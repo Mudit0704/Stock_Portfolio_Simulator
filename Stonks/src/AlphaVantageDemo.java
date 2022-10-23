@@ -2,6 +2,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.Set;
 
 public class AlphaVantageDemo {
   public static void main(String []args) {
@@ -33,6 +42,7 @@ public class AlphaVantageDemo {
 
     InputStream in = null;
     StringBuilder output = new StringBuilder();
+    Map<Date, Double> dateSet = new HashMap();
 
     try {
       /*
@@ -47,14 +57,32 @@ public class AlphaVantageDemo {
       in = url.openStream();
       int b;
 
-      while ((b=in.read())!=-1) {
-        output.append((char)b);
+      Scanner sc = new Scanner(in).useDelimiter("\n");
+
+      sc.next();
+      while(sc.hasNext()) {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-mm-yyyy", Locale.ENGLISH);
+        String result = sc.next() ;
+        String[] arr = result.split(",");
+
+        try {
+          dateSet.put(formatter.parse(arr[0]), Double.valueOf(arr[4]));
+        } catch (ParseException e) {
+          throw new RuntimeException(e);
+        }
       }
     }
     catch (IOException e) {
       throw new IllegalArgumentException("No price data found for "+stockSymbol);
     }
-    System.out.println("Return value: ");
-    System.out.println(output.toString());
+    SimpleDateFormat formatter = new SimpleDateFormat("dd-mm-yyyy", Locale.ENGLISH);
+
+    try {
+      System.out.println(dateSet.get(formatter.parse("2022-10-21")));
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
+//    System.out.println("Return value: ");
+//    System.out.println(output.toString());
   }
 }

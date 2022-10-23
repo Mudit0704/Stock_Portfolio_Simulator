@@ -1,6 +1,6 @@
 package portfolio.model;
 
-import java.net.URL;
+import java.util.Date;
 
 public class Stock extends AbstractStock {
 
@@ -9,8 +9,7 @@ public class Stock extends AbstractStock {
   }
 
   @Override
-  public double getValue() {
-
-    return 0;
+  public double getValue(Date date) {
+    return this.getPriceByDate(date);
   }
 }
