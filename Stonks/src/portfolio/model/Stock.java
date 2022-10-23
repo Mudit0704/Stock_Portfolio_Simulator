@@ -13,9 +13,4 @@ public class Stock extends AbstractStock {
 
     return 0;
   }
-
-  @Override
-  public IStock fromData(String tickerSymbol, int numShares) {
-    return new Stock(tickerSymbol, numShares);
-  }
 }
