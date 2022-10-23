@@ -1,9 +1,9 @@
-package portfolio;
+package portfolio.model;
 
 /**
  * Interface to represent a stock unit.
  */
-public interface Stock {
+public interface IStock {
 
   /**
    * Gets the value of this stock from realtime API.
