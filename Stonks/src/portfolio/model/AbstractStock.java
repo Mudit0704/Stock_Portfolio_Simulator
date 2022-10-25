@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 public abstract class AbstractStock implements IStock {
   private static final String APIKEY = "W0M1JOKC82EZEQA8";
@@ -65,6 +66,26 @@ public abstract class AbstractStock implements IStock {
       throw new IllegalArgumentException("No price data found for "+this.tickerSymbol);
     }
 
-    return dateClosingPriceMap.get(date);
+    if(!dateClosingPriceMap.containsKey(date)) {
+      //logic to determine the next nearest date
+    }
+
+    return (dateClosingPriceMap.containsKey(date)) ? dateClosingPriceMap.get(date) : dateClosingPriceMap.get(getClosestDate(date)) ;
+  }
+
+  private Date getClosestDate(Date date) {
+    long minDiff = Long.MAX_VALUE ;
+    Date result = null;
+
+    for (Map.Entry<Date, Double> mapElement :  dateClosingPriceMap.entrySet()) {
+      Date currDate = mapElement.getKey() ;
+      long diffInMillies = Math.abs(date.getTime() - currDate.getTime());
+      long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+      if (minDiff > diff) {
+        minDiff = diff;
+        result = currDate;
+      }
+    }
+    return result;
   }
 }

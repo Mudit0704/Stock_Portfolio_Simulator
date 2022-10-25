@@ -11,9 +11,10 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 public class AlphaVantageDemo {
-  public static void main(String []args) {
+  public static void main(String []args) throws ParseException {
     //the API key needed to use this web service.
     //Please get your own free API key here: https://www.alphavantage.co/
     //Please look at documentation here: https://www.alphavantage.co/documentation/
@@ -30,14 +31,13 @@ public class AlphaVantageDemo {
       which you are welcome to use.
        */
       url = new URL("https://www.alphavantage"
-                    + ".co/query?function=TIME_SERIES_DAILY"
-                    + "&outputsize=full"
-                    + "&symbol"
-                    + "=" + stockSymbol + "&apikey="+apiKey+"&datatype=csv");
-    }
-    catch (MalformedURLException e) {
+        + ".co/query?function=TIME_SERIES_DAILY"
+        + "&outputsize=full"
+        + "&symbol"
+        + "=" + stockSymbol + "&apikey=" + apiKey + "&datatype=csv");
+    } catch (MalformedURLException e) {
       throw new RuntimeException("the alphavantage API has either changed or "
-                                 + "no longer works");
+        + "no longer works");
     }
 
     InputStream in = null;
@@ -60,9 +60,9 @@ public class AlphaVantageDemo {
       Scanner sc = new Scanner(in).useDelimiter("\n");
 
       sc.next();
-      while(sc.hasNext()) {
+      while (sc.hasNext()) {
         SimpleDateFormat formatter = new SimpleDateFormat("dd-mm-yyyy", Locale.ENGLISH);
-        String result = sc.next() ;
+        String result = sc.next();
         String[] arr = result.split(",");
 
         try {
@@ -71,9 +71,8 @@ public class AlphaVantageDemo {
           throw new RuntimeException(e);
         }
       }
-    }
-    catch (IOException e) {
-      throw new IllegalArgumentException("No price data found for "+stockSymbol);
+    } catch (IOException e) {
+      throw new IllegalArgumentException("No price data found for " + stockSymbol);
     }
     SimpleDateFormat formatter = new SimpleDateFormat("dd-mm-yyyy", Locale.ENGLISH);
 
@@ -84,5 +83,13 @@ public class AlphaVantageDemo {
     }
 //    System.out.println("Return value: ");
 //    System.out.println(output.toString());
+
+//    SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH);
+//    Date firstDate = sdf.parse("12/31/2017");
+//    Date secondDate = sdf.parse("01/11/2019");
+//
+//    long diffInMillies = Math.abs(secondDate.getTime() - firstDate.getTime());
+//    long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+//    System.out.println(diff);
   }
 }
