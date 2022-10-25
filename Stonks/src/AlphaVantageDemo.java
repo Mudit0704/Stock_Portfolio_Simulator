@@ -14,6 +14,8 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class AlphaVantageDemo {
+  static Map<Date, Double> dateSet = new HashMap();
+
   public static void main(String []args) throws ParseException {
     //the API key needed to use this web service.
     //Please get your own free API key here: https://www.alphavantage.co/
@@ -42,7 +44,6 @@ public class AlphaVantageDemo {
 
     InputStream in = null;
     StringBuilder output = new StringBuilder();
-    Map<Date, Double> dateSet = new HashMap();
 
     try {
       /*
@@ -61,11 +62,12 @@ public class AlphaVantageDemo {
 
       sc.next();
       while (sc.hasNext()) {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-mm-yyyy", Locale.ENGLISH);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
         String result = sc.next();
         String[] arr = result.split(",");
 
         try {
+//          System.out.println(arr[0] + " " + formatter.parse(arr[0]));
           dateSet.put(formatter.parse(arr[0]), Double.valueOf(arr[4]));
         } catch (ParseException e) {
           throw new RuntimeException(e);
@@ -74,22 +76,29 @@ public class AlphaVantageDemo {
     } catch (IOException e) {
       throw new IllegalArgumentException("No price data found for " + stockSymbol);
     }
-    SimpleDateFormat formatter = new SimpleDateFormat("dd-mm-yyyy", Locale.ENGLISH);
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 
     try {
       System.out.println(dateSet.get(formatter.parse("2022-10-21")));
+      System.out.println(getClosestDate(formatter.parse("2022-10-02")) + " " + dateSet.get(formatter.parse("2022-10-02")));
     } catch (ParseException e) {
       throw new RuntimeException(e);
     }
-//    System.out.println("Return value: ");
-//    System.out.println(output.toString());
+  }
 
-//    SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH);
-//    Date firstDate = sdf.parse("12/31/2017");
-//    Date secondDate = sdf.parse("01/11/2019");
-//
-//    long diffInMillies = Math.abs(secondDate.getTime() - firstDate.getTime());
-//    long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
-//    System.out.println(diff);
+  private static Date getClosestDate(Date date) {
+    long minDiff = Long.MAX_VALUE;
+    Date result = null;
+
+    for (Map.Entry<Date, Double> mapElement : dateSet.entrySet()) {
+      Date currDate = mapElement.getKey();
+      long timeDiff = Math.abs(date.getTime() - currDate.getTime());
+      long diff = TimeUnit.DAYS.convert(timeDiff, TimeUnit.MILLISECONDS);
+      if (currDate.before(date) && minDiff > diff) {
+        minDiff = diff;
+        result = currDate;
+      }
+    }
+    return result;
   }
 }
