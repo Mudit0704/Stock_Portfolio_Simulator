@@ -1,7 +1,10 @@
 package portfolio.model;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Date;
+import javax.xml.parsers.ParserConfigurationException;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -17,7 +20,7 @@ public interface IPortfolio {
    * @param date
    * @return
    */
-  double getPortfolioValue(Date date);
+  String getPortfolioValue(Date date);
 
   /**
    * @param path
@@ -29,5 +32,6 @@ public interface IPortfolio {
    * @param path
    * @throws FileNotFoundException
    */
-  void retrievePortfolio(String path) throws FileNotFoundException;
+  boolean retrievePortfolio(String path)
+      throws IOException, ParserConfigurationException, SAXException;
 }

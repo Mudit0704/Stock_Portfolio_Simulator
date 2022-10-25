@@ -14,17 +14,16 @@ import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 public abstract class AbstractStock implements IStock {
-
   private static final String APIKEY = "W0M1JOKC82EZEQA8";
   private URL url = null;
   private Map<Date, Double> dateClosingPriceMap = new HashMap();
 
-  protected String tickerSymbol;
-  protected int stockQuantity;
+  protected String tickerSymbol ;
+  protected int stockQuantity ;
 
   public AbstractStock(String tickerSymbol, int stockQuantity) {
-    this.tickerSymbol = tickerSymbol;
-    this.stockQuantity = stockQuantity;
+    this.tickerSymbol = tickerSymbol ;
+    this.stockQuantity = stockQuantity ;
   }
 
   protected double getPriceByDate(Date date) {
@@ -34,7 +33,8 @@ public abstract class AbstractStock implements IStock {
         + "&outputsize=compact"
         + "&symbol"
         + "=" + this.tickerSymbol + "&apikey=" + APIKEY + "&datatype=json");
-    } catch (MalformedURLException e) {
+    }
+    catch (MalformedURLException e) {
       throw new RuntimeException("the alphavantage API has either changed or "
         + "no longer works");
     }
@@ -50,9 +50,9 @@ public abstract class AbstractStock implements IStock {
       Scanner sc = new Scanner(in).useDelimiter("\n");
 
       sc.next();
-      while (sc.hasNext()) {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-        String result = sc.next();
+      while(sc.hasNext()) {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-mm-yyyy", Locale.ENGLISH);
+        String result = sc.next() ;
         String[] arr = result.split(",");
 
         try {
@@ -61,24 +61,27 @@ public abstract class AbstractStock implements IStock {
           throw new RuntimeException(e);
         }
       }
-    } catch (IOException e) {
-      throw new IllegalArgumentException("No price data found for " + this.tickerSymbol);
+    }
+    catch (IOException e) {
+      throw new IllegalArgumentException("No price data found for "+this.tickerSymbol);
     }
 
-    return (dateClosingPriceMap.containsKey(date)) ? dateClosingPriceMap.get(date)
-      : dateClosingPriceMap.get(getClosestDate(date));
+    if(!dateClosingPriceMap.containsKey(date)) {
+      //logic to determine the next nearest date
+    }
+
+    return (dateClosingPriceMap.containsKey(date)) ? dateClosingPriceMap.get(date) : dateClosingPriceMap.get(getClosestDate(date)) ;
   }
 
   private Date getClosestDate(Date date) {
-    long minDiff = Long.MAX_VALUE;
+    long minDiff = Long.MAX_VALUE ;
     Date result = null;
 
-    for (Map.Entry<Date, Double> mapElement : dateClosingPriceMap.entrySet()) {
-      Date currDate = mapElement.getKey();
-      long timeDiff = Math.abs(date.getTime() - currDate.getTime());
-      long diff = TimeUnit.DAYS.convert(timeDiff, TimeUnit.MILLISECONDS);
-
-      if (currDate.before(date) && minDiff > diff) {
+    for (Map.Entry<Date, Double> mapElement :  dateClosingPriceMap.entrySet()) {
+      Date currDate = mapElement.getKey() ;
+      long diffInMillies = Math.abs(date.getTime() - currDate.getTime());
+      long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+      if (minDiff > diff) {
         minDiff = diff;
         result = currDate;
       }

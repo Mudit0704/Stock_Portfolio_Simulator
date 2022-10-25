@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="Stonks:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Stonks_jar</output-path>
+    <root id="archive" name="Stonks.jar">
+      <element id="module-output" name="Stonks" />
+    </root>
+  </artifact>
+</component>
