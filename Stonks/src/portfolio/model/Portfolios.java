@@ -1,7 +1,6 @@
 package portfolio.model;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -11,7 +10,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
 public class Portfolios {
-  private List<IPortfolio> portfolios = new ArrayList<>();
+  private final List<IPortfolio> portfolios = new ArrayList<>();
 
   public String getPortfolioComposition() {
     int portfolioNo = 0;
@@ -20,22 +19,20 @@ public class Portfolios {
       composition = new StringBuilder();
       for (IPortfolio portfolio : portfolios) {
         portfolioNo++;
-        composition.append("Portfolio"+portfolioNo+"\n"+portfolio.getPortfolioComposition()+"\n");
+        composition.append("Portfolio").append(portfolioNo).append("\n")
+            .append(portfolio.getPortfolioComposition()).append("\n");
       }
     }
     return composition.toString();
   }
 
-  public String getPortfolioValue(LocalDate date) {
+  public String getPortfolioValue(LocalDate date, int portfolioId) {
     StringBuilder portfolioValues = new StringBuilder("No Portfolios");
-    int portfolioNo = 0;
 
     if (portfolios.size() > 0) {
       portfolioValues = new StringBuilder();
-      for(IPortfolio portfolio : portfolios) {
-        portfolioNo++;
-        portfolioValues.append("Portfolio" + portfolioNo+"\n"+portfolio.getPortfolioValue(date)+"\n");
-      }
+      portfolioValues.append("Portfolio").append(portfolioId).append("\n")
+          .append(portfolios.get(portfolioId-1).getPortfolioValue(date)).append("\n");
     }
     return portfolioValues.toString();
   }
@@ -59,11 +56,7 @@ public class Portfolios {
     boolean result = false;
 
     File dir = new File(path);
-    File[] files = dir.listFiles(new FilenameFilter() {
-      public boolean accept(File dir, String name) {
-        return name.toLowerCase().endsWith(".xml");
-      }
-    });
+    File[] files = dir.listFiles((dir1, name) -> name.toLowerCase().endsWith(".xml"));
 
     if (files != null && files.length != 0) {
       for (File file : files) {

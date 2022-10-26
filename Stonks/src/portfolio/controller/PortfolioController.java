@@ -8,7 +8,6 @@ import java.util.InputMismatchException;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Scanner;
-import portfolio.model.IPortfolio;
 import portfolio.model.Portfolios;
 import portfolio.view.IView;
 
@@ -112,10 +111,20 @@ public class PortfolioController implements IPortfolioController {
     LocalDate date;
     view.displayCustomText("Please enter the date (yyyy-mm-dd): ");
     String userDate = scan.next();
+    int portfolioId;
 
     date = LocalDate.parse(userDate.isEmpty() || userDate.isBlank() ?
         String.valueOf(LocalDateTime.now()) : userDate);
-    view.displayCustomText(portfolio.getPortfolioValue(date));
+    view.displayCustomText("Choose from available portfolios (eg: Portfolio1 -> give 1):\n");
+    view.displayCustomText(portfolio.getPortfolioComposition());
+    view.askForInput();
+    try {
+      portfolioId = scan.nextInt();
+    } catch (InputMismatchException e) {
+      view.displayInvalidInput();
+      return;
+    }
+    view.displayCustomText(portfolio.getPortfolioValue(date, portfolioId));
     displayExitOperationSequence(scan);
   }
 

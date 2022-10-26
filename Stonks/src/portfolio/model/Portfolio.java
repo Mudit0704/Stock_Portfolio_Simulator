@@ -23,7 +23,7 @@ import org.xml.sax.SAXException;
 
 public class Portfolio implements IPortfolio {
 
-  private class Pair<S,T> {
+  private static class Pair<S,T> {
     S s ;
     T t ;
     public Pair(S s, T t) {
@@ -121,7 +121,7 @@ public class Portfolio implements IPortfolio {
             .item(0).getTextContent();
         int stockQuantity = Integer.parseInt(eElement.getElementsByTagName("stockQuantity")
             .item(0).getTextContent());
-        this.stocks.add(new Pair<>(new Stock(tickerSymbol), stockQuantity) );
+        this.stocks.add(new Pair<>(new Stock(tickerSymbol), stockQuantity));
       }
     }
 
