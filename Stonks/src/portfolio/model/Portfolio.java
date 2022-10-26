@@ -4,10 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -28,12 +25,11 @@ public class Portfolio implements IPortfolio {
 
   private final List<AbstractStock> stocks = new ArrayList<>();
 
-  public Portfolio setPortfolioStocks(Map<String, Integer> stocks) {
+  @Override
+  public void setPortfolioStocks(Map<String, Integer> stocks) {
     for (Map.Entry<String, Integer> stock : stocks.entrySet()) {
       this.stocks.add(new Stock(stock.getKey(), stock.getValue()));
     }
-
-    return this;
   }
 
   @Override

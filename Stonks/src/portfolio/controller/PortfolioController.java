@@ -44,7 +44,7 @@ public class PortfolioController implements IPortfolioController {
       switch (scan.next()) {
         case "1":
           view.clearScreen();
-          portfolio = generatePortfolio(scan);
+          generatePortfolio(scan, portfolio);
           break;
         case "2":
           view.clearScreen();
@@ -121,9 +121,8 @@ public class PortfolioController implements IPortfolioController {
     displayExitOperationSequence(scan);
   }
 
-  private IPortfolio generatePortfolio(Scanner scan) throws IOException {
+  private IPortfolio generatePortfolio(Scanner scan, IPortfolio portfolio) throws IOException {
     String tickerSymbol;
-    IPortfolio portfolio;
     int stockQuantity;
     Map<String, Integer> stocks = new HashMap<>();
     while (true) {
@@ -131,7 +130,7 @@ public class PortfolioController implements IPortfolioController {
       view.askForInput();
       String userInput = scan.next();
       if ("E".equals(userInput)) {
-        portfolio = new Portfolio().setPortfolioStocks(stocks);
+        portfolio.setPortfolioStocks(stocks);
         view.clearScreen();
         break;
       } else if ("1".equals(userInput)) {

@@ -4,29 +4,26 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.Period;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
 
 abstract class AbstractStock implements IStock {
+
   private static final String APIKEY = "W0M1JOKC82EZEQA8";
   private URL url = null;
-  private Map<LocalDate, Double> dateClosingPriceMap = new HashMap();
+  private final Map<LocalDate, Double> dateClosingPriceMap = new HashMap();
 
-  String tickerSymbol ;
-  int stockQuantity ;
+  String tickerSymbol;
+  int stockQuantity;
 
   public AbstractStock(String tickerSymbol, int stockQuantity) {
-    this.tickerSymbol = tickerSymbol ;
-    this.stockQuantity = stockQuantity ;
+    this.tickerSymbol = tickerSymbol;
+    this.stockQuantity = stockQuantity;
   }
 
   double getPriceByDate(LocalDate date) {
@@ -36,8 +33,7 @@ abstract class AbstractStock implements IStock {
         + "&outputsize=full"
         + "&symbol"
         + "=" + this.tickerSymbol + "&apikey=" + APIKEY + "&datatype=csv");
-    }
-    catch (MalformedURLException e) {
+    } catch (MalformedURLException e) {
       throw new RuntimeException("the alphavantage API has either changed or "
         + "no longer works");
     }
@@ -52,25 +48,25 @@ abstract class AbstractStock implements IStock {
       Scanner sc = new Scanner(in).useDelimiter("\n");
 
       sc.next();
-      while(sc.hasNext()) {
+      while (sc.hasNext()) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-        String result = sc.next() ;
+        String result = sc.next();
         String[] arr = result.split(",");
 
         dateClosingPriceMap.put(LocalDate.parse(arr[0]), Double.valueOf(arr[4]));
       }
+    } catch (IOException e) {
+      throw new IllegalArgumentException("No price data found for " + this.tickerSymbol);
     }
-    catch (IOException e) {
-      throw new IllegalArgumentException("No price data found for "+ this.tickerSymbol);
-    }
-    return (dateClosingPriceMap.containsKey(date)) ? dateClosingPriceMap.get(date) : dateClosingPriceMap.get(getClosestDate(date)) ;
+    return (dateClosingPriceMap.containsKey(date)) ? dateClosingPriceMap.get(date)
+      : dateClosingPriceMap.get(getClosestDate(date));
   }
 
   private LocalDate getClosestDate(LocalDate date) {
-    long minDiff = Long.MAX_VALUE ;
+    long minDiff = Long.MAX_VALUE;
     LocalDate result = null;
 
-    for (Map.Entry<LocalDate, Double> mapElement :  dateClosingPriceMap.entrySet()) {
+    for (Map.Entry<LocalDate, Double> mapElement : dateClosingPriceMap.entrySet()) {
       LocalDate currDate = mapElement.getKey();
       long diff = ChronoUnit.DAYS.between(currDate, date);
 

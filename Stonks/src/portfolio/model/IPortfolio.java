@@ -3,7 +3,7 @@ package portfolio.model;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.Date;
+import java.util.Map;
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
@@ -35,4 +35,6 @@ public interface IPortfolio {
    */
   boolean retrievePortfolio(String path)
       throws IOException, ParserConfigurationException, SAXException;
+
+  void setPortfolioStocks(Map<String, Integer> stocks);
 }
