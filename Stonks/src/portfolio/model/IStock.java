@@ -1,6 +1,6 @@
 package portfolio.model;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 /**
  * Interface to represent a stock unit and get the price of the stock.
@@ -13,5 +13,5 @@ public interface IStock {
    * @param date the date at which stock price is to be fetched for.
    * @return current value of this stock.
    */
-  double getValue(Date date);
+  double getValue(LocalDate date);
 }

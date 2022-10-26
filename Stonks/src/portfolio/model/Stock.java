@@ -1,5 +1,6 @@
 package portfolio.model;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class Stock extends AbstractStock {
@@ -9,7 +10,7 @@ public class Stock extends AbstractStock {
   }
 
   @Override
-  public double getValue(Date date) {
+  public double getValue(LocalDate date) {
     return this.getPriceByDate(date);
   }
 }

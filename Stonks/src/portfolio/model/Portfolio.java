@@ -3,7 +3,10 @@ package portfolio.model;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -40,8 +43,12 @@ public class Portfolio implements IPortfolio {
   }
 
   @Override
-  public String getPortfolioValue(Date date) {
-    return "0";
+  public double getPortfolioValue(LocalDate date) {
+    double portfolioValue = 0;
+    for (AbstractStock stock: this.stocks) {
+      portfolioValue += stock.getValue(date) * stock.stockQuantity;
+    }
+    return portfolioValue;
   }
 
   @Override
@@ -60,8 +67,11 @@ public class Portfolio implements IPortfolio {
         stockTickerSymbol.appendChild(doc.createTextNode(stock.tickerSymbol));
         Element stockQuantity = doc.createElement("stockQuantity");
         stockQuantity.appendChild(doc.createTextNode(String.valueOf(stock.stockQuantity)));
+        Element stockPrice = doc.createElement("stockPrice");
+        stockQuantity.appendChild(doc.createTextNode(String.valueOf(stock.getValue(LocalDate.now()))));
         stockElement.appendChild(stockTickerSymbol);
         stockElement.appendChild(stockQuantity);
+        stockElement.appendChild(stockPrice);
         rootElement.appendChild(stockElement);
       }
 

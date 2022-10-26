@@ -2,6 +2,7 @@ package portfolio.model;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Date;
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
@@ -20,7 +21,7 @@ public interface IPortfolio {
    * @param date
    * @return
    */
-  String getPortfolioValue(Date date);
+  double getPortfolioValue(LocalDate date);
 
   /**
    * @param path

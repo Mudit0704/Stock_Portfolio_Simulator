@@ -3,6 +3,7 @@ package portfolio.controller;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
@@ -109,19 +110,15 @@ public class PortfolioController implements IPortfolioController {
   }
 
   private void getStockValueForGivenDate(IPortfolio portfolio, Scanner scan) throws IOException {
-    Date date;
-    view.displayCustomText("Please enter the date (dd-mm-yyyy): ");
-    try {
-      SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
-      String userDate = scan.next();
+    LocalDate date;
+    view.displayCustomText("Please enter the date (yyyy-mm-dd): ");
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+    String userDate = scan.next();
 
-      date = formatter.parse(userDate.isEmpty() || userDate.isBlank() ?
-          String.valueOf(LocalDateTime.now()) : userDate);
-      view.displayCustomText(portfolio.getPortfolioValue(date) + "\n");
-      displayExitOperationSequence(scan);
-    } catch (ParseException e) {
-      view.displayInvalidInput();
-    }
+    date = LocalDate.parse(userDate.isEmpty() || userDate.isBlank() ?
+        String.valueOf(LocalDateTime.now()) : userDate);
+    view.displayCustomText(portfolio.getPortfolioValue(date) + "\n");
+    displayExitOperationSequence(scan);
   }
 
   private IPortfolio generatePortfolio(Scanner scan) throws IOException {
