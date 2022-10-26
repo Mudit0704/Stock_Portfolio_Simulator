@@ -1,5 +1,7 @@
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
@@ -12,6 +14,7 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public class AlphaVantageDemo {
   static Map<Date, Double> dateSet = new HashMap();
@@ -56,18 +59,23 @@ public class AlphaVantageDemo {
       This is printed below.
        */
       in = url.openStream();
-      int b;
-
-      Scanner sc = new Scanner(in).useDelimiter("\n");
-
-      sc.next();
-      while (sc.hasNext()) {
+      StringBuilder sb = new StringBuilder();
+      for (int ch; (ch = in.read()) != -1; ) {
+        sb.append((char) ch);
+      }
+      String ds = sb.toString();
+      String[] resultArr = ds.split("\n");
+      int i=0;
+      for(String str:resultArr){
+        if(i==0) {
+          i++;
+          continue;
+        }
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-        String result = sc.next();
-        String[] arr = result.split(",");
+        String[] arr = str.split(",");
 
         try {
-//          System.out.println(arr[0] + " " + formatter.parse(arr[0]));
+  //          System.out.println(arr[0] + " " + formatter.parse(arr[0]));
           dateSet.put(formatter.parse(arr[0]), Double.valueOf(arr[4]));
         } catch (ParseException e) {
           throw new RuntimeException(e);

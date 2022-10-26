@@ -2,13 +2,21 @@ package portfolio.model;
 
 import static org.junit.Assert.*;
 
+import java.lang.reflect.Field;
+import java.time.LocalDate;
 import org.junit.Test;
 
 public class StockTest {
 
   @Test
-  public void getValue() {
+  public void getValue() throws NoSuchFieldException, IllegalAccessException {
+    IStock stock = new Stock("GOOG");
+    Class obj = stock.getClass();
+    Field field = obj.getDeclaredField("stockService");
+    field.setAccessible(true);
 
+    field.set(stock,new MockStockService());
+    System.out.println(stock.getValue(LocalDate.now()));
   }
 
   @Test
