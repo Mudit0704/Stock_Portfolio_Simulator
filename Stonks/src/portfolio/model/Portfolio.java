@@ -58,7 +58,10 @@ public class Portfolio implements IPortfolio {
   }
 
   @Override
-  public void savePortfolio(String path) throws IllegalArgumentException {
+  public boolean savePortfolio(String path) throws IllegalArgumentException {
+    if (stocks.size() == 0) {
+      return false;
+    }
     try {
       DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
       DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -94,6 +97,7 @@ public class Portfolio implements IPortfolio {
     } catch (Exception e) {
       throw new IllegalArgumentException();
     }
+    return true;
   }
 
   @Override

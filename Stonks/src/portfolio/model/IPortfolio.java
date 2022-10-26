@@ -27,7 +27,7 @@ public interface IPortfolio {
    * @param path
    * @throws IllegalArgumentException
    */
-  void savePortfolio(String path) throws IllegalArgumentException;
+  boolean savePortfolio(String path) throws IllegalArgumentException;
 
   /**
    * @param path
