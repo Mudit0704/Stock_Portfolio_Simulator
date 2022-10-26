@@ -115,7 +115,7 @@ public class PortfolioController implements IPortfolioController {
 
     date = LocalDate.parse(userDate.isEmpty() || userDate.isBlank() ?
         String.valueOf(LocalDateTime.now()) : userDate);
-    view.displayCustomText(portfolio.getPortfolioValue(date) + "\n");
+    view.displayCustomText(portfolio.getPortfolioValue(date));
     displayExitOperationSequence(scan);
   }
 

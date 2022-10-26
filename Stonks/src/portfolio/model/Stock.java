@@ -10,9 +10,9 @@ import java.util.Scanner;
 public class Stock implements IStock {
 
   private final String tickerSymbol;
-  IAPIStockService stockService ;
+  IAPIStockService stockService;
 
-  private Map<LocalDate, Double> dateClosingPriceMap = new HashMap();
+  private Map<LocalDate, Double> dateClosingPriceMap;
 
   public Stock(String tickerSymbol) throws IllegalArgumentException {
     if(tickerSymbol == null || tickerSymbol.length() == 0) {
@@ -20,6 +20,7 @@ public class Stock implements IStock {
     }
     stockService = new StockService();
     this.tickerSymbol = tickerSymbol;
+    this.dateClosingPriceMap = new HashMap<>();
   }
 
   @Override

@@ -26,14 +26,18 @@ public class Portfolios {
     return composition.toString();
   }
 
-  public double getPortfolioValue(LocalDate date) {
-    double result = 0d;
+  public String getPortfolioValue(LocalDate date) {
+    StringBuilder portfolioValues = new StringBuilder("No Portfolios");
+    int portfolioNo = 0;
+
     if (portfolios.size() > 0) {
+      portfolioValues = new StringBuilder();
       for(IPortfolio portfolio : portfolios) {
-        result+=portfolio.getPortfolioValue(LocalDate.now());
+        portfolioNo++;
+        portfolioValues.append("Portfolio" + portfolioNo+"\n"+portfolio.getPortfolioValue(date)+"\n");
       }
     }
-    return result;
+    return portfolioValues.toString();
   }
 
 

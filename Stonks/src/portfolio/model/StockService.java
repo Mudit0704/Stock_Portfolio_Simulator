@@ -4,16 +4,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
 
 class StockService implements IAPIStockService {
 
   private static final String APIKEY = "W0M1JOKC82EZEQA8";
   private URL stockServiceURL = null;
-  private static Map<LocalDate, Double> dateClosingPriceMap = new HashMap();
 
   @Override
   public InputStream getStockPrices(String tickerSymbol) {
