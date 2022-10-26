@@ -23,26 +23,36 @@ import org.xml.sax.SAXException;
 
 public class Portfolio implements IPortfolio {
 
-  private final List<AbstractStock> stocks = new ArrayList<>();
+  private class Pair<S,T> {
+    S s ;
+    T t ;
+    public Pair(S s, T t) {
+      this.s = s ;
+      this.t = t ;
+    }
+  }
+
+  private final List<Pair<IStock, Integer>> stocks = new ArrayList<>();
 
   @Override
   public void setPortfolioStocks(Map<String, Integer> stocks) {
     for (Map.Entry<String, Integer> stock : stocks.entrySet()) {
-      this.stocks.add(new Stock(stock.getKey(), stock.getValue()));
+      this.stocks.add(new Pair<>(new Stock(stock.getKey()), stock.getValue()));
     }
   }
 
   @Override
   public String getPortfolioComposition() {
-    return stocks.size() > 0 ? stocks.stream().map(x -> x.tickerSymbol + " -> " + x.stockQuantity + "\n")
+    return stocks.size() > 0 ? stocks.stream().map(x -> x.s.getStockTicker() + " -> " + x.t + "\n")
         .collect(Collectors.joining()) : "No stocks in the portfolio";
   }
 
   @Override
   public double getPortfolioValue(LocalDate date) {
     double portfolioValue = 0;
-    for (AbstractStock stock: this.stocks) {
-      portfolioValue += stock.getValue(date) * stock.stockQuantity;
+
+    for (Pair<IStock, Integer> stock: this.stocks) {
+      portfolioValue += stock.s.getValue(date) * stock.t;
     }
     return portfolioValue;
   }
@@ -57,14 +67,18 @@ public class Portfolio implements IPortfolio {
       Element rootElement = doc.createElement("portfolio");
       doc.appendChild(rootElement);
 
-      for (AbstractStock stock : this.stocks) {
+      for (Pair<IStock, Integer> stock: this.stocks) {
         Element stockElement = doc.createElement("stock");
+
         Element stockTickerSymbol = doc.createElement("tickerSymbol");
-        stockTickerSymbol.appendChild(doc.createTextNode(stock.tickerSymbol));
+        stockTickerSymbol.appendChild(doc.createTextNode(stock.s.getStockTicker()));
+
         Element stockQuantity = doc.createElement("stockQuantity");
-        stockQuantity.appendChild(doc.createTextNode(String.valueOf(stock.stockQuantity)));
+        stockQuantity.appendChild(doc.createTextNode(String.valueOf(stock.t)));
+
         Element stockPrice = doc.createElement("stockPrice");
-        stockQuantity.appendChild(doc.createTextNode(String.valueOf(stock.getValue(LocalDate.now()))));
+        stockPrice.appendChild(doc.createTextNode(String.valueOf(stock.s.getValue(LocalDate.now()))));
+
         stockElement.appendChild(stockTickerSymbol);
         stockElement.appendChild(stockQuantity);
         stockElement.appendChild(stockPrice);
@@ -103,7 +117,7 @@ public class Portfolio implements IPortfolio {
             .item(0).getTextContent();
         int stockQuantity = Integer.parseInt(eElement.getElementsByTagName("stockQuantity")
             .item(0).getTextContent());
-        this.stocks.add(new Stock(tickerSymbol, stockQuantity));
+        this.stocks.add(new Pair<>(new Stock(tickerSymbol), stockQuantity) );
       }
     }
 

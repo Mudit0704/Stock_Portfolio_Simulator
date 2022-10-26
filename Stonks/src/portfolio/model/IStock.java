@@ -14,4 +14,10 @@ public interface IStock {
    * @return current value of this stock.
    */
   double getValue(LocalDate date);
+
+  /**
+   * Returns this stock's ticker symbol.
+   * @return a string representing the ticker symbol of this stock.
+   */
+  String getStockTicker() ;
 }

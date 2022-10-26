@@ -26,7 +26,6 @@ public class PortfolioTest {
   @Test
   public void savePortfolio() throws IOException {
     IPortfolio portfolio = new Portfolio();
-
     File file = folder.newFile("aadish.xml");
     portfolio.savePortfolio(file.getPath());
   }

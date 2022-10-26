@@ -1,12 +1,12 @@
 package portfolio.model;
 
 class StockFactory {
-  public static AbstractStock buildStock(StockType stockType, String tickerSymbol, int stockQuantity) {
+  public static IStock buildStock(StockType stockType, String tickerSymbol, int stockQuantity) {
 
-    AbstractStock newStockOption = null ;
+    IStock newStockOption = null ;
     switch (stockType) {
       case STOCK: {
-        newStockOption = new Stock(tickerSymbol, stockQuantity);
+        newStockOption = new Stock(tickerSymbol);
       }
       default:
         break;
