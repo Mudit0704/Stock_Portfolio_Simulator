@@ -2,7 +2,6 @@ package portfolio.controller;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.Map;
@@ -29,11 +28,12 @@ public class PortfolioController implements IPortfolioController {
   }
 
   @Override
-  public void run(Portfolios portfolio) throws IOException {
+  public void run(Portfolios portfolio) throws IOException, InterruptedException {
     Objects.requireNonNull(portfolio);
     Scanner scan = new Scanner(this.in);
 
     while (true) {
+      view.clearScreen();
       view.displayMenu();
       view.askForInput();
       switch (scan.next()) {
@@ -43,7 +43,7 @@ public class PortfolioController implements IPortfolioController {
           break;
         case "2":
           view.clearScreen();
-          view.displayCustomText(portfolio.getPortfolioComposition() + "\n");
+          view.displayCustomText(portfolio.getPortfolioComposition());
           displayExitOperationSequence(scan);
           break;
         case "3":
@@ -63,7 +63,7 @@ public class PortfolioController implements IPortfolioController {
 
   }
 
-  private void displayExitOperationSequence(Scanner scan) throws IOException {
+  private void displayExitOperationSequence(Scanner scan) throws IOException, InterruptedException {
     view.displayEscapeFromOperation();
     while (!"E".equals(scan.next())) {
       view.displayInvalidInput();
@@ -72,93 +72,82 @@ public class PortfolioController implements IPortfolioController {
     view.clearScreen();
   }
 
-  private void saveRetrievePortfolios(Portfolios portfolio, Scanner scan) throws IOException {
+  private void saveRetrievePortfolios(Portfolios portfolio, Scanner scan)
+      throws IOException, InterruptedException {
     String path;
     view.displayCustomText(SAVE_RETRIEVE_PORTFOLIO_MENU);
     view.askForInput();
     String choice = scan.next();
-    if (choice.isEmpty() || choice.isBlank()) {
-      view.displayInvalidInput();
-      return;
-    }
+    if("E".equals(choice)) return;
     view.displayCustomText("Please enter the directory path: ");
     path = scan.next();
     try {
       if ("1".equals(choice)) {
-        if (portfolio.savePortfolio(path)) {
-          view.displayCustomText("Saved\n");
-          displayExitOperationSequence(scan);
-        } else {
-          view.displayCustomText("No portfolios to save");
-        }
+        view.displayCustomText(
+            portfolio.savePortfolio(path) ? "Saved\n" : "No portfolios to save\n");
       } else if ("2".equals(choice)) {
-        if (portfolio.retrievePortfolio(path)) {
-          view.displayCustomText("Retrieved\n");
-          displayExitOperationSequence(scan);
-        } else {
-          view.displayCustomText("Portfolios already populated\n");
-        }
-
-      } else if (!"E".equals(choice)) {
-        view.displayInvalidInput();
+        view.displayCustomText(
+            portfolio.retrievePortfolio(path) ? "Retrieved\n" : "Portfolios already populated\n");
+      } else {
+        throw new IOException();
       }
     } catch (Exception e) {
       view.displayInvalidInput();
+      return;
     }
+    displayExitOperationSequence(scan);
   }
 
-  private void getPortfolioValuesForGivenDate(Portfolios portfolio, Scanner scan) throws IOException {
+  private void getPortfolioValuesForGivenDate(Portfolios portfolio, Scanner scan)
+      throws IOException, InterruptedException {
     LocalDate date;
-    view.displayCustomText("Please enter the date (yyyy-mm-dd): ");
-    String userDate = scan.next();
     int portfolioId;
-
-    date = LocalDate.parse(userDate.isEmpty() || userDate.isBlank() ?
-        String.valueOf(LocalDateTime.now()) : userDate);
     view.displayCustomText("Choose from available portfolios (eg: Portfolio1 -> give 1):\n");
     view.displayCustomText(portfolio.getPortfolioComposition());
     view.askForInput();
     try {
       portfolioId = scan.nextInt();
-    } catch (InputMismatchException e) {
+      view.displayCustomText("Please enter the date (yyyy-mm-dd): ");
+      date = LocalDate.parse(scan.next());
+      view.displayCustomText(portfolio.getPortfolioValue(date, portfolioId));
+    } catch (Exception e) {
       view.displayInvalidInput();
-      return;
     }
-    view.displayCustomText(portfolio.getPortfolioValue(date, portfolioId));
+
     displayExitOperationSequence(scan);
   }
 
-  private void generatePortfolios(Scanner scan, Portfolios portfolio) throws IOException {
+  private void generatePortfolios(Scanner scan, Portfolios portfolio)
+      throws IOException, InterruptedException {
     String tickerSymbol;
     int stockQuantity;
     Map<String, Integer> stocks = new HashMap<>();
     while (true) {
       view.displayCustomText(CREATE_PORTFOLIO_SUB_MENU);
       view.askForInput();
-      String userInput = scan.next();
-      if ("E".equals(userInput)) {
-        portfolio.setPortfolioStocks(stocks);
-        view.clearScreen();
-        break;
-      } else if ("1".equals(userInput)) {
-        view.displayCustomText("Stock Symbol: ");
-        tickerSymbol = scan.next();
-        if (tickerSymbol.isEmpty() || tickerSymbol.isBlank()) {
+      switch (scan.next()) {
+        case "E":
+          if (stocks.size() > 0) {
+            portfolio.setPortfolioStocks(stocks);
+          }
+          view.clearScreen();
+          return;
+        case "1":
+          view.displayCustomText("Stock Symbol: ");
+          tickerSymbol = scan.next();
+          view.displayCustomText("Stock Quantity: ");
+          try {
+            stockQuantity = scan.nextInt();
+          } catch (InputMismatchException e) {
+            scan.nextLine();
+            view.displayInvalidInput();
+            continue;
+          }
+          stocks.put(tickerSymbol, stockQuantity);
+          break;
+        default:
           view.displayInvalidInput();
-          continue;
-        }
-        view.displayCustomText("Stock Quantity: ");
-        try {
-          stockQuantity = scan.nextInt();
-        } catch (InputMismatchException e) {
-          scan.nextLine();
-          view.displayInvalidInput();
-          continue;
-        }
-
-        stocks.put(tickerSymbol, stockQuantity);
-      } else {
-        view.displayInvalidInput();
+          break;
       }
     }
   }

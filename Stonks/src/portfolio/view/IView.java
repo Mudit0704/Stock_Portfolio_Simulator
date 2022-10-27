@@ -14,5 +14,5 @@ public interface IView {
 
   void displayInvalidInput() throws IOException;
 
-  void clearScreen() throws IOException;
+  void clearScreen() throws IOException, InterruptedException;
 }

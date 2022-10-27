@@ -14,7 +14,7 @@ public class Portfolios {
 
   public String getPortfolioComposition() {
     int portfolioNo = 0;
-    StringBuilder composition = new StringBuilder("No portfolios");
+    StringBuilder composition = new StringBuilder("No portfolios\n");
     if (portfolios.size() > 0) {
       composition = new StringBuilder();
       for (IPortfolio portfolio : portfolios) {
@@ -27,7 +27,7 @@ public class Portfolios {
   }
 
   public String getPortfolioValue(LocalDate date, int portfolioId) {
-    StringBuilder portfolioValues = new StringBuilder("No Portfolios");
+    StringBuilder portfolioValues = new StringBuilder("No Portfolios\n");
 
     if (portfolios.size() > 0) {
       portfolioValues = new StringBuilder();

@@ -15,7 +15,8 @@ public class Main {
       new PortfolioController(new InputStreamReader(System.in), view).run(new Portfolios());
     } catch (IOException e) {
       e.printStackTrace();
+    } catch (InterruptedException e) {
+      throw new RuntimeException(e);
     }
-    //controller
   }
 }
