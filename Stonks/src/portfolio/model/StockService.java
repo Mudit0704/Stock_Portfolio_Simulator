@@ -8,11 +8,12 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
-class StockService implements IAPIService {
+class StockService implements IAPIStockService {
 
   private static final String APIKEY = "W0M1JOKC82EZEQA8";
   private URL stockServiceURL = null;
 
+  @Override
   public Map getStockPrices(String tickerSymbol) {
     String queryString = "https://www.alphavantage"
       + ".co/query?function=TIME_SERIES_DAILY"
