@@ -26,36 +26,11 @@ public class Stock implements IStock {
   @Override
   public double getValue(LocalDate date) {
     if(dateClosingPriceMap.size() == 0) {
-      try {
-        populateStockData();
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
+      dateClosingPriceMap = stockService.getStockPrices(this.tickerSymbol);
     }
+
     return (dateClosingPriceMap.containsKey(date)) ? dateClosingPriceMap.get(date)
       : dateClosingPriceMap.get(getClosestDate(date));
-  }
-
-  private void populateStockData() throws IOException {
-    InputStream in = stockService.getStockPrices(this.tickerSymbol);
-
-    StringBuilder dataRead = new StringBuilder();
-
-    for (int ch; (ch = in.read()) != -1; ) {
-      dataRead.append((char) ch);
-    }
-    String ds = dataRead.toString();
-    String[] resultArr = ds.split("\n");
-
-    int i=0;
-    for(String str:resultArr){
-      if(i==0) {
-        i++;
-        continue;
-      }
-      String[] arr = str.split(",");
-      dateClosingPriceMap.put(LocalDate.parse(arr[0]), Double.valueOf(arr[4]));
-    }
   }
 
   @Override
