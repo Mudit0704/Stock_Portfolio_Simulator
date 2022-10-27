@@ -7,6 +7,7 @@ import java.util.InputMismatchException;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Scanner;
+import portfolio.model.IPortfolios;
 import portfolio.model.Portfolios;
 import portfolio.view.IView;
 
@@ -28,7 +29,7 @@ public class PortfolioController implements IPortfolioController {
   }
 
   @Override
-  public void run(Portfolios portfolio) throws IOException, InterruptedException {
+  public void run(IPortfolios portfolio) throws IOException, InterruptedException {
     Objects.requireNonNull(portfolio);
     Scanner scan = new Scanner(this.in);
 
@@ -72,7 +73,7 @@ public class PortfolioController implements IPortfolioController {
     view.clearScreen();
   }
 
-  private void saveRetrievePortfolios(Portfolios portfolio, Scanner scan)
+  private void saveRetrievePortfolios(IPortfolios portfolio, Scanner scan)
       throws IOException, InterruptedException {
     String path;
     view.displayCustomText(SAVE_RETRIEVE_PORTFOLIO_MENU);
@@ -98,7 +99,7 @@ public class PortfolioController implements IPortfolioController {
     displayExitOperationSequence(scan);
   }
 
-  private void getPortfolioValuesForGivenDate(Portfolios portfolio, Scanner scan)
+  private void getPortfolioValuesForGivenDate(IPortfolios portfolio, Scanner scan)
       throws IOException, InterruptedException {
     LocalDate date;
     int portfolioId;
@@ -117,7 +118,7 @@ public class PortfolioController implements IPortfolioController {
     displayExitOperationSequence(scan);
   }
 
-  private void generatePortfolios(Scanner scan, Portfolios portfolio)
+  private void generatePortfolios(Scanner scan, IPortfolios portfolio)
       throws IOException, InterruptedException {
     String tickerSymbol;
     int stockQuantity;

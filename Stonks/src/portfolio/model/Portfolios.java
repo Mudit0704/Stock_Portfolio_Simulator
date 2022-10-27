@@ -11,6 +11,12 @@ import org.xml.sax.SAXException;
 
 public class Portfolios implements IPortfolios {
   private final List<IPortfolio> portfolios = new ArrayList<>();
+  private final IAPIStockService stockService;
+
+  public Portfolios() {
+    //TODO: Need to check this.
+    stockService = new StockService();
+  }
 
   @Override
   public String getPortfolioComposition() {
@@ -62,7 +68,7 @@ public class Portfolios implements IPortfolios {
 
     if (files != null && files.length != 0) {
       for (File file : files) {
-        IPortfolio portfolio = new Portfolio();
+        IPortfolio portfolio = new Portfolio(stockService);
         portfolio.retrievePortfolio(path + file.getName());
         portfolios.add(portfolio);
       }
@@ -73,7 +79,7 @@ public class Portfolios implements IPortfolios {
   }
 
   public void setPortfolioStocks(Map<String, Integer> stocks) {
-    IPortfolio portfolio = new Portfolio();
+    IPortfolio portfolio = new Portfolio(stockService);
     portfolio.setPortfolioStocks(stocks);
     portfolios.add(portfolio);
   }

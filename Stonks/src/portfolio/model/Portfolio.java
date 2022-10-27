@@ -33,11 +33,16 @@ public class Portfolio implements IPortfolio {
   }
 
   private final List<Pair<IStock, Integer>> stocks = new ArrayList<>();
+  private final IAPIStockService stockService;
+
+  public Portfolio(IAPIStockService stockService) {
+    this.stockService = stockService;
+  }
 
   @Override
   public void setPortfolioStocks(Map<String, Integer> stocks) {
     for (Map.Entry<String, Integer> stock : stocks.entrySet()) {
-      this.stocks.add(new Pair<>(new Stock(stock.getKey()), stock.getValue()));
+      this.stocks.add(new Pair<>(new Stock(stock.getKey(), this.stockService), stock.getValue()));
     }
   }
 
@@ -121,7 +126,7 @@ public class Portfolio implements IPortfolio {
             .item(0).getTextContent();
         int stockQuantity = Integer.parseInt(eElement.getElementsByTagName("stockQuantity")
             .item(0).getTextContent());
-        this.stocks.add(new Pair<>(new Stock(tickerSymbol), stockQuantity));
+        this.stocks.add(new Pair<>(new Stock(tickerSymbol, new StockService()), stockQuantity));
       }
     }
 

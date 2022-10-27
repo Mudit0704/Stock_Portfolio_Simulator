@@ -6,7 +6,7 @@ class StockFactory {
     IStock newStockOption = null ;
     switch (stockType) {
       case STOCK: {
-        newStockOption = new Stock(tickerSymbol);
+        newStockOption = new Stock(tickerSymbol, new StockService());
       }
       default:
         break;

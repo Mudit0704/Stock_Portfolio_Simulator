@@ -10,7 +10,7 @@ public class StockTest {
 
   @Test
   public void getValue() throws NoSuchFieldException, IllegalAccessException {
-    IStock stock = new Stock("GOOG");
+    IStock stock = new Stock("GOOG", new MockStockService());
     Class obj = stock.getClass();
     Field field = obj.getDeclaredField("stockService");
     field.setAccessible(true);
@@ -21,18 +21,18 @@ public class StockTest {
 
   @Test
   public void getStockTicker() {
-    IStock stock = new Stock("GOOG");
+    IStock stock = new Stock("GOOG", new MockStockService());
     assertEquals("GOOG", stock.getStockTicker());
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void getStockTickerEmpty() {
-    IStock stock = new Stock("");
+    IStock stock = new Stock("", new MockStockService());
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void getStockTickerInvalid() {
     String obj = null;
-    IStock stock = new Stock(obj);
+    IStock stock = new Stock(obj, new MockStockService());
   }
 }

@@ -1,7 +1,5 @@
 package portfolio.model;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
@@ -14,11 +12,11 @@ public class Stock implements IStock {
 
   private Map<LocalDate, Double> dateClosingPriceMap;
 
-  public Stock(String tickerSymbol) throws IllegalArgumentException {
+  public Stock(String tickerSymbol, IAPIStockService stockService) throws IllegalArgumentException {
     if(tickerSymbol == null || tickerSymbol.length() == 0) {
       throw new IllegalArgumentException();
     }
-    stockService = new StockService();
+    this.stockService = stockService;
     this.tickerSymbol = tickerSymbol;
     this.dateClosingPriceMap = new HashMap<>();
   }
