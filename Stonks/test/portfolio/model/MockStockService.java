@@ -7,13 +7,23 @@ import java.io.InputStream;
 import java.util.Map;
 
 class MockStockService extends StockService {
+  String filePath ;
+
+  public MockStockService() {
+
+  }
+
+  public MockStockService(String filePath) {
+    this.filePath = filePath;
+  }
+
   @Override
   public InputStream queryAPI(String queryString) throws IOException {
     InputStream in;
     try {
-      in = new FileInputStream(System.getProperty("user.dir") + "/test/testData.txt");
+      in = new FileInputStream(System.getProperty("user.dir") + filePath);
     } catch (FileNotFoundException e) {
-      throw new RuntimeException(e);
+      throw new IOException();
     }
     return in;
   }

@@ -8,7 +8,7 @@ import java.util.Map;
 public class Stock implements IStock {
 
   private final String tickerSymbol;
-  private IAPIStockService stockService;
+  private final IAPIStockService stockService;
 
   private Map<LocalDate, Double> dateClosingPriceMap;
 
@@ -27,8 +27,19 @@ public class Stock implements IStock {
       dateClosingPriceMap = stockService.getStockPrices(this.tickerSymbol);
     }
 
-    return (dateClosingPriceMap.containsKey(date)) ? dateClosingPriceMap.get(date)
-      : dateClosingPriceMap.get(getClosestDate(date));
+    if (dateClosingPriceMap.containsKey(date)) {
+      return dateClosingPriceMap.get(date);
+    }
+    else {
+      LocalDate latestDate = getClosestDate(date);
+
+      if(latestDate == null) {
+        throw new IllegalArgumentException("Cannot find stock price for the given date.");
+      }
+      else {
+        return dateClosingPriceMap.get(latestDate);
+      }
+    }
   }
 
   @Override
