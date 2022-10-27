@@ -100,7 +100,7 @@ public class Portfolio implements IPortfolio {
       transformer.transform(source, result);
 
     } catch (Exception e) {
-      throw new IllegalArgumentException();
+      throw new IllegalArgumentException("File path not found.");
     }
     return true;
   }
@@ -110,7 +110,7 @@ public class Portfolio implements IPortfolio {
       throws IOException, ParserConfigurationException, SAXException {
     if (this.stocks.size() != 0) return false;
     File inputFile = new File(path);
-    if(!inputFile.isFile()) throw new FileNotFoundException();
+    if(!inputFile.isFile()) throw new FileNotFoundException("Cannot find file: " + path);
     DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
     DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
     Document doc = dBuilder.parse(inputFile);
