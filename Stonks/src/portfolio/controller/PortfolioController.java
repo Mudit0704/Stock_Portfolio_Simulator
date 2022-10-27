@@ -44,7 +44,20 @@ public class PortfolioController implements IPortfolioController {
           break;
         case "2":
           view.clearScreen();
-          view.displayCustomText(portfolio.getPortfolioComposition());
+          view.displayCustomText("Choose from available portfolios (eg: Portfolio1 -> give 1):\n");
+          String availablePortfolios = portfolio.getAvailablePortfolios();
+          view.displayCustomText(availablePortfolios);
+          if ("No portfolios\n".equals(availablePortfolios)) {
+            displayExitOperationSequence(scan);
+            break;
+          }
+          view.askForInput();
+          try {
+            int portfolioId = scan.nextInt();
+            view.displayCustomText(portfolio.getPortfolioComposition(portfolioId));
+          } catch (InputMismatchException e) {
+            view.displayInvalidInput();
+          }
           displayExitOperationSequence(scan);
           break;
         case "3":
@@ -104,13 +117,23 @@ public class PortfolioController implements IPortfolioController {
     LocalDate date;
     int portfolioId;
     view.displayCustomText("Choose from available portfolios (eg: Portfolio1 -> give 1):\n");
-    view.displayCustomText(portfolio.getPortfolioComposition());
+    String availablePortfolios = portfolio.getAvailablePortfolios();
+    view.displayCustomText(availablePortfolios);
+    if ("No portfolios\n".equals(availablePortfolios)) {
+      displayExitOperationSequence(scan);
+      return;
+    }
     view.askForInput();
     try {
       portfolioId = scan.nextInt();
       view.displayCustomText("Please enter the date (yyyy-mm-dd): ");
       date = LocalDate.parse(scan.next());
-      view.displayCustomText(portfolio.getPortfolioValue(date, portfolioId));
+      String portfolioValue = portfolio.getPortfolioValue(date, portfolioId);
+      view.displayCustomText(portfolioValue);
+      if ("Invalid portfolioId\n".equals(portfolioValue)) {
+        displayExitOperationSequence(scan);
+        return;
+      }
     } catch (Exception e) {
       view.displayInvalidInput();
     }
@@ -118,7 +141,7 @@ public class PortfolioController implements IPortfolioController {
     displayExitOperationSequence(scan);
   }
 
-  private void generatePortfolios(Scanner scan, IPortfolios portfolio)
+  private void generatePortfolios(Scanner scan, IPortfolios portfolios)
       throws IOException, InterruptedException {
     String tickerSymbol;
     int stockQuantity;
@@ -129,7 +152,7 @@ public class PortfolioController implements IPortfolioController {
       switch (scan.next()) {
         case "E":
           if (stocks.size() > 0) {
-            portfolio.setPortfolioStocks(stocks);
+            portfolios.setPortfolioStocks(stocks);
           }
           view.clearScreen();
           return;

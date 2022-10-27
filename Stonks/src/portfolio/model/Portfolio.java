@@ -107,7 +107,7 @@ public class Portfolio implements IPortfolio {
 
   @Override
   public boolean retrievePortfolio(String path)
-      throws IOException, ParserConfigurationException, SAXException {
+      throws IOException, SAXException, ParserConfigurationException {
     if (this.stocks.size() != 0) return false;
     File inputFile = new File(path);
     if(!inputFile.isFile()) throw new FileNotFoundException("Cannot find file: " + path);

@@ -16,7 +16,7 @@ public interface IPortfolios {
    *
    * @return the composition of all the portfolios.
    */
-  String getPortfolioComposition();
+  String getPortfolioComposition(int portfolioId);
 
   /**
    * Determines the values of the specified portfolio at any given date.
@@ -54,4 +54,10 @@ public interface IPortfolios {
    * @param stocks the specified mapping of stocks and their quantity to be part of this portfolio.
    */
   void setPortfolioStocks(Map<String, Integer> stocks);
+
+  /**
+   * Gets all the available portfolios.
+   * @return available portfolios represented using a String.
+   */
+  String getAvailablePortfolios();
 }

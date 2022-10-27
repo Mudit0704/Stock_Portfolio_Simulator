@@ -19,16 +19,17 @@ public class Portfolios implements IPortfolios {
   }
 
   @Override
-  public String getPortfolioComposition() {
+  public String getPortfolioComposition(int portfolioId) {
+    if(portfolioId > portfolios.size()) {
+      return "Invalid portfolioId\n";
+    }
     int portfolioNo = 0;
     StringBuilder composition = new StringBuilder("No portfolios\n");
     if (portfolios.size() > 0) {
       composition = new StringBuilder();
-      for (IPortfolio portfolio : portfolios) {
-        portfolioNo++;
-        composition.append("Portfolio").append(portfolioNo).append("\n")
-            .append(portfolio.getPortfolioComposition()).append("\n");
-      }
+      portfolioNo++;
+      composition.append("Portfolio").append(portfolioNo).append("\n")
+          .append(portfolios.get(portfolioId-1).getPortfolioComposition()).append("\n");
     }
     return composition.toString();
   }
@@ -36,7 +37,9 @@ public class Portfolios implements IPortfolios {
   @Override
   public String getPortfolioValue(LocalDate date, int portfolioId) {
     StringBuilder portfolioValues = new StringBuilder("No Portfolios\n");
-
+    if(portfolioId > portfolios.size()) {
+      return "Invalid portfolioId\n";
+    }
     if (portfolios.size() > 0) {
       portfolioValues = new StringBuilder();
       portfolioValues.append("Portfolio").append(portfolioId).append("\n")
@@ -82,5 +85,18 @@ public class Portfolios implements IPortfolios {
     IPortfolio portfolio = new Portfolio(stockService);
     portfolio.setPortfolioStocks(stocks);
     portfolios.add(portfolio);
+  }
+
+  public String getAvailablePortfolios() {
+    int portfolioNo = 0;
+    StringBuilder composition = new StringBuilder("No portfolios\n");
+    if (portfolios.size() > 0) {
+      composition = new StringBuilder();
+      while(portfolioNo < portfolios.size()) {
+        composition.append("Portfolio").append(portfolioNo+1).append("\n");
+        portfolioNo++;
+      }
+    }
+    return composition.toString();
   }
 }
