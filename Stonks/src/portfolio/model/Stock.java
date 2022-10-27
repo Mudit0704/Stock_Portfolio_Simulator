@@ -1,7 +1,5 @@
 package portfolio.model;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
@@ -10,7 +8,7 @@ import java.util.Map;
 public class Stock implements IStock {
 
   private final String tickerSymbol;
-  private IAPIStockService stockService;
+  private final StockService stockService;
 
   private Map<LocalDate, Double> dateClosingPriceMap;
 
