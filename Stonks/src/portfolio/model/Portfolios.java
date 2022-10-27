@@ -9,9 +9,10 @@ import java.util.Map;
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
-public class Portfolios {
+public class Portfolios implements IPortfolios {
   private final List<IPortfolio> portfolios = new ArrayList<>();
 
+  @Override
   public String getPortfolioComposition() {
     int portfolioNo = 0;
     StringBuilder composition = new StringBuilder("No portfolios\n");
@@ -26,6 +27,7 @@ public class Portfolios {
     return composition.toString();
   }
 
+  @Override
   public String getPortfolioValue(LocalDate date, int portfolioId) {
     StringBuilder portfolioValues = new StringBuilder("No Portfolios\n");
 
@@ -37,7 +39,7 @@ public class Portfolios {
     return portfolioValues.toString();
   }
 
-
+  @Override
   public boolean savePortfolio(String path) throws IllegalArgumentException {
     if(portfolios.size() == 0) {
       return false;
