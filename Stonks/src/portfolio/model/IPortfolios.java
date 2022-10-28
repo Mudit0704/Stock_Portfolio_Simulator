@@ -65,4 +65,11 @@ public interface IPortfolios {
    * Sets the service used for fetching portfolio stocks data.
    */
   void setPortfolioServiceType(ServiceType serviceType);
+
+  /**
+   * Checks if a ticker symbol is valid, i.e, it is being traded currently.
+   * @param tickerSymbol symbol to be checked.
+   * @return <code>true</code> if symbol is valid; otherwise <code>false</code>.
+   */
+  public boolean isTickerSymbolValid(String tickerSymbol);
 }
