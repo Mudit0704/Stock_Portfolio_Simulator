@@ -22,7 +22,7 @@ class StockService implements IStockService {
   private URL stockServiceURL = null;
 
   private static final String filePath =
-    System.getProperty("user.dir") + "/src/portfolio/model/stockSet" +
+    System.getProperty("user.dir") + "stockSet" +
       new SimpleDateFormat("yyyyMMdd").format(new Date()) + ".dat";
 
   private String readFromInputStream(InputStream in) throws IOException {
@@ -42,8 +42,6 @@ class StockService implements IStockService {
       symbolSet = (HashSet<String>) ois.readObject();
       return symbolSet;
     } catch (IOException | ClassNotFoundException e) {
-      System.out.println(
-        "Didn't find the latest set of active symbols, fetching recent most data...");
     }
     return null;
   }
