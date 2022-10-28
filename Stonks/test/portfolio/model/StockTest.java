@@ -1,8 +1,11 @@
 package portfolio.model;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDate;
+import java.util.Set;
 import org.junit.Test;
 
 public class StockTest {
@@ -40,5 +43,14 @@ public class StockTest {
   public void getStockTickerInvalid() {
     String obj = null;
     new Stock(obj, new MockStockService("/test/testData.txt"));
+  }
+
+  @Test
+  public void getStockTickerSetCheck() {
+    IStockService testSet = new MockStockService("/test/testStockSymbolValidation.txt");
+    Set<String> set = testSet.getValidStockSymbols();
+    assertTrue(set.contains("PUBM"));
+    assertTrue(set.contains("GOOG"));
+    assertFalse(set.contains("uwydshjbc"));
   }
 }

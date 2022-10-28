@@ -6,12 +6,56 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 class StockService implements IStockService {
 
   private static final String APIKEY = "W0M1JOKC82EZEQA8";
   private URL stockServiceURL = null;
+
+  private String readFromInputStream(InputStream in) throws IOException {
+    StringBuilder dataRead = new StringBuilder();
+
+    for (int ch; (ch = in.read()) != -1; ) {
+      dataRead.append((char) ch);
+    }
+    return dataRead.toString();
+  }
+
+  public Set<String> getValidStockSymbols() {
+
+    String queryString = "https://www.alphavantage.co/query?function=LISTING_STATUS&"
+      + "apikey=" + APIKEY;;
+
+    Set<String> symbolSet = new HashSet<>();
+
+    InputStream in;
+
+    try {
+      in = this.queryAPI(queryString);
+    } catch (IOException e) {
+      throw new IllegalArgumentException("No stock data found");
+    }
+
+    try {
+      String[] resultArr = readFromInputStream(in).split("\n");
+
+      int i=0;
+      for(String str:resultArr){
+        if(i==0) {
+          i++;
+          continue;
+        }
+        String[] arr = str.split(",");
+        symbolSet.add(arr[0]);
+      }
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+    return symbolSet;
+  }
 
   @Override
   public Map getStockPrices(String tickerSymbol) {
@@ -35,14 +79,9 @@ class StockService implements IStockService {
   }
 
   private Map populateStockData(InputStream in) throws IOException {
-    StringBuilder dataRead = new StringBuilder();
     Map<LocalDate, Double> dateClosingPriceMap = new HashMap<>();
 
-    for (int ch; (ch = in.read()) != -1; ) {
-      dataRead.append((char) ch);
-    }
-    String ds = dataRead.toString();
-    String[] resultArr = ds.split("\n");
+    String[] resultArr = readFromInputStream(in).split("\n");
 
     int i=0;
     for(String str:resultArr){
