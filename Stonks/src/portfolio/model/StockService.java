@@ -1,6 +1,5 @@
 package portfolio.model;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -22,7 +21,8 @@ class StockService implements IStockService {
   private static final String APIKEY = "W0M1JOKC82EZEQA8";
   private URL stockServiceURL = null;
 
-  private static final String filePath = System.getProperty("user.dir") + "/src/portfolio/model/stockSet" +
+  private static final String filePath =
+    System.getProperty("user.dir") + "/src/portfolio/model/stockSet" +
       new SimpleDateFormat("yyyyMMdd").format(new Date()) + ".dat";
 
   private String readFromInputStream(InputStream in) throws IOException {
@@ -34,8 +34,7 @@ class StockService implements IStockService {
     return dataRead.toString();
   }
 
-  public Set<String> getValidStockSymbols() {
-
+  private Set<String> readSavedHashSet() {
     Set<String> symbolSet = null;
 
     try {
@@ -43,13 +42,34 @@ class StockService implements IStockService {
       symbolSet = (HashSet<String>) ois.readObject();
       return symbolSet;
     } catch (IOException | ClassNotFoundException e) {
+      System.out.println(
+        "Didn't find the latest set of active symbols, fetching recent most data...");
+    }
+    return null;
+  }
+
+  private void saveHashSet(Set<String> hashSet) {
+    try {
+      ObjectOutputStream stockSetObjStream = new ObjectOutputStream(new FileOutputStream(filePath));
+      stockSetObjStream.writeObject(hashSet);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  public Set<String> getValidStockSymbols() {
+
+    Set<String> symbolSet = readSavedHashSet();
+
+    if (symbolSet != null) {
+      return symbolSet;
     }
 
     String queryString = "https://www.alphavantage.co/query?function=LISTING_STATUS&"
-      + "apikey=" + APIKEY;;
+      + "apikey=" + APIKEY;
+    ;
 
     InputStream in;
-    symbolSet = new HashSet<>();
     try {
       in = this.queryAPI(queryString);
     } catch (IOException e) {
@@ -57,24 +77,19 @@ class StockService implements IStockService {
     }
 
     try {
+      symbolSet = new HashSet<>();
       String[] resultArr = readFromInputStream(in).split("\n");
-
-      int i=0;
-      for(String str:resultArr){
-        if(i==0) {
+      int i = 0;
+      for (String str : resultArr) {
+        if (i == 0) {
           i++;
           continue;
         }
         String[] arr = str.split(",");
         symbolSet.add(arr[0]);
       }
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
+      saveHashSet(symbolSet);
 
-    try {
-      ObjectOutputStream stockSetObjStream = new ObjectOutputStream(new FileOutputStream(filePath));
-      stockSetObjStream.writeObject(symbolSet);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
@@ -85,10 +100,10 @@ class StockService implements IStockService {
   public Map getStockPrices(String tickerSymbol) {
     String queryString = "https://www.alphavantage"
       + ".co/query?function=TIME_SERIES_DAILY"
-      + "&outputsize=full"
+      + "&outputsize=compact"
       + "&symbol"
       + "=" + tickerSymbol + "&apikey=" + APIKEY + "&datatype=csv";
-    InputStream in ;
+    InputStream in;
 
     try {
       in = this.queryAPI(queryString);
@@ -107,9 +122,9 @@ class StockService implements IStockService {
 
     String[] resultArr = readFromInputStream(in).split("\n");
 
-    int i=0;
-    for(String str:resultArr){
-      if(i==0) {
+    int i = 0;
+    for (String str : resultArr) {
+      if (i == 0) {
         i++;
         continue;
       }
