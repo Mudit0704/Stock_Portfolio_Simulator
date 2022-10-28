@@ -13,12 +13,13 @@ import portfolio.view.IView;
 
 public class PortfolioController implements IPortfolioController {
 
-  final static String CREATE_PORTFOLIO_SUB_MENU =
+  private final static String CREATE_PORTFOLIO_SUB_MENU =
       "Choose from the below menu: \n 1 -> Add a new stock "
           + "\n E -> Exit from the operation \n";
-  final static String SAVE_RETRIEVE_PORTFOLIO_MENU =
+  private final static String SAVE_RETRIEVE_PORTFOLIO_MENU =
       "Choose from the below menu: \n 1 -> Save portfolio "
           + "\n 2 -> Retrieve portfolio \n E -> Exit from the operation \n";
+  private static final String CHOOSE_FROM_AVAILABLE_PORTFOLIOS = "Choose from available portfolios (eg: Portfolio1 -> give 1):\n";
 
   final Readable in;
   final IView view;
@@ -43,22 +44,7 @@ public class PortfolioController implements IPortfolioController {
           generatePortfolios(scan, portfolios);
           break;
         case "2":
-          view.clearScreen();
-          view.displayCustomText("Choose from available portfolios (eg: Portfolio1 -> give 1):\n");
-          String availablePortfolios = portfolios.getAvailablePortfolios();
-          view.displayCustomText(availablePortfolios);
-          if ("No portfolios\n".equals(availablePortfolios)) {
-            displayExitOperationSequence(scan);
-            break;
-          }
-          view.askForInput();
-          try {
-            int portfolioId = scan.nextInt();
-            view.displayCustomText(portfolios.getPortfolioComposition(portfolioId));
-          } catch (InputMismatchException e) {
-            view.displayInvalidInput();
-          }
-          displayExitOperationSequence(scan);
+          getPortfolioComposition(portfolios, scan);
           break;
         case "3":
           view.clearScreen();
@@ -77,6 +63,26 @@ public class PortfolioController implements IPortfolioController {
 
   }
 
+  private void getPortfolioComposition(IPortfolios portfolios, Scanner scan)
+      throws IOException, InterruptedException {
+    view.clearScreen();
+    view.displayCustomText(CHOOSE_FROM_AVAILABLE_PORTFOLIOS);
+    String availablePortfolios = portfolios.getAvailablePortfolios();
+    view.displayCustomText(availablePortfolios);
+    if ("No portfolios\n".equals(availablePortfolios)) {
+      displayExitOperationSequence(scan);
+      return;
+    }
+    view.askForInput();
+    try {
+      int portfolioId = scan.nextInt();
+      view.displayCustomText(portfolios.getPortfolioComposition(portfolioId));
+    } catch (InputMismatchException e) {
+      view.displayInvalidInput();
+    }
+    displayExitOperationSequence(scan);
+  }
+
   private void displayExitOperationSequence(Scanner scan) throws IOException, InterruptedException {
     view.displayEscapeFromOperation();
     while (!"E".equals(scan.next())) {
@@ -92,7 +98,9 @@ public class PortfolioController implements IPortfolioController {
     view.displayCustomText(SAVE_RETRIEVE_PORTFOLIO_MENU);
     view.askForInput();
     String choice = scan.next();
-    if("E".equals(choice)) return;
+    if ("E".equals(choice)) {
+      return;
+    }
     view.displayCustomText("Please enter the directory path: ");
     path = scan.next();
     try {
@@ -116,7 +124,7 @@ public class PortfolioController implements IPortfolioController {
       throws IOException, InterruptedException {
     LocalDate date;
     int portfolioId;
-    view.displayCustomText("Choose from available portfolios (eg: Portfolio1 -> give 1):\n");
+    view.displayCustomText(CHOOSE_FROM_AVAILABLE_PORTFOLIOS);
     String availablePortfolios = portfolios.getAvailablePortfolios();
     view.displayCustomText(availablePortfolios);
     if ("No portfolios\n".equals(availablePortfolios)) {
@@ -143,8 +151,6 @@ public class PortfolioController implements IPortfolioController {
 
   private void generatePortfolios(Scanner scan, IPortfolios portfolios)
       throws IOException, InterruptedException {
-    String tickerSymbol;
-    int stockQuantity;
     Map<String, Integer> stocks = new HashMap<>();
     while (true) {
       view.displayCustomText(CREATE_PORTFOLIO_SUB_MENU);
@@ -157,28 +163,36 @@ public class PortfolioController implements IPortfolioController {
           view.clearScreen();
           return;
         case "1":
-          portfolios.setPortfolioServiceType(ServiceType.STOCK);
-          view.displayCustomText("Stock Symbol: ");
-          tickerSymbol = scan.next();
-          while(!portfolios.isTickerSymbolValid(tickerSymbol)){
-            view.displayCustomText("Invalid Ticker Symbol\n");
-            view.displayCustomText("Stock Symbol: ");
-            tickerSymbol = scan.next();
-          }
-          view.displayCustomText("Stock Quantity: ");
-          try {
-            stockQuantity = scan.nextInt();
-          } catch (InputMismatchException e) {
-            scan.nextLine();
-            view.displayInvalidInput();
-            continue;
-          }
-          stocks.put(tickerSymbol, stockQuantity);
+          addNewStock(scan, portfolios, stocks);
           break;
         default:
           view.displayInvalidInput();
           break;
       }
     }
+  }
+
+  private void addNewStock(Scanner scan, IPortfolios portfolios, Map<String, Integer> stocks)
+      throws IOException {
+    String tickerSymbol;
+    int stockQuantity;
+    portfolios.setPortfolioServiceType(ServiceType.STOCK);
+    view.displayCustomText("Stock Symbol: ");
+    scan.next();
+    tickerSymbol = scan.nextLine();
+    while (!portfolios.isTickerSymbolValid(tickerSymbol)) {
+      view.displayCustomText("Invalid Ticker Symbol\n");
+      view.displayCustomText("Stock Symbol: ");
+      tickerSymbol = scan.nextLine();
+    }
+    view.displayCustomText("Stock Quantity: ");
+    try {
+      stockQuantity = scan.nextInt();
+    } catch (InputMismatchException e) {
+      scan.nextLine();
+      view.displayInvalidInput();
+      return;
+    }
+    stocks.put(tickerSymbol, stockQuantity);
   }
 }

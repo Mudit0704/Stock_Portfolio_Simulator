@@ -132,9 +132,4 @@ public class Portfolio implements IPortfolio {
 
     return true;
   }
-
-  @Override
-  public boolean isTickerSymbolValid(String tickerSymbol) {
-    return this.stockService.getValidStockSymbols().contains(tickerSymbol);
-  };
 }

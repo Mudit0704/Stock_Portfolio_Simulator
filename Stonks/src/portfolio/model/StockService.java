@@ -43,8 +43,6 @@ class StockService implements IStockService {
       symbolSet = (HashSet<String>) ois.readObject();
       return symbolSet;
     } catch (IOException | ClassNotFoundException e) {
-      System.out.println("Didn't find an existing file, going for API call...");
-      System.out.println(filePath);
     }
 
     String queryString = "https://www.alphavantage.co/query?function=LISTING_STATUS&"

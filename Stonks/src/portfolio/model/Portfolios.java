@@ -106,7 +106,7 @@ public class Portfolios implements IPortfolios {
   }
 
   public boolean isTickerSymbolValid(String tickerSymbol) {
-    return new Portfolio(stockService).isTickerSymbolValid(tickerSymbol);
+    return this.stockService.getValidStockSymbols().contains(tickerSymbol);
   }
 
 
