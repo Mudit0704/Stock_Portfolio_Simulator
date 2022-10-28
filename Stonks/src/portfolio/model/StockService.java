@@ -1,10 +1,17 @@
 package portfolio.model;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -14,6 +21,9 @@ class StockService implements IStockService {
 
   private static final String APIKEY = "W0M1JOKC82EZEQA8";
   private URL stockServiceURL = null;
+
+  private static final String filePath = System.getProperty("user.dir") + "/src/portfolio/model/stockSet" +
+      new SimpleDateFormat("yyyyMMdd").format(new Date()) + ".dat";
 
   private String readFromInputStream(InputStream in) throws IOException {
     StringBuilder dataRead = new StringBuilder();
@@ -26,13 +36,22 @@ class StockService implements IStockService {
 
   public Set<String> getValidStockSymbols() {
 
+    Set<String> symbolSet = null;
+
+    try {
+      ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath));
+      symbolSet = (HashSet<String>) ois.readObject();
+      return symbolSet;
+    } catch (IOException | ClassNotFoundException e) {
+      System.out.println("Didn't find an existing file, going for API call...");
+      System.out.println(filePath);
+    }
+
     String queryString = "https://www.alphavantage.co/query?function=LISTING_STATUS&"
       + "apikey=" + APIKEY;;
 
-    Set<String> symbolSet = new HashSet<>();
-
     InputStream in;
-
+    symbolSet = new HashSet<>();
     try {
       in = this.queryAPI(queryString);
     } catch (IOException e) {
@@ -51,6 +70,13 @@ class StockService implements IStockService {
         String[] arr = str.split(",");
         symbolSet.add(arr[0]);
       }
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+
+    try {
+      ObjectOutputStream stockSetObjStream = new ObjectOutputStream(new FileOutputStream(filePath));
+      stockSetObjStream.writeObject(symbolSet);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
