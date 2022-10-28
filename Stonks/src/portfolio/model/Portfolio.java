@@ -40,9 +40,9 @@ public class Portfolio implements IPortfolio {
   }
 
   @Override
-  public void setPortfolioStocks(Map<String, Integer> stocks) {
-    for (Map.Entry<String, Integer> stock : stocks.entrySet()) {
-      this.stocks.add(new Pair<>(new Stock(stock.getKey(), this.stockService), stock.getValue()));
+  public void setPortfolioStocks(Map<IStock, Integer> stocks) {
+    for (Map.Entry<IStock, Integer> entry:stocks.entrySet()) {
+      this.stocks.add(new Pair<>(entry.getKey(), entry.getValue()));
     }
   }
 

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.xml.parsers.ParserConfigurationException;
@@ -12,6 +13,8 @@ import org.xml.sax.SAXException;
 public class Portfolios implements IPortfolios {
   private final List<IPortfolio> portfolios = new ArrayList<>();
   private IStockService stockService;
+
+  private Map<String, IStock> stockMap ;
 
   @Override
   public String getPortfolioComposition(int portfolioId) {
@@ -22,8 +25,7 @@ public class Portfolios implements IPortfolios {
     StringBuilder composition = new StringBuilder("No portfolios\n");
     if (portfolios.size() > 0) {
       composition = new StringBuilder();
-      portfolioNo++;
-      composition.append("Portfolio").append(portfolioNo).append("\n")
+      composition.append("Portfolio").append(portfolioId).append("\n")
           .append(portfolios.get(portfolioId-1).getPortfolioComposition()).append("\n");
     }
     return composition.toString();
@@ -80,7 +82,25 @@ public class Portfolios implements IPortfolios {
   @Override
   public void createNewPortfolio(Map<String, Integer> stocks) {
     IPortfolio portfolio = new Portfolio(stockService);
-    portfolio.setPortfolioStocks(stocks);
+    if(this.stockMap == null) {
+      this.stockMap = new HashMap<>();
+    }
+
+    Map<IStock, Integer> stockList = new HashMap<>();
+
+    for (Map.Entry<String, Integer> entry:stocks.entrySet()) {
+      IStock newStock;
+      if(!this.stockMap.containsKey(entry.getKey())) {
+        newStock = new Stock(entry.getKey(), this.stockService);
+        this.stockMap.put(entry.getKey(), newStock);
+      }
+      else {
+        newStock = this.stockMap.get(entry.getKey());
+      }
+      stockList.put(newStock, entry.getValue());
+    }
+
+    portfolio.setPortfolioStocks(stockList);
     portfolios.add(portfolio);
   }
 
