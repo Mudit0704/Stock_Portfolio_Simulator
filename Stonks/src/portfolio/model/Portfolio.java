@@ -33,9 +33,9 @@ public class Portfolio implements IPortfolio {
   }
 
   private final List<Pair<IStock, Integer>> stocks = new ArrayList<>();
-  private final IAPIStockService stockService;
+  private final IStockService stockService;
 
-  public Portfolio(IAPIStockService stockService) {
+  public Portfolio(IStockService stockService) {
     this.stockService = stockService;
   }
 

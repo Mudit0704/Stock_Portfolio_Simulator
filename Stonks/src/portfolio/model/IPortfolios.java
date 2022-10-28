@@ -53,11 +53,16 @@ public interface IPortfolios {
    *
    * @param stocks the specified mapping of stocks and their quantity to be part of this portfolio.
    */
-  void setPortfolioStocks(Map<String, Integer> stocks);
+  void createNewPortfolio(Map<String, Integer> stocks);
 
   /**
    * Gets all the available portfolios.
    * @return available portfolios represented using a String.
    */
   String getAvailablePortfolios();
+
+  /**
+   * Sets the service used for fetching portfolio stocks data.
+   */
+  void setPortfolioServiceType(ServiceType serviceType);
 }

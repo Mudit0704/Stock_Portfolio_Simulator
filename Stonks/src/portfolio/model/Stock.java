@@ -8,11 +8,11 @@ import java.util.Map;
 public class Stock implements IStock {
 
   private final String tickerSymbol;
-  private final IAPIStockService stockService;
+  private final IStockService stockService;
 
   private Map<LocalDate, Double> dateClosingPriceMap;
 
-  public Stock(String tickerSymbol, IAPIStockService stockService) throws IllegalArgumentException {
+  public Stock(String tickerSymbol, IStockService stockService) throws IllegalArgumentException {
     if(tickerSymbol == null || tickerSymbol.length() == 0) {
       throw new IllegalArgumentException();
     }

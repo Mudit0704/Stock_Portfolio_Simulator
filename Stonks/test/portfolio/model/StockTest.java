@@ -1,8 +1,7 @@
 package portfolio.model;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-import java.lang.reflect.Field;
 import java.time.LocalDate;
 import org.junit.Test;
 

@@ -11,12 +11,7 @@ import org.xml.sax.SAXException;
 
 public class Portfolios implements IPortfolios {
   private final List<IPortfolio> portfolios = new ArrayList<>();
-  private final IAPIStockService stockService;
-
-  public Portfolios() {
-    //TODO: Need to check this.
-    stockService = new StockService();
-  }
+  private IStockService stockService;
 
   @Override
   public String getPortfolioComposition(int portfolioId) {
@@ -62,6 +57,7 @@ public class Portfolios implements IPortfolios {
     return true;
   }
 
+  @Override
   public boolean retrievePortfolio(String path)
       throws IOException, ParserConfigurationException, SAXException {
     boolean result = false;
@@ -81,12 +77,14 @@ public class Portfolios implements IPortfolios {
     return result;
   }
 
-  public void setPortfolioStocks(Map<String, Integer> stocks) {
+  @Override
+  public void createNewPortfolio(Map<String, Integer> stocks) {
     IPortfolio portfolio = new Portfolio(stockService);
     portfolio.setPortfolioStocks(stocks);
     portfolios.add(portfolio);
   }
 
+  @Override
   public String getAvailablePortfolios() {
     int portfolioNo = 0;
     StringBuilder composition = new StringBuilder("No portfolios\n");
@@ -99,4 +97,13 @@ public class Portfolios implements IPortfolios {
     }
     return composition.toString();
   }
+
+  @Override
+  public void setPortfolioServiceType(ServiceType serviceType) {
+    if (serviceType == ServiceType.STOCK) {
+      this.stockService = new StockService();
+    }
+  }
+
+
 }

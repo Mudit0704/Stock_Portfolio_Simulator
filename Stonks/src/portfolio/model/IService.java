@@ -6,7 +6,7 @@ import java.io.InputStream;
 /**
  * Represents the operations for any service making API calls.
  */
-public interface IAPIService {
+public interface IService {
 
   /**
    * Method to make API query calls.

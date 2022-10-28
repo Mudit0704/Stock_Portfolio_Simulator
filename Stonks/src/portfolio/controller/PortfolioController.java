@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Scanner;
 import portfolio.model.IPortfolios;
-import portfolio.model.Portfolios;
+import portfolio.model.ServiceType;
 import portfolio.view.IView;
 
 public class PortfolioController implements IPortfolioController {
@@ -152,7 +152,8 @@ public class PortfolioController implements IPortfolioController {
       switch (scan.next()) {
         case "E":
           if (stocks.size() > 0) {
-            portfolios.setPortfolioStocks(stocks);
+            portfolios.setPortfolioServiceType(ServiceType.STOCK);
+            portfolios.createNewPortfolio(stocks);
           }
           view.clearScreen();
           return;
