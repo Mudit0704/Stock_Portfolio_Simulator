@@ -106,10 +106,10 @@ public class PortfolioController implements IPortfolioController {
     try {
       if ("1".equals(choice)) {
         view.displayCustomText(
-            portfolios.savePortfolio(path) ? "Saved\n" : "No portfolios to save\n");
+            portfolios.savePortfolios(path) ? "Saved\n" : "No portfolios to save\n");
       } else if ("2".equals(choice)) {
         view.displayCustomText(
-            portfolios.retrievePortfolio(path) ? "Retrieved\n" : "Portfolios already populated\n");
+            portfolios.retrievePortfolios(path) ? "Retrieved\n" : "Portfolios already populated\n");
       } else {
         throw new IOException();
       }

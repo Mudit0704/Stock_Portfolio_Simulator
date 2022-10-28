@@ -34,7 +34,7 @@ public interface IPortfolios {
    * @return true if the operation is successful, false otherwise.
    * @throws IllegalArgumentException in case specified file path is not found.
    */
-  boolean savePortfolio(String path) throws IllegalArgumentException;
+  boolean savePortfolios(String path) throws IllegalArgumentException;
 
   /**
    * Retrieves the portfolio information at the specified location.
@@ -45,7 +45,7 @@ public interface IPortfolios {
    * @throws ParserConfigurationException
    * @throws SAXException
    */
-  boolean retrievePortfolio(String path)
+  boolean retrievePortfolios(String path)
       throws IOException, ParserConfigurationException, SAXException;
 
   /**

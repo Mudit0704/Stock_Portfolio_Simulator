@@ -126,7 +126,7 @@ public class Portfolio implements IPortfolio {
             .item(0).getTextContent();
         int stockQuantity = Integer.parseInt(eElement.getElementsByTagName("stockQuantity")
             .item(0).getTextContent());
-        this.stocks.add(new Pair<>(new Stock(tickerSymbol, new StockService()), stockQuantity));
+        this.stocks.add(new Pair<>(new Stock(tickerSymbol, this.stockService), stockQuantity));
       }
     }
 

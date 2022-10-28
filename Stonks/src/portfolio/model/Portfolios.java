@@ -46,7 +46,7 @@ public class Portfolios implements IPortfolios {
   }
 
   @Override
-  public boolean savePortfolio(String path) throws IllegalArgumentException {
+  public boolean savePortfolios(String path) throws IllegalArgumentException {
     if(portfolios.size() == 0) {
       return false;
     }
@@ -60,7 +60,7 @@ public class Portfolios implements IPortfolios {
   }
 
   @Override
-  public boolean retrievePortfolio(String path)
+  public boolean retrievePortfolios(String path)
       throws IOException, ParserConfigurationException, SAXException {
     boolean result = false;
 
