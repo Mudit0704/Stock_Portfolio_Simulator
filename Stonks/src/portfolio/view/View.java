@@ -38,8 +38,7 @@ public class View implements IView{
   }
 
   @Override
-  public void clearScreen() throws IOException, InterruptedException {
+  public void clearScreen() throws IOException {
     this.out.append("\033[H\033[2J");
-    //new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
   }
 }

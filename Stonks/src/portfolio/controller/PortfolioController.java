@@ -178,7 +178,7 @@ public class PortfolioController implements IPortfolioController {
     int stockQuantity;
     portfolios.setPortfolioServiceType(ServiceType.STOCK);
     view.displayCustomText("Stock Symbol: ");
-    scan.next();
+    scan.nextLine();
     tickerSymbol = scan.nextLine();
     while (!portfolios.isTickerSymbolValid(tickerSymbol)) {
       view.displayCustomText("Invalid Ticker Symbol\n");

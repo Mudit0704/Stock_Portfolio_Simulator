@@ -14,6 +14,7 @@ import org.xml.sax.SAXException;
 public interface IPortfolio {
 
   /**
+   * Get a portfolio composition
    * @return
    */
   String getPortfolioComposition();
