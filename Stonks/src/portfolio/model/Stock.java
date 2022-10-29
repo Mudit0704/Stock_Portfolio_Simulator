@@ -5,7 +5,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Stock implements IStock {
+class Stock implements IStock {
 
   private final String tickerSymbol;
   private final IStockService stockService;

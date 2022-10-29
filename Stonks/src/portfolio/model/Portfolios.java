@@ -14,7 +14,6 @@ public class Portfolios implements IPortfolios {
 
   private final List<IPortfolio> portfolios = new ArrayList<>();
   private IStockService stockService;
-
   private Map<String, IStock> stockMap;
 
   @Override
@@ -28,7 +27,6 @@ public class Portfolios implements IPortfolios {
     if (Id > portfolios.size() || Id < 0 || (portfolios.size() > 0 && Id == 0)) {
       return "Invalid portfolioId\n";
     }
-    int portfolioNo = 0;
     StringBuilder composition = new StringBuilder("No portfolios\n");
     if (portfolios.size() > 0) {
       composition = new StringBuilder();

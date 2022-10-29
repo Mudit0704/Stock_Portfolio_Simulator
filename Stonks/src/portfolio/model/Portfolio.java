@@ -23,7 +23,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-public class Portfolio implements IPortfolio {
+class Portfolio implements IPortfolio {
 
   private static class Pair<S,T> {
     S s ;
