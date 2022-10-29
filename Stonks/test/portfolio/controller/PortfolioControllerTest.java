@@ -5,7 +5,6 @@ import static org.junit.Assert.assertEquals;
 import java.io.Reader;
 import java.io.StringReader;
 import org.junit.Test;
-import portfolio.model.MockPortfolios;
 import portfolio.view.IView;
 
 public class PortfolioControllerTest {

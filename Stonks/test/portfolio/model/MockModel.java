@@ -40,11 +40,6 @@ public class MockModel implements IPortfolios{
   }
 
   @Override
-  public void setPortfolioServiceType(ServiceType serviceType) {
-
-  }
-
-  @Override
   public boolean isTickerSymbolValid(String tickerSymbol) {
     return false;
   }

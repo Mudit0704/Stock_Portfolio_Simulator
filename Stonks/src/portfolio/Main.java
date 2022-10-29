@@ -12,7 +12,7 @@ public class Main {
   public static void main(String[] args) {
     try {
       IView view = new View(System.out);
-      new PortfolioController(new InputStreamReader(System.in), view).run(new Portfolios());
+      new PortfolioController(new InputStreamReader(System.in), view).run(Portfolios.getBuilder());
     } catch (IOException e) {
       e.printStackTrace();
     } catch (InterruptedException e) {

@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Scanner;
 import portfolio.model.IPortfolios;
+import portfolio.model.Portfolios.PortfoliosBuilder;
 import portfolio.model.ServiceType;
 import portfolio.view.IView;
 
@@ -31,8 +32,9 @@ public class PortfolioController implements IPortfolioController {
   }
 
   @Override
-  public void run(IPortfolios portfolios) throws IOException, InterruptedException {
-    Objects.requireNonNull(portfolios);
+  public void run(PortfoliosBuilder portfoliosBuilder) throws IOException, InterruptedException {
+    Objects.requireNonNull(portfoliosBuilder);
+    IPortfolios portfolios = portfoliosBuilder.setStockService(ServiceType.STOCK).build();
     Scanner scan = new Scanner(this.in);
 
     while (true) {
@@ -118,7 +120,6 @@ public class PortfolioController implements IPortfolioController {
             displayExitOperationSequence(scan);
             return;
           case "2":
-            portfolios.setPortfolioServiceType(ServiceType.STOCK);
             if (!portfolios.retrievePortfolios()) {
               view.displayCustomText(
                   "Portfolios already populated OR No files found to retrieve\n");
@@ -195,7 +196,6 @@ public class PortfolioController implements IPortfolioController {
       throws IOException {
     String tickerSymbol;
     int stockQuantity;
-    portfolios.setPortfolioServiceType(ServiceType.STOCK);
     view.displayCustomText("Stock Symbol: ");
     scan.nextLine();
     tickerSymbol = scan.nextLine();
