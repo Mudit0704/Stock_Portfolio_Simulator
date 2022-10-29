@@ -19,7 +19,8 @@ public class PortfolioController implements IPortfolioController {
   private final static String SAVE_RETRIEVE_PORTFOLIO_MENU =
       "Choose from the below menu: \n 1 -> Save portfolio "
           + "\n 2 -> Retrieve portfolio \n E -> Exit from the operation \n";
-  private static final String CHOOSE_FROM_AVAILABLE_PORTFOLIOS = "Choose from available portfolios (eg: Portfolio1 -> give 1):\n";
+  private static final String CHOOSE_FROM_AVAILABLE_PORTFOLIOS = "Choose from available portfolios "
+      + "(eg: Portfolio1 -> give 1):\n";
 
   final Readable in;
   final IView view;
@@ -74,12 +75,16 @@ public class PortfolioController implements IPortfolioController {
       return;
     }
     view.askForInput();
-    try {
-      int portfolioId = scan.nextInt();
-      view.displayCustomText(portfolios.getPortfolioComposition(portfolioId));
-    } catch (InputMismatchException e) {
+    scan.nextLine();
+    String portfolioId = scan.nextLine();
+    String result = portfolios.getPortfolioComposition(portfolioId);
+    while ("Invalid portfolioId\n".equals(result)) {
       view.displayInvalidInput();
+      view.askForInput();
+      portfolioId = scan.nextLine();
+      result = portfolios.getPortfolioComposition(portfolioId);
     }
+    view.displayCustomText(result);
     displayExitOperationSequence(scan);
   }
 
@@ -93,31 +98,45 @@ public class PortfolioController implements IPortfolioController {
   }
 
   private void saveRetrievePortfolios(IPortfolios portfolios, Scanner scan)
-      throws IOException, InterruptedException {
-    String path;
+      throws IOException {
     view.displayCustomText(SAVE_RETRIEVE_PORTFOLIO_MENU);
     view.askForInput();
-    String choice = scan.next();
-    if ("E".equals(choice)) {
-      return;
-    }
-    view.displayCustomText("Please enter the directory path: ");
-    path = scan.next();
+
     try {
-      if ("1".equals(choice)) {
-        view.displayCustomText(
-            portfolios.savePortfolios(path) ? "Saved\n" : "No portfolios to save\n");
-      } else if ("2".equals(choice)) {
-        view.displayCustomText(
-            portfolios.retrievePortfolios(path) ? "Retrieved\n" : "Portfolios already populated\n");
-      } else {
-        throw new IOException();
+      while (true) {
+        switch (scan.next()) {
+          case "E":
+            displayExitOperationSequence(scan);
+            return;
+          case "1":
+            if (!portfolios.savePortfolios()) {
+              view.displayCustomText("No portfolios to save\n");
+              displayExitOperationSequence(scan);
+              return;
+            }
+            view.displayCustomText("Saved\n");
+            displayExitOperationSequence(scan);
+            return;
+          case "2":
+            portfolios.setPortfolioServiceType(ServiceType.STOCK);
+            if (!portfolios.retrievePortfolios()) {
+              view.displayCustomText(
+                  "Portfolios already populated OR No files found to retrieve\n");
+              displayExitOperationSequence(scan);
+              return;
+            }
+            view.displayCustomText("Retrieved\n");
+            displayExitOperationSequence(scan);
+            return;
+          default:
+            view.displayInvalidInput();
+            break;
+        }
       }
     } catch (Exception e) {
-      view.displayInvalidInput();
-      return;
+      view.displayCustomText("Encountered a problem while saving. Please check if the xml file "
+          + "provided is in correct format\n");
     }
-    displayExitOperationSequence(scan);
   }
 
   private void getPortfolioValuesForGivenDate(IPortfolios portfolios, Scanner scan)

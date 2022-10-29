@@ -16,7 +16,7 @@ public interface IPortfolios {
    *
    * @return the composition of all the portfolios.
    */
-  String getPortfolioComposition(int portfolioId);
+  String getPortfolioComposition(String portfolioId);
 
   /**
    * Determines the values of the specified portfolio at any given date.
@@ -30,22 +30,20 @@ public interface IPortfolios {
   /**
    * Saves all portfolios' information into specified file path.
    *
-   * @param path the path at which portfolio files are to be stored.
    * @return true if the operation is successful, false otherwise.
    * @throws IllegalArgumentException in case specified file path is not found.
    */
-  boolean savePortfolios(String path) throws IllegalArgumentException;
+  boolean savePortfolios() throws IllegalArgumentException;
 
   /**
    * Retrieves the portfolio information at the specified location.
    *
-   * @param path the location from where portfolios are to be retrieved.
    * @return true if the file retrieval is successful, false otherwise.
    * @throws IOException
    * @throws ParserConfigurationException
    * @throws SAXException
    */
-  boolean retrievePortfolios(String path)
+  boolean retrievePortfolios()
       throws IOException, ParserConfigurationException, SAXException;
 
   /**
