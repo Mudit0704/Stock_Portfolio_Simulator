@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.management.AttributeNotFoundException;
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
@@ -110,15 +111,16 @@ public class Portfolios implements IPortfolios {
   }
 
   @Override
-  public String getAvailablePortfolios() {
+  public String getAvailablePortfolios() throws AttributeNotFoundException {
     int portfolioNo = 0;
-    StringBuilder composition = new StringBuilder("No portfolios\n");
+    StringBuilder composition = new StringBuilder();;
     if (portfolios.size() > 0) {
-      composition = new StringBuilder();
       while (portfolioNo < portfolios.size()) {
         composition.append("Portfolio").append(portfolioNo + 1).append("\n");
         portfolioNo++;
       }
+    } else {
+      throw new AttributeNotFoundException();
     }
     return composition.toString();
   }

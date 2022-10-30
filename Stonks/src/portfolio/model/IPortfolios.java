@@ -3,6 +3,7 @@ package portfolio.model;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Map;
+import javax.management.AttributeNotFoundException;
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
@@ -57,7 +58,7 @@ public interface IPortfolios {
    *
    * @return available portfolios represented using a String.
    */
-  String getAvailablePortfolios();
+  String getAvailablePortfolios() throws AttributeNotFoundException;
 
   /**
    * Checks if a ticker symbol is valid, i.e, it is being traded currently.

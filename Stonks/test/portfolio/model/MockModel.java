@@ -35,7 +35,7 @@ public class MockModel implements IPortfolios {
 
   @Override
   public void createNewPortfolio(Map<String, Integer> stocks) {
-
+    log.append(stocks + " ");
   }
 
   @Override
@@ -45,6 +45,7 @@ public class MockModel implements IPortfolios {
 
   @Override
   public boolean isTickerSymbolValid(String tickerSymbol) {
-    return false;
+    log.append(tickerSymbol + " ");
+    return "TICKER_SYMBOL".equals(tickerSymbol) || " TICKER_SYMBOL2".equals(tickerSymbol);
   }
 }

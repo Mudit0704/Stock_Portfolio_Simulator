@@ -12,27 +12,27 @@ public class MockView implements IView {
 
   @Override
   public void displayEscapeFromOperation() throws IOException {
-    this.out.append("Escape");
+    this.out.append("Escape ");
   }
 
   @Override
   public void displayMenu() throws IOException {
-    this.out.append("Menu");
+    this.out.append("Menu ");
   }
 
   @Override
   public void displayCustomText(String customText) throws IOException {
-    this.out.append("Custom Text");
+    this.out.append(customText);
   }
 
   @Override
   public void askForInput() throws IOException {
-    this.out.append("Ask For Input");
+    this.out.append("Ask_For_Input ");
   }
 
   @Override
   public void displayInvalidInput() throws IOException {
-    this.out.append("Invalid Input");
+    this.out.append("Invalid_Input ");
   }
 
   @Override

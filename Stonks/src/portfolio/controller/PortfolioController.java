@@ -8,6 +8,7 @@ import java.util.InputMismatchException;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Scanner;
+import javax.management.AttributeNotFoundException;
 import portfolio.model.IPortfolios;
 import portfolio.view.IView;
 
@@ -59,6 +60,7 @@ public class PortfolioController implements IPortfolioController {
           return;
         default:
           view.displayInvalidInput();
+          break;
       }
     }
 
@@ -73,10 +75,6 @@ public class PortfolioController implements IPortfolioController {
         view.displayCustomText(CHOOSE_FROM_AVAILABLE_PORTFOLIOS);
         String availablePortfolios = portfolios.getAvailablePortfolios();
         view.displayCustomText(availablePortfolios);
-        if ("No portfolios\n".equals(availablePortfolios)) {
-          displayExitOperationSequence(scan);
-          return;
-        }
         view.askForInput();
         scan.nextLine();
         int portfolioId = scan.nextInt();
@@ -84,6 +82,10 @@ public class PortfolioController implements IPortfolioController {
         break;
       } catch (InputMismatchException | IllegalArgumentException e) {
         view.displayInvalidInput();
+      } catch (AttributeNotFoundException e) {
+        view.displayCustomText("No portfolios\n");
+        displayExitOperationSequence(scan);
+        return;
       }
     }
 
@@ -147,15 +149,11 @@ public class PortfolioController implements IPortfolioController {
     int portfolioId;
 
     while (true) {
-      view.displayCustomText(CHOOSE_FROM_AVAILABLE_PORTFOLIOS);
-      String availablePortfolios = portfolios.getAvailablePortfolios();
-      view.displayCustomText(availablePortfolios);
-      if ("No portfolios\n".equals(availablePortfolios)) {
-        displayExitOperationSequence(scan);
-        return;
-      }
-      view.askForInput();
       try {
+        view.displayCustomText(CHOOSE_FROM_AVAILABLE_PORTFOLIOS);
+        String availablePortfolios = portfolios.getAvailablePortfolios();
+        view.displayCustomText(availablePortfolios);
+        view.askForInput();
         portfolioId = scan.nextInt();
         view.displayCustomText("Please enter the date (yyyy-mm-dd): ");
         date = LocalDate.parse(scan.next());
@@ -164,7 +162,10 @@ public class PortfolioController implements IPortfolioController {
         break;
       } catch (DateTimeParseException | IllegalArgumentException e) {
         view.displayInvalidInput();
-
+      } catch (AttributeNotFoundException e) {
+        view.displayCustomText("No portfolios\n");
+        displayExitOperationSequence(scan);
+        return;
       }
     }
 
@@ -206,13 +207,15 @@ public class PortfolioController implements IPortfolioController {
       view.displayCustomText("Stock Symbol: ");
       tickerSymbol = scan.nextLine();
     }
-    view.displayCustomText("Stock Quantity: ");
-    try {
-      stockQuantity = scan.nextInt();
-    } catch (InputMismatchException e) {
-      scan.nextLine();
-      view.displayInvalidInput();
-      return;
+    while(true) {
+      view.displayCustomText("Stock Quantity: ");
+      try {
+        stockQuantity = scan.nextInt();
+        break;
+      } catch (InputMismatchException e) {
+        scan.nextLine();
+        view.displayInvalidInput();
+      }
     }
     stocks.put(tickerSymbol, stockQuantity);
   }
