@@ -5,11 +5,7 @@ import static org.junit.Assert.assertEquals;
 import java.io.Reader;
 import java.io.StringReader;
 import org.junit.Test;
-import portfolio.model.IPortfolios;
 import portfolio.model.MockModel;
-import portfolio.model.MockPortfolios;
-import portfolio.model.MockStockService;
-import portfolio.model.Portfolios;
 import portfolio.view.IView;
 import portfolio.view.MockView;
 
@@ -24,7 +20,7 @@ public class PortfolioControllerTest {
     StringBuilder log = new StringBuilder(); //log for mock model
     //IPortfolios x = new Portfolios();
     //x.sto
-    controller.run(new MockModel());
+    controller.run(new MockModel(log));
     assertEquals("Input: 3 4\nInput: 8 9\n", log.toString()); //inputs reached the model correctly
     assertEquals("1234321\n1234321\n",out.toString()); //output of model transmitted correctly
   }

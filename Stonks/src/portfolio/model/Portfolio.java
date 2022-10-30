@@ -53,7 +53,7 @@ class Portfolio implements IPortfolio {
   }
 
   @Override
-  public double getPortfolioValue(LocalDate date) {
+  public double getPortfolioValue(LocalDate date) throws IllegalArgumentException {
     double portfolioValue = 0;
 
     for (Pair<IStock, Integer> stock: this.stocks) {

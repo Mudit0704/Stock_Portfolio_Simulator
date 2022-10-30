@@ -7,6 +7,10 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
 public class MockModel implements IPortfolios {
+  StringBuilder log;
+  public MockModel(StringBuilder log) {
+    this.log = log;
+  }
 
   @Override
   public String getPortfolioComposition(String portfolioId) {
@@ -14,7 +18,7 @@ public class MockModel implements IPortfolios {
   }
 
   @Override
-  public String getPortfolioValue(LocalDate date, int portfolioId) {
+  public Double getPortfolioValue(LocalDate date, int portfolioId) {
     return null;
   }
 

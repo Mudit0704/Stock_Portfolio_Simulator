@@ -24,7 +24,7 @@ public interface IPortfolios {
    * @param portfolioId the id of the portfolio specified.
    * @return the value of the specified portfolio based.
    */
-  String getPortfolioValue(LocalDate date, int portfolioId);
+  Double getPortfolioValue(LocalDate date, int portfolioId);
 
   /**
    * Saves all portfolios' information into specified file path.

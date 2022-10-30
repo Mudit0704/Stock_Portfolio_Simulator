@@ -2,6 +2,7 @@ package portfolio.controller;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.Map;
@@ -141,26 +142,27 @@ public class PortfolioController implements IPortfolioController {
       throws IOException, InterruptedException {
     LocalDate date;
     int portfolioId;
-    view.displayCustomText(CHOOSE_FROM_AVAILABLE_PORTFOLIOS);
-    String availablePortfolios = portfolios.getAvailablePortfolios();
-    view.displayCustomText(availablePortfolios);
-    if ("No portfolios\n".equals(availablePortfolios)) {
-      displayExitOperationSequence(scan);
-      return;
-    }
-    view.askForInput();
-    try {
-      portfolioId = scan.nextInt();
-      view.displayCustomText("Please enter the date (yyyy-mm-dd): ");
-      date = LocalDate.parse(scan.next());
-      String portfolioValue = portfolios.getPortfolioValue(date, portfolioId);
-      view.displayCustomText(portfolioValue);
-      if ("Invalid portfolioId\n".equals(portfolioValue)) {
+
+    while (true) {
+      view.displayCustomText(CHOOSE_FROM_AVAILABLE_PORTFOLIOS);
+      String availablePortfolios = portfolios.getAvailablePortfolios();
+      view.displayCustomText(availablePortfolios);
+      if ("No portfolios\n".equals(availablePortfolios)) {
         displayExitOperationSequence(scan);
         return;
       }
-    } catch (Exception e) {
-      view.displayInvalidInput();
+      view.askForInput();
+      try {
+        portfolioId = scan.nextInt();
+        view.displayCustomText("Please enter the date (yyyy-mm-dd): ");
+        date = LocalDate.parse(scan.next());
+        String portfolioValue = String.format("%.2f", portfolios.getPortfolioValue(date, portfolioId));
+        view.displayCustomText("Portfolio" + portfolioId + "\n" + portfolioValue + "\n");
+        break;
+      } catch (DateTimeParseException | IllegalArgumentException e) {
+        view.displayInvalidInput();
+
+      }
     }
 
     displayExitOperationSequence(scan);

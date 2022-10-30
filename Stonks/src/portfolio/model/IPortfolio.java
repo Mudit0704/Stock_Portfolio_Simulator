@@ -25,7 +25,7 @@ interface IPortfolio {
    * @param date the date on which the total value of the portfolio is to be determined.
    * @return the portfolio's total value on the specified date.
    */
-  double getPortfolioValue(LocalDate date);
+  double getPortfolioValue(LocalDate date) throws IllegalArgumentException;
 
   /**
    * Saves the portfolio information into a file.

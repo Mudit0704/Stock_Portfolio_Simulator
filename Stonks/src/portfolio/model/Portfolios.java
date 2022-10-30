@@ -44,17 +44,13 @@ public class Portfolios implements IPortfolios {
   }
 
   @Override
-  public String getPortfolioValue(LocalDate date, int portfolioId) {
-    StringBuilder portfolioValues = new StringBuilder("No Portfolios\n");
-    if (portfolioId > portfolios.size()) {
-      return "Invalid portfolioId\n";
-    }
+  public Double getPortfolioValue(LocalDate date, int portfolioId) {
+    if(date.isAfter(LocalDate.now()) || portfolioId > portfolios.size()) throw new IllegalArgumentException();
+    Double portfolioValues = 0d;
     if (portfolios.size() > 0) {
-      portfolioValues = new StringBuilder();
-      portfolioValues.append("Portfolio").append(portfolioId).append("\n")
-          .append(portfolios.get(portfolioId - 1).getPortfolioValue(date)).append("\n");
+      portfolioValues = portfolios.get(portfolioId - 1).getPortfolioValue(date);
     }
-    return portfolioValues.toString();
+    return portfolioValues;
   }
 
   @Override
