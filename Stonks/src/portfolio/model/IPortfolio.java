@@ -10,7 +10,7 @@ import org.xml.sax.SAXException;
  * This interface represents a single portfolio of stocks. It is possible to build a portfolio,
  * store and retrieve its information and composition.
  */
-public interface IPortfolio {
+interface IPortfolio {
 
   /**
    * Get a portfolio's composition.

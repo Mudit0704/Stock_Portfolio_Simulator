@@ -11,25 +11,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
 public class Portfolios implements IPortfolios {
-  public static class PortfoliosBuilder {
-    private IStockService stockService;
-    private PortfoliosBuilder() {
-        stockService = new StockService();
-    }
-
-    public PortfoliosBuilder setStockService(ServiceType serviceType) {
-      if (serviceType == ServiceType.STOCK) {
-        this.stockService = stockService;
-      }
-      return this;
-    }
-    public Portfolios build() {
-      return new Portfolios(stockService);
-    }
-  }
-
   private final List<IPortfolio> portfolios = new ArrayList<>();
-  private IStockService stockService;
+  private final IStockService stockService;
   private Map<String, IStock> stockMap;
 
   Portfolios(IStockService stockService) {

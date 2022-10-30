@@ -5,7 +5,7 @@ import java.time.LocalDate;
 /**
  * Interface to represent a stock unit and get the price of the stock.
  */
-public interface IStock {
+interface IStock {
 
   /**
    * Gets the value of this stock from realtime API.
