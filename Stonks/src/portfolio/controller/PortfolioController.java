@@ -8,8 +8,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Scanner;
 import portfolio.model.IPortfolios;
-import portfolio.model.IPortfolios.PortfoliosBuilder;
-import portfolio.model.PortfolioType;
 import portfolio.view.IView;
 
 public class PortfolioController implements IPortfolioController {
@@ -32,10 +30,8 @@ public class PortfolioController implements IPortfolioController {
   }
 
   @Override
-  public void run(PortfoliosBuilder portfoliosBuilder) throws IOException, InterruptedException {
-    Objects.requireNonNull(portfoliosBuilder);
-    IPortfolios portfolios = portfoliosBuilder.setStockService(PortfolioType.STOCKS).build(
-        PortfolioType.STOCKS);
+  public void run(IPortfolios portfolios) throws IOException, InterruptedException {
+    Objects.requireNonNull(portfolios);
     Scanner scan = new Scanner(this.in);
 
     while (true) {

@@ -1,8 +1,8 @@
 package portfolio.controller;
 
 import java.io.IOException;
-import portfolio.model.IPortfolios.PortfoliosBuilder;
+import portfolio.model.IPortfolios;
 
 public interface IPortfolioController {
-  void run(PortfoliosBuilder portfoliosBuilder) throws IOException, InterruptedException;
+  void run(IPortfolios portfolios) throws IOException, InterruptedException;
 }

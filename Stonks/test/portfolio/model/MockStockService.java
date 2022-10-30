@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
-class MockStockService extends StockService {
+public class MockStockService extends StockService {
   String filePath ;
 
   public MockStockService() {

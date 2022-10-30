@@ -12,8 +12,6 @@ import org.xml.sax.SAXException;
  */
 public interface IPortfolios {
 
-  IPortfolios.PortfoliosBuilder PortfoliosBuilder = new PortfoliosBuilder();
-
   /**
    * @return the composition of all the portfolios.
    */
@@ -67,44 +65,5 @@ public interface IPortfolios {
    * @param tickerSymbol symbol to be checked.
    * @return <code>true</code> if symbol is valid; otherwise <code>false</code>.
    */
-  public boolean isTickerSymbolValid(String tickerSymbol);
-
-  /**
-   * Builder class to generalize the creation of portfolios.
-   */
-  class PortfoliosBuilder {
-
-    private IStockService stockService;
-
-    PortfoliosBuilder() {
-      stockService = null;
-    }
-
-    /**
-     * Sets the stock service object for a portfolio.
-     *
-     * @param portfolioType Type of service represented using {@link PortfolioType}.
-     * @return the updated PortfolioBuilder object.
-     */
-    public PortfoliosBuilder setStockService(PortfolioType portfolioType) {
-      if (portfolioType == PortfolioType.STOCKS) {
-        this.stockService = new StockService();
-      }
-      return this;
-    }
-
-    /**
-     * Creates the portfolio object with the properties set in the builder.
-     *
-     * @param portfolioType Type of portfolio represented using {@link PortfolioType}.
-     * @return the requested portfolio type object with the properties set in the builder.
-     */
-    public IPortfolios build(PortfolioType portfolioType) {
-      IPortfolios result = null;
-      if (portfolioType == PortfolioType.STOCKS) {
-        result = new Portfolios(stockService);
-      }
-      return result;
-    }
-  }
+  boolean isTickerSymbolValid(String tickerSymbol);
 }

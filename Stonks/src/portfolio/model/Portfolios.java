@@ -15,12 +15,12 @@ public class Portfolios implements IPortfolios {
   private final IStockService stockService;
   private Map<String, IStock> stockMap;
 
-  Portfolios(IStockService stockService) {
-    this.stockService = stockService;
+  public Portfolios() {
+    this(new StockService());
   }
 
-  public static PortfoliosBuilder getBuilder() {
-    return new PortfoliosBuilder();
+  Portfolios(IStockService stockService) {
+    this.stockService = stockService;
   }
 
   @Override
