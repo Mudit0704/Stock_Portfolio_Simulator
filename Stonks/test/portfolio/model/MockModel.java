@@ -13,7 +13,7 @@ public class MockModel implements IPortfolios {
   }
 
   @Override
-  public String getPortfolioComposition(String portfolioId) {
+  public String getPortfolioComposition(int portfolioId) {
     return null;
   }
 

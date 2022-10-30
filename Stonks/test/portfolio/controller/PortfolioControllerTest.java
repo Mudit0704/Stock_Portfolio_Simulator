@@ -11,18 +11,39 @@ import portfolio.view.MockView;
 
 public class PortfolioControllerTest {
 
+  private final static String CREATE_PORTFOLIO_SUB_MENU =
+      "Choose from the below menu: \n 1 -> Add a new stock "
+          + "\n E -> Exit from the operation \n";
+  private final static String SAVE_RETRIEVE_PORTFOLIO_MENU =
+      "Choose from the below menu: \n 1 -> Save portfolio "
+          + "\n 2 -> Retrieve portfolio \n E -> Exit from the operation \n";
+  private static final String CHOOSE_FROM_AVAILABLE_PORTFOLIOS = "Choose from available portfolios "
+      + "(eg: Portfolio1 -> give 1):\n";
+
   @Test
-  public void testGo() throws Exception {
+  public void testRunInvalidInputs() throws Exception {
     StringBuffer out = new StringBuffer();
     IView mockView = new MockView(out);
-    Reader in = new StringReader("+ 3 4 + 8 9 q");
+    Reader in = new StringReader("+ + + E");
     IPortfolioController controller = new PortfolioController(in, mockView);
-    StringBuilder log = new StringBuilder(); //log for mock model
-    //IPortfolios x = new Portfolios();
-    //x.sto
+    StringBuilder log = new StringBuilder();
     controller.run(new MockModel(log));
-    assertEquals("Input: 3 4\nInput: 8 9\n", log.toString()); //inputs reached the model correctly
-    assertEquals("1234321\n1234321\n",out.toString()); //output of model transmitted correctly
+    assertEquals("", log.toString());
+    assertEquals("MenuAsk For InputInvalid InputMenuAsk For InputInvalid InputMenuAsk For "
+            + "InputInvalid InputMenuAsk For Input", out.toString());
+  }
+
+  @Test
+  public void testRunInvalidInputsd() throws Exception {
+    StringBuffer out = new StringBuffer();
+    IView mockView = new MockView(out);
+    Reader in = new StringReader("+ + + E");
+    IPortfolioController controller = new PortfolioController(in, mockView);
+    StringBuilder log = new StringBuilder();
+    controller.run(new MockModel(log));
+    assertEquals("", log.toString());
+    assertEquals("MenuAsk For InputInvalid InputMenuAsk For InputInvalid InputMenuAsk For "
+        + "InputInvalid InputMenuAsk For Input", out.toString());
   }
 
   @Test

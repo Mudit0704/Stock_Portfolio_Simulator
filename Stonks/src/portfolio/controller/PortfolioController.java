@@ -67,23 +67,26 @@ public class PortfolioController implements IPortfolioController {
   private void getPortfolioComposition(IPortfolios portfolios, Scanner scan)
       throws IOException, InterruptedException {
     view.clearScreen();
-    view.displayCustomText(CHOOSE_FROM_AVAILABLE_PORTFOLIOS);
-    String availablePortfolios = portfolios.getAvailablePortfolios();
-    view.displayCustomText(availablePortfolios);
-    if ("No portfolios\n".equals(availablePortfolios)) {
-      displayExitOperationSequence(scan);
-      return;
+    String result;
+    while(true) {
+      try {
+        view.displayCustomText(CHOOSE_FROM_AVAILABLE_PORTFOLIOS);
+        String availablePortfolios = portfolios.getAvailablePortfolios();
+        view.displayCustomText(availablePortfolios);
+        if ("No portfolios\n".equals(availablePortfolios)) {
+          displayExitOperationSequence(scan);
+          return;
+        }
+        view.askForInput();
+        scan.nextLine();
+        int portfolioId = scan.nextInt();
+        result = portfolios.getPortfolioComposition(portfolioId);
+        break;
+      } catch (InputMismatchException | IllegalArgumentException e) {
+        view.displayInvalidInput();
+      }
     }
-    view.askForInput();
-    scan.nextLine();
-    String portfolioId = scan.nextLine();
-    String result = portfolios.getPortfolioComposition(portfolioId);
-    while ("Invalid portfolioId\n".equals(result)) {
-      view.displayInvalidInput();
-      view.askForInput();
-      portfolioId = scan.nextLine();
-      result = portfolios.getPortfolioComposition(portfolioId);
-    }
+
     view.displayCustomText(result);
     displayExitOperationSequence(scan);
   }

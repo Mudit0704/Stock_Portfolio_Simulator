@@ -24,21 +24,15 @@ public class Portfolios implements IPortfolios {
   }
 
   @Override
-  public String getPortfolioComposition(String portfolioId) {
-    int Id;
-    try {
-      Id = Integer.parseInt(portfolioId);
-    } catch (NumberFormatException e) {
-      return "Invalid portfolioId\n";
-    }
-    if (Id > portfolios.size() || Id < 0 || (portfolios.size() > 0 && Id == 0)) {
-      return "Invalid portfolioId\n";
+  public String getPortfolioComposition(int portfolioId) throws IllegalArgumentException {
+    if (portfolioId > portfolios.size() || portfolioId < 0 || (portfolios.size() > 0 && portfolioId == 0)) {
+      throw new IllegalArgumentException();
     }
     StringBuilder composition = new StringBuilder("No portfolios\n");
     if (portfolios.size() > 0) {
       composition = new StringBuilder();
       composition.append("Portfolio").append(portfolioId).append("\n")
-          .append(portfolios.get(Id - 1).getPortfolioComposition()).append("\n");
+          .append(portfolios.get(portfolioId - 1).getPortfolioComposition()).append("\n");
     }
     return composition.toString();
   }

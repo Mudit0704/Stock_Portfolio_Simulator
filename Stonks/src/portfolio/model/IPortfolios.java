@@ -15,7 +15,7 @@ public interface IPortfolios {
   /**
    * @return the composition of all the portfolios.
    */
-  String getPortfolioComposition(String portfolioId);
+  String getPortfolioComposition(int portfolioId);
 
   /**
    * Determines the values of the specified portfolio at any given date.
