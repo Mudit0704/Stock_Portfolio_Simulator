@@ -56,7 +56,7 @@ public class Portfolios implements IPortfolios {
     String userDirectory = System.getProperty("user.dir");
     for (IPortfolio portfolio : portfolios) {
       portfolioNo++;
-      portfolio.savePortfolio(userDirectory + "\\portfolio" + portfolioNo + ".xml");
+      portfolio.savePortfolio(userDirectory + "/portfolio" + portfolioNo + ".xml");
     }
 
     return true;
@@ -66,7 +66,7 @@ public class Portfolios implements IPortfolios {
   public boolean retrievePortfolios()
       throws IOException, ParserConfigurationException, SAXException {
     boolean result = false;
-    String userDirectory = System.getProperty("user.dir") + "\\";
+    String userDirectory = System.getProperty("user.dir") + "/";
     File dir = new File(userDirectory);
     File[] files = dir.listFiles((dir1, name) -> name.toLowerCase().endsWith(".xml"));
 
@@ -84,6 +84,9 @@ public class Portfolios implements IPortfolios {
 
   @Override
   public void createNewPortfolio(Map<String, Integer> stocks) {
+    if(stocks.size() == 0) {
+      return ;
+    }
     IPortfolio portfolio = new Portfolio(stockService);
     if (this.stockMap == null) {
       this.stockMap = new HashMap<>();

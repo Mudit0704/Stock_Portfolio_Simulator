@@ -22,7 +22,7 @@ public interface IPortfolios {
    *
    * @param date        date at which the value of the specified portfolio is to be fetched.
    * @param portfolioId the id of the portfolio specified.
-   * @return the value of the specified portfolio based.
+   * @return the value of the specified portfolio based on the given date.
    */
   Double getPortfolioValue(LocalDate date, int portfolioId);
 
