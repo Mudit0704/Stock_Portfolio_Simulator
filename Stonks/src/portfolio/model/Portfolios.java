@@ -63,6 +63,7 @@ public class Portfolios implements IPortfolios {
   @Override
   public boolean retrievePortfolios()
       throws IOException, ParserConfigurationException, SAXException {
+    if(portfolios.size() > 0) return false;
     boolean result = false;
     String userDirectory = System.getProperty("user.dir") + "/";
     File dir = new File(userDirectory);
