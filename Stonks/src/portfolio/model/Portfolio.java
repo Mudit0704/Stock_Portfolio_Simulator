@@ -34,9 +34,11 @@ class Portfolio implements IPortfolio {
 
   private final List<Pair<IStock, Integer>> stocks = new ArrayList<>();
   private final IStockService stockService;
+  private IStockAPIOptimizer apiOptimizer;
 
   public Portfolio(IStockService stockService) {
     this.stockService = stockService;
+    apiOptimizer = APICache.getInstance();
   }
 
   @Override
@@ -126,7 +128,12 @@ class Portfolio implements IPortfolio {
             .item(0).getTextContent();
         int stockQuantity = Integer.parseInt(eElement.getElementsByTagName("stockQuantity")
             .item(0).getTextContent());
-        this.stocks.add(new Pair<>(new Stock(tickerSymbol, this.stockService), stockQuantity));
+        IStock newStock = apiOptimizer.cacheGetObj(tickerSymbol);
+        if(newStock == null) {
+          newStock = new Stock(tickerSymbol, this.stockService);
+          apiOptimizer.cacheSetObj(tickerSymbol, newStock);
+        }
+        this.stocks.add(new Pair<>(newStock, stockQuantity));
       }
     }
 

@@ -15,7 +15,7 @@ public class Portfolios implements IPortfolios {
 
   private final List<IPortfolio> portfolios = new ArrayList<>();
   private final IStockService stockService;
-  private Map<String, IStock> stockMap;
+  private final IStockAPIOptimizer apiOptimizer;
 
   public Portfolios() {
     this(new StockService());
@@ -23,6 +23,7 @@ public class Portfolios implements IPortfolios {
 
   Portfolios(IStockService stockService) {
     this.stockService = stockService;
+    apiOptimizer = APICache.getInstance();
   }
 
   @Override
@@ -85,19 +86,14 @@ public class Portfolios implements IPortfolios {
       return;
     }
     IPortfolio portfolio = new Portfolio(stockService);
-    if (this.stockMap == null) {
-      this.stockMap = new HashMap<>();
-    }
 
     Map<IStock, Integer> stockList = new HashMap<>();
 
     for (Map.Entry<String, Integer> entry : stocks.entrySet()) {
-      IStock newStock;
-      if (!this.stockMap.containsKey(entry.getKey())) {
+      IStock newStock = apiOptimizer.cacheGetObj(entry.getKey());
+      if (newStock == null) {
         newStock = new Stock(entry.getKey(), this.stockService);
-        this.stockMap.put(entry.getKey(), newStock);
-      } else {
-        newStock = this.stockMap.get(entry.getKey());
+        apiOptimizer.cacheSetObj(entry.getKey(), newStock);
       }
       stockList.put(newStock, entry.getValue());
     }
