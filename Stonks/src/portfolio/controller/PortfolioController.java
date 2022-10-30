@@ -10,7 +10,6 @@ import java.util.Scanner;
 import portfolio.model.IPortfolios;
 import portfolio.model.IPortfolios.PortfoliosBuilder;
 import portfolio.model.PortfolioType;
-import portfolio.model.ServiceType;
 import portfolio.view.IView;
 
 public class PortfolioController implements IPortfolioController {
@@ -35,7 +34,7 @@ public class PortfolioController implements IPortfolioController {
   @Override
   public void run(PortfoliosBuilder portfoliosBuilder) throws IOException, InterruptedException {
     Objects.requireNonNull(portfoliosBuilder);
-    IPortfolios portfolios = portfoliosBuilder.setStockService(ServiceType.STOCK).build(
+    IPortfolios portfolios = portfoliosBuilder.setStockService(PortfolioType.STOCKS).build(
         PortfolioType.STOCKS);
     Scanner scan = new Scanner(this.in);
 

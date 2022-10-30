@@ -83,11 +83,11 @@ public interface IPortfolios {
     /**
      * Sets the stock service object for a portfolio.
      *
-     * @param serviceType Type of service represented using {@link ServiceType}.
+     * @param portfolioType Type of service represented using {@link PortfolioType}.
      * @return the updated PortfolioBuilder object.
      */
-    public PortfoliosBuilder setStockService(ServiceType serviceType) {
-      if (serviceType == ServiceType.STOCK) {
+    public PortfoliosBuilder setStockService(PortfolioType portfolioType) {
+      if (portfolioType == PortfolioType.STOCKS) {
         this.stockService = new StockService();
       }
       return this;
