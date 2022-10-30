@@ -12,6 +12,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
 public class Portfolios implements IPortfolios {
+
   private final List<IPortfolio> portfolios = new ArrayList<>();
   private final IStockService stockService;
   private Map<String, IStock> stockMap;
@@ -26,26 +27,21 @@ public class Portfolios implements IPortfolios {
 
   @Override
   public String getPortfolioComposition(int portfolioId) throws IllegalArgumentException {
-    if (portfolioId > portfolios.size() || portfolioId < 0 || (portfolios.size() > 0 && portfolioId == 0)) {
+    if (portfolioId > portfolios.size() || portfolioId <= 0) {
       throw new IllegalArgumentException();
     }
-    StringBuilder composition = new StringBuilder("No portfolios\n");
-    if (portfolios.size() > 0) {
-      composition = new StringBuilder();
-      composition.append("Portfolio").append(portfolioId).append("\n")
-          .append(portfolios.get(portfolioId - 1).getPortfolioComposition()).append("\n");
-    }
+    StringBuilder composition = new StringBuilder();
+    composition.append("Portfolio").append(portfolioId).append("\n")
+        .append(portfolios.get(portfolioId - 1).getPortfolioComposition()).append("\n");
     return composition.toString();
   }
 
   @Override
   public Double getPortfolioValue(LocalDate date, int portfolioId) {
-    if(date.isAfter(LocalDate.now()) || portfolioId > portfolios.size()) throw new IllegalArgumentException();
-    Double portfolioValues = 0d;
-    if (portfolios.size() > 0) {
-      portfolioValues = portfolios.get(portfolioId - 1).getPortfolioValue(date);
+    if (date.isAfter(LocalDate.now()) || portfolioId > portfolios.size() || portfolioId <= 0) {
+      throw new IllegalArgumentException();
     }
-    return portfolioValues;
+    return portfolios.get(portfolioId - 1).getPortfolioValue(date);
   }
 
   @Override
@@ -85,8 +81,8 @@ public class Portfolios implements IPortfolios {
 
   @Override
   public void createNewPortfolio(Map<String, Integer> stocks) {
-    if(stocks.size() == 0) {
-      return ;
+    if (stocks.size() == 0) {
+      return;
     }
     IPortfolio portfolio = new Portfolio(stockService);
     if (this.stockMap == null) {
@@ -113,7 +109,8 @@ public class Portfolios implements IPortfolios {
   @Override
   public String getAvailablePortfolios() throws AttributeNotFoundException {
     int portfolioNo = 0;
-    StringBuilder composition = new StringBuilder();;
+    StringBuilder composition = new StringBuilder();
+    ;
     if (portfolios.size() > 0) {
       while (portfolioNo < portfolios.size()) {
         composition.append("Portfolio").append(portfolioNo + 1).append("\n");

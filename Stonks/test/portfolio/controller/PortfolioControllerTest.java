@@ -182,7 +182,7 @@ public class PortfolioControllerTest {
   @Test
   public void testRunWhenOption2()
       throws IOException, InterruptedException {
-    Reader in = new StringReader("2 E");
+    Reader in = new StringReader("2\n 2 2022-10-25 E E");
     IPortfolioController controller = new PortfolioController(in, mockView);
 
     controller.run(new MockModel(log));

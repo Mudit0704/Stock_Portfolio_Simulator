@@ -14,12 +14,14 @@ public class MockModel implements IPortfolios {
 
   @Override
   public String getPortfolioComposition(int portfolioId) {
+
     return null;
   }
 
   @Override
   public Double getPortfolioValue(LocalDate date, int portfolioId) {
-    return null;
+    log.append(date).append(portfolioId);
+    return 2d;
   }
 
   @Override
