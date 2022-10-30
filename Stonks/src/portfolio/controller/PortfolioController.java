@@ -8,7 +8,6 @@ import java.util.InputMismatchException;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Scanner;
-import javax.management.AttributeNotFoundException;
 import portfolio.model.IPortfolios;
 import portfolio.view.IView;
 
@@ -81,11 +80,12 @@ public class PortfolioController implements IPortfolioController {
         result = portfolios.getPortfolioComposition(portfolioId);
         break;
       } catch (InputMismatchException | IllegalArgumentException e) {
+        if("No Portfolios".equals(e.getMessage())) {
+          view.displayCustomText("No portfolios\n");
+          displayExitOperationSequence(scan);
+          return;
+        }
         view.displayInvalidInput();
-      } catch (AttributeNotFoundException e) {
-        view.displayCustomText("No portfolios\n");
-        displayExitOperationSequence(scan);
-        return;
       }
     }
 
@@ -111,7 +111,6 @@ public class PortfolioController implements IPortfolioController {
       while (true) {
         switch (scan.next()) {
           case "E":
-            displayExitOperationSequence(scan);
             return;
           case "1":
             if (!portfolios.savePortfolios()) {
@@ -154,18 +153,21 @@ public class PortfolioController implements IPortfolioController {
         String availablePortfolios = portfolios.getAvailablePortfolios();
         view.displayCustomText(availablePortfolios);
         view.askForInput();
+        scan.nextLine();
         portfolioId = scan.nextInt();
+        if(portfolioId <= 0) throw new IllegalArgumentException();
         view.displayCustomText("Please enter the date (yyyy-mm-dd): ");
         date = LocalDate.parse(scan.next());
         String portfolioValue = String.format("%.2f", portfolios.getPortfolioValue(date, portfolioId));
         view.displayCustomText("Portfolio" + portfolioId + "\n" + portfolioValue + "\n");
         break;
-      } catch (DateTimeParseException | IllegalArgumentException e) {
+      } catch (DateTimeParseException | IllegalArgumentException | InputMismatchException e) {
+        if("No Portfolios".equals(e.getMessage())) {
+          view.displayCustomText("No portfolios\n");
+          displayExitOperationSequence(scan);
+          return;
+        }
         view.displayInvalidInput();
-      } catch (AttributeNotFoundException e) {
-        view.displayCustomText("No portfolios\n");
-        displayExitOperationSequence(scan);
-        return;
       }
     }
 
@@ -211,8 +213,11 @@ public class PortfolioController implements IPortfolioController {
       view.displayCustomText("Stock Quantity: ");
       try {
         stockQuantity = scan.nextInt();
+        if (stockQuantity <= 0) {
+          throw new IllegalArgumentException();
+        }
         break;
-      } catch (InputMismatchException e) {
+      } catch (InputMismatchException | IllegalArgumentException e) {
         scan.nextLine();
         view.displayInvalidInput();
       }

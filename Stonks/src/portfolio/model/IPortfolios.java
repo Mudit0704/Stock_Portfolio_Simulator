@@ -58,7 +58,7 @@ public interface IPortfolios {
    *
    * @return available portfolios represented using a String.
    */
-  String getAvailablePortfolios() throws AttributeNotFoundException;
+  String getAvailablePortfolios() throws IllegalArgumentException;
 
   /**
    * Checks if a ticker symbol is valid, i.e, it is being traded currently.

@@ -71,7 +71,9 @@ public class Portfolios implements IPortfolios {
     if (files != null && files.length != 0) {
       for (File file : files) {
         IPortfolio portfolio = new Portfolio(stockService);
-        portfolio.retrievePortfolio(userDirectory + file.getName());
+        if (!portfolio.retrievePortfolio(userDirectory + file.getName())) {
+          return false;
+        }
         portfolios.add(portfolio);
       }
       result = true;
@@ -103,17 +105,17 @@ public class Portfolios implements IPortfolios {
   }
 
   @Override
-  public String getAvailablePortfolios() throws AttributeNotFoundException {
+  public String getAvailablePortfolios() throws IllegalArgumentException {
     int portfolioNo = 0;
     StringBuilder composition = new StringBuilder();
-    ;
+
     if (portfolios.size() > 0) {
       while (portfolioNo < portfolios.size()) {
         composition.append("Portfolio").append(portfolioNo + 1).append("\n");
         portfolioNo++;
       }
     } else {
-      throw new AttributeNotFoundException();
+      throw new IllegalArgumentException("No portfolios");
     }
     return composition.toString();
   }

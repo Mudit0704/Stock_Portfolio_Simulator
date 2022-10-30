@@ -499,7 +499,7 @@ public class PortfoliosTest {
   }
 
   @Test
-  public void testSaveMultipleRetrievePortfolios() throws AttributeNotFoundException {
+  public void testSaveMultipleRetrievePortfolios() {
 
     IPortfolios portfolios = new MockPortfolios(new MockStockService("/test/testData.txt"));
 
@@ -629,8 +629,8 @@ public class PortfoliosTest {
 //    portfolios.retrievePortfolios();
 //  }
 
-  @Test(expected = AttributeNotFoundException.class)
-  public void testSetStocksInPortfolioZeroStocks() throws AttributeNotFoundException {
+  @Test(expected = IllegalArgumentException.class)
+  public void testSetStocksInPortfolioZeroStocks() {
     IPortfolios portfolios = new MockPortfolios(new MockStockService("/test/testData.txt"));
     Map<String, Integer> map = new HashMap<>();
 
