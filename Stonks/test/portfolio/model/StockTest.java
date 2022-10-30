@@ -23,6 +23,12 @@ public class StockTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
+  public void getValueOnInvalidDate() {
+    IStock stock = new Stock("GOOG", new MockStockService("/test/testData.txt"));
+    assertEquals(101.48, stock.getValue(LocalDate.of(2024,10,22)), 0.0);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
   public void getValueBeyondAvailableDates() {
     IStock stock = new Stock("GOOG", new MockStockService());
     stock.getValue(LocalDate.of(2010,10,22));

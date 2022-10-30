@@ -33,7 +33,7 @@ class Stock implements IStock {
     else {
       LocalDate latestDate = getClosestDate(date);
 
-      if(latestDate == null) {
+      if(date.isAfter(LocalDate.now()) || latestDate == null) {
         throw new IllegalArgumentException("Cannot find stock price for the given date.");
       }
       else {
