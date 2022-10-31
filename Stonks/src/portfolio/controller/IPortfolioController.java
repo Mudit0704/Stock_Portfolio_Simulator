@@ -14,5 +14,5 @@ public interface IPortfolioController {
    * @param portfolios Represents the model object and is of type {@link IPortfolios}.
    * @throws IOException if an I/O error occurs.
    */
-  void run(IPortfolios portfolios) throws IOException, InterruptedException;
+  void run(IPortfolios portfolios) throws IOException;
 }

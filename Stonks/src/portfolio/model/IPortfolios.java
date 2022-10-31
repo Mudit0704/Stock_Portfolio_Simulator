@@ -43,7 +43,6 @@ public interface IPortfolios {
   /**
    * Retrieves the portfolio information at the specified location.
    *
-   * @return true if the file retrieval is successful, false otherwise.
    * @throws IOException                  if an I/O error occurs.
    * @throws ParserConfigurationException if a DocumentBuilder cannot be created which satisfies the
    *                                      configuration requested.
