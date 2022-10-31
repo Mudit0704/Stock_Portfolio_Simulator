@@ -46,6 +46,5 @@ You cannot fetch the portfolio value if the input date is prior to 100 days from
 Due to API limitations this application can process upto 5 stocks without trouble. If you add more
 than 5 different stocks at a time, the application will take time to load the stock data, please keep trying.
 
-Please note, that the application does not persist the portfolio data unless the user explicitly
-decides to do so by choosing option "4" in the startup menu. But it does so once the user asks for it
-and loads the portfolio data as well.
+Please note, the application will not persist the portfolio unless the user explicitly specifies through the menu option "4".
+
