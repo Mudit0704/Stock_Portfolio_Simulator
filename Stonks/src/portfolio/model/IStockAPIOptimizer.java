@@ -3,7 +3,7 @@ package portfolio.model;
 /**
  * This interface represents a caching layer to avoid making additional API calls.
  */
-public interface IStockAPIOptimizer {
+interface IStockAPIOptimizer {
 
   /**
    * Gets the cached object for the specified key.

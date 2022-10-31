@@ -6,7 +6,7 @@ import java.util.Map;
 /**
  * Implements the caching of stock data from API.
  */
-public class StockCache implements IStockAPIOptimizer {
+class StockCache implements IStockAPIOptimizer {
 
   final Map<String, IStock> stockMap ;
 
