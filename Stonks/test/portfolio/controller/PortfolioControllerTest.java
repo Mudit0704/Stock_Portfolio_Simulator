@@ -26,7 +26,7 @@ public class PortfolioControllerTest {
 
   @Test
   public void testRunInvalidInputs() throws IOException, InterruptedException {
-    Reader in = new StringReader("+ + + E");
+    Reader in = new StringReader("+\n +\n +\n E");
     IPortfolioController controller = new PortfolioController(in, mockView);
 
     controller.run(new MockModel(log, true));
@@ -68,7 +68,7 @@ public class PortfolioControllerTest {
   @Test
   public void testRunWhenOption1InvalidInput()
       throws IOException, InterruptedException {
-    Reader in = new StringReader("1 INVALID E E");
+    Reader in = new StringReader("1 INVALID\n E E");
     IPortfolioController controller = new PortfolioController(in, mockView);
 
     controller.run(new MockModel(log, true));
@@ -384,7 +384,7 @@ public class PortfolioControllerTest {
   @Test
   public void testRunWhenOption4InvalidInput()
       throws IOException, InterruptedException {
-    Reader in = new StringReader("4\n Invalid E E");
+    Reader in = new StringReader("4\n Invalid\n E E");
     IPortfolioController controller = new PortfolioController(in, mockView);
 
     controller.run(new MockModel(log, true));
@@ -392,7 +392,10 @@ public class PortfolioControllerTest {
     assertEquals("", log.toString());
     assertEquals("Menu Ask_For_Input Choose from the below menu: \n"
             + " 1 -> Save portfolio \n 2 -> Retrieve portfolio \n"
-            + " E -> Exit from the operation \nAsk_For_Input Invalid_Input Menu Ask_For_Input ",
+            + " E -> Exit from the operation \n"
+            + "Ask_For_Input Invalid_Input Choose from the below menu: \n"
+            + " 1 -> Save portfolio \n 2 -> Retrieve portfolio \n"
+            + " E -> Exit from the operation \nAsk_For_Input Menu Ask_For_Input ",
         out.toString());
   }
 

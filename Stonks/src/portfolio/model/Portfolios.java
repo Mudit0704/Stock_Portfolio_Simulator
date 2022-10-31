@@ -81,15 +81,15 @@ public class Portfolios implements IPortfolios {
   }
 
   @Override
-  public void createNewPortfolio(Map<String, Integer> stocks) {
+  public void createNewPortfolio(Map<String, Long> stocks) {
     if (stocks.size() == 0) {
       return;
     }
     IPortfolio portfolio = new Portfolio(stockService);
 
-    Map<IStock, Integer> stockList = new HashMap<>();
+    Map<IStock, Long> stockList = new HashMap<>();
 
-    for (Map.Entry<String, Integer> entry : stocks.entrySet()) {
+    for (Map.Entry<String, Long> entry : stocks.entrySet()) {
       IStock newStock = apiOptimizer.cacheGetObj(entry.getKey());
       if (newStock == null) {
         newStock = new Stock(entry.getKey(), this.stockService);

@@ -23,10 +23,10 @@ public class PortfolioTest {
     IStockService mockStockService = new MockStockService("/test/testData.txt");
     IPortfolio portfolio = new Portfolio(mockStockService);
 
-    Map<IStock, Integer> map = new HashMap<>();
-    map.put(new Stock("GOOG", mockStockService), 3);
-    map.put(new Stock("PUBM", mockStockService), 1);
-    map.put(new Stock("MSFT", mockStockService), 2);
+    Map<IStock, Long> map = new HashMap<>();
+    map.put(new Stock("GOOG", mockStockService), 3L);
+    map.put(new Stock("PUBM", mockStockService), 1L);
+    map.put(new Stock("MSFT", mockStockService), 2L);
 
     portfolio.setPortfolioStocks(map);
 
@@ -41,7 +41,7 @@ public class PortfolioTest {
     IStockService mockStockService = new MockStockService("/test/testData.txt");
     IPortfolio portfolio = new Portfolio(mockStockService);
 
-    Map<IStock, Integer> map = new HashMap<>();
+    Map<IStock, Long> map = new HashMap<>();
 
     portfolio.setPortfolioStocks(map);
 
@@ -54,10 +54,10 @@ public class PortfolioTest {
     IStockService mockStockService = new MockStockService("/test/testData.txt");
     IPortfolio portfolio = new Portfolio(mockStockService);
 
-    Map<IStock, Integer> map = new HashMap<>();
-    map.put(new Stock("GOOG", mockStockService), 3);
-    map.put(new Stock("PUBM", mockStockService), 1);
-    map.put(new Stock("MSFT", mockStockService), 2);
+    Map<IStock, Long> map = new HashMap<>();
+    map.put(new Stock("GOOG", mockStockService), 3L);
+    map.put(new Stock("PUBM", mockStockService), 1L);
+    map.put(new Stock("MSFT", mockStockService), 2L);
 
     portfolio.setPortfolioStocks(map);
 
@@ -66,9 +66,9 @@ public class PortfolioTest {
     assertTrue(result.contains("MSFT -> 2\n"));
     assertTrue(result.contains("PUBM -> 1\n"));
 
-    map.put(new Stock("ABC", mockStockService), 3);
-    map.put(new Stock("DEF", mockStockService), 1);
-    map.put(new Stock("GHI", mockStockService), 2);
+    map.put(new Stock("ABC", mockStockService), 3L);
+    map.put(new Stock("DEF", mockStockService), 1L);
+    map.put(new Stock("GHI", mockStockService), 2L);
 
     portfolio.setPortfolioStocks(map);
 
@@ -87,10 +87,10 @@ public class PortfolioTest {
     IStockService mockStockService = new MockStockService("/test/testData.txt");
     IPortfolio portfolio = new Portfolio(mockStockService);
 
-    Map<IStock, Integer> map = new HashMap<>();
-    map.put(new Stock("GOOG", mockStockService), 3);
-    map.put(new Stock("PUBM", mockStockService), 1);
-    map.put(new Stock("MSFT", mockStockService), 2);
+    Map<IStock, Long> map = new HashMap<>();
+    map.put(new Stock("GOOG", mockStockService), 3L);
+    map.put(new Stock("PUBM", mockStockService), 1L);
+    map.put(new Stock("MSFT", mockStockService), 2L);
 
     portfolio.setPortfolioStocks(map);
 
@@ -102,10 +102,10 @@ public class PortfolioTest {
     IStockService mockStockService = new MockStockService("/test/testData.txt");
     IPortfolio portfolio = new Portfolio(mockStockService);
 
-    Map<IStock, Integer> map = new HashMap<>();
-    map.put(new Stock("GOOG", mockStockService), 3);
-    map.put(new Stock("PUBM", mockStockService), 1);
-    map.put(new Stock("MSFT", mockStockService), 2);
+    Map<IStock, Long> map = new HashMap<>();
+    map.put(new Stock("GOOG", mockStockService), 3L);
+    map.put(new Stock("PUBM", mockStockService), 1L);
+    map.put(new Stock("MSFT", mockStockService), 2L);
 
     portfolio.setPortfolioStocks(map);
 
@@ -117,10 +117,10 @@ public class PortfolioTest {
     IStockService mockStockService = new MockStockService("/test/testData.txt");
     IPortfolio portfolio = new Portfolio(mockStockService);
 
-    Map<IStock, Integer> map = new HashMap<>();
-    map.put(new Stock("GOOG", mockStockService), 3);
-    map.put(new Stock("PUBM", mockStockService), 1);
-    map.put(new Stock("MSFT", mockStockService), 2);
+    Map<IStock, Long> map = new HashMap<>();
+    map.put(new Stock("GOOG", mockStockService), 3L);
+    map.put(new Stock("PUBM", mockStockService), 1L);
+    map.put(new Stock("MSFT", mockStockService), 2L);
 
     portfolio.setPortfolioStocks(map);
 
@@ -132,7 +132,7 @@ public class PortfolioTest {
     IStockService mockStockService = new MockStockService("/test/testData.txt");
     IPortfolio portfolio = new Portfolio(mockStockService);
 
-    Map<IStock, Integer> map = new HashMap<>();
+    Map<IStock, Long> map = new HashMap<>();
 
     portfolio.setPortfolioStocks(map);
 
@@ -144,10 +144,10 @@ public class PortfolioTest {
     IStockService mockStockService = new MockStockService("/test/testData.txt");
     IPortfolio portfolio = new Portfolio(mockStockService);
 
-    Map<IStock, Integer> map = new HashMap<>();
-    map.put(new Stock("GOOG", mockStockService), 3);
-    map.put(new Stock("PUBM", mockStockService), 1);
-    map.put(new Stock("MSFT", mockStockService), 2);
+    Map<IStock, Long> map = new HashMap<>();
+    map.put(new Stock("GOOG", mockStockService), 3L);
+    map.put(new Stock("PUBM", mockStockService), 1L);
+    map.put(new Stock("MSFT", mockStockService), 2L);
 
     portfolio.setPortfolioStocks(map);
     String path = System.getProperty("user.dir") + "/test_save.xml";
@@ -183,7 +183,7 @@ public class PortfolioTest {
     IStockService mockStockService = new MockStockService("/test/testData.txt");
     IPortfolio portfolio = new Portfolio(mockStockService);
 
-    Map<IStock, Integer> map = new HashMap<>();
+    Map<IStock, Long> map = new HashMap<>();
 
     portfolio.setPortfolioStocks(map);
     String path = System.getProperty("user.dir") + "/test_save.xml";
@@ -201,10 +201,10 @@ public class PortfolioTest {
     IStockService mockStockService = new MockStockService("/test/testData.txt");
     IPortfolio portfolio = new Portfolio(mockStockService);
 
-    Map<IStock, Integer> map = new HashMap<>();
-    map.put(new Stock("GOOG", mockStockService), 3);
-    map.put(new Stock("PUBM", mockStockService), 1);
-    map.put(new Stock("MSFT", mockStockService), 2);
+    Map<IStock, Long> map = new HashMap<>();
+    map.put(new Stock("GOOG", mockStockService), 3L);
+    map.put(new Stock("PUBM", mockStockService), 1L);
+    map.put(new Stock("MSFT", mockStockService), 2L);
 
     portfolio.setPortfolioStocks(map);
     String path = System.getProperty("user.dir") + "/test_multiple_save.xml";
@@ -265,10 +265,10 @@ public class PortfolioTest {
     IStockService mockStockService = new MockStockService("/test/testData.txt");
     IPortfolio portfolio = new Portfolio(mockStockService);
 
-    Map<IStock, Integer> map = new HashMap<>();
-    map.put(new Stock("GOOG", mockStockService), 3);
-    map.put(new Stock("PUBM", mockStockService), 1);
-    map.put(new Stock("MSFT", mockStockService), 2);
+    Map<IStock, Long> map = new HashMap<>();
+    map.put(new Stock("GOOG", mockStockService), 3L);
+    map.put(new Stock("PUBM", mockStockService), 1L);
+    map.put(new Stock("MSFT", mockStockService), 2L);
 
     portfolio.setPortfolioStocks(map);
     String path = System.getProperty("user.dir") + "/test_multiple_save.xml";

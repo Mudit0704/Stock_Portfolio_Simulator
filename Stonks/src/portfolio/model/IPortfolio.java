@@ -55,5 +55,5 @@ interface IPortfolio {
    *
    * @param stocks mapping of stock and quantity to be stored in the portfolio.
    */
-  void setPortfolioStocks(Map<IStock, Integer> stocks);
+  void setPortfolioStocks(Map<IStock, Long> stocks);
 }

@@ -23,16 +23,16 @@ public class PortfoliosTest {
   public void testGetPortfolioValue() {
     IPortfolios portfolios = new MockPortfolios(new MockStockService("/test/testData.txt"));
 
-    Map<String, Integer> map = new HashMap<>();
-    map.put("GOOG", 3);
-    map.put("PUBM", 2);
-    map.put("MSFT", 1);
+    Map<String, Long> map = new HashMap<>();
+    map.put("GOOG", 3L);
+    map.put("PUBM", 2L);
+    map.put("MSFT", 1L);
 
     portfolios.createNewPortfolio(map);
 
     map = new HashMap<>();
-    map.put("GOOG", 1);
-    map.put("PUBM", 2);
+    map.put("GOOG", 1L);
+    map.put("PUBM", 2L);
 
     portfolios.createNewPortfolio(map);
 
@@ -44,7 +44,7 @@ public class PortfoliosTest {
   public void testGetPortfolioValueForEmptyPortfolio() {
     IPortfolios portfolios = new MockPortfolios(new MockStockService("/test/testData.txt"));
 
-    Map<String, Integer> map = new HashMap<>();
+    Map<String, Long> map = new HashMap<>();
 
     portfolios.createNewPortfolio(map);
 
@@ -56,17 +56,17 @@ public class PortfoliosTest {
   public void testGetPortfolioValueForInvalidPortfolioId() {
     IPortfolios portfolios = new MockPortfolios(new MockStockService("/test/testData.txt"));
 
-    Map<String, Integer> map = new HashMap<>();
-    map.put("GOOG", 3);
-    map.put("PUBM", 2);
-    map.put("MSFT", 1);
+    Map<String, Long> map = new HashMap<>();
+    map.put("GOOG", 3L);
+    map.put("PUBM", 2L);
+    map.put("MSFT", 1L);
 
     portfolios.createNewPortfolio(map);
 
     map = new HashMap<>();
-    map.put("GOOG", 1);
-    map.put("PUBM", 2);
-    map.put("MSFT", 3);
+    map.put("GOOG", 1L);
+    map.put("PUBM", 2L);
+    map.put("MSFT", 3L);
 
     portfolios.createNewPortfolio(map);
 
@@ -78,17 +78,17 @@ public class PortfoliosTest {
   public void testGetPortfolioValueForNonEmptyZeroPortfolioId() {
     IPortfolios portfolios = new MockPortfolios(new MockStockService("/test/testData.txt"));
 
-    Map<String, Integer> map = new HashMap<>();
-    map.put("GOOG", 3);
-    map.put("PUBM", 2);
-    map.put("MSFT", 1);
+    Map<String, Long> map = new HashMap<>();
+    map.put("GOOG", 3L);
+    map.put("PUBM", 2L);
+    map.put("MSFT", 1L);
 
     portfolios.createNewPortfolio(map);
 
     map = new HashMap<>();
-    map.put("GOOG", 1);
-    map.put("PUBM", 2);
-    map.put("MSFT", 3);
+    map.put("GOOG", 1L);
+    map.put("PUBM", 2L);
+    map.put("MSFT", 3L);
 
     portfolios.createNewPortfolio(map);
 
@@ -100,17 +100,17 @@ public class PortfoliosTest {
   public void testGetPortfolioValueForInvalidDate() {
     IPortfolios portfolios = new MockPortfolios(new MockStockService("/test/testData.txt"));
 
-    Map<String, Integer> map = new HashMap<>();
-    map.put("GOOG", 3);
-    map.put("PUBM", 2);
-    map.put("MSFT", 1);
+    Map<String, Long> map = new HashMap<>();
+    map.put("GOOG", 3L);
+    map.put("PUBM", 2L);
+    map.put("MSFT", 1L);
 
     portfolios.createNewPortfolio(map);
 
     map = new HashMap<>();
-    map.put("GOOG", 1);
-    map.put("PUBM", 2);
-    map.put("MSFT", 3);
+    map.put("GOOG", 1L);
+    map.put("PUBM", 2L);
+    map.put("MSFT", 3L);
 
     portfolios.createNewPortfolio(map);
 
@@ -122,17 +122,17 @@ public class PortfoliosTest {
   public void testGetPortfolioValueForNegativeId() {
     IPortfolios portfolios = new MockPortfolios(new MockStockService("/test/testData.txt"));
 
-    Map<String, Integer> map = new HashMap<>();
-    map.put("GOOG", 3);
-    map.put("PUBM", 2);
-    map.put("MSFT", 1);
+    Map<String, Long> map = new HashMap<>();
+    map.put("GOOG", 3L);
+    map.put("PUBM", 2L);
+    map.put("MSFT", 1L);
 
     portfolios.createNewPortfolio(map);
 
     map = new HashMap<>();
-    map.put("GOOG", 1);
-    map.put("PUBM", 2);
-    map.put("MSFT", 3);
+    map.put("GOOG", 1L);
+    map.put("PUBM", 2L);
+    map.put("MSFT", 3L);
 
     portfolios.createNewPortfolio(map);
 
@@ -144,24 +144,24 @@ public class PortfoliosTest {
   public void testGetPortfolioComposition() {
     IPortfolios portfolios = new MockPortfolios(new MockStockService("/test/testData.txt"));
 
-    Map<String, Integer> map = new HashMap<>();
-    map.put("GOOG", 3);
-    map.put("PUBM", 2);
-    map.put("MSFT", 1);
-    map.put("MUN", 12);
+    Map<String, Long> map = new HashMap<>();
+    map.put("GOOG", 3L);
+    map.put("PUBM", 2L);
+    map.put("MSFT", 1L);
+    map.put("MUN", 12L);
 
     portfolios.createNewPortfolio(map);
 
     map = new HashMap<>();
-    map.put("AAPL", 7);
-    map.put("OCL", 9);
+    map.put("AAPL", 7L);
+    map.put("OCL", 9L);
 
     portfolios.createNewPortfolio(map);
 
     map = new HashMap<>();
-    map.put("IBM", 7);
-    map.put("ROCL", 9);
-    map.put("A", 12);
+    map.put("IBM", 7L);
+    map.put("ROCL", 9L);
+    map.put("A", 12L);
 
     portfolios.createNewPortfolio(map);
 
@@ -188,24 +188,24 @@ public class PortfoliosTest {
   public void testGetPortfolioCompositionZeroId() {
     IPortfolios portfolios = new MockPortfolios(new MockStockService("/test/testData.txt"));
 
-    Map<String, Integer> map = new HashMap<>();
-    map.put("GOOG", 3);
-    map.put("PUBM", 2);
-    map.put("MSFT", 1);
-    map.put("MUN", 12);
+    Map<String, Long> map = new HashMap<>();
+    map.put("GOOG", 3L);
+    map.put("PUBM", 2L);
+    map.put("MSFT", 1L);
+    map.put("MUN", 12L);
 
     portfolios.createNewPortfolio(map);
 
     map = new HashMap<>();
-    map.put("AAPL", 7);
-    map.put("OCL", 9);
+    map.put("AAPL", 7L);
+    map.put("OCL", 9L);
 
     portfolios.createNewPortfolio(map);
 
     map = new HashMap<>();
-    map.put("IBM", 7);
-    map.put("ROCL", 9);
-    map.put("A", 12);
+    map.put("IBM", 7L);
+    map.put("ROCL", 9L);
+    map.put("A", 12L);
 
     portfolios.createNewPortfolio(map);
 
@@ -216,24 +216,24 @@ public class PortfoliosTest {
   public void testGetInvalidIdPortfolioComposition() {
     IPortfolios portfolios = new MockPortfolios(new MockStockService("/test/testData.txt"));
 
-    Map<String, Integer> map = new HashMap<>();
-    map.put("GOOG", 3);
-    map.put("PUBM", 2);
-    map.put("MSFT", 1);
-    map.put("MUN", 12);
+    Map<String, Long> map = new HashMap<>();
+    map.put("GOOG", 3L);
+    map.put("PUBM", 2L);
+    map.put("MSFT", 1L);
+    map.put("MUN", 12L);
 
     portfolios.createNewPortfolio(map);
 
     map = new HashMap<>();
-    map.put("AAPL", 7);
-    map.put("OCL", 9);
+    map.put("AAPL", 7L);
+    map.put("OCL", 9L);
 
     portfolios.createNewPortfolio(map);
 
     map = new HashMap<>();
-    map.put("IBM", 7);
-    map.put("ROCL", 9);
-    map.put("A", 12);
+    map.put("IBM", 7L);
+    map.put("ROCL", 9L);
+    map.put("A", 12L);
 
     portfolios.createNewPortfolio(map);
 
@@ -244,7 +244,7 @@ public class PortfoliosTest {
   public void testGetInvalidEmptyPortfolioComposition() {
     IPortfolios portfolios = new MockPortfolios(new MockStockService("/test/testData.txt"));
 
-    Map<String, Integer> map = new HashMap<>();
+    Map<String, Long> map = new HashMap<>();
 
     portfolios.createNewPortfolio(map);
 
@@ -255,7 +255,7 @@ public class PortfoliosTest {
   public void testGetInvalidIndexEmptyPortfolioComposition() {
     IPortfolios portfolios = new MockPortfolios(new MockStockService("/test/testData.txt"));
 
-    Map<String, Integer> map = new HashMap<>();
+    Map<String, Long> map = new HashMap<>();
 
     portfolios.createNewPortfolio(map);
 
@@ -266,24 +266,24 @@ public class PortfoliosTest {
   public void testGetInvalidIdPortfolioCompositionNegativeVal() {
     IPortfolios portfolios = new MockPortfolios(new MockStockService("/test/testData.txt"));
 
-    Map<String, Integer> map = new HashMap<>();
-    map.put("GOOG", 3);
-    map.put("PUBM", 2);
-    map.put("MSFT", 1);
-    map.put("MUN", 12);
+    Map<String, Long> map = new HashMap<>();
+    map.put("GOOG", 3L);
+    map.put("PUBM", 2L);
+    map.put("MSFT", 1L);
+    map.put("MUN", 12L);
 
     portfolios.createNewPortfolio(map);
 
     map = new HashMap<>();
-    map.put("AAPL", 7);
-    map.put("OCL", 9);
+    map.put("AAPL", 7L);
+    map.put("OCL", 9L);
 
     portfolios.createNewPortfolio(map);
 
     map = new HashMap<>();
-    map.put("IBM", 7);
-    map.put("ROCL", 9);
-    map.put("A", 12);
+    map.put("IBM", 7L);
+    map.put("ROCL", 9L);
+    map.put("A", 12L);
 
     portfolios.createNewPortfolio(map);
 
@@ -309,24 +309,24 @@ public class PortfoliosTest {
 
     IPortfolios portfolios = new MockPortfolios(new MockStockService("/test/testData.txt"));
 
-    Map<String, Integer> map = new HashMap<>();
-    map.put("GOOG", 3);
-    map.put("PUBM", 2);
-    map.put("MSFT", 1);
-    map.put("MUN", 12);
+    Map<String, Long> map = new HashMap<>();
+    map.put("GOOG", 3L);
+    map.put("PUBM", 2L);
+    map.put("MSFT", 1L);
+    map.put("MUN", 12L);
 
     portfolios.createNewPortfolio(map);
 
     map = new HashMap<>();
-    map.put("AAPL", 7);
-    map.put("OCL", 9);
+    map.put("AAPL", 7L);
+    map.put("OCL", 9L);
 
     portfolios.createNewPortfolio(map);
 
     map = new HashMap<>();
-    map.put("IBM", 7);
-    map.put("ROCL", 9);
-    map.put("A", 12);
+    map.put("IBM", 7L);
+    map.put("ROCL", 9L);
+    map.put("A", 12L);
 
     portfolios.createNewPortfolio(map);
 
@@ -375,11 +375,11 @@ public class PortfoliosTest {
   public void testSaveSinglePortfolio() throws ParserConfigurationException {
     IPortfolios portfolios = new MockPortfolios(new MockStockService("/test/testData.txt"));
 
-    Map<String, Integer> map = new HashMap<>();
-    map.put("GOOG", 3);
-    map.put("PUBM", 2);
-    map.put("MSFT", 1);
-    map.put("MUN", 12);
+    Map<String, Long> map = new HashMap<>();
+    map.put("GOOG", 3L);
+    map.put("PUBM", 2L);
+    map.put("MSFT", 1L);
+    map.put("MUN", 12L);
 
     portfolios.createNewPortfolio(map);
     portfolios.savePortfolios();
@@ -434,24 +434,24 @@ public class PortfoliosTest {
 
     IPortfolios portfolios = new MockPortfolios(new MockStockService("/test/testData.txt"));
 
-    Map<String, Integer> map = new HashMap<>();
-    map.put("GOOG", 3);
-    map.put("PUBM", 2);
-    map.put("MSFT", 1);
-    map.put("MUN", 12);
+    Map<String, Long> map = new HashMap<>();
+    map.put("GOOG", 3L);
+    map.put("PUBM", 2L);
+    map.put("MSFT", 1L);
+    map.put("MUN", 12L);
 
     portfolios.createNewPortfolio(map);
 
     map = new HashMap<>();
-    map.put("AAPL", 7);
-    map.put("OCL", 9);
+    map.put("AAPL", 7L);
+    map.put("OCL", 9L);
 
     portfolios.createNewPortfolio(map);
 
     map = new HashMap<>();
-    map.put("IBM", 7);
-    map.put("ROCL", 9);
-    map.put("A", 12);
+    map.put("IBM", 7L);
+    map.put("ROCL", 9L);
+    map.put("A", 12L);
 
     portfolios.createNewPortfolio(map);
 
@@ -495,24 +495,24 @@ public class PortfoliosTest {
 
     IPortfolios portfolios = new MockPortfolios(new MockStockService("/test/testData.txt"));
 
-    Map<String, Integer> map = new HashMap<>();
-    map.put("GOOG", 3);
-    map.put("PUBM", 2);
-    map.put("MSFT", 1);
-    map.put("MUN", 12);
+    Map<String, Long> map = new HashMap<>();
+    map.put("GOOG", 3L);
+    map.put("PUBM", 2L);
+    map.put("MSFT", 1L);
+    map.put("MUN", 12L);
 
     portfolios.createNewPortfolio(map);
 
     map = new HashMap<>();
-    map.put("AAPL", 7);
-    map.put("OCL", 9);
+    map.put("AAPL", 7L);
+    map.put("OCL", 9L);
 
     portfolios.createNewPortfolio(map);
 
     map = new HashMap<>();
-    map.put("IBM", 7);
-    map.put("ROCL", 9);
-    map.put("A", 12);
+    map.put("IBM", 7L);
+    map.put("ROCL", 9L);
+    map.put("A", 12L);
 
     portfolios.createNewPortfolio(map);
 
@@ -566,7 +566,7 @@ public class PortfoliosTest {
   @Test(expected = IllegalArgumentException.class)
   public void testSetStocksInPortfolioZeroStocks() {
     IPortfolios portfolios = new MockPortfolios(new MockStockService("/test/testData.txt"));
-    Map<String, Integer> map = new HashMap<>();
+    Map<String, Long> map = new HashMap<>();
 
     portfolios.createNewPortfolio(map);
     portfolios.createNewPortfolio(map);
@@ -577,24 +577,24 @@ public class PortfoliosTest {
   @Test
   public void testGetAvailablePortfolios() throws AttributeNotFoundException {
     IPortfolios portfolios = new MockPortfolios(new MockStockService("/test/testData.txt"));
-    Map<String, Integer> map = new HashMap<>();
-    map.put("GOOG", 3);
-    map.put("PUBM", 2);
-    map.put("MSFT", 1);
-    map.put("MUN", 12);
+    Map<String, Long> map = new HashMap<>();
+    map.put("GOOG", 3L);
+    map.put("PUBM", 2L);
+    map.put("MSFT", 1L);
+    map.put("MUN", 12L);
 
     portfolios.createNewPortfolio(map);
 
     map = new HashMap<>();
-    map.put("AAPL", 7);
-    map.put("OCL", 9);
+    map.put("AAPL", 7L);
+    map.put("OCL", 9L);
 
     portfolios.createNewPortfolio(map);
 
     map = new HashMap<>();
-    map.put("IBM", 7);
-    map.put("ROCL", 9);
-    map.put("A", 12);
+    map.put("IBM", 7L);
+    map.put("ROCL", 9L);
+    map.put("A", 12L);
 
     portfolios.createNewPortfolio(map);
     assertEquals("Portfolio1\nPortfolio2\nPortfolio3\n", portfolios.getAvailablePortfolios());

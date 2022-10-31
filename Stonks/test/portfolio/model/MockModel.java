@@ -52,14 +52,14 @@ public class MockModel implements IPortfolios {
   }
 
   @Override
-  public void createNewPortfolio(Map<String, Integer> stocks) {
+  public void createNewPortfolio(Map<String, Long> stocks) {
     log.append(stocks).append(" ");
   }
 
   @Override
   public String getAvailablePortfolios() {
     if(!dataPresent) {
-      throw new IllegalArgumentException("No Portfolios");
+      throw new IllegalArgumentException("No portfolios");
     }
     log.append("Available_Portfolios ");
     return "Available_Portfolios ";

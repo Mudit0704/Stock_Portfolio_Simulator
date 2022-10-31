@@ -40,7 +40,7 @@ class Portfolio implements IPortfolio {
     }
   }
 
-  private final List<Pair<IStock, Integer>> stocks = new ArrayList<>();
+  private final List<Pair<IStock, Long>> stocks = new ArrayList<>();
   private final IStockService stockService;
   private final IStockAPIOptimizer apiOptimizer;
   //endregion
@@ -57,8 +57,8 @@ class Portfolio implements IPortfolio {
 
   //region Public Methods
   @Override
-  public void setPortfolioStocks(Map<IStock, Integer> stocks) {
-    for (Map.Entry<IStock, Integer> entry : stocks.entrySet()) {
+  public void setPortfolioStocks(Map<IStock, Long> stocks) {
+    for (Map.Entry<IStock, Long> entry : stocks.entrySet()) {
       this.stocks.add(new Pair<>(entry.getKey(), entry.getValue()));
     }
   }
@@ -73,7 +73,7 @@ class Portfolio implements IPortfolio {
   public double getPortfolioValue(LocalDate date) throws IllegalArgumentException {
     double portfolioValue = 0;
 
-    for (Pair<IStock, Integer> stock : this.stocks) {
+    for (Pair<IStock, Long> stock : this.stocks) {
       portfolioValue += stock.s.getValue(date) * stock.t;
     }
     return portfolioValue;
@@ -93,7 +93,7 @@ class Portfolio implements IPortfolio {
       Element rootElement = doc.createElement("portfolio");
       doc.appendChild(rootElement);
 
-      for (Pair<IStock, Integer> stock : this.stocks) {
+      for (Pair<IStock, Long> stock : this.stocks) {
         Element stockElement = doc.createElement("stock");
 
         Element stockTickerSymbol = doc.createElement("tickerSymbol");
@@ -146,7 +146,7 @@ class Portfolio implements IPortfolio {
         Element eElement = (Element) nNode;
         String tickerSymbol = eElement.getElementsByTagName("tickerSymbol")
             .item(0).getTextContent();
-        int stockQuantity = Integer.parseInt(eElement.getElementsByTagName("stockQuantity")
+        long stockQuantity = Long.parseLong(eElement.getElementsByTagName("stockQuantity")
             .item(0).getTextContent());
         IStock newStock = apiOptimizer.cacheGetObj(tickerSymbol);
         if (newStock == null) {
