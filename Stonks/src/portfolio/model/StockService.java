@@ -25,7 +25,7 @@ class StockService implements IStockService {
   private static final String APIKEY = "W0M1JOKC82EZEQA8";
 
   private static final String filePath =
-      System.getProperty("user.dir") + "stockSet" +
+      System.getProperty("user.dir") + "/stockSet" +
           new SimpleDateFormat("yyyyMMdd").format(new Date()) + ".dat";
   //endregion
 
