@@ -24,6 +24,7 @@ interface IPortfolio {
    *
    * @param date the date on which the total value of the portfolio is to be determined.
    * @return the portfolio's total value on the specified date.
+   * @throws IllegalArgumentException if the given date is invalid.
    */
   double getPortfolioValue(LocalDate date) throws IllegalArgumentException;
 
@@ -31,19 +32,22 @@ interface IPortfolio {
    * Saves the portfolio information into a file.
    *
    * @param path the location where portfolio information is to be stored.
-   * @throws IllegalArgumentException if the given file path is invalid.
+   * @throws RuntimeException             if an error occurs while saving.
+   * @throws ParserConfigurationException if a DocumentBuilder cannot be created which satisfies the
+   *                                      configuration requested.
    */
-  boolean savePortfolio(String path) throws IllegalArgumentException;
+  void savePortfolio(String path) throws IllegalArgumentException, ParserConfigurationException;
 
   /**
    * Retrieves this portfolio's information from a saved file.
    *
    * @param path the path from where this portfolio's information is to be retrieved.
-   * @throws IOException
-   * @throws ParserConfigurationException
-   * @throws SAXException
+   * @throws IOException                  if I/O error occurs.
+   * @throws ParserConfigurationException if a DocumentBuilder cannot be created which satisfies the
+   *                                      configuration requested.
+   * @throws SAXException                 If any parse errors occur.
    */
-  boolean retrievePortfolio(String path)
+  void retrievePortfolio(String path)
       throws IOException, ParserConfigurationException, SAXException;
 
   /**

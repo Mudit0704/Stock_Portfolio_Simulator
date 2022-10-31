@@ -3,11 +3,14 @@ package portfolio.model;
 import java.util.HashMap;
 import java.util.Map;
 
-public class APICache implements IStockAPIOptimizer {
+/**
+ * Implements the caching of stock data from API.
+ */
+public class StockCache implements IStockAPIOptimizer {
 
   final Map<String, IStock> stockMap ;
 
-  private APICache() {
+  private StockCache() {
     stockMap = new HashMap<>();
   }
 
@@ -15,11 +18,12 @@ public class APICache implements IStockAPIOptimizer {
 
   static IStockAPIOptimizer getInstance() {
     if(apiOptimizer == null) {
-      apiOptimizer = new APICache();
+      apiOptimizer = new StockCache();
     }
     return apiOptimizer;
   }
 
+  //region Public Methods
   @Override
   public IStock cacheGetObj(String tickerSymbol) {
     if(!this.stockMap.containsKey(tickerSymbol)) {
@@ -32,4 +36,5 @@ public class APICache implements IStockAPIOptimizer {
   public void cacheSetObj(String tickerSymbol, IStock stockObj) {
     this.stockMap.put(tickerSymbol, stockObj);
   }
+  //endregion
 }

@@ -4,6 +4,7 @@ import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -304,7 +305,7 @@ public class PortfoliosTest {
   }
 
   @Test
-  public void testSavePortfolio() {
+  public void testSavePortfolio() throws ParserConfigurationException {
 
     IPortfolios portfolios = new MockPortfolios(new MockStockService("/test/testData.txt"));
 
@@ -335,7 +336,7 @@ public class PortfoliosTest {
       new MockStockService("/test/testData.txt"));
 
     try {
-      assertTrue(retrievedPortfolios.retrievePortfolios());
+      retrievedPortfolios.retrievePortfolios();
     } catch (IOException e) {
       throw new RuntimeException(e);
     } catch (ParserConfigurationException e) {
@@ -371,7 +372,7 @@ public class PortfoliosTest {
   }
 
   @Test
-  public void testSaveSinglePortfolio() {
+  public void testSaveSinglePortfolio() throws ParserConfigurationException {
     IPortfolios portfolios = new MockPortfolios(new MockStockService("/test/testData.txt"));
 
     Map<String, Integer> map = new HashMap<>();
@@ -387,7 +388,7 @@ public class PortfoliosTest {
       new MockStockService("/test/testData.txt"));
 
     try {
-      assertTrue(retrievedPortfolios.retrievePortfolios());
+      retrievedPortfolios.retrievePortfolios();
     } catch (IOException e) {
       throw new RuntimeException(e);
     } catch (ParserConfigurationException e) {
@@ -409,8 +410,8 @@ public class PortfoliosTest {
     }
   }
 
-  @Test
-  public void testNoStockPortfolioSaveRetrieve() {
+  @Test(expected = RuntimeException.class)
+  public void testNoStockPortfolioSaveRetrieve() throws ParserConfigurationException {
     IPortfolios portfolios = new MockPortfolios(new MockStockService("/test/testData.txt"));
 
     Map<String, Integer> map = new HashMap<>();
@@ -421,85 +422,15 @@ public class PortfoliosTest {
       new MockStockService("/test/testData.txt"));
 
     try {
-      assertFalse(retrievedPortfolios.retrievePortfolios());
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    } catch (ParserConfigurationException e) {
-      throw new RuntimeException(e);
-    } catch (SAXException e) {
+      retrievedPortfolios.retrievePortfolios();
+    } catch (IOException | ParserConfigurationException | SAXException e) {
       throw new RuntimeException(e);
     }
   }
 
   @Test
-  public void testSaveRetrieveMultiplePortfolio() {
-
-    IPortfolios portfolios = new MockPortfolios(new MockStockService("/test/testData.txt"));
-
-    Map<String, Integer> map = new HashMap<>();
-    map.put("GOOG", 3);
-    map.put("PUBM", 2);
-    map.put("MSFT", 1);
-    map.put("MUN", 12);
-
-    portfolios.createNewPortfolio(map);
-
-    map = new HashMap<>();
-    map.put("AAPL", 7);
-    map.put("OCL", 9);
-
-    portfolios.createNewPortfolio(map);
-
-    map = new HashMap<>();
-    map.put("IBM", 7);
-    map.put("ROCL", 9);
-    map.put("A", 12);
-
-    portfolios.createNewPortfolio(map);
-
-    portfolios.savePortfolios();
-
-    IPortfolios retrievedPortfolios = new MockPortfolios(
-      new MockStockService("/test/testData.txt"));
-
-    try {
-      assertTrue(retrievedPortfolios.retrievePortfolios());
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    } catch (ParserConfigurationException e) {
-      throw new RuntimeException(e);
-    } catch (SAXException e) {
-      throw new RuntimeException(e);
-    }
-    String result1 = retrievedPortfolios.getPortfolioComposition(1);
-    assertTrue(result1.contains("Portfolio1\n"));
-    assertTrue(result1.contains("GOOG -> 3\n"));
-    assertTrue(result1.contains("PUBM -> 2\n"));
-    assertTrue(result1.contains("MSFT -> 1\n"));
-    assertTrue(result1.contains("MUN -> 12\n"));
-
-    String result2 = retrievedPortfolios.getPortfolioComposition(2);
-    assertTrue(result2.contains("Portfolio2\n"));
-    assertTrue(result2.contains("AAPL -> 7\n"));
-    assertTrue(result2.contains("OCL -> 9\n"));
-
-    String result3 = retrievedPortfolios.getPortfolioComposition(3);
-    assertTrue(result3.contains("Portfolio3\n"));
-    assertTrue(result3.contains("A -> 12\n"));
-    assertTrue(result3.contains("IBM -> 7\n"));
-    assertTrue(result3.contains("ROCL -> 9\n"));
-
-    try {
-      Files.delete(Path.of(System.getProperty("user.dir") + "/portfolio1.xml"));
-      Files.delete(Path.of(System.getProperty("user.dir") + "/portfolio2.xml"));
-      Files.delete(Path.of(System.getProperty("user.dir") + "/portfolio3.xml"));
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  @Test
-  public void testSaveMultipleRetrievePortfolios() {
+  public void testSaveRetrieveMultiplePortfolio()
+      throws ParserConfigurationException, IOException, SAXException {
 
     IPortfolios portfolios = new MockPortfolios(new MockStockService("/test/testData.txt"));
 
@@ -529,18 +460,8 @@ public class PortfoliosTest {
     IPortfolios retrievedPortfolios = new MockPortfolios(
       new MockStockService("/test/testData.txt"));
 
-    try {
-      assertTrue(retrievedPortfolios.retrievePortfolios());
-      assertFalse(retrievedPortfolios.retrievePortfolios());
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    } catch (ParserConfigurationException e) {
-      throw new RuntimeException(e);
-    } catch (SAXException e) {
-      throw new RuntimeException(e);
-    }
+    retrievedPortfolios.retrievePortfolios();
 
-    assertEquals("Portfolio1\nPortfolio2\nPortfolio3\n", portfolios.getAvailablePortfolios());
     String result1 = retrievedPortfolios.getPortfolioComposition(1);
     assertTrue(result1.contains("Portfolio1\n"));
     assertTrue(result1.contains("GOOG -> 3\n"));
@@ -568,66 +489,79 @@ public class PortfoliosTest {
     }
   }
 
-  @Test
-  public void testRetrievePortfolioWithNoFiles() {
+  @Test (expected = RuntimeException.class)
+  public void testSaveMultipleRetrievePortfolios()
+      throws ParserConfigurationException, IOException, SAXException {
+
     IPortfolios portfolios = new MockPortfolios(new MockStockService("/test/testData.txt"));
+
+    Map<String, Integer> map = new HashMap<>();
+    map.put("GOOG", 3);
+    map.put("PUBM", 2);
+    map.put("MSFT", 1);
+    map.put("MUN", 12);
+
+    portfolios.createNewPortfolio(map);
+
+    map = new HashMap<>();
+    map.put("AAPL", 7);
+    map.put("OCL", 9);
+
+    portfolios.createNewPortfolio(map);
+
+    map = new HashMap<>();
+    map.put("IBM", 7);
+    map.put("ROCL", 9);
+    map.put("A", 12);
+
+    portfolios.createNewPortfolio(map);
+
+    portfolios.savePortfolios();
+
+    IPortfolios retrievedPortfolios = new MockPortfolios(
+      new MockStockService("/test/testData.txt"));
+
+    retrievedPortfolios.retrievePortfolios();
     try {
-      assertFalse(portfolios.retrievePortfolios());
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    } catch (ParserConfigurationException e) {
-      throw new RuntimeException(e);
-    } catch (SAXException e) {
-      throw new RuntimeException(e);
+      retrievedPortfolios.retrievePortfolios();
+    } catch (RuntimeException e) {
+      assertEquals("Portfolio1\nPortfolio2\nPortfolio3\n", portfolios.getAvailablePortfolios());
+      String result1 = retrievedPortfolios.getPortfolioComposition(1);
+      assertTrue(result1.contains("Portfolio1\n"));
+      assertTrue(result1.contains("GOOG -> 3\n"));
+      assertTrue(result1.contains("PUBM -> 2\n"));
+      assertTrue(result1.contains("MSFT -> 1\n"));
+      assertTrue(result1.contains("MUN -> 12\n"));
+
+      String result2 = retrievedPortfolios.getPortfolioComposition(2);
+      assertTrue(result2.contains("Portfolio2\n"));
+      assertTrue(result2.contains("AAPL -> 7\n"));
+      assertTrue(result2.contains("OCL -> 9\n"));
+
+      String result3 = retrievedPortfolios.getPortfolioComposition(3);
+      assertTrue(result3.contains("Portfolio3\n"));
+      assertTrue(result3.contains("A -> 12\n"));
+      assertTrue(result3.contains("IBM -> 7\n"));
+      assertTrue(result3.contains("ROCL -> 9\n"));
+
+      try {
+        Files.delete(Path.of(System.getProperty("user.dir") + "/portfolio1.xml"));
+        Files.delete(Path.of(System.getProperty("user.dir") + "/portfolio2.xml"));
+        Files.delete(Path.of(System.getProperty("user.dir") + "/portfolio3.xml"));
+      } catch (IOException ex) {
+        throw new IOException(ex);
+      }
+
+      throw new RuntimeException();
     }
   }
 
-  //test this in portfolio
-//  @Test(expected = SAXException.class)
-//  public void testRetrievePortfolioParsingError()
-//    throws SAXException, IOException, ParserConfigurationException {
-//
-//    String path = System.getProperty("user.dir") + "/invalid_portfolio.xml";
-//    System.out.println(path);
-//    try {
-//      DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-//      DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-//      Document doc = dBuilder.newDocument();
-//
-//      Element rootElement = doc.createElement("portfolio>");
-//      doc.appendChild(rootElement);
-//
-//        Element stockElement = doc.createElement("st<o/>ck");
-//
-//        Element stockTickerSymbol = doc.createElement("t>ickerSymbol");
-//        stockTickerSymbol.appendChild(doc.createTextNode("ticker"));
-//
-//        Element stockQuantity = doc.createElement("stockQuantity");
-//        stockQuantity.appendChild(doc.createTextNode("23"));
-//
-//        Element stockPrice = doc.createElement("stockPrice");
-//        stockPrice.appendChild(doc.createTextNode("89"));
-//
-//        stockElement.appendChild(stockTickerSymbol);
-//        stockElement.appendChild(stockQuantity);
-//        stockElement.appendChild(stockPrice);
-//        rootElement.appendChild(stockElement);
-//
-//      TransformerFactory transformerFactory = TransformerFactory.newInstance();
-//      Transformer transformer = transformerFactory.newTransformer();
-//      DOMSource source = new DOMSource(doc);
-//
-//      StreamResult result = new StreamResult(new File(path));
-//      transformer.transform(source, result);
-//
-//    } catch (Exception e) {
-//      throw new IllegalArgumentException("File path not found. : " + e.getMessage());
-//    }
-//
-//
-//    IPortfolios portfolios = new MockPortfolios(new MockStockService("/test/testData.txt"));
-//    portfolios.retrievePortfolios();
-//  }
+  @Test(expected = FileNotFoundException.class)
+  public void testRetrievePortfolioWithNoFiles()
+      throws IOException, ParserConfigurationException, SAXException {
+    IPortfolios portfolios = new MockPortfolios(new MockStockService("/test/testData.txt"));
+    portfolios.retrievePortfolios();
+  }
 
   @Test(expected = IllegalArgumentException.class)
   public void testSetStocksInPortfolioZeroStocks() {

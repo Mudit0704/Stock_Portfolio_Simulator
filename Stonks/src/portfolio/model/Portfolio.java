@@ -12,6 +12,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
@@ -21,29 +22,43 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+/**
+ * Represents a single portfolio and the set of operations related to it. Implements
+ * {@link IPortfolios}.
+ */
 class Portfolio implements IPortfolio {
 
-  private static class Pair<S,T> {
-    S s ;
-    T t ;
+  //region Class Members
+  private static class Pair<S, T> {
+
+    S s;
+    T t;
+
     public Pair(S s, T t) {
-      this.s = s ;
-      this.t = t ;
+      this.s = s;
+      this.t = t;
     }
   }
 
   private final List<Pair<IStock, Integer>> stocks = new ArrayList<>();
   private final IStockService stockService;
-  private IStockAPIOptimizer apiOptimizer;
+  private final IStockAPIOptimizer apiOptimizer;
+  //endregion
 
+  /**
+   * Constructs an object of Portfolio and initializes its members.
+   *
+   * @param stockService the service responsible for calling the API required for stocks data.
+   */
   public Portfolio(IStockService stockService) {
     this.stockService = stockService;
-    apiOptimizer = APICache.getInstance();
+    apiOptimizer = StockCache.getInstance();
   }
 
+  //region Public Methods
   @Override
   public void setPortfolioStocks(Map<IStock, Integer> stocks) {
-    for (Map.Entry<IStock, Integer> entry:stocks.entrySet()) {
+    for (Map.Entry<IStock, Integer> entry : stocks.entrySet()) {
       this.stocks.add(new Pair<>(entry.getKey(), entry.getValue()));
     }
   }
@@ -58,16 +73,17 @@ class Portfolio implements IPortfolio {
   public double getPortfolioValue(LocalDate date) throws IllegalArgumentException {
     double portfolioValue = 0;
 
-    for (Pair<IStock, Integer> stock: this.stocks) {
+    for (Pair<IStock, Integer> stock : this.stocks) {
       portfolioValue += stock.s.getValue(date) * stock.t;
     }
     return portfolioValue;
   }
 
   @Override
-  public boolean savePortfolio(String path) throws IllegalArgumentException {
+  public void savePortfolio(String path)
+      throws RuntimeException, ParserConfigurationException {
     if (stocks.size() == 0) {
-      return false;
+      throw new RuntimeException("No portfolios to save\n");
     }
     try {
       DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -77,7 +93,7 @@ class Portfolio implements IPortfolio {
       Element rootElement = doc.createElement("portfolio");
       doc.appendChild(rootElement);
 
-      for (Pair<IStock, Integer> stock: this.stocks) {
+      for (Pair<IStock, Integer> stock : this.stocks) {
         Element stockElement = doc.createElement("stock");
 
         Element stockTickerSymbol = doc.createElement("tickerSymbol");
@@ -87,7 +103,8 @@ class Portfolio implements IPortfolio {
         stockQuantity.appendChild(doc.createTextNode(String.valueOf(stock.t)));
 
         Element stockPrice = doc.createElement("stockPrice");
-        stockPrice.appendChild(doc.createTextNode(String.valueOf(stock.s.getValue(LocalDate.now()))));
+        stockPrice.appendChild(
+            doc.createTextNode(String.valueOf(stock.s.getValue(LocalDate.now()))));
 
         stockElement.appendChild(stockTickerSymbol);
         stockElement.appendChild(stockQuantity);
@@ -101,18 +118,21 @@ class Portfolio implements IPortfolio {
       StreamResult result = new StreamResult(new File(path));
       transformer.transform(source, result);
 
-    } catch (Exception e) {
-      throw new IllegalArgumentException("File path not found.");
+    } catch (TransformerException e) {
+      throw new RuntimeException(e);
     }
-    return true;
   }
 
   @Override
-  public boolean retrievePortfolio(String path)
-      throws IOException, SAXException, ParserConfigurationException {
-    if (this.stocks.size() != 0) return false;
+  public void retrievePortfolio(String path)
+      throws IOException, SAXException, ParserConfigurationException, RuntimeException {
+    if (this.stocks.size() > 0) {
+      throw new RuntimeException("Portfolios already populated\n");
+    }
     File inputFile = new File(path);
-    if(!inputFile.isFile()) throw new FileNotFoundException("Cannot find file: " + path);
+    if (!inputFile.isFile()) {
+      throw new FileNotFoundException("Cannot find file: " + path);
+    }
     DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
     DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
     Document doc = dBuilder.parse(inputFile);
@@ -129,14 +149,13 @@ class Portfolio implements IPortfolio {
         int stockQuantity = Integer.parseInt(eElement.getElementsByTagName("stockQuantity")
             .item(0).getTextContent());
         IStock newStock = apiOptimizer.cacheGetObj(tickerSymbol);
-        if(newStock == null) {
+        if (newStock == null) {
           newStock = new Stock(tickerSymbol, this.stockService);
           apiOptimizer.cacheSetObj(tickerSymbol, newStock);
         }
         this.stocks.add(new Pair<>(newStock, stockQuantity));
       }
     }
-
-    return true;
   }
+  //endregion
 }

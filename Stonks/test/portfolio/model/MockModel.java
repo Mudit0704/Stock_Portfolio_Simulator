@@ -1,9 +1,9 @@
 package portfolio.model;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Map;
-import javax.management.AttributeNotFoundException;
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
@@ -39,14 +39,16 @@ public class MockModel implements IPortfolios {
   }
 
   @Override
-  public boolean savePortfolios() throws IllegalArgumentException {
-    return dataPresent;
+  public void savePortfolios() throws RuntimeException {
+    if(!dataPresent) throw new RuntimeException("No portfolios to save\n");
   }
 
   @Override
-  public boolean retrievePortfolios()
+  public void retrievePortfolios()
       throws IOException, ParserConfigurationException, SAXException {
-    return dataPresent;
+    if(dataPresent) {
+      throw new RuntimeException("Portfolios already populated\n");
+    }
   }
 
   @Override

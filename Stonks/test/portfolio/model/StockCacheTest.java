@@ -5,8 +5,8 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-public class APICacheTest {
-  IStockAPIOptimizer apiOptimizer = APICache.getInstance();
+public class StockCacheTest {
+  IStockAPIOptimizer apiOptimizer = StockCache.getInstance();
 
   @Test
   public void testCache() {

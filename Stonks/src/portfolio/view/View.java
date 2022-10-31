@@ -2,13 +2,23 @@ package portfolio.view;
 
 import java.io.IOException;
 
-public class View implements IView{
+/**
+ * Responsible for displaying output of the application and implements {@link IView}.
+ */
+public class View implements IView {
+
   Appendable out;
 
+  /**
+   * Constructs an object of View and initializes its members.
+   *
+   * @param out an {@link Appendable} to display output in the application.
+   */
   public View(Appendable out) {
     this.out = out;
   }
 
+  //region Public Methods
   @Override
   public void displayEscapeFromOperation() throws IOException {
     this.out.append("Press E to exit from the operation\n");
@@ -41,4 +51,5 @@ public class View implements IView{
   public void clearScreen() throws IOException {
     this.out.append("\033[H\033[2J");
   }
+  //endregion
 }

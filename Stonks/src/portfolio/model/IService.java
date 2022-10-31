@@ -13,7 +13,7 @@ interface IService {
    *
    * @param queryString the API query to be passed.
    * @return InputStream object for the result returned.
-   * @throws IOException
+   * @throws IOException If I/O error occurs.
    */
   InputStream queryAPI(String queryString) throws IOException;
 }

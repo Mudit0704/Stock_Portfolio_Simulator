@@ -5,15 +5,27 @@ import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Implements the functionality of a singular stock and the operations related to it.
+ */
 class Stock implements IStock {
 
+  //region Class Members
   private final String tickerSymbol;
   private final IStockService stockService;
 
   private Map<LocalDate, Double> dateClosingPriceMap;
+  //endregion
 
+  /**
+   * Construct an object of Stock and initializes its members.
+   *
+   * @param tickerSymbol tickerSymbol of the stock.
+   * @param stockService stock service linked with the stock for populating its data.
+   * @throws IllegalArgumentException if tickerSymbol is null or empty.
+   */
   public Stock(String tickerSymbol, IStockService stockService) throws IllegalArgumentException {
-    if(tickerSymbol == null || tickerSymbol.length() == 0) {
+    if (tickerSymbol == null || tickerSymbol.length() == 0) {
       throw new IllegalArgumentException();
     }
     this.stockService = stockService;
@@ -21,22 +33,21 @@ class Stock implements IStock {
     this.dateClosingPriceMap = new HashMap<>();
   }
 
+  //region Public Methods
   @Override
   public double getValue(LocalDate date) {
-    if(dateClosingPriceMap.size() == 0) {
+    if (dateClosingPriceMap.size() == 0) {
       dateClosingPriceMap = stockService.getStockPrices(this.tickerSymbol);
     }
 
     if (dateClosingPriceMap.containsKey(date)) {
       return dateClosingPriceMap.get(date);
-    }
-    else {
+    } else {
       LocalDate latestDate = getClosestDate(date);
 
-      if(date.isAfter(LocalDate.now()) || latestDate == null) {
+      if (date.isAfter(LocalDate.now()) || latestDate == null) {
         throw new IllegalArgumentException("Cannot find stock price for the given date.");
-      }
-      else {
+      } else {
         return dateClosingPriceMap.get(latestDate);
       }
     }
@@ -62,4 +73,5 @@ class Stock implements IStock {
     }
     return result;
   }
+  //endregion
 }

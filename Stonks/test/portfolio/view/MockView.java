@@ -36,7 +36,7 @@ public class MockView implements IView {
   }
 
   @Override
-  public void clearScreen() throws IOException, InterruptedException {
+  public void clearScreen() throws IOException {
     //do nothing
   }
 }

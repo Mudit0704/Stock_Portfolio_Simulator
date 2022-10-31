@@ -1,13 +1,13 @@
 package portfolio.model;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.management.AttributeNotFoundException;
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
@@ -23,7 +23,7 @@ public class Portfolios implements IPortfolios {
 
   Portfolios(IStockService stockService) {
     this.stockService = stockService;
-    apiOptimizer = APICache.getInstance();
+    apiOptimizer = StockCache.getInstance();
   }
 
   @Override
@@ -38,7 +38,7 @@ public class Portfolios implements IPortfolios {
   }
 
   @Override
-  public Double getPortfolioValue(LocalDate date, int portfolioId) {
+  public Double getPortfolioValue(LocalDate date, int portfolioId) throws IllegalArgumentException {
     if (date.isAfter(LocalDate.now()) || portfolioId > portfolios.size() || portfolioId <= 0) {
       throw new IllegalArgumentException();
     }
@@ -46,9 +46,9 @@ public class Portfolios implements IPortfolios {
   }
 
   @Override
-  public boolean savePortfolios() throws IllegalArgumentException {
+  public void savePortfolios() throws RuntimeException, ParserConfigurationException {
     if (portfolios.size() == 0) {
-      return false;
+      throw new RuntimeException("No portfolios to save\n");
     }
     int portfolioNo = 0;
     String userDirectory = System.getProperty("user.dir");
@@ -56,15 +56,15 @@ public class Portfolios implements IPortfolios {
       portfolioNo++;
       portfolio.savePortfolio(userDirectory + "/portfolio" + portfolioNo + ".xml");
     }
-
-    return true;
   }
 
   @Override
-  public boolean retrievePortfolios()
+  public void retrievePortfolios()
       throws IOException, ParserConfigurationException, SAXException {
-    if(portfolios.size() > 0) return false;
-    boolean result = false;
+    if (portfolios.size() > 0) {
+      throw new RuntimeException("Portfolios already populated\n");
+    }
+
     String userDirectory = System.getProperty("user.dir") + "/";
     File dir = new File(userDirectory);
     File[] files = dir.listFiles((dir1, name) -> name.toLowerCase().endsWith(".xml"));
@@ -72,15 +72,12 @@ public class Portfolios implements IPortfolios {
     if (files != null && files.length != 0) {
       for (File file : files) {
         IPortfolio portfolio = new Portfolio(stockService);
-        if (!portfolio.retrievePortfolio(userDirectory + file.getName())) {
-          return false;
-        }
+        portfolio.retrievePortfolio(userDirectory + file.getName());
         portfolios.add(portfolio);
       }
-      result = true;
+    } else {
+      throw new FileNotFoundException("No portfolios found to retrieve");
     }
-
-    return result;
   }
 
   @Override
@@ -106,7 +103,7 @@ public class Portfolios implements IPortfolios {
   }
 
   @Override
-  public String getAvailablePortfolios() throws IllegalArgumentException {
+  public String getAvailablePortfolios() throws RuntimeException {
     int portfolioNo = 0;
     StringBuilder composition = new StringBuilder();
 
@@ -125,6 +122,4 @@ public class Portfolios implements IPortfolios {
   public boolean isTickerSymbolValid(String tickerSymbol) {
     return this.stockService.getValidStockSymbols().contains(tickerSymbol);
   }
-
-
 }

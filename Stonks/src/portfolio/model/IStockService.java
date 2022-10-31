@@ -15,5 +15,11 @@ interface IStockService extends IService {
    */
   Set<String> getValidStockSymbols();
 
+  /**
+   * Populates stock data after calling the API.
+   *
+   * @param tickerSymbol tickerSymbol of the stock for which value has to be populated
+   * @return the historic stock data.
+   */
   Map getStockPrices(String tickerSymbol);
 }

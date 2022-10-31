@@ -3,7 +3,6 @@ package portfolio.model;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Map;
-import javax.management.AttributeNotFoundException;
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
@@ -14,7 +13,11 @@ import org.xml.sax.SAXException;
 public interface IPortfolios {
 
   /**
+   * Get the composition of a single portfolio
+   *
+   * @param portfolioId id of the portfolio for which composition is required.
    * @return the composition of all the portfolios.
+   * @throws IllegalArgumentException if the portfolioId is invalid.
    */
   String getPortfolioComposition(int portfolioId);
 
@@ -24,26 +27,29 @@ public interface IPortfolios {
    * @param date        date at which the value of the specified portfolio is to be fetched.
    * @param portfolioId the id of the portfolio specified.
    * @return the value of the specified portfolio based on the given date.
+   * @throws IllegalArgumentException if the date or portfolioId is invalid.
    */
   Double getPortfolioValue(LocalDate date, int portfolioId);
 
   /**
    * Saves all portfolios' information into specified file path.
    *
-   * @return true if the operation is successful, false otherwise.
-   * @throws IllegalArgumentException in case specified file path is not found.
+   * @throws RuntimeException             if an error occurs while saving.
+   * @throws ParserConfigurationException if a DocumentBuilder cannot be created which satisfies the
+   *                                      configuration requested.
    */
-  boolean savePortfolios() throws IllegalArgumentException;
+  void savePortfolios() throws RuntimeException, ParserConfigurationException;
 
   /**
    * Retrieves the portfolio information at the specified location.
    *
    * @return true if the file retrieval is successful, false otherwise.
-   * @throws IOException
-   * @throws ParserConfigurationException
-   * @throws SAXException
+   * @throws IOException                  if an I/O error occurs.
+   * @throws ParserConfigurationException if a DocumentBuilder cannot be created which satisfies the
+   *                                      configuration requested.
+   * @throws SAXException                 If any parse errors occur.
    */
-  boolean retrievePortfolios()
+  void retrievePortfolios()
       throws IOException, ParserConfigurationException, SAXException;
 
   /**
@@ -57,8 +63,9 @@ public interface IPortfolios {
    * Gets all the available portfolios.
    *
    * @return available portfolios represented using a String.
+   * @throws RuntimeException if no portfolios found.
    */
-  String getAvailablePortfolios() throws IllegalArgumentException;
+  String getAvailablePortfolios() throws RuntimeException;
 
   /**
    * Checks if a ticker symbol is valid, i.e, it is being traded currently.

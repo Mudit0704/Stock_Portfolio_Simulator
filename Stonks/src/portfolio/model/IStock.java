@@ -17,7 +17,8 @@ interface IStock {
 
   /**
    * Returns this stock's ticker symbol.
+   *
    * @return a string representing the ticker symbol of this stock.
    */
-  String getStockTicker() ;
+  String getStockTicker();
 }

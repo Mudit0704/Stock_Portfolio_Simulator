@@ -17,7 +17,7 @@ public interface IStockAPIOptimizer {
    * Sets the cached object for the specified key.
    *
    * @param tickerSymbol the key whose stock object is to be stored.
-   * @param stockObj the stock object to be stored.
+   * @param stockObj     the stock object to be stored.
    */
   void cacheSetObj(String tickerSymbol, IStock stockObj);
 }

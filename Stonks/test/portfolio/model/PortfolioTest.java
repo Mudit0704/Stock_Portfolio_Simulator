@@ -140,7 +140,7 @@ public class PortfolioTest {
   }
 
   @Test
-  public void testSavePortfolio() {
+  public void testSavePortfolio() throws ParserConfigurationException {
     IStockService mockStockService = new MockStockService("/test/testData.txt");
     IPortfolio portfolio = new Portfolio(mockStockService);
 
@@ -156,7 +156,7 @@ public class PortfolioTest {
     IPortfolio retrievedPortfolio = new Portfolio(mockStockService);
 
     try {
-      assertTrue(retrievedPortfolio.retrievePortfolio(path));
+      retrievedPortfolio.retrievePortfolio(path);
     } catch (IOException e) {
       throw new RuntimeException(e);
     } catch (ParserConfigurationException e) {
@@ -178,8 +178,8 @@ public class PortfolioTest {
     }
   }
 
-  @Test(expected = IOException.class)
-  public void testSaveEmptyPortfolio() throws IOException {
+  @Test(expected = RuntimeException.class)
+  public void testSaveEmptyPortfolio() throws IOException, ParserConfigurationException {
     IStockService mockStockService = new MockStockService("/test/testData.txt");
     IPortfolio portfolio = new Portfolio(mockStockService);
 
@@ -197,7 +197,7 @@ public class PortfolioTest {
   }
 
   @Test
-  public void testSavePortfolioMultipleTimes() throws IOException {
+  public void testSavePortfolioMultipleTimes() throws IOException, ParserConfigurationException {
     IStockService mockStockService = new MockStockService("/test/testData.txt");
     IPortfolio portfolio = new Portfolio(mockStockService);
 
@@ -217,7 +217,7 @@ public class PortfolioTest {
     IPortfolio retrievedPortfolio = new Portfolio(mockStockService);
 
     try {
-      assertTrue(retrievedPortfolio.retrievePortfolio(path));
+      retrievedPortfolio.retrievePortfolio(path);
     } catch (IOException e) {
       throw new RuntimeException(e);
     } catch (ParserConfigurationException e) {
@@ -248,7 +248,7 @@ public class PortfolioTest {
     IPortfolio retrievedPortfolio = new Portfolio(mockStockService);
 
     try {
-      assertFalse(retrievedPortfolio.retrievePortfolio(path));
+      retrievedPortfolio.retrievePortfolio(path);
     } catch (Exception e) {
       throw e;
     }
@@ -258,5 +258,45 @@ public class PortfolioTest {
     assertTrue(result.contains("MSFT -> 2\n"));
     assertTrue(result.contains("PUBM -> 1\n"));
     assertEquals(568.92, retrievedPortfolio.getPortfolioValue(LocalDate.of(2022, 10, 28)), 0.0);
+  }
+
+  @Test(expected = RuntimeException.class)
+  public void testRetrievePortfolioMultipleTimes() throws IOException, ParserConfigurationException {
+    IStockService mockStockService = new MockStockService("/test/testData.txt");
+    IPortfolio portfolio = new Portfolio(mockStockService);
+
+    Map<IStock, Integer> map = new HashMap<>();
+    map.put(new Stock("GOOG", mockStockService), 3);
+    map.put(new Stock("PUBM", mockStockService), 1);
+    map.put(new Stock("MSFT", mockStockService), 2);
+
+    portfolio.setPortfolioStocks(map);
+    String path = System.getProperty("user.dir") + "/test_multiple_save.xml";
+    portfolio.savePortfolio(path);
+    portfolio.savePortfolio(path);
+    portfolio.savePortfolio(path);
+    portfolio.savePortfolio(path);
+
+
+    IPortfolio retrievedPortfolio = new Portfolio(mockStockService);
+
+    try {
+      retrievedPortfolio.retrievePortfolio(path);
+      retrievedPortfolio.retrievePortfolio(path);
+    } catch (IOException | ParserConfigurationException | SAXException e) {
+      throw new RuntimeException(e);
+    }
+
+    String result = retrievedPortfolio.getPortfolioComposition();
+    assertTrue(result.contains("GOOG -> 3\n"));
+    assertTrue(result.contains("MSFT -> 2\n"));
+    assertTrue(result.contains("PUBM -> 1\n"));
+    assertEquals(568.92, retrievedPortfolio.getPortfolioValue(LocalDate.of(2022, 10, 28)), 0.0);
+
+    try {
+      Files.delete(Path.of(path));
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 }

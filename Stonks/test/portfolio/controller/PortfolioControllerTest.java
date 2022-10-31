@@ -412,18 +412,18 @@ public class PortfolioControllerTest {
   }
 
   @Test
-  public void testRunWhenOption4RetrieveNoDataPresent()
+  public void testRunWhenOption4RetrieveDataPresent()
       throws IOException, InterruptedException {
     Reader in = new StringReader("4\n 2 E E");
     IPortfolioController controller = new PortfolioController(in, mockView);
 
-    controller.run(new MockModel(log, false));
+    controller.run(new MockModel(log, true));
 
     assertEquals("", log.toString());
     assertEquals("Menu Ask_For_Input Choose from the below menu: \n"
         + " 1 -> Save portfolio \n 2 -> Retrieve portfolio \n"
-        + " E -> Exit from the operation \nAsk_For_Input Portfolios already populated OR "
-        + "No files found to retrieve\nEscape Menu Ask_For_Input ", out.toString());
+        + " E -> Exit from the operation \nAsk_For_Input Portfolios already populated"
+        + "\nEscape Menu Ask_For_Input ", out.toString());
   }
 
   @Test
@@ -447,7 +447,7 @@ public class PortfolioControllerTest {
     Reader in = new StringReader("4\n 2 E E");
     IPortfolioController controller = new PortfolioController(in, mockView);
 
-    controller.run(new MockModel(log, true));
+    controller.run(new MockModel(log, false));
 
     assertEquals("", log.toString());
     assertEquals("Menu Ask_For_Input Choose from the below menu: \n"

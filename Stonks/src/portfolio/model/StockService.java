@@ -16,45 +16,21 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Implements the service required to fetch stock data.
+ */
 class StockService implements IStockService {
 
+  //region Class Members
   private static final String APIKEY = "W0M1JOKC82EZEQA8";
-  private URL stockServiceURL = null;
 
   private static final String filePath =
-    System.getProperty("user.dir") + "stockSet" +
-      new SimpleDateFormat("yyyyMMdd").format(new Date()) + ".dat";
+      System.getProperty("user.dir") + "stockSet" +
+          new SimpleDateFormat("yyyyMMdd").format(new Date()) + ".dat";
+  //endregion
 
-  private String readFromInputStream(InputStream in) throws IOException {
-    StringBuilder dataRead = new StringBuilder();
-
-    for (int ch; (ch = in.read()) != -1; ) {
-      dataRead.append((char) ch);
-    }
-    return dataRead.toString();
-  }
-
-  private Set<String> readSavedHashSet() {
-    Set<String> symbolSet = null;
-
-    try {
-      ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath));
-      symbolSet = (HashSet<String>) ois.readObject();
-      return symbolSet;
-    } catch (IOException | ClassNotFoundException e) {
-    }
-    return null;
-  }
-
-  private void saveHashSet(Set<String> hashSet) {
-    try {
-      ObjectOutputStream stockSetObjStream = new ObjectOutputStream(new FileOutputStream(filePath));
-      stockSetObjStream.writeObject(hashSet);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
+  //region Public Methods
+  @Override
   public Set<String> getValidStockSymbols() {
 
     Set<String> symbolSet = readSavedHashSet();
@@ -64,7 +40,7 @@ class StockService implements IStockService {
     }
 
     String queryString = "https://www.alphavantage.co/query?function=LISTING_STATUS&"
-      + "apikey=" + APIKEY;
+        + "apikey=" + APIKEY;
     ;
 
     InputStream in;
@@ -97,10 +73,10 @@ class StockService implements IStockService {
   @Override
   public Map getStockPrices(String tickerSymbol) {
     String queryString = "https://www.alphavantage"
-      + ".co/query?function=TIME_SERIES_DAILY"
-      + "&outputsize=compact"
-      + "&symbol"
-      + "=" + tickerSymbol + "&apikey=" + APIKEY + "&datatype=csv";
+        + ".co/query?function=TIME_SERIES_DAILY"
+        + "&outputsize=compact"
+        + "&symbol"
+        + "=" + tickerSymbol + "&apikey=" + APIKEY + "&datatype=csv";
     InputStream in;
 
     try {
@@ -110,6 +86,51 @@ class StockService implements IStockService {
     }
     try {
       return populateStockData(in);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Override
+  public InputStream queryAPI(String queryString) throws IOException {
+    URL stockServiceURL = null;
+    try {
+      stockServiceURL = new URL(queryString);
+    } catch (MalformedURLException e) {
+      throw new RuntimeException("the alphavantage API has either changed or "
+          + "no longer works");
+    }
+    InputStream in = stockServiceURL.openStream();
+    return in;
+  }
+  //endregion
+
+  //region Private Methods
+  private String readFromInputStream(InputStream in) throws IOException {
+    StringBuilder dataRead = new StringBuilder();
+
+    for (int ch; (ch = in.read()) != -1; ) {
+      dataRead.append((char) ch);
+    }
+    return dataRead.toString();
+  }
+
+  private Set<String> readSavedHashSet() {
+    Set<String> symbolSet = null;
+
+    try {
+      ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath));
+      symbolSet = (HashSet<String>) ois.readObject();
+      return symbolSet;
+    } catch (IOException | ClassNotFoundException ignored) {
+    }
+    return null;
+  }
+
+  private void saveHashSet(Set<String> hashSet) {
+    try {
+      ObjectOutputStream stockSetObjStream = new ObjectOutputStream(new FileOutputStream(filePath));
+      stockSetObjStream.writeObject(hashSet);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
@@ -131,16 +152,5 @@ class StockService implements IStockService {
     }
     return dateClosingPriceMap;
   }
-
-  @Override
-  public InputStream queryAPI(String queryString) throws IOException {
-    try {
-      this.stockServiceURL = new URL(queryString);
-    } catch (MalformedURLException e) {
-      throw new RuntimeException("the alphavantage API has either changed or "
-        + "no longer works");
-    }
-    InputStream in = stockServiceURL.openStream();
-    return in;
-  }
+  //endregion
 }
