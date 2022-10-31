@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -74,7 +75,12 @@ class Portfolio implements IPortfolio {
     double portfolioValue = 0;
 
     for (Pair<IStock, Long> stock : this.stocks) {
-      portfolioValue += stock.s.getValue(date) * stock.t;
+      try {
+        portfolioValue += stock.s.getValue(date) * stock.t;
+      }
+      catch (DateTimeParseException e) {
+        throw new RuntimeException("API failure...\n");
+      }
     }
     return portfolioValue;
   }
@@ -120,6 +126,9 @@ class Portfolio implements IPortfolio {
 
     } catch (TransformerException e) {
       throw new RuntimeException(e);
+    }
+    catch (DateTimeParseException e) {
+      throw new RuntimeException("API Failure...\n");
     }
   }
 

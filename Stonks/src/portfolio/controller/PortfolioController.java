@@ -176,6 +176,9 @@ public class PortfolioController implements IPortfolioController {
         }
         view.displayInvalidInput();
       }
+      catch (RuntimeException e) {
+        view.displayCustomText("\nFailed to get value, please try again after some time...\n");
+      }
     }
 
     displayExitOperationSequence(scan);
@@ -230,7 +233,12 @@ public class PortfolioController implements IPortfolioController {
         view.displayInvalidInput();
       }
     }
-    stocks.put(tickerSymbol, stockQuantity);
+    if(stocks.containsKey(tickerSymbol)) {
+      stocks.put(tickerSymbol, stocks.get(tickerSymbol) + 1);
+    }
+    else {
+      stocks.put(tickerSymbol, stockQuantity);
+    }
   }
 
   private void displayExitOperationSequence(Scanner scan) throws IOException {

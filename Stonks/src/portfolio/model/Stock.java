@@ -1,6 +1,7 @@
 package portfolio.model;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,7 +38,12 @@ class Stock implements IStock {
   @Override
   public double getValue(LocalDate date) {
     if (dateClosingPriceMap.size() == 0) {
-      dateClosingPriceMap = stockService.getStockPrices(this.tickerSymbol);
+      try {
+        dateClosingPriceMap = stockService.getStockPrices(this.tickerSymbol);
+      }
+      catch (DateTimeParseException e) {
+        throw new RuntimeException("API Failure...\n");
+      }
     }
 
     if (dateClosingPriceMap.containsKey(date)) {
