@@ -234,7 +234,7 @@ public class PortfolioController implements IPortfolioController {
       }
     }
     if(stocks.containsKey(tickerSymbol)) {
-      stocks.put(tickerSymbol, stocks.get(tickerSymbol) + 1);
+      stocks.put(tickerSymbol, stocks.get(tickerSymbol) + stockQuantity);
     }
     else {
       stocks.put(tickerSymbol, stockQuantity);
