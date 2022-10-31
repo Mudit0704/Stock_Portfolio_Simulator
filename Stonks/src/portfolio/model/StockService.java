@@ -25,8 +25,8 @@ class StockService implements IStockService {
   private static final String APIKEY = "W0M1JOKC82EZEQA8";
 
   private static final String filePath =
-      System.getProperty("user.dir") + "/stockSet" +
-          new SimpleDateFormat("yyyyMMdd").format(new Date()) + ".dat";
+      System.getProperty("user.dir") + "/stockSet"
+          + new SimpleDateFormat("yyyyMMdd").format(new Date()) + ".dat";
   //endregion
 
   //region Public Methods
@@ -41,7 +41,6 @@ class StockService implements IStockService {
 
     String queryString = "https://www.alphavantage.co/query?function=LISTING_STATUS&"
         + "apikey=" + APIKEY;
-    ;
 
     InputStream in;
     try {

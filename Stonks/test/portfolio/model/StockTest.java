@@ -8,6 +8,9 @@ import java.time.LocalDate;
 import java.util.Set;
 import org.junit.Test;
 
+/**
+ * A JUnit test class to test the Stock class.
+ */
 public class StockTest {
 
   @Test
@@ -30,7 +33,7 @@ public class StockTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void getValueBeyondAvailableDates() {
-    IStock stock = new Stock("GOOG", new MockStockService());
+    IStock stock = new Stock("GOOG", new MockStockService("/test/testData.txt"));
     stock.getValue(LocalDate.of(2010,10,22));
   }
 

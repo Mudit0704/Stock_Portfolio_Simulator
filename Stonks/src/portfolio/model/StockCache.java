@@ -8,7 +8,7 @@ import java.util.Map;
  */
 class StockCache implements IStockAPIOptimizer {
 
-  final Map<String, IStock> stockMap ;
+  final Map<String, IStock> stockMap;
 
   private StockCache() {
     stockMap = new HashMap<>();
@@ -17,7 +17,7 @@ class StockCache implements IStockAPIOptimizer {
   static IStockAPIOptimizer apiOptimizer;
 
   static IStockAPIOptimizer getInstance() {
-    if(apiOptimizer == null) {
+    if (apiOptimizer == null) {
       apiOptimizer = new StockCache();
     }
     return apiOptimizer;
@@ -26,7 +26,7 @@ class StockCache implements IStockAPIOptimizer {
   //region Public Methods
   @Override
   public IStock cacheGetObj(String tickerSymbol) {
-    if(!this.stockMap.containsKey(tickerSymbol)) {
+    if (!this.stockMap.containsKey(tickerSymbol)) {
       return null;
     }
     return this.stockMap.get(tickerSymbol);

@@ -2,20 +2,20 @@ package portfolio.model;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertFalse;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 import javax.xml.parsers.ParserConfigurationException;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
+/**
+ * A JUnit class to test Portfolio class.
+ */
 public class PortfolioTest {
 
   @Test
@@ -241,7 +241,7 @@ public class PortfolioTest {
 
   @Test(expected = IOException.class)
   public void retrievePortfolioInvalidPath()
-    throws IOException, ParserConfigurationException, SAXException {
+      throws IOException, ParserConfigurationException, SAXException {
     IStockService mockStockService = new MockStockService("/test/testData.txt");
     String path = System.getProperty("user.dir") + "/invalid.xml";
 
@@ -261,7 +261,8 @@ public class PortfolioTest {
   }
 
   @Test(expected = RuntimeException.class)
-  public void testRetrievePortfolioMultipleTimes() throws IOException, ParserConfigurationException {
+  public void testRetrievePortfolioMultipleTimes()
+      throws IOException, ParserConfigurationException {
     IStockService mockStockService = new MockStockService("/test/testData.txt");
     IPortfolio portfolio = new Portfolio(mockStockService);
 

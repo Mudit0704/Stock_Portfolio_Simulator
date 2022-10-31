@@ -2,10 +2,17 @@ package portfolio.view;
 
 import java.io.IOException;
 
+/**
+ * A Mock view class that display dummy outputs to help facilitate testing the controller.
+ */
 public class MockView implements IView {
 
   Appendable out;
 
+  /**
+   * Constructor to initialize the MockView class with an Appendable object.
+   * @param out the appendable object to be set for testing.
+   */
   public MockView(Appendable out) {
     this.out = out;
   }
