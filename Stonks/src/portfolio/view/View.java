@@ -7,7 +7,7 @@ import java.io.IOException;
  */
 public class View implements IView {
 
-  Appendable out;
+  private final Appendable out;
 
   /**
    * Constructs an object of View and initializes its members.

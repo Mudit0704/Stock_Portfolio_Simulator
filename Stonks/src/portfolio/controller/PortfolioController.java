@@ -26,8 +26,8 @@ public class PortfolioController implements IPortfolioController {
   private final static String CHOOSE_FROM_AVAILABLE_PORTFOLIOS = "Choose from available portfolios "
       + "(eg: Portfolio1 -> give 1):\n";
 
-  final Readable in;
-  final IView view;
+  private final Readable in;
+  private final IView view;
   //endregion
 
   /**
