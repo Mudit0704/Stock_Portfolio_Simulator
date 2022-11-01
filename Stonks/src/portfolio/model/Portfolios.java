@@ -71,7 +71,7 @@ public class Portfolios implements IPortfolios {
 
     if (files != null && files.length != 0) {
       for (File file : files) {
-        IPortfolio portfolio = new Portfolio(stockService);
+        IPortfolio portfolio = new Portfolio(stockService, new HashMap<>());
         portfolio.retrievePortfolio(userDirectory + file.getName());
         portfolios.add(portfolio);
       }
@@ -85,7 +85,6 @@ public class Portfolios implements IPortfolios {
     if (stocks.size() == 0) {
       return;
     }
-    IPortfolio portfolio = new Portfolio(stockService);
 
     Map<IStock, Long> stockList = new HashMap<>();
 
@@ -98,7 +97,7 @@ public class Portfolios implements IPortfolios {
       stockList.put(newStock, entry.getValue());
     }
 
-    portfolio.setPortfolioStocks(stockList);
+    IPortfolio portfolio = new Portfolio(stockService, stockList);
     portfolios.add(portfolio);
   }
 

@@ -51,19 +51,13 @@ class Portfolio implements IPortfolio {
    *
    * @param stockService the service responsible for calling the API required for stocks data.
    */
-  public Portfolio(IStockService stockService) {
+  public Portfolio(IStockService stockService, Map<IStock, Long> stocks) {
     this.stockService = stockService;
+    setPortfolioStocks(stocks);
     apiOptimizer = StockCache.getInstance();
   }
 
   //region Public Methods
-  @Override
-  public void setPortfolioStocks(Map<IStock, Long> stocks) {
-    for (Map.Entry<IStock, Long> entry : stocks.entrySet()) {
-      this.stocks.add(new Pair<>(entry.getKey(), entry.getValue()));
-    }
-  }
-
   @Override
   public String getPortfolioComposition() {
     return stocks.size() > 0 ? stocks.stream().map(x -> x.s.getStockTicker() + " -> " + x.t + "\n")
@@ -164,6 +158,14 @@ class Portfolio implements IPortfolio {
         }
         this.stocks.add(new Pair<>(newStock, stockQuantity));
       }
+    }
+  }
+  //endregion
+
+  //region Private Methods
+  private void setPortfolioStocks(Map<IStock, Long> stocks) {
+    for (Map.Entry<IStock, Long> entry : stocks.entrySet()) {
+      this.stocks.add(new Pair<>(entry.getKey(), entry.getValue()));
     }
   }
   //endregion

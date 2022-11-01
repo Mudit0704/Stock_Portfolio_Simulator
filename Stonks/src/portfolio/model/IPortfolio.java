@@ -2,7 +2,6 @@ package portfolio.model;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.Map;
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
@@ -49,11 +48,4 @@ interface IPortfolio {
    */
   void retrievePortfolio(String path)
       throws IOException, ParserConfigurationException, SAXException;
-
-  /**
-   * Builds the portfolio based on the stocks and their quantities.
-   *
-   * @param stocks mapping of stock and quantity to be stored in the portfolio.
-   */
-  void setPortfolioStocks(Map<IStock, Long> stocks);
 }
