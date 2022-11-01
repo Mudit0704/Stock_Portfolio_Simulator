@@ -14,16 +14,21 @@ import org.xml.sax.SAXException;
 import portfolio.model.IPortfolios;
 import portfolio.view.IView;
 
+/**
+ * This class represents the implementation of the controller of this application. It takes user
+ * inputs and performs the operations by forwarding the portfolio creation, save, retrieve,
+ * composition and value to the model. Also takes model's response and outputs to the view.
+ */
 public class PortfolioController implements IPortfolioController {
 
   //region Variables
-  private final static String CREATE_PORTFOLIO_SUB_MENU =
+  private static final String CREATE_PORTFOLIO_SUB_MENU =
       "Choose from the below menu: \n 1 -> Add a new stock "
           + "\n E -> Exit from the operation \n";
-  private final static String SAVE_RETRIEVE_PORTFOLIO_MENU =
+  private static final String SAVE_RETRIEVE_PORTFOLIO_MENU =
       "Choose from the below menu: \n 1 -> Save portfolio "
           + "\n 2 -> Retrieve portfolio \n E -> Exit from the operation \n";
-  private final static String CHOOSE_FROM_AVAILABLE_PORTFOLIOS = "Choose from available portfolios "
+  private static final String CHOOSE_FROM_AVAILABLE_PORTFOLIOS = "Choose from available portfolios "
       + "(eg: Portfolio1 -> give 1):\n";
 
   private final Readable in;
@@ -233,7 +238,7 @@ public class PortfolioController implements IPortfolioController {
         view.displayInvalidInput();
       }
     }
-    if(stocks.containsKey(tickerSymbol)) {
+    if (stocks.containsKey(tickerSymbol)) {
       stocks.put(tickerSymbol, stocks.get(tickerSymbol) + stockQuantity);
     }
     else {

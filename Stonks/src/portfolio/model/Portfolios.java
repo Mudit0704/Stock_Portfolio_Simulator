@@ -11,6 +11,11 @@ import java.util.Map;
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
+/**
+ * This class represents the entry point of the Model of this application. This implements the
+ * IPortfolios interface and represents a list of Portfolios and the applicable operations on them
+ * such as save, retrieve, get value on specific date, get their composition.
+ */
 public class Portfolios implements IPortfolios {
 
   private final List<IPortfolio> portfolios = new ArrayList<>();

@@ -28,7 +28,8 @@ public class View implements IView {
   public void displayMenu() throws IOException {
     this.out.append("Choose from the below menu: \n 1 -> Create a new portfolio \n"
         + " 2 -> Get portfolio composition (Stock Symbol -> Stock Quantity)"
-        + "\n 3 -> Get a portfolio value at a given date \n 4 -> Save/Retrieve portfolio at a given path"
+        + "\n 3 -> Get a portfolio value at a given date \n 4 -> Save/Retrieve portfolio at a "
+        + "given path"
         + "\n E -> Exit from the application \n");
   }
 

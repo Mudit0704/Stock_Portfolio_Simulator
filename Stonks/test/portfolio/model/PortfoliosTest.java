@@ -16,7 +16,9 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
-
+/**
+ * A JUnit class to test Portfolios class.
+ */
 public class PortfoliosTest {
 
   @Test
@@ -48,8 +50,7 @@ public class PortfoliosTest {
 
     portfolios.createNewPortfolio(map);
 
-//    assertEquals(0.0,
-    System.out.println(portfolios.getPortfolioValue(LocalDate.of(2022, 10, 28), 0));
+    portfolios.getPortfolioValue(LocalDate.of(2022, 10, 28), 0);
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -71,7 +72,7 @@ public class PortfoliosTest {
     portfolios.createNewPortfolio(map);
 
     assertEquals("Invalid portfolioId\n",
-      portfolios.getPortfolioValue(LocalDate.of(2022, 10, 28), 3));
+        portfolios.getPortfolioValue(LocalDate.of(2022, 10, 28), 3));
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -93,7 +94,7 @@ public class PortfoliosTest {
     portfolios.createNewPortfolio(map);
 
     assertEquals("Invalid portfolioId\n",
-      portfolios.getPortfolioValue(LocalDate.of(2022, 10, 28), 0));
+        portfolios.getPortfolioValue(LocalDate.of(2022, 10, 28), 0));
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -115,7 +116,7 @@ public class PortfoliosTest {
     portfolios.createNewPortfolio(map);
 
     assertEquals("Invalid portfolioId\n",
-      portfolios.getPortfolioValue(LocalDate.of(2023, 10, 28), 2));
+        portfolios.getPortfolioValue(LocalDate.of(2023, 10, 28), 2));
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -137,7 +138,7 @@ public class PortfoliosTest {
     portfolios.createNewPortfolio(map);
 
     assertEquals("Invalid portfolioId\n",
-      portfolios.getPortfolioValue(LocalDate.of(2022, 10, 28), -1));
+        portfolios.getPortfolioValue(LocalDate.of(2022, 10, 28), -1));
   }
 
   @Test
@@ -333,7 +334,7 @@ public class PortfoliosTest {
     portfolios.savePortfolios();
 
     IPortfolios retrievedPortfolios = new MockPortfolios(
-      new MockStockService("/test/testData.txt"));
+        new MockStockService("/test/testData.txt"));
 
     try {
       retrievedPortfolios.retrievePortfolios();
@@ -385,7 +386,7 @@ public class PortfoliosTest {
     portfolios.savePortfolios();
 
     IPortfolios retrievedPortfolios = new MockPortfolios(
-      new MockStockService("/test/testData.txt"));
+        new MockStockService("/test/testData.txt"));
 
     try {
       retrievedPortfolios.retrievePortfolios();
@@ -419,7 +420,7 @@ public class PortfoliosTest {
     portfolios.savePortfolios();
 
     IPortfolios retrievedPortfolios = new MockPortfolios(
-      new MockStockService("/test/testData.txt"));
+        new MockStockService("/test/testData.txt"));
 
     try {
       retrievedPortfolios.retrievePortfolios();
@@ -458,7 +459,7 @@ public class PortfoliosTest {
     portfolios.savePortfolios();
 
     IPortfolios retrievedPortfolios = new MockPortfolios(
-      new MockStockService("/test/testData.txt"));
+        new MockStockService("/test/testData.txt"));
 
     retrievedPortfolios.retrievePortfolios();
 
@@ -519,7 +520,7 @@ public class PortfoliosTest {
     portfolios.savePortfolios();
 
     IPortfolios retrievedPortfolios = new MockPortfolios(
-      new MockStockService("/test/testData.txt"));
+        new MockStockService("/test/testData.txt"));
 
     retrievedPortfolios.retrievePortfolios();
     try {

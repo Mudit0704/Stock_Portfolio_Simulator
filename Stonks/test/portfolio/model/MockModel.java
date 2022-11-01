@@ -1,17 +1,26 @@
 package portfolio.model;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Map;
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
+/**
+ * This class represents a dummy model to be used for testing controller.
+ */
 public class MockModel implements IPortfolios {
 
   StringBuilder log;
   boolean dataPresent;
 
+  /**
+   * Constructor for this dummy model class which takes in logging params to use for testing
+   * controller.
+   *
+   * @param log to log the string input so far by the controller to the model.
+   * @param dataPresent to represent if the data is input.
+   */
   public MockModel(StringBuilder log, boolean dataPresent) {
     this.log = log;
     this.dataPresent = dataPresent;
@@ -31,7 +40,7 @@ public class MockModel implements IPortfolios {
 
   @Override
   public Double getPortfolioValue(LocalDate date, int portfolioId) {
-    if(!dataPresent) {
+    if (!dataPresent) {
       throw  new IllegalArgumentException();
     }
     log.append(date).append(" ").append(portfolioId);
@@ -40,13 +49,15 @@ public class MockModel implements IPortfolios {
 
   @Override
   public void savePortfolios() throws RuntimeException {
-    if(!dataPresent) throw new RuntimeException("No portfolios to save\n");
+    if (!dataPresent) {
+      throw new RuntimeException("No portfolios to save\n");
+    }
   }
 
   @Override
   public void retrievePortfolios()
       throws IOException, ParserConfigurationException, SAXException {
-    if(dataPresent) {
+    if (dataPresent) {
       throw new RuntimeException("Portfolios already populated\n");
     }
   }
@@ -58,7 +69,7 @@ public class MockModel implements IPortfolios {
 
   @Override
   public String getAvailablePortfolios() {
-    if(!dataPresent) {
+    if (!dataPresent) {
       throw new IllegalArgumentException("No portfolios");
     }
     log.append("Available_Portfolios ");

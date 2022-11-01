@@ -4,15 +4,20 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Map;
 
+/**
+ * This class represents a dummy service that imitates an actual API fetch service to retrieve
+ * stock data.
+ */
 public class MockStockService extends StockService {
   String filePath ;
 
-  public MockStockService() {
 
-  }
-
+  /**
+   * Constructor to initialize mock service by taking input path to mock fetching API data from.
+   *
+   * @param filePath the path where dummy data exists.
+   */
   public MockStockService(String filePath) {
     this.filePath = filePath;
   }

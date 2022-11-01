@@ -11,6 +11,9 @@ import portfolio.model.MockModel;
 import portfolio.view.IView;
 import portfolio.view.MockView;
 
+/**
+ * A JUnit test class to test the Portfolio class.
+ */
 public class PortfolioControllerTest {
 
   private StringBuffer out;

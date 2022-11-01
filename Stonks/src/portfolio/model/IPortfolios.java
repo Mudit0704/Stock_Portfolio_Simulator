@@ -13,7 +13,7 @@ import org.xml.sax.SAXException;
 public interface IPortfolios {
 
   /**
-   * Get the composition of a single portfolio
+   * Get the composition of a single portfolio.
    *
    * @param portfolioId id of the portfolio for which composition is required.
    * @return the composition of all the portfolios.
