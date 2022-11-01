@@ -7,11 +7,12 @@ import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Scanner;
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
-import portfolio.model.IPortfolios;
+import portfolio.model.IPortfoliosModel;
 import portfolio.view.IView;
 
 /**
@@ -48,46 +49,45 @@ public class PortfolioController implements IPortfolioController {
 
   //region Public methods
   @Override
-  public void run(IPortfolios portfolios) throws IOException {
+  public void run(IPortfoliosModel portfolios) throws IOException {
     Objects.requireNonNull(portfolios);
     Scanner scan = new Scanner(this.in);
 
-    while (true) {
-      view.clearScreen();
-      view.displayMenu();
-      view.askForInput();
-      switch (scan.next()) {
-        case "1":
-          view.clearScreen();
-          generatePortfolios(scan, portfolios);
-          break;
-        case "2":
-          getPortfolioComposition(portfolios, scan);
-          break;
-        case "3":
-          view.clearScreen();
-          getPortfolioValuesForGivenDate(portfolios, scan);
-          break;
-        case "4":
-          view.clearScreen();
-          saveRetrievePortfolios(portfolios, scan);
-          break;
-        case "E":
-          return;
-        default:
-          view.displayInvalidInput();
-          scan.nextLine();
-          break;
+    try {
+      while (true) {
+        view.displayMenu();
+        view.askForInput();
+        switch (scan.next()) {
+          case "1":
+            generatePortfolios(scan, portfolios);
+            break;
+          case "2":
+            getPortfolioComposition(portfolios, scan);
+            break;
+          case "3":
+            getPortfolioValuesForGivenDate(portfolios, scan);
+            break;
+          case "4":
+            saveRetrievePortfolios(portfolios, scan);
+            break;
+          case "E":
+            return;
+          default:
+            view.displayInvalidInput();
+            scan.nextLine();
+            break;
+        }
       }
+    } catch(NoSuchElementException e) {
+      view.displayCustomText("\n----Exiting----\n");
     }
 
   }
   //endregion
 
   //region Private Methods
-  private void getPortfolioComposition(IPortfolios portfolios, Scanner scan)
+  private void getPortfolioComposition(IPortfoliosModel portfolios, Scanner scan)
       throws IOException {
-    view.clearScreen();
     String result;
     while (true) {
       try {
@@ -113,7 +113,7 @@ public class PortfolioController implements IPortfolioController {
     displayExitOperationSequence(scan);
   }
 
-  private void saveRetrievePortfolios(IPortfolios portfolios, Scanner scan)
+  private void saveRetrievePortfolios(IPortfoliosModel portfolios, Scanner scan)
       throws IOException {
     try {
       while (true) {
@@ -151,7 +151,7 @@ public class PortfolioController implements IPortfolioController {
     displayExitOperationSequence(scan);
   }
 
-  private void getPortfolioValuesForGivenDate(IPortfolios portfolios, Scanner scan)
+  private void getPortfolioValuesForGivenDate(IPortfoliosModel portfolios, Scanner scan)
       throws IOException {
     LocalDate date;
     int portfolioId;
@@ -189,7 +189,7 @@ public class PortfolioController implements IPortfolioController {
     displayExitOperationSequence(scan);
   }
 
-  private void generatePortfolios(Scanner scan, IPortfolios portfolios)
+  private void generatePortfolios(Scanner scan, IPortfoliosModel portfolios)
       throws IOException {
     Map<String, Long> stocks = new HashMap<>();
     while (true) {
@@ -200,7 +200,6 @@ public class PortfolioController implements IPortfolioController {
           if (stocks.size() > 0) {
             portfolios.createNewPortfolio(stocks);
           }
-          view.clearScreen();
           return;
         case "1":
           addNewStock(scan, portfolios, stocks);
@@ -213,7 +212,7 @@ public class PortfolioController implements IPortfolioController {
     }
   }
 
-  private void addNewStock(Scanner scan, IPortfolios portfolios, Map<String, Long> stocks)
+  private void addNewStock(Scanner scan, IPortfoliosModel portfolios, Map<String, Long> stocks)
       throws IOException {
     String tickerSymbol;
     long stockQuantity;
@@ -252,7 +251,6 @@ public class PortfolioController implements IPortfolioController {
       view.displayInvalidInput();
       view.displayEscapeFromOperation();
     }
-    view.clearScreen();
   }
   //endregion
 }

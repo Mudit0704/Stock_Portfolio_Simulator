@@ -9,7 +9,7 @@ import org.xml.sax.SAXException;
 /**
  * This class represents a dummy model to be used for testing controller.
  */
-public class MockModel implements IPortfolios {
+public class MockModel implements IPortfoliosModel {
 
   StringBuilder log;
   boolean dataPresent;

@@ -42,11 +42,4 @@ public interface IView {
    * @throws IOException if an I/O error occurs.
    */
   void displayInvalidInput() throws IOException;
-
-  /**
-   * Clears the screen.
-   *
-   * @throws IOException if an I/O error occurs.
-   */
-  void clearScreen() throws IOException;
 }

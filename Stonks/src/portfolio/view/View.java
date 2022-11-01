@@ -48,9 +48,5 @@ public class View implements IView {
     this.out.append("Invalid input\n");
   }
 
-  @Override
-  public void clearScreen() throws IOException {
-    this.out.append("\033[H\033[2J");
-  }
   //endregion
 }

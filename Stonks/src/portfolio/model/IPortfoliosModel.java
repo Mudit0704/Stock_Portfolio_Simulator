@@ -10,7 +10,7 @@ import org.xml.sax.SAXException;
  * This interface represents a collection of portfolios and the set of operations to create and
  * persist them.
  */
-public interface IPortfolios {
+public interface IPortfoliosModel {
 
   /**
    * Get the composition of a single portfolio.

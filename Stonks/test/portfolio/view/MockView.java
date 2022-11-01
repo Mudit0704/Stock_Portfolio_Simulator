@@ -42,8 +42,4 @@ public class MockView implements IView {
     this.out.append("Invalid_Input ");
   }
 
-  @Override
-  public void clearScreen() throws IOException {
-    //do nothing
-  }
 }

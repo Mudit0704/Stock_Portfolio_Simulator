@@ -25,7 +25,7 @@ import org.xml.sax.SAXException;
 
 /**
  * Represents a single portfolio and the set of operations related to it. Implements
- * {@link IPortfolios}.
+ * {@link IPortfoliosModel}.
  */
 class Portfolio implements IPortfolio {
 
@@ -50,6 +50,7 @@ class Portfolio implements IPortfolio {
    * Constructs an object of Portfolio and initializes its members.
    *
    * @param stockService the service responsible for calling the API required for stocks data.
+   * @param stocks       stocks that will be stored in this portfolio.
    */
   public Portfolio(IStockService stockService, Map<IStock, Long> stocks) {
     this.stockService = stockService;
@@ -71,8 +72,7 @@ class Portfolio implements IPortfolio {
     for (Pair<IStock, Long> stock : this.stocks) {
       try {
         portfolioValue += stock.s.getValue(date) * stock.t;
-      }
-      catch (DateTimeParseException e) {
+      } catch (DateTimeParseException e) {
         throw new RuntimeException("API failure...\n");
       }
     }
@@ -120,8 +120,7 @@ class Portfolio implements IPortfolio {
 
     } catch (TransformerException e) {
       throw new RuntimeException(e);
-    }
-    catch (DateTimeParseException e) {
+    } catch (DateTimeParseException e) {
       throw new RuntimeException("API Failure...\n");
     }
   }
