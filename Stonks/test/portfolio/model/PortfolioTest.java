@@ -17,6 +17,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
+/**
+ * A JUnit class to test Portfolio class.
+ */
 public class PortfolioTest {
   private IStockService mockStockService;
 
