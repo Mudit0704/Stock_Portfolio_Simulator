@@ -8,8 +8,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
@@ -117,7 +115,7 @@ class StockService implements IStockService {
   }
 
   private Set<String> readSavedHashSet() {
-    Set<String> symbolSet = null;
+    Set<String> symbolSet;
 
     try {
       ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath));
@@ -132,7 +130,6 @@ class StockService implements IStockService {
     try {
       ObjectOutputStream stockSetObjStream = new ObjectOutputStream(new FileOutputStream(filePath));
       stockSetObjStream.writeObject(hashSet);
-      Files.setAttribute(Path.of(filePath), "dos:hidden", true);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }

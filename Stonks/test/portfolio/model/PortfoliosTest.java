@@ -293,7 +293,7 @@ public class PortfoliosTest {
 
   @Test
   public void testIsTickerSymbolValid() {
-    IPortfolios portfolios = new MockPortfolios(new MockStockService("/test/testData.txt"));
+    IPortfolios portfolios = new MockPortfolios(new MockStockService("/test/testStockSymbolValidation.txt"));
 
     assertFalse(portfolios.isTickerSymbolValid("ABCDEFGHIJKLMNOGOOGPQRSTUVW"));
 
