@@ -28,33 +28,35 @@ public class PortfolioControllerTest {
   }
 
   @Test
-  public void testRunInvalidInputs() throws IOException, InterruptedException {
+  public void testRunInvalidInputs() throws IOException {
     Reader in = new StringReader("+\n +\n +\n E");
     IPortfolioController controller = new PortfolioController(in, mockView);
 
     controller.run(new MockModel(log, true));
 
     assertEquals("", log.toString());
-    assertEquals("Menu Ask_For_Input Invalid_Input Menu Ask_For_Input Invalid_Input Menu Ask_For_"
+    assertEquals("Menu Ask_For_Input Invalid_Input Menu Ask_For_Input "
+        + "Invalid_Input Menu Ask_For_"
         + "Input Invalid_Input Menu Ask_For_Input ", out.toString());
   }
 
   @Test
   public void testRunWhenOptionExitOperationInvalidInput()
-      throws IOException, InterruptedException {
+      throws IOException {
     Reader in = new StringReader("2\n 2 D E E");
     IPortfolioController controller = new PortfolioController(in, mockView);
 
     controller.run(new MockModel(log, true));
 
     assertEquals("Available_Portfolios 2 ", log.toString());
-    assertEquals("Menu Ask_For_Input Choose from available portfolios (eg: Portfolio1 -> give 1):\n"
+    assertEquals("Menu Ask_For_Input Choose from available portfolios "
+        + "(eg: Portfolio1 -> give 1):\n"
         + "Available_Portfolios Ask_For_Input Composition Escape \n"
         + "----Exiting----\n", out.toString());
   }
 
   @Test
-  public void testRunWhenOption1ExitWithoutAddingStocks() throws IOException, InterruptedException {
+  public void testRunWhenOption1ExitWithoutAddingStocks() throws IOException {
     Reader in = new StringReader("1 E E");
     IPortfolioController controller = new PortfolioController(in, mockView);
 
@@ -69,7 +71,7 @@ public class PortfolioControllerTest {
 
   @Test
   public void testRunWhenOption1InvalidInput()
-      throws IOException, InterruptedException {
+      throws IOException {
     Reader in = new StringReader("1 INVALID\n E E");
     IPortfolioController controller = new PortfolioController(in, mockView);
 
@@ -85,7 +87,7 @@ public class PortfolioControllerTest {
   }
 
   @Test
-  public void testRunWhenOption1AddingOneStock() throws IOException, InterruptedException {
+  public void testRunWhenOption1AddingOneStock() throws IOException {
     Reader in = new StringReader("1 1\nTICKER_SYMBOL\n 12 E E");
     IPortfolioController controller = new PortfolioController(in, mockView);
 
@@ -102,7 +104,7 @@ public class PortfolioControllerTest {
   }
 
   @Test
-  public void testRunWhenOption1AddingMultipleStock() throws IOException, InterruptedException {
+  public void testRunWhenOption1AddingMultipleStock() throws IOException {
     Reader in = new StringReader("1 1\nTICKER_SYMBOL\n 12 1\n TICKER_SYMBOL2\n 5 E E");
     IPortfolioController controller = new PortfolioController(in, mockView);
 
@@ -123,7 +125,7 @@ public class PortfolioControllerTest {
   }
 
   @Test
-  public void testRunWhenOption1InvalidTickerSymbol() throws IOException, InterruptedException {
+  public void testRunWhenOption1InvalidTickerSymbol() throws IOException {
     Reader in = new StringReader("1 1\nTICKER_SYMBOL33\n TICKER_SYMBOL2\n 12 E E");
     IPortfolioController controller = new PortfolioController(in, mockView);
 
@@ -143,8 +145,9 @@ public class PortfolioControllerTest {
 
   @Test
   public void testRunWhenOption1InvalidTickerSymbolMultipleTimes()
-      throws IOException, InterruptedException {
-    Reader in = new StringReader("1 1\nTICKER_SYMBOL33\n TICKER_SYMBOL3\n TICKER_SYMBOL2\n 12 E E");
+      throws IOException {
+    Reader in = new StringReader("1 1\nTICKER_SYMBOL33\n TICKER_SYMBOL3\n "
+        + "TICKER_SYMBOL2\n 12 E E");
     IPortfolioController controller = new PortfolioController(in, mockView);
 
     controller.run(new MockModel(log, true));
@@ -163,7 +166,7 @@ public class PortfolioControllerTest {
   }
 
   @Test
-  public void testRunWhenOption1InvalidStockQuantity() throws IOException, InterruptedException {
+  public void testRunWhenOption1InvalidStockQuantity() throws IOException {
     Reader in = new StringReader("1 1\nTICKER_SYMBOL\n quantity\n 12 E E");
     IPortfolioController controller = new PortfolioController(in, mockView);
 
@@ -180,7 +183,7 @@ public class PortfolioControllerTest {
 
   @Test
   public void testRunWhenOption1ZeroNegativeStockQuantity()
-      throws IOException, InterruptedException {
+      throws IOException {
     Reader in = new StringReader("1 1\nTICKER_SYMBOL\n 0\n -1\n 12 E E");
     IPortfolioController controller = new PortfolioController(in, mockView);
 
@@ -198,7 +201,7 @@ public class PortfolioControllerTest {
 
   @Test
   public void testRunWhenOption1InvalidStockQuantityMultipleTimes()
-      throws IOException, InterruptedException {
+      throws IOException {
     Reader in = new StringReader("1 1\nTICKER_SYMBOL\n quantity\n quantity2\n 12 E E");
     IPortfolioController controller = new PortfolioController(in, mockView);
 
@@ -216,7 +219,7 @@ public class PortfolioControllerTest {
 
   @Test
   public void testRunWhenOption2()
-      throws IOException, InterruptedException {
+      throws IOException {
     Reader in = new StringReader("2\n 2 E E");
     IPortfolioController controller = new PortfolioController(in, mockView);
 
@@ -224,7 +227,8 @@ public class PortfolioControllerTest {
 
     assertEquals("Available_Portfolios 2 ",
         log.toString());
-    assertEquals("Menu Ask_For_Input Choose from available portfolios (eg: Portfolio1 -> give 1):\n"
+    assertEquals("Menu Ask_For_Input Choose from available portfolios "
+            + "(eg: Portfolio1 -> give 1):\n"
             + "Available_Portfolios Ask_For_Input Composition Escape \n"
             + "----Exiting----\n",
         out.toString());
@@ -232,7 +236,7 @@ public class PortfolioControllerTest {
 
   @Test
   public void testRunWhenOption2InvalidPortfolioId()
-      throws IOException, InterruptedException {
+      throws IOException {
     Reader in = new StringReader("2\n Id\n 2 E E");
     IPortfolioController controller = new PortfolioController(in, mockView);
 
@@ -240,8 +244,10 @@ public class PortfolioControllerTest {
 
     assertEquals("Available_Portfolios Available_Portfolios 2 ",
         log.toString());
-    assertEquals("Menu Ask_For_Input Choose from available portfolios (eg: Portfolio1 -> give 1):\n"
-            + "Available_Portfolios Ask_For_Input Invalid_Input Choose from available portfolios (eg: Portfolio1 -> give 1):\n"
+    assertEquals("Menu Ask_For_Input Choose from available portfolios"
+            + " (eg: Portfolio1 -> give 1):\n"
+            + "Available_Portfolios Ask_For_Input Invalid_Input Choose from available "
+            + "portfolios (eg: Portfolio1 -> give 1):\n"
             + "Available_Portfolios Ask_For_Input Composition Escape \n"
             + "----Exiting----\n",
         out.toString());
@@ -249,7 +255,7 @@ public class PortfolioControllerTest {
 
   @Test
   public void testRunWhenOption2InvalidPortfolioIdNegativeZero()
-      throws IOException, InterruptedException {
+      throws IOException {
     Reader in = new StringReader("2\n -1\n 0\n 2 E E");
     IPortfolioController controller = new PortfolioController(in, mockView);
 
@@ -257,9 +263,12 @@ public class PortfolioControllerTest {
 
     assertEquals("Available_Portfolios -1 Available_Portfolios 0 Available_Portfolios 2 ",
         log.toString());
-    assertEquals("Menu Ask_For_Input Choose from available portfolios (eg: Portfolio1 -> give 1):\n"
-            + "Available_Portfolios Ask_For_Input Invalid_Input Choose from available portfolios (eg: Portfolio1 -> give 1):\n"
-            + "Available_Portfolios Ask_For_Input Invalid_Input Choose from available portfolios (eg: Portfolio1 -> give 1):\n"
+    assertEquals("Menu Ask_For_Input Choose from available portfolios "
+            + "(eg: Portfolio1 -> give 1):\n"
+            + "Available_Portfolios Ask_For_Input Invalid_Input Choose from available"
+            + " portfolios (eg: Portfolio1 -> give 1):\n"
+            + "Available_Portfolios Ask_For_Input Invalid_Input Choose from available"
+            + " portfolios (eg: Portfolio1 -> give 1):\n"
             + "Available_Portfolios Ask_For_Input Composition Escape \n"
             + "----Exiting----\n",
         out.toString());
@@ -267,7 +276,7 @@ public class PortfolioControllerTest {
 
   @Test
   public void testRunWhenOption2NoDataFound()
-      throws IOException, InterruptedException {
+      throws IOException {
     Reader in = new StringReader("2\n E E");
     IPortfolioController controller = new PortfolioController(in, mockView);
 
@@ -280,7 +289,7 @@ public class PortfolioControllerTest {
 
   @Test
   public void testRunWhenOption3()
-      throws IOException, InterruptedException {
+      throws IOException {
     Reader in = new StringReader("3\n 2 2022-10-25 E E");
     IPortfolioController controller = new PortfolioController(in, mockView);
 
@@ -288,7 +297,8 @@ public class PortfolioControllerTest {
 
     assertEquals("Available_Portfolios 2022-10-25 2",
         log.toString());
-    assertEquals("Menu Ask_For_Input Choose from available portfolios (eg: Portfolio1 -> give 1):\n"
+    assertEquals("Menu Ask_For_Input Choose from available portfolios "
+        + "(eg: Portfolio1 -> give 1):\n"
         + "Available_Portfolios Ask_For_Input Please enter the date (yyyy-mm-dd): Portfolio2\n"
         + "2.00\n"
         + "Escape \n"
@@ -297,7 +307,7 @@ public class PortfolioControllerTest {
 
   @Test
   public void testRunWhenOption3InvalidPortfolioId()
-      throws IOException, InterruptedException {
+      throws IOException {
     Reader in = new StringReader("3\n Id\n 2 2022-10-25 E E");
     IPortfolioController controller = new PortfolioController(in, mockView);
 
@@ -305,8 +315,10 @@ public class PortfolioControllerTest {
 
     assertEquals("Available_Portfolios Available_Portfolios 2022-10-25 2",
         log.toString());
-    assertEquals("Menu Ask_For_Input Choose from available portfolios (eg: Portfolio1 -> give 1):\n"
-        + "Available_Portfolios Ask_For_Input Invalid_Input Choose from available portfolios (eg: Portfolio1 -> give 1):\n"
+    assertEquals("Menu Ask_For_Input Choose from available portfolios"
+        + " (eg: Portfolio1 -> give 1):\n"
+        + "Available_Portfolios Ask_For_Input Invalid_Input Choose from available "
+        + "portfolios (eg: Portfolio1 -> give 1):\n"
         + "Available_Portfolios Ask_For_Input Please enter the date (yyyy-mm-dd): Portfolio2\n"
         + "2.00\n"
         + "Escape \n"
@@ -315,7 +327,7 @@ public class PortfolioControllerTest {
 
   @Test
   public void testRunWhenOption3InvalidPortfolioIdNegativeZero()
-      throws IOException, InterruptedException {
+      throws IOException {
     Reader in = new StringReader("3\n -1\n 0\n 2 2022-10-25 E E");
     IPortfolioController controller = new PortfolioController(in, mockView);
 
@@ -323,9 +335,12 @@ public class PortfolioControllerTest {
 
     assertEquals("Available_Portfolios Available_Portfolios Available_Portfolios 2022-10-25 2",
         log.toString());
-    assertEquals("Menu Ask_For_Input Choose from available portfolios (eg: Portfolio1 -> give 1):\n"
-        + "Available_Portfolios Ask_For_Input Invalid_Input Choose from available portfolios (eg: Portfolio1 -> give 1):\n"
-        + "Available_Portfolios Ask_For_Input Invalid_Input Choose from available portfolios (eg: Portfolio1 -> give 1):\n"
+    assertEquals("Menu Ask_For_Input Choose from available portfolios "
+        + "(eg: Portfolio1 -> give 1):\n"
+        + "Available_Portfolios Ask_For_Input Invalid_Input Choose from available "
+        + "portfolios (eg: Portfolio1 -> give 1):\n"
+        + "Available_Portfolios Ask_For_Input Invalid_Input Choose from available "
+        + "portfolios (eg: Portfolio1 -> give 1):\n"
         + "Available_Portfolios Ask_For_Input Please enter the date (yyyy-mm-dd): Portfolio2\n"
         + "2.00\n"
         + "Escape \n"
@@ -334,7 +349,7 @@ public class PortfolioControllerTest {
 
   @Test
   public void testRunWhenOption3InvalidDate()
-      throws IOException, InterruptedException {
+      throws IOException {
     Reader in = new StringReader("3\n 2 2022A10-25\n 2 2022-10-25 E E");
     IPortfolioController controller = new PortfolioController(in, mockView);
 
@@ -342,8 +357,10 @@ public class PortfolioControllerTest {
 
     assertEquals("Available_Portfolios Available_Portfolios 2022-10-25 2",
         log.toString());
-    assertEquals("Menu Ask_For_Input Choose from available portfolios (eg: Portfolio1 -> give 1):\n"
-        + "Available_Portfolios Ask_For_Input Please enter the date (yyyy-mm-dd): Invalid_Input Choose from available portfolios (eg: Portfolio1 -> give 1):\n"
+    assertEquals("Menu Ask_For_Input Choose from available portfolios "
+        + "(eg: Portfolio1 -> give 1):\n"
+        + "Available_Portfolios Ask_For_Input Please enter the date (yyyy-mm-dd): "
+        + "Invalid_Input Choose from available portfolios (eg: Portfolio1 -> give 1):\n"
         + "Available_Portfolios Ask_For_Input Please enter the date (yyyy-mm-dd): Portfolio2\n"
         + "2.00\n"
         + "Escape \n"
@@ -352,7 +369,7 @@ public class PortfolioControllerTest {
 
   @Test
   public void testRunWhenOption3NoDataPresent()
-      throws IOException, InterruptedException {
+      throws IOException {
     Reader in = new StringReader("3\n E E");
     IPortfolioController controller = new PortfolioController(in, mockView);
 
@@ -360,7 +377,8 @@ public class PortfolioControllerTest {
 
     assertEquals("",
         log.toString());
-    assertEquals("Menu Ask_For_Input Choose from available portfolios (eg: Portfolio1 -> give 1):\n"
+    assertEquals("Menu Ask_For_Input Choose from available portfolios "
+            + "(eg: Portfolio1 -> give 1):\n"
             + "No portfolios\n"
             + "Escape Menu Ask_For_Input ",
         out.toString());
@@ -368,7 +386,7 @@ public class PortfolioControllerTest {
 
   @Test
   public void testRunWhenOption4ExitWithoutOperation()
-      throws IOException, InterruptedException {
+      throws IOException {
     Reader in = new StringReader("4\n E E");
     IPortfolioController controller = new PortfolioController(in, mockView);
 
@@ -383,7 +401,7 @@ public class PortfolioControllerTest {
 
   @Test
   public void testRunWhenOption4InvalidInput()
-      throws IOException, InterruptedException {
+      throws IOException {
     Reader in = new StringReader("4\n Invalid\n E E");
     IPortfolioController controller = new PortfolioController(in, mockView);
 
@@ -401,7 +419,7 @@ public class PortfolioControllerTest {
 
   @Test
   public void testRunWhenOption4SaveNoDataPresent()
-      throws IOException, InterruptedException {
+      throws IOException {
     Reader in = new StringReader("4\n 1 E E");
     IPortfolioController controller = new PortfolioController(in, mockView);
 
@@ -419,7 +437,7 @@ public class PortfolioControllerTest {
 
   @Test
   public void testRunWhenOption4RetrieveDataPresent()
-      throws IOException, InterruptedException {
+      throws IOException {
     Reader in = new StringReader("4\n 2 E E");
     IPortfolioController controller = new PortfolioController(in, mockView);
 
@@ -437,7 +455,7 @@ public class PortfolioControllerTest {
 
   @Test
   public void testRunWhenOption4Save()
-      throws IOException, InterruptedException {
+      throws IOException {
     Reader in = new StringReader("4\n 1 E E");
     IPortfolioController controller = new PortfolioController(in, mockView);
 
@@ -457,7 +475,7 @@ public class PortfolioControllerTest {
 
   @Test
   public void testRunWhenOption4Retrieve()
-      throws IOException, InterruptedException {
+      throws IOException {
     Reader in = new StringReader("4\n 2 E E");
     IPortfolioController controller = new PortfolioController(in, mockView);
 
