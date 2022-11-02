@@ -2,16 +2,13 @@ package portfolio.model;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertFalse;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 import javax.xml.parsers.ParserConfigurationException;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,7 +21,7 @@ public class PortfolioTest {
   private IStockService mockStockService;
 
   @Before
-  public void Setup() {
+  public void setup() {
     mockStockService = new MockStockService("/test/testData.txt");
   }
 
@@ -188,7 +185,7 @@ public class PortfolioTest {
 
   @Test(expected = IOException.class)
   public void retrievePortfolioInvalidPath()
-    throws IOException, ParserConfigurationException, SAXException {
+      throws IOException, ParserConfigurationException, SAXException {
     String path = System.getProperty("user.dir") + "/invalid.xml";
 
     IPortfolio retrievedPortfolio = new Portfolio(mockStockService, new HashMap<>());
@@ -207,7 +204,8 @@ public class PortfolioTest {
   }
 
   @Test(expected = RuntimeException.class)
-  public void testRetrievePortfolioMultipleTimes() throws IOException, ParserConfigurationException {
+  public void testRetrievePortfolioMultipleTimes()
+      throws IOException, ParserConfigurationException {
     Map<IStock, Long> map = new HashMap<>();
     map.put(new Stock("GOOG", mockStockService), 3L);
     map.put(new Stock("PUBM", mockStockService), 1L);

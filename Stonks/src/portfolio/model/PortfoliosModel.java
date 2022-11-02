@@ -13,8 +13,8 @@ import org.xml.sax.SAXException;
 
 /**
  * This class represents the entry point of the Model of this application. This implements the
- * IPortfoliosModel interface and represents a list of Portfolios and the applicable operations on them
- * such as save, retrieve, get value on specific date, get their composition.
+ * IPortfoliosModel interface and represents a list of Portfolios and the applicable operations on
+ * them such as save, retrieve, get value on specific date, get their composition.
  */
 public class PortfoliosModel implements IPortfoliosModel {
 

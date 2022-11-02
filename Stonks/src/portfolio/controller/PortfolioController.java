@@ -78,7 +78,7 @@ public class PortfolioController implements IPortfolioController {
             break;
         }
       }
-    } catch(NoSuchElementException e) {
+    } catch (NoSuchElementException e) {
       view.displayCustomText("\n----Exiting----\n");
     }
 
