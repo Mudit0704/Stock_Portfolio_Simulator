@@ -247,7 +247,9 @@ public class PortfolioController implements IPortfolioController {
 
   private void displayExitOperationSequence(Scanner scan) throws IOException {
     view.displayEscapeFromOperation();
+    scan.nextLine();
     while (!"E".equals(scan.next())) {
+      scan.nextLine();
       view.displayInvalidInput();
       view.displayEscapeFromOperation();
     }

@@ -1,9 +1,7 @@
 Steps to run the program:
 
-<How to run the jar file>
-
 Steps to create a portfolio with 3 different stocks
-1. <Start the program with jar>
+1. Open a command line prompt/terminal in admin/sudo mode. Type this command 'java -jar "Stonks.jar"'
 The startup menu would look something like this,
 
 Choose from the below menu:
@@ -34,7 +32,7 @@ Your input:
 12. You would have to input 1 as portfolio id 1 for getting value of "Portfolio1", 2 for "Portfolio2" and so on if there are any.
 13. Once you choose the portfolio, by typing in the portfolio id, you would get a prompt "Please enter the date (yyyy-mm-dd):"
 14. Input the date in the requested format, and you would see the portfolio value on the given date.
-15. Press "E" to exit from the operation
+15. Press "E" (Shift + "E"/Uppercase E) to exit from the operation
 16. Repeat steps 10 to 15 in the same manner to get portfolio value for portfolio 2, provided you created it.
 
 ================================================================================================================
@@ -44,10 +42,9 @@ The application supports data for all the stocks' closing price for the past 100
 You cannot fetch the portfolio value if the input date is prior to 100 days from now or any future date.
 
 Due to API limitations this application can process upto 5 stocks without trouble. If you add more
-than 5 different stocks at a time, the application will take time to load the stock data, please keep trying.
+than 5 different stocks at a time, the application will take time to load the stock data, please try after a minute or so.
 
 Please note, the application will not persist the portfolio unless the user explicitly specifies through the menu option "4".
 
-In order to upload user generated XMLs, the user will have to create
-and XML file as per the format in the provided demo.xml file.
-
+In order to upload user generated XMLs, the user will have to create an XML file as per the format in the provided demo.xml file and save in the same
+directory as that of the jar file.
