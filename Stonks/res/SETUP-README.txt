@@ -48,3 +48,6 @@ than 5 different stocks at a time, the application will take time to load the st
 
 Please note, the application will not persist the portfolio unless the user explicitly specifies through the menu option "4".
 
+In order to upload user generated XMLs, the user will have to create
+and XML file as per the format in the provided demo.xml file.
+
