@@ -1,13 +1,15 @@
 package portfolio.model;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
+import javax.xml.parsers.ParserConfigurationException;
+import org.xml.sax.SAXException;
 
-public class FlexiblePortfolioImpl extends Portfolio
-      implements IFlexiblePortfolio {
+public class FlexiblePortfolioImpl extends AbstractPortfolio {
 
   private final Map<IStock, Long> stockQuantityMap = new HashMap<>();
   private final LocalDate creationDate;
@@ -80,5 +82,17 @@ public class FlexiblePortfolioImpl extends Portfolio
       }
     }
     return portfolioValue;
+  }
+
+  @Override
+  public void savePortfolio(String path)
+      throws IllegalArgumentException, ParserConfigurationException {
+
+  }
+
+  @Override
+  public void retrievePortfolio(String path)
+      throws IOException, ParserConfigurationException, SAXException {
+
   }
 }

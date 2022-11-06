@@ -1,17 +1,12 @@
 package portfolio.model;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.xml.parsers.ParserConfigurationException;
+import org.xml.sax.SAXException;
 
-public class FlexiblePortfoliosModelImpl extends PortfoliosModel
-    implements IFlexiblePortfoliosModel {
-
-  private List<IFlexiblePortfolio> portfolioList;
-  private IStockService stockService;
-  private IStockAPIOptimizer apiOptimizer;
+public class FlexiblePortfoliosModelImpl extends AbstractPortfolioModel {
 
   public FlexiblePortfoliosModelImpl() {
     apiOptimizer = StockCache.getInstance();
@@ -20,7 +15,7 @@ public class FlexiblePortfoliosModelImpl extends PortfoliosModel
 
   @Override
   public void addStocksToPortfolio(String tickerSymbol, Long quantity, int portfolioId) {
-    if(portfolioId < 0 || portfolioId > portfolioList.size()) {
+    if (portfolioId < 0 || portfolioId > portfolioList.size()) {
       throw new IllegalArgumentException("Invalid portfolio ID");
     }
 
@@ -35,7 +30,7 @@ public class FlexiblePortfoliosModelImpl extends PortfoliosModel
 
   @Override
   public void sellStockFromPortfolio(String tickerSymbol, Long quantity, int portfolioId) {
-    if(portfolioId < 0 || portfolioId > portfolioList.size()) {
+    if (portfolioId < 0 || portfolioId > portfolioList.size()) {
       throw new IllegalArgumentException("Invalid portfolio Id");
     }
 
@@ -54,26 +49,17 @@ public class FlexiblePortfoliosModelImpl extends PortfoliosModel
   }
 
   @Override
-  public void setServiceType(ServiceType serviceType) {
-    stockService = AbstractServiceCreator.serviceCreator(serviceType);
+  public void savePortfolios() throws RuntimeException, ParserConfigurationException {
+
   }
 
   @Override
-  public void createNewPortfolio(Map<String, Long> stocks) {
-    IFlexiblePortfolio portfolio = new FlexiblePortfolioImpl(stockService, null);
-    portfolioList.add(portfolio);
+  public void retrievePortfolios() throws IOException, ParserConfigurationException, SAXException {
 
-    for (Map.Entry<String, Long> entry : stocks.entrySet()) {
-      this.addStocksToPortfolio(entry.getKey(), entry.getValue(), portfolioList.size() - 1);
-    }
   }
 
   @Override
-  public Double getPortfolioValue(LocalDate date, int portfolioId) throws IllegalArgumentException {
-    if (date.isAfter(LocalDate.now()) || portfolioId > portfolioList.size() || portfolioId <= 0) {
-      throw new IllegalArgumentException();
-    }
-
-    return portfolioList.get(portfolioId - 1).getPortfolioValue(date);
+  protected AbstractPortfolio createPortfolio() {
+    return new FlexiblePortfolioImpl(stockService, null);
   }
 }
