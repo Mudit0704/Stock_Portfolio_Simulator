@@ -164,7 +164,7 @@ class Portfolio extends AbstractPortfolio {
 
   @Override
   protected AbstractPortfolio createPortfolio(Map<IStock, Long> stockQty) {
-    return new FlexiblePortfolioImpl(stockService, stockQty);
+    return new Portfolio(stockService, stockQty);
   }
 
   //region Private Methods
