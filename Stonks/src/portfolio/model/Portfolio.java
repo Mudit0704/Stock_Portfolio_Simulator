@@ -27,7 +27,7 @@ import org.xml.sax.SAXException;
  * Represents a single portfolio and the set of operations related to it. Implements
  * {@link IPortfoliosModel}.
  */
-class Portfolio implements IPortfolio {
+class Portfolio extends AbstractPortfolio {
 
   //region Class Members
   private static class Pair<S, T> {
@@ -53,6 +53,7 @@ class Portfolio implements IPortfolio {
    * @param stocks       stocks that will be stored in this portfolio.
    */
   public Portfolio(IStockService stockService, Map<IStock, Long> stocks) {
+    super(stockService, stocks);
     this.stockService = stockService;
     setPortfolioStocks(stocks);
     apiOptimizer = StockCache.getInstance();
@@ -160,6 +161,11 @@ class Portfolio implements IPortfolio {
     }
   }
   //endregion
+
+  @Override
+  protected AbstractPortfolio createPortfolio(Map<IStock, Long> stockQty) {
+    return new FlexiblePortfolioImpl(stockService, stockQty);
+  }
 
   //region Private Methods
   private void setPortfolioStocks(Map<IStock, Long> stocks) {
