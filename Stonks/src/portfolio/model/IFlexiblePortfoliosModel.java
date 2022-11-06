@@ -38,4 +38,6 @@ public interface IFlexiblePortfoliosModel extends IPortfoliosModel {
    */
   double getCostBasis(LocalDate date, int portfolioId);
 
+  void setServiceType(ServiceType serviceType);
+
 }

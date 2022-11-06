@@ -1,6 +1,7 @@
 package portfolio.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,9 +11,11 @@ public class FlexiblePortfoliosModelImpl extends PortfoliosModel
 
   private List<IFlexiblePortfolio> portfolioList;
   private IStockService stockService;
+  private IStockAPIOptimizer apiOptimizer;
 
-  public FlexiblePortfoliosModelImpl(ServiceType serviceType) {
-    stockService = AbstractServiceCreator.serviceCreator(serviceType);
+  public FlexiblePortfoliosModelImpl() {
+    apiOptimizer = StockCache.getInstance();
+    portfolioList = new ArrayList<>();
   }
 
   @Override
@@ -22,9 +25,12 @@ public class FlexiblePortfoliosModelImpl extends PortfoliosModel
     }
 
     IFlexiblePortfolio portfolio = portfolioList.get(portfolioId);
-    IStock stockObj = new Stock(tickerSymbol, this.stockService);
-
-    portfolio.addStocksToPortfolio(stockObj, quantity);
+    IStock stock = apiOptimizer.cacheGetObj(tickerSymbol);
+    if (stock == null) {
+      stock = new Stock(tickerSymbol, this.stockService);
+      apiOptimizer.cacheSetObj(tickerSymbol, stock);
+    }
+    portfolio.addStocksToPortfolio(stock, quantity);
   }
 
   @Override
@@ -34,12 +40,21 @@ public class FlexiblePortfoliosModelImpl extends PortfoliosModel
     }
 
     IFlexiblePortfolio portfolio = this.portfolioList.get(portfolioId);
-    IStock stock = new Stock(tickerSymbol, this.stockService);
+    IStock stock = apiOptimizer.cacheGetObj(tickerSymbol);
+    if (stock == null) {
+      stock = new Stock(tickerSymbol, this.stockService);
+      apiOptimizer.cacheSetObj(tickerSymbol, stock);
+    }
     portfolio.sellStocksFromPortfolio(stock, quantity);
   }
 
   @Override
   public double getCostBasis(LocalDate date, int portfolioId) {
     return 0;
+  }
+
+  @Override
+  public void setServiceType(ServiceType serviceType) {
+    stockService = AbstractServiceCreator.serviceCreator(serviceType);
   }
 }
