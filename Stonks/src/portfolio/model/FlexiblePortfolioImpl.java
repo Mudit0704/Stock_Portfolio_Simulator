@@ -17,10 +17,6 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
   public FlexiblePortfolioImpl(IStockService stockService, Map<IStock, Long> stocks) {
     super(stockService, stocks);
     creationDate = LocalDate.now();
-
-    for(Map.Entry<IStock, Long> stock:stocks.entrySet()) {
-      this.addStocksToPortfolio(stock.getKey(), stock.getValue());
-    }
   }
 
   @Override
