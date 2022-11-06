@@ -3,6 +3,7 @@ package portfolio.model;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Map;
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
@@ -59,7 +60,7 @@ public class FlexiblePortfoliosModelImpl extends AbstractPortfolioModel {
   }
 
   @Override
-  protected AbstractPortfolio createPortfolio() {
-    return new FlexiblePortfolioImpl(stockService, null);
+  protected AbstractPortfolio createPortfolio(Map<IStock, Long> stockQty) {
+    return new FlexiblePortfolioImpl(stockService, stockQty);
   }
 }

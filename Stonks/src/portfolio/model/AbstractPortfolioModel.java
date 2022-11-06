@@ -2,6 +2,7 @@ package portfolio.model;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.xml.parsers.ParserConfigurationException;
@@ -20,7 +21,13 @@ public abstract class AbstractPortfolioModel implements IFlexiblePortfoliosModel
 
   @Override
   public void createNewPortfolio(Map<String, Long> stocks) {
-    AbstractPortfolio portfolio = createPortfolio();
+    Map<IStock, Long> stockQty = new HashMap<>();
+
+    for (Map.Entry<String, Long> entry : stocks.entrySet()) {
+      stockQty.put(new Stock(entry.getKey(), this.stockService), entry.getValue());
+    }
+
+    AbstractPortfolio portfolio = createPortfolio(stockQty);
     portfolioList.add(portfolio);
 
     for (Map.Entry<String, Long> entry : stocks.entrySet()) {
@@ -73,5 +80,5 @@ public abstract class AbstractPortfolioModel implements IFlexiblePortfoliosModel
 
   public abstract void retrievePortfolios() throws IOException, ParserConfigurationException, SAXException;
 
-  protected abstract AbstractPortfolio createPortfolio();
+  protected abstract AbstractPortfolio createPortfolio(Map<IStock, Long> stockQty);
 }

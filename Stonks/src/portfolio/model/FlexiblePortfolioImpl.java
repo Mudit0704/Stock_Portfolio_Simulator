@@ -2,18 +2,12 @@ package portfolio.model;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
 public class FlexiblePortfolioImpl extends AbstractPortfolio {
-
-  private final Map<IStock, Long> stockQuantityMap = new HashMap<>();
-  private final LocalDate creationDate;
-
   /**
    * Constructs an object of Portfolio and initializes its members.
    *
@@ -64,24 +58,6 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
   @Override
   public double getPortfolioCostBasisByDate(LocalDate date) {
     return 0;
-  }
-
-  @Override
-  public double getPortfolioValue(LocalDate date) throws IllegalArgumentException {
-    if(date.isBefore(this.creationDate)) {
-      return 0.0;
-    }
-
-    double portfolioValue = 0;
-
-    for (Map.Entry<IStock, Long> stock : stockQuantityMap.entrySet()) {
-      try {
-        portfolioValue += stock.getKey().getValue(date) * stock.getValue();
-      } catch (DateTimeParseException e) {
-        throw new RuntimeException("API failure...\n");
-      }
-    }
-    return portfolioValue;
   }
 
   @Override
