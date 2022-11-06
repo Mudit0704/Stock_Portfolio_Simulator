@@ -47,7 +47,7 @@ public class FlexiblePortfolioController extends PortfolioController implements
       while (true) {
         view.displayCustomText(MAIN_MENU);
         view.askForInput();
-        switch (scan.nextLine()) {
+        switch (scan.next()) {
           case "1":
             super.run(new PortfoliosModel());
             break;
@@ -73,7 +73,7 @@ public class FlexiblePortfolioController extends PortfolioController implements
     while (true) {
       view.displayMenu();
       view.askForInput();
-      switch (scan.nextLine()) {
+      switch (scan.next()) {
         case "1":
           super.generatePortfolios(scan, portfolios);
           break;
@@ -102,6 +102,7 @@ public class FlexiblePortfolioController extends PortfolioController implements
           return;
         default:
           view.displayInvalidInput();
+          scan.nextLine();
           break;
       }
     }
@@ -188,14 +189,5 @@ public class FlexiblePortfolioController extends PortfolioController implements
       }
     }
     return date;
-  }
-
-  void displayExitOperationSequence(Scanner scan) throws IOException {
-    view.displayEscapeFromOperation();
-    while (!"E".equals(scan.nextLine())) {
-      scan.nextLine();
-      view.displayInvalidInput();
-      view.displayEscapeFromOperation();
-    }
   }
 }
