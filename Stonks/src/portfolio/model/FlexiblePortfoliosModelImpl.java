@@ -24,7 +24,7 @@ public class FlexiblePortfoliosModelImpl extends PortfoliosModel
       throw new IllegalArgumentException("Invalid portfolio ID");
     }
 
-    IFlexiblePortfolio portfolio = portfolioList.get(portfolioId);
+    IFlexiblePortfolio portfolio = portfolioList.get(portfolioId - 1);
     IStock stock = apiOptimizer.cacheGetObj(tickerSymbol);
     if (stock == null) {
       stock = new Stock(tickerSymbol, this.stockService);
@@ -39,7 +39,7 @@ public class FlexiblePortfoliosModelImpl extends PortfoliosModel
       throw new IllegalArgumentException("Invalid portfolio Id");
     }
 
-    IFlexiblePortfolio portfolio = this.portfolioList.get(portfolioId);
+    IFlexiblePortfolio portfolio = this.portfolioList.get(portfolioId - 1);
     IStock stock = apiOptimizer.cacheGetObj(tickerSymbol);
     if (stock == null) {
       stock = new Stock(tickerSymbol, this.stockService);
@@ -56,5 +56,24 @@ public class FlexiblePortfoliosModelImpl extends PortfoliosModel
   @Override
   public void setServiceType(ServiceType serviceType) {
     stockService = AbstractServiceCreator.serviceCreator(serviceType);
+  }
+
+  @Override
+  public void createNewPortfolio(Map<String, Long> stocks) {
+    IFlexiblePortfolio portfolio = new FlexiblePortfolioImpl(stockService, null);
+    portfolioList.add(portfolio);
+
+    for (Map.Entry<String, Long> entry : stocks.entrySet()) {
+      this.addStocksToPortfolio(entry.getKey(), entry.getValue(), portfolioList.size() - 1);
+    }
+  }
+
+  @Override
+  public Double getPortfolioValue(LocalDate date, int portfolioId) throws IllegalArgumentException {
+    if (date.isAfter(LocalDate.now()) || portfolioId > portfolioList.size() || portfolioId <= 0) {
+      throw new IllegalArgumentException();
+    }
+
+    return portfolioList.get(portfolioId - 1).getPortfolioValue(date);
   }
 }
