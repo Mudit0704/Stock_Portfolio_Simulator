@@ -1,11 +1,25 @@
 package portfolio.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class FlexiblePortfolioImpl extends Portfolio
       implements IFlexiblePortfolio {
 
+  private static class Pair<S, T> {
+
+    S s;
+    T t;
+
+    public Pair(S s, T t) {
+      this.s = s;
+      this.t = t;
+    }
+  }
+
+  private final List<FlexiblePortfolioImpl.Pair<IStock, Long>> stocks = new ArrayList<>();
   /**
    * Constructs an object of Portfolio and initializes its members.
    *
@@ -17,8 +31,11 @@ public class FlexiblePortfolioImpl extends Portfolio
   }
 
   @Override
-  public void addStocksToPortfolio(Map<String, Long> stocks) {
-
+  public void addStocksToPortfolio(IStock stocks) {
+    for(Map.Entry<IStock, Long> stock: stocks.entrySet()) {
+      Pair<IStock, Long> stockLongPair = new Pair<>(stock.getKey(), stock.getValue());
+      this.stocks.add(stockLongPair);
+    }
   }
 
   @Override

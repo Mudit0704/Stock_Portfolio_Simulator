@@ -10,7 +10,7 @@ public interface IFlexiblePortfolio extends IPortfolio {
    *
    * @param stocks
    */
-  void addStocksToPortfolio(Map<String, Long> stocks);
+  void addStocksToPortfolio(IStock stocks);
 
   /**
    * Sells the given set of stocks from this portfolio.

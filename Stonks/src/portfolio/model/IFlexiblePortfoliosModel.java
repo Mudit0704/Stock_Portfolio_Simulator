@@ -12,19 +12,21 @@ public interface IFlexiblePortfoliosModel extends IPortfoliosModel {
   /**
    * Adds new stocks and their respective quantities to an existing portfolio.
    *
-   * @param stocks
+   * @param tickerSymbol
+   * @param quantity
    * @param portfolioId
    */
-  void addStocksToPortfolio(Map<String, Long> stocks, int portfolioId);
+  void addStocksToPortfolio(String tickerSymbol, Long quantity, int portfolioId);
 
   /**
-   * Sells current stocks and their respective quantities from the given portfolio
+   * Sells current stocks and their respective quantities from the given portfolio.
    *
-   * @param stocks
+   * @param tickerSymbol
+   * @param quantity
    * @param portfolioId
-   * @throws IllegalArgumentException if the number of stocks specified is not in portfolio.
+   * @throws IllegalArgumentException
    */
-  void sellStockFromPortfolio(Map<String, Long> stocks, int portfolioId)
+  void sellStockFromPortfolio(String tickerSymbol, Long quantity, int portfolioId)
       throws IllegalArgumentException;
 
   /**

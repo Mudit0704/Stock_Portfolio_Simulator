@@ -22,7 +22,7 @@ import java.util.Set;
 class StockService implements IStockService {
 
   //region Class Members
-  private static final String APIKEY = "W0M1JOKC82EZEQA8";
+  private static final String APIKEY = "5XJSOM36JMEQXFEL";
 
   private static final String filePath =
       System.getProperty("user.dir") + "/stockSet"
