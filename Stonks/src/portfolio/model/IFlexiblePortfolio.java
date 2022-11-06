@@ -9,8 +9,9 @@ public interface IFlexiblePortfolio extends IPortfolio {
    * Adds a given set of stocks to the portfolio.
    *
    * @param stocks
+   * @param quantity
    */
-  void addStocksToPortfolio(IStock stocks);
+  void addStocksToPortfolio(IStock stocks, Long quantity);
 
   /**
    * Sells the given set of stocks from this portfolio.

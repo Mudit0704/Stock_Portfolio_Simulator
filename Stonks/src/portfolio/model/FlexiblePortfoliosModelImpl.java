@@ -22,10 +22,9 @@ public class FlexiblePortfoliosModelImpl extends PortfoliosModel
     }
 
     IFlexiblePortfolio portfolio = portfolioList.get(portfolioId);
-    Map<IStock, Long> stocksToAdd = new HashMap<>();
     IStock stockObj = new Stock(tickerSymbol, this.stockService);
 
-    portfolio.addStocksToPortfolio(stockObj);
+    portfolio.addStocksToPortfolio(stockObj, quantity);
   }
 
   @Override

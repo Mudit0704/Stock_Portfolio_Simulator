@@ -31,11 +31,9 @@ public class FlexiblePortfolioImpl extends Portfolio
   }
 
   @Override
-  public void addStocksToPortfolio(IStock stocks) {
-    for(Map.Entry<IStock, Long> stock: stocks.entrySet()) {
-      Pair<IStock, Long> stockLongPair = new Pair<>(stock.getKey(), stock.getValue());
-      this.stocks.add(stockLongPair);
-    }
+  public void addStocksToPortfolio(IStock stocks, Long quantity) {
+    Pair<IStock, Long> stockLongPair = new Pair<>(stocks, quantity);
+    this.stocks.add(stockLongPair);
   }
 
   @Override
