@@ -5,31 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class AbstractPortfolioModel implements IFlexiblePortfoliosModel {
+public abstract class AbstractPortfolioModel implements IPortfoliosModel {
 
   List<AbstractPortfolio> portfolioList;
   IStockService stockService;
   IStockAPIOptimizer apiOptimizer;
 
-  @Override
   public void setServiceType(ServiceType serviceType) {
     stockService = AbstractServiceCreator.serviceCreator(serviceType);
-  }
-
-  @Override
-  public void createNewPortfolio(Map<String, Long> stocks) {
-    Map<IStock, Long> stockQty = new HashMap<>();
-
-    for (Map.Entry<String, Long> entry : stocks.entrySet()) {
-      stockQty.put(new Stock(entry.getKey(), this.stockService), entry.getValue());
-    }
-
-    AbstractPortfolio portfolio = null;
-    portfolioList.add(portfolio.createPortfolio(stockQty));
-
-    for (Map.Entry<String, Long> entry : stocks.entrySet()) {
-      this.addStocksToPortfolio(entry.getKey(), entry.getValue(), portfolioList.size() - 1);
-    }
   }
 
   @Override

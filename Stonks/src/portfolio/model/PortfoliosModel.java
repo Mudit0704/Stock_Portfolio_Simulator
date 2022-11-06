@@ -16,7 +16,7 @@ import org.xml.sax.SAXException;
  * IPortfoliosModel interface and represents a list of Portfolios and the applicable operations on
  * them such as save, retrieve, get value on specific date, get their composition.
  */
-public class PortfoliosModel implements IPortfoliosModel {
+public class PortfoliosModel extends AbstractPortfolioModel {
 
   private final List<IPortfolio> portfolios = new ArrayList<>();
   private final IStockService stockService;
@@ -29,17 +29,6 @@ public class PortfoliosModel implements IPortfoliosModel {
   PortfoliosModel(IStockService stockService) {
     this.stockService = stockService;
     apiOptimizer = StockCache.getInstance();
-  }
-
-  @Override
-  public String getPortfolioComposition(int portfolioId) throws IllegalArgumentException {
-    if (portfolioId > portfolios.size() || portfolioId <= 0) {
-      throw new IllegalArgumentException();
-    }
-    StringBuilder composition = new StringBuilder();
-    composition.append("Portfolio").append(portfolioId).append("\n")
-        .append(portfolios.get(portfolioId - 1).getPortfolioComposition()).append("\n");
-    return composition.toString();
   }
 
   @Override
@@ -104,26 +93,5 @@ public class PortfoliosModel implements IPortfoliosModel {
 
     IPortfolio portfolio = new Portfolio(stockService, stockList);
     portfolios.add(portfolio);
-  }
-
-  @Override
-  public String getAvailablePortfolios() throws RuntimeException {
-    int portfolioNo = 0;
-    StringBuilder composition = new StringBuilder();
-
-    if (portfolios.size() > 0) {
-      while (portfolioNo < portfolios.size()) {
-        composition.append("Portfolio").append(portfolioNo + 1).append("\n");
-        portfolioNo++;
-      }
-    } else {
-      throw new IllegalArgumentException("No portfolios");
-    }
-    return composition.toString();
-  }
-
-  @Override
-  public boolean isTickerSymbolValid(String tickerSymbol) {
-    return this.stockService.getValidStockSymbols().contains(tickerSymbol);
   }
 }

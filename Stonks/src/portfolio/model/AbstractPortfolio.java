@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.Map;
 
-public abstract class AbstractPortfolio implements IFlexiblePortfolio {
+public abstract class AbstractPortfolio implements IPortfolio {
   protected Map<IStock, Long> stockQuantityMap;
   IStockService stockService;
   protected LocalDate creationDate;
@@ -35,4 +35,12 @@ public abstract class AbstractPortfolio implements IFlexiblePortfolio {
   }
 
   protected abstract AbstractPortfolio createPortfolio(Map<IStock, Long> stockQty);
+
+  public void addStocksToPortfolio(IStock stock, Long quantity) {
+    throw new IllegalArgumentException("Cannot add stocks to this portfolio.");
+  }
+
+  public void sellStocksFromPortfolio(IStock stock, Long quantity) {
+    throw new IllegalArgumentException("Cannot remove stocks from this portfolio.");
+  }
 }

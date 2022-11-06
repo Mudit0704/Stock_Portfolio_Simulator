@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
-public class FlexiblePortfolioImpl extends AbstractPortfolio {
+public class FlexiblePortfolioImpl extends AbstractPortfolio implements IFlexiblePortfolio {
   /**
    * Constructs an object of Portfolio and initializes its members.
    *
