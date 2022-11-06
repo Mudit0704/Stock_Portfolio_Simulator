@@ -14,7 +14,7 @@ public interface IFlexiblePortfolio extends IPortfolio {
 
   /**
    * Sells the given set of stocks from this portfolio.
-   * 
+   *
    * @param tickerSymbol
    * @param quantity
    * @throws IllegalArgumentException
