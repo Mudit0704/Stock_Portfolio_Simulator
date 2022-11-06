@@ -1,7 +1,6 @@
 package portfolio.model;
 
 import java.time.LocalDate;
-import java.util.Map;
 
 public interface IFlexiblePortfolio extends IPortfolio {
 
@@ -15,11 +14,12 @@ public interface IFlexiblePortfolio extends IPortfolio {
 
   /**
    * Sells the given set of stocks from this portfolio.
-   *
-   * @param stocks
-   * @throws IllegalArgumentException if the number of stocks specified is not in portfolio.
+   * 
+   * @param tickerSymbol
+   * @param quantity
+   * @throws IllegalArgumentException
    */
-  void sellStocksFromPortfolio(Map<String, Long> stocks) throws IllegalArgumentException;
+  void sellStocksFromPortfolio(IStock tickerSymbol, Long quantity) throws IllegalArgumentException;
 
   /**
    * Gets the cost basis of the given portfolio by the date.

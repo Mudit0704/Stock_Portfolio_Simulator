@@ -32,6 +32,10 @@ public class FlexiblePortfoliosModelImpl extends PortfoliosModel
     if(portfolioId < 0 || portfolioId > portfolioList.size()) {
       throw new IllegalArgumentException("Invalid portfolio Id");
     }
+
+    IFlexiblePortfolio portfolio = this.portfolioList.get(portfolioId);
+    IStock stock = new Stock(tickerSymbol, this.stockService);
+    portfolio.sellStocksFromPortfolio(stock, quantity);
   }
 
   @Override

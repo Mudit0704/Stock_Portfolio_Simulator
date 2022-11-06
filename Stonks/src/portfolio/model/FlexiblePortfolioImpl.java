@@ -1,25 +1,14 @@
 package portfolio.model;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 public class FlexiblePortfolioImpl extends Portfolio
       implements IFlexiblePortfolio {
 
-  private static class Pair<S, T> {
+  private final Map<IStock, Long> stockQuantityMap = new HashMap<>();
 
-    S s;
-    T t;
-
-    public Pair(S s, T t) {
-      this.s = s;
-      this.t = t;
-    }
-  }
-
-  private final List<FlexiblePortfolioImpl.Pair<IStock, Long>> stocks = new ArrayList<>();
   /**
    * Constructs an object of Portfolio and initializes its members.
    *
@@ -31,14 +20,28 @@ public class FlexiblePortfolioImpl extends Portfolio
   }
 
   @Override
-  public void addStocksToPortfolio(IStock stocks, Long quantity) {
-    Pair<IStock, Long> stockLongPair = new Pair<>(stocks, quantity);
-    this.stocks.add(stockLongPair);
+  public void addStocksToPortfolio(IStock stock, Long quantity) {
+    long stockQty = 0;
+    if(stockQuantityMap.containsKey(stock)) {
+      stockQty = stockQuantityMap.get(stock);
+    }
+    stockQuantityMap.put(stock, stockQty + quantity);
   }
 
   @Override
-  public void sellStocksFromPortfolio(Map<String, Long> stocks) throws IllegalArgumentException {
+  public void sellStocksFromPortfolio(IStock stock, Long quantity) throws IllegalArgumentException {
+    long stockQty = 0;
+    if (!stockQuantityMap.containsKey(stock)) {
+      throw new IllegalArgumentException("Cannot sell stock if portfolio doesn't contain it.");
+    }
 
+    stockQty = stockQuantityMap.get(stock);
+
+    if (stockQty - quantity < 0) {
+      throw new IllegalArgumentException("Do not have more than " + quantity + " shares presently");
+    }
+
+    stockQuantityMap.put(stock, stockQty - quantity);
   }
 
   @Override
