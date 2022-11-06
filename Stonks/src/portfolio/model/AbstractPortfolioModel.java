@@ -27,8 +27,8 @@ public abstract class AbstractPortfolioModel implements IFlexiblePortfoliosModel
       stockQty.put(new Stock(entry.getKey(), this.stockService), entry.getValue());
     }
 
-    AbstractPortfolio portfolio = createPortfolio(stockQty);
-    portfolioList.add(portfolio);
+    AbstractPortfolio portfolio = null;// = createPortfolio(stockQty);
+    portfolioList.add(portfolio.createPortfolio(stockQty));
 
     for (Map.Entry<String, Long> entry : stocks.entrySet()) {
       this.addStocksToPortfolio(entry.getKey(), entry.getValue(), portfolioList.size() - 1);
@@ -75,6 +75,4 @@ public abstract class AbstractPortfolioModel implements IFlexiblePortfoliosModel
         .append(portfolioList.get(portfolioId - 1).getPortfolioComposition()).append("\n");
     return composition.toString();
   }
-
-  protected abstract AbstractPortfolio createPortfolio(Map<IStock, Long> stockQty);
 }

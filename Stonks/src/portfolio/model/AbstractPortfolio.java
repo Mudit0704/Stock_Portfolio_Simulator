@@ -33,4 +33,6 @@ public abstract class AbstractPortfolio implements IFlexiblePortfolio {
     }
     return portfolioValue;
   }
+
+  protected abstract AbstractPortfolio createPortfolio(Map<IStock, Long> stockQty);
 }
