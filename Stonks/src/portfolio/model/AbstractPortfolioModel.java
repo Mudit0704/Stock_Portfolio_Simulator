@@ -76,9 +76,5 @@ public abstract class AbstractPortfolioModel implements IFlexiblePortfoliosModel
     return composition.toString();
   }
 
-  public abstract void savePortfolios() throws RuntimeException, ParserConfigurationException;
-
-  public abstract void retrievePortfolios() throws IOException, ParserConfigurationException, SAXException;
-
   protected abstract AbstractPortfolio createPortfolio(Map<IStock, Long> stockQty);
 }
