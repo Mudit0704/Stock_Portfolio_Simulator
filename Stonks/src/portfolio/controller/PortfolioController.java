@@ -23,13 +23,13 @@ import portfolio.view.IView;
 public class PortfolioController implements IPortfolioController {
 
   //region Variables
-  private static final String CREATE_PORTFOLIO_SUB_MENU =
+  static final String CREATE_PORTFOLIO_SUB_MENU =
       "Choose from the below menu: \n 1 -> Add a new stock "
           + "\n E -> Exit from the operation \n";
-  private static final String SAVE_RETRIEVE_PORTFOLIO_MENU =
+  static final String SAVE_RETRIEVE_PORTFOLIO_MENU =
       "Choose from the below menu: \n 1 -> Save portfolio "
           + "\n 2 -> Retrieve portfolio \n E -> Exit from the operation \n";
-  private static final String CHOOSE_FROM_AVAILABLE_PORTFOLIOS = "Choose from available portfolios "
+  static final String CHOOSE_FROM_AVAILABLE_PORTFOLIOS = "Choose from available portfolios "
       + "(eg: Portfolio1 -> give 1):\n";
 
   private final Readable in;
@@ -56,6 +56,7 @@ public class PortfolioController implements IPortfolioController {
     try {
       while (true) {
         view.displayMenu();
+        view.displayEscapeFromOperation();
         view.askForInput();
         switch (scan.next()) {
           case "1":
@@ -86,7 +87,7 @@ public class PortfolioController implements IPortfolioController {
   //endregion
 
   //region Private Methods
-  private void getPortfolioComposition(IPortfoliosModel portfolios, Scanner scan)
+  void getPortfolioComposition(IPortfoliosModel portfolios, Scanner scan)
       throws IOException {
     String result;
     while (true) {
@@ -113,7 +114,7 @@ public class PortfolioController implements IPortfolioController {
     displayExitOperationSequence(scan);
   }
 
-  private void saveRetrievePortfolios(IPortfoliosModel portfolios, Scanner scan)
+  void saveRetrievePortfolios(IPortfoliosModel portfolios, Scanner scan)
       throws IOException {
     try {
       while (true) {
@@ -151,7 +152,7 @@ public class PortfolioController implements IPortfolioController {
     displayExitOperationSequence(scan);
   }
 
-  private void getPortfolioValuesForGivenDate(IPortfoliosModel portfolios, Scanner scan)
+  void getPortfolioValuesForGivenDate(IPortfoliosModel portfolios, Scanner scan)
       throws IOException {
     LocalDate date;
     int portfolioId;
@@ -189,7 +190,7 @@ public class PortfolioController implements IPortfolioController {
     displayExitOperationSequence(scan);
   }
 
-  private void generatePortfolios(Scanner scan, IPortfoliosModel portfolios)
+  void generatePortfolios(Scanner scan, IPortfoliosModel portfolios)
       throws IOException {
     Map<String, Long> stocks = new HashMap<>();
     while (true) {
@@ -212,7 +213,7 @@ public class PortfolioController implements IPortfolioController {
     }
   }
 
-  private void addNewStock(Scanner scan, IPortfoliosModel portfolios, Map<String, Long> stocks)
+  void addNewStock(Scanner scan, IPortfoliosModel portfolios, Map<String, Long> stocks)
       throws IOException {
     String tickerSymbol;
     long stockQuantity;
@@ -245,7 +246,7 @@ public class PortfolioController implements IPortfolioController {
     }
   }
 
-  private void displayExitOperationSequence(Scanner scan) throws IOException {
+  void displayExitOperationSequence(Scanner scan) throws IOException {
     view.displayEscapeFromOperation();
     scan.nextLine();
     while (!"E".equals(scan.next())) {
