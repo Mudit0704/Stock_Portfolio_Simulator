@@ -71,9 +71,4 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
       throws IOException, ParserConfigurationException, SAXException {
 
   }
-
-  @Override
-  protected AbstractPortfolio createPortfolio(Map<IStock, Long> stockQty) {
-    return new FlexiblePortfolioImpl(stockService, stockQty);
-  }
 }
