@@ -1,12 +1,9 @@
 package portfolio.model;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.xml.parsers.ParserConfigurationException;
-import org.xml.sax.SAXException;
 
 public abstract class AbstractPortfolioModel implements IFlexiblePortfoliosModel {
 
@@ -27,7 +24,7 @@ public abstract class AbstractPortfolioModel implements IFlexiblePortfoliosModel
       stockQty.put(new Stock(entry.getKey(), this.stockService), entry.getValue());
     }
 
-    AbstractPortfolio portfolio = null;// = createPortfolio(stockQty);
+    AbstractPortfolio portfolio = null;
     portfolioList.add(portfolio.createPortfolio(stockQty));
 
     for (Map.Entry<String, Long> entry : stocks.entrySet()) {
