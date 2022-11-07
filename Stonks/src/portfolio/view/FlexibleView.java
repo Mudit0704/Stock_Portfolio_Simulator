@@ -19,9 +19,8 @@ public class FlexibleView extends View implements IView {
   @Override
   public void displayMenu() throws IOException {
     super.displayMenu();
-    this.out.append(" 5 -> Purchase a new stock for an existing portfolio \n"
-        + " 6 -> Sell a stock from an existing portfolio \n"
-        + " 7 -> Determine the cost basis of an existing portfolio at a given date \n"
-        + " 8 -> Display portfolio performance \n");
+    this.out.append(" 5 -> Perform a transaction on an existing portfolio \n"
+        + " 6 -> Determine the cost basis of an existing portfolio at a given date \n"
+        + " 7 -> Display portfolio performance \n");
   }
 }

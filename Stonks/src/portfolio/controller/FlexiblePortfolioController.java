@@ -16,10 +16,15 @@ import portfolio.view.View;
 public class FlexiblePortfolioController extends PortfolioController implements
     IFlexiblePortfolioController {
 
-  private static final String MAIN_MENU =
+  protected static final String MAIN_MENU =
       "Choose from the below menu: \n 1 -> Create a static portfolio \n"
           + " 2 -> Create a flexible portfolio \n"
           + " E -> Exit from the application \n";
+
+  protected static final String TRANSACTION_MENU =
+      "Choose from the below menu: \n 1 -> Purchase a new stock \n"
+          + " 2 -> Sell a stock \n"
+          + " E -> Exit from the operation \n";
   private final Readable in;
   private final IView view;
   private final ControllerHelper controllerHelper;
@@ -85,15 +90,12 @@ public class FlexiblePortfolioController extends PortfolioController implements
           super.saveRetrievePortfolios(portfolios, scan);
           break;
         case "5":
-          purchaseNewStock(portfolios, scan);
+          performTransaction(portfolios, scan);
           break;
         case "6":
-          sellAStock(portfolios, scan);
-          break;
-        case "7":
           getPortfolioCostBasis(portfolios, scan);
           break;
-        case "8":
+        case "7":
           getPortfolioPerformance(portfolios, scan);
           break;
         case "E":
@@ -107,40 +109,49 @@ public class FlexiblePortfolioController extends PortfolioController implements
   }
 
   void getPortfolioPerformance(IFlexiblePortfoliosModel portfolios, Scanner scan) {
+    //view.displayCustomText(portfolios);
   }
 
   void getPortfolioCostBasis(IFlexiblePortfoliosModel portfolios, Scanner scan) throws IOException {
     Integer portfolioId;
     portfolioId = controllerHelper.populatePortfolioIdFromUser(portfolios, scan);
-    if(portfolioId == null) return;
+    if (portfolioId == null) {
+      return;
+    }
     LocalDate date = controllerHelper.populateDateFromUser(scan);
 
     view.displayCustomText(String.valueOf(portfolios.getCostBasis(date, portfolioId)));
   }
 
-  void sellAStock(IFlexiblePortfoliosModel portfolios, Scanner scan) throws IOException {
+  void performTransaction(IFlexiblePortfoliosModel portfolios, Scanner scan) throws IOException {
+    view.displayCustomText("NOTE : You will be charged a commission fee for each transaction \n");
     Integer portfolioId;
     portfolioId = controllerHelper.populatePortfolioIdFromUser(portfolios, scan);
-    if(portfolioId == null) return;
-
+    if (portfolioId == null) {
+      return;
+    }
+    view.displayCustomText("Please provide stock details for the transaction: \n");
     Map<String, Long> stock = new LinkedHashMap<>();
     controllerHelper.populateStockDateFromUser(scan, portfolios, stock);
     Entry<String, Long> entry = stock.entrySet().iterator().next();
-    portfolios.sellStockFromPortfolio(entry.getKey(), entry.getValue(), portfolioId);
-  }
 
-  void purchaseNewStock(IFlexiblePortfoliosModel portfolios, Scanner scan) throws IOException {
-    Integer portfolioId;
-    portfolioId = controllerHelper.populatePortfolioIdFromUser(portfolios, scan);
-    if(portfolioId == null) return;
-
-    Map<String, Long> stock = new LinkedHashMap<>();
-    controllerHelper.populateStockDateFromUser(scan, portfolios, stock);
-    Entry<String, Long> entry = stock.entrySet().iterator().next();
-    portfolios.addStocksToPortfolio(entry.getKey(), entry.getValue(), portfolioId);
-  }
-
-  void populateStockAndPortfolioId(Map<String, Long> stock, Integer portfolioId) {
-
+    while (true) {
+      view.displayCustomText(TRANSACTION_MENU);
+      view.askForInput();
+      switch (scan.next()) {
+        case "1":
+          portfolios.addStocksToPortfolio(entry.getKey(), entry.getValue(), portfolioId);
+          break;
+        case "2":
+          portfolios.sellStockFromPortfolio(entry.getKey(), entry.getValue(), portfolioId);
+          break;
+        case "E":
+          return;
+        default:
+          view.displayInvalidInput();
+          scan.nextLine();
+          break;
+      }
+    }
   }
 }
