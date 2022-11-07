@@ -83,7 +83,7 @@ public abstract class AbstractPortfolioModel implements IFlexiblePortfoliosModel
     String userDirectory = System.getProperty("user.dir");
     for (AbstractPortfolio portfolio : portfolioList) {
       portfolioNo++;
-      portfolio.savePortfolio(userDirectory + "/" + getPath() + portfolioNo + ".xml");
+      portfolio.savePortfolio(userDirectory + "/" + getPath() + "portfolio" + portfolioNo + ".xml");
     }
   }
 
@@ -94,7 +94,7 @@ public abstract class AbstractPortfolioModel implements IFlexiblePortfoliosModel
       throw new RuntimeException("Portfolios already populated\n");
     }
 
-    String userDirectory = System.getProperty("user.dir") + "/" + getPath() + "/";
+    String userDirectory = System.getProperty("user.dir") + "/" + getPath() ;
     File dir = new File(userDirectory);
     File[] files = dir.listFiles((dir1, name) -> name.toLowerCase().endsWith(".xml"));
 

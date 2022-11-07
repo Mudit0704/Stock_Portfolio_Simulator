@@ -1,13 +1,30 @@
 package portfolio.model;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public class FlexiblePortfolioImpl extends AbstractPortfolio {
+  Map<LocalDate, Map<IStock, Long>> dateWiseStockQty = new HashMap<>();
   /**
    * Constructs an object of Portfolio and initializes its members.
    *
@@ -16,7 +33,6 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
    */
   public FlexiblePortfolioImpl(IStockService stockService, Map<IStock, Long> stocks) {
     super(stockService, stocks);
-    creationDate = LocalDate.now();
   }
 
   @Override
@@ -58,13 +74,137 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
 
   @Override
   public void savePortfolio(String path)
-      throws IllegalArgumentException, ParserConfigurationException {
+    throws RuntimeException, ParserConfigurationException {
+    if (stockQuantityMap.size() == 0) {
+      throw new RuntimeException("No portfolios to save\n");
+    }
+    try {
+      DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+      DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+      Document doc = dBuilder.newDocument();
 
+      Element rootElement = doc.createElement("portfolio");
+      doc.appendChild(rootElement);
+
+      for (Map.Entry<IStock, Long>  stock : this.stockQuantityMap.entrySet()) {
+        Element stockElement = doc.createElement("stock");
+
+        Element stockTickerSymbol = doc.createElement("tickerSymbol");
+        stockTickerSymbol.appendChild(doc.createTextNode(stock.getKey().getStockTicker()));
+
+        Element stockQuantity = doc.createElement("stockQuantity");
+        stockQuantity.appendChild(doc.createTextNode(String.valueOf(stock.getValue())));
+
+        Element stockDate = doc.createElement("modificationDate");
+        stockDate.appendChild(doc.createTextNode(LocalDate.now().toString()));
+
+        Element stockPrice = doc.createElement("stockPrice");
+        stockPrice.appendChild(
+          doc.createTextNode(String.valueOf(stock.getKey().getValue(LocalDate.now()))));
+
+        stockElement.appendChild(stockTickerSymbol);
+        stockElement.appendChild(stockQuantity);
+        stockElement.appendChild(stockPrice);
+        stockElement.appendChild(stockDate);
+        rootElement.appendChild(stockElement);
+      }
+
+      TransformerFactory transformerFactory = TransformerFactory.newInstance();
+      Transformer transformer = transformerFactory.newTransformer();
+      DOMSource source = new DOMSource(doc);
+      StreamResult result = new StreamResult(new File(path));
+      transformer.transform(source, result);
+
+    } catch (TransformerException e) {
+      throw new RuntimeException(e);
+    } catch (DateTimeParseException e) {
+      throw new RuntimeException("API Failure...\n");
+    }
+    this.creationDate = LocalDate.now();
   }
 
   @Override
   public void retrievePortfolio(String path)
-      throws IOException, ParserConfigurationException, SAXException {
+    throws IOException, SAXException, ParserConfigurationException, RuntimeException {
+    if (this.stockQuantityMap.size() > 0) {
+      throw new RuntimeException("Portfolios already populated\n");
+    }
+    File inputFile = new File(path);
+    if (!inputFile.isFile()) {
+      throw new FileNotFoundException("Cannot find file: " + path);
+    }
+    DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+    DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+    Document doc = dBuilder.parse(inputFile);
+    doc.getDocumentElement().normalize();
+    NodeList nList = doc.getDocumentElement().getElementsByTagName("stock");
 
+    for (int temp = 0; temp < nList.getLength(); temp++) {
+      Node nNode = nList.item(temp);
+
+      if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+        Element eElement = (Element) nNode;
+        String tickerSymbol = eElement.getElementsByTagName("tickerSymbol")
+          .item(0).getTextContent();
+        long stockQuantity = Long.parseLong(eElement.getElementsByTagName("stockQuantity")
+          .item(0).getTextContent());
+        String modificationDate = eElement.getElementsByTagName("modificationDate")
+          .item(0).getFirstChild().getNodeValue();
+        IStock newStock = apiOptimizer.cacheGetObj(tickerSymbol);
+        if (newStock == null) {
+          newStock = new Stock(tickerSymbol, this.stockService);
+          apiOptimizer.cacheSetObj(tickerSymbol, newStock);
+        }
+        this.stockQuantityMap.put(newStock, stockQuantity);
+        LocalDate modDate = LocalDate.parse(modificationDate);
+        Map<IStock, Long> stockQty;
+        if(!this.dateWiseStockQty.containsKey(modDate)) {
+          stockQty = new HashMap<>();
+        }
+        else {
+          stockQty = this.dateWiseStockQty.get(modDate);
+        }
+
+        stockQty.put(newStock, stockQuantity);
+        this.dateWiseStockQty.put(modDate,stockQty);
+        //load creation date as well... this.creationDate = xml.creationDate
+      }
+    }
+  }
+
+  @Override
+  public double getPortfolioValue(LocalDate date) throws IllegalArgumentException {
+    if(date.isBefore(this.creationDate)) {
+      return 0.0;
+    }
+
+    double portfolioValue = 0;
+    LocalDate closestDate = getClosestDate(date);
+    if(closestDate == null || !this.dateWiseStockQty.containsKey(date)) {
+      throw new IllegalArgumentException("Could not find portfolio value for the given date.");
+    }
+
+    Map<IStock, Long> stockQty = dateWiseStockQty.get(date);
+
+    for (Map.Entry<IStock, Long> stock : stockQty.entrySet()) {
+      portfolioValue += stock.getKey().getValue(date) * stock.getValue();
+    }
+    return portfolioValue;
+  }
+
+  private LocalDate getClosestDate(LocalDate date) {
+    long minDiff = Long.MAX_VALUE;
+    LocalDate result = null;
+
+    for (Map.Entry<LocalDate, Map<IStock, Long>> stock : dateWiseStockQty.entrySet()) {
+      LocalDate currDate = stock.getKey();
+      long diff = ChronoUnit.DAYS.between(currDate, date);
+
+      if (currDate.isBefore(date) && minDiff > diff) {
+        minDiff = diff;
+        result = currDate;
+      }
+    }
+    return result;
   }
 }

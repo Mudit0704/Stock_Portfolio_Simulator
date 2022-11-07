@@ -55,6 +55,6 @@ public class FlexiblePortfoliosModelImpl extends AbstractPortfolioModel {
 
   @Override
   protected String getPath() {
-    return "flexiblePortfolio/portfolio";
+    return "flexiblePortfolio/";
   }
 }
