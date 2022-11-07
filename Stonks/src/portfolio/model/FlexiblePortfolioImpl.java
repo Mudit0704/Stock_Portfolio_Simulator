@@ -95,7 +95,7 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
       doc.appendChild(rootElement);
 
       Element creationDateElement = doc.createElement("created");
-      creationDateElement.appendChild(doc.createTextNode(creationDate.toString()));
+      creationDateElement.appendChild(doc.createTextNode(super.creationDate.toString()));
       rootElement.appendChild(creationDateElement);
 
       for (Map.Entry<IStock, Long>  stock : this.stockQuantityMap.entrySet()) {
@@ -147,7 +147,6 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
     } catch (DateTimeParseException e) {
       throw new RuntimeException("API Failure...\n");
     }
-    this.creationDate = LocalDate.now();
   }
 
   @Override
@@ -164,6 +163,9 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
     DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
     Document doc = dBuilder.parse(inputFile);
     doc.getDocumentElement().normalize();
+    String creationTime = doc.getDocumentElement().getElementsByTagName("created")
+      .item(0).getTextContent();
+    this.creationDate = LocalDate.parse(creationTime);
     NodeList nList = doc.getDocumentElement().getElementsByTagName("stock");
 
     for (int temp = 0; temp < nList.getLength(); temp++) {
@@ -203,9 +205,6 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
           stockQuantityIdx++;
         }
 
-//        String creationTime = eElement.getElementsByTagName("created")
-//          .item(0).getTextContent();
-//        this.creationDate = LocalDate.parse(creationTime);
         long currentHolding = Long.parseLong(eElement.getElementsByTagName("currentHolding")
           .item(0).getTextContent());
         this.stockQuantityMap.put(newStock, currentHolding);
