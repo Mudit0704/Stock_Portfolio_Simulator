@@ -107,7 +107,7 @@ public abstract class AbstractPortfolioModel implements IFlexiblePortfoliosModel
       for (File file : files) {
         AbstractPortfolio portfolio = createPortfolio(new HashMap<>());
         portfolio.retrievePortfolio(userDirectory + file.getName());
-        portfolioMap.put(file.getName(), portfolio);
+        portfolioMap.put(file.getName().replaceAll(".xml", ""), portfolio);
       }
     } else {
       throw new FileNotFoundException("No portfolios found to retrieve");

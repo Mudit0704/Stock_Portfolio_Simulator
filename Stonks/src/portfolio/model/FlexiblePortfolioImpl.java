@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
@@ -24,7 +25,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public class FlexiblePortfolioImpl extends AbstractPortfolio {
-  Map<LocalDate, Map<IStock, Long>> dateWiseStockQty = new HashMap<>();
+  private Map<LocalDate, Map<IStock, Long>> dateWiseStockQty;
   /**
    * Constructs an object of Portfolio and initializes its members.
    *
@@ -33,6 +34,11 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
    */
   public FlexiblePortfolioImpl(IStockService stockService, Map<IStock, Long> stocks) {
     super(stockService, stocks);
+    this.dateWiseStockQty = new HashMap<>();
+
+    if(stocks.size() != 0) {
+      this.dateWiseStockQty.put(this.creationDate, stocks);
+    }
   }
 
   @Override
@@ -49,6 +55,7 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
       stockQty = stockQuantityMap.get(stock);
     }
     stockQuantityMap.put(stock, stockQty + quantity);
+    this.dateWiseStockQty.put(LocalDate.now(), stockQuantityMap);
   }
 
   @Override
@@ -65,6 +72,7 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
     }
 
     stockQuantityMap.put(stock, stockQty - quantity);
+    this.dateWiseStockQty.put(LocalDate.now(), stockQuantityMap);
   }
 
   @Override
@@ -86,31 +94,50 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
       Element rootElement = doc.createElement("portfolio");
       doc.appendChild(rootElement);
 
+      Element creationDateElement = doc.createElement("created");
+      creationDateElement.appendChild(doc.createTextNode(creationDate.toString()));
+      rootElement.appendChild(creationDateElement);
+
       for (Map.Entry<IStock, Long>  stock : this.stockQuantityMap.entrySet()) {
         Element stockElement = doc.createElement("stock");
 
         Element stockTickerSymbol = doc.createElement("tickerSymbol");
         stockTickerSymbol.appendChild(doc.createTextNode(stock.getKey().getStockTicker()));
 
-        Element stockQuantity = doc.createElement("stockQuantity");
-        stockQuantity.appendChild(doc.createTextNode(String.valueOf(stock.getValue())));
+        Element stockCurrentHoldings = doc.createElement("currentHolding");
+        stockCurrentHoldings.setAttribute("date", LocalDate.now().toString());
+        stockCurrentHoldings.appendChild(doc.createTextNode(String.valueOf(stock.getValue())));
 
-        Element stockDate = doc.createElement("modificationDate");
-        stockDate.appendChild(doc.createTextNode(LocalDate.now().toString()));
+        for(Map.Entry<LocalDate, Map<IStock, Long>> stockQuantity
+            : this.dateWiseStockQty.entrySet()) {
+          Map<IStock, Long> thisDateStockQty = stockQuantity.getValue();
+          Element stockQuantityXML;
+          if(!(thisDateStockQty.get(stock.getKey()) == null)) {
+            stockQuantityXML = doc.createElement("stockQuantity");
+            stockQuantityXML.appendChild(doc.createTextNode(String.valueOf(thisDateStockQty.get(stock.getKey()))));
+          }
+          else {
+            continue;
+          }
+
+          stockQuantityXML.setAttribute("date", stockQuantity.getKey().toString());
+          stockElement.appendChild(stockQuantityXML);
+        }
 
         Element stockPrice = doc.createElement("stockPrice");
         stockPrice.appendChild(
           doc.createTextNode(String.valueOf(stock.getKey().getValue(LocalDate.now()))));
 
         stockElement.appendChild(stockTickerSymbol);
-        stockElement.appendChild(stockQuantity);
         stockElement.appendChild(stockPrice);
-        stockElement.appendChild(stockDate);
+        stockElement.appendChild(stockCurrentHoldings);
         rootElement.appendChild(stockElement);
       }
 
       TransformerFactory transformerFactory = TransformerFactory.newInstance();
+      transformerFactory.setAttribute("indent-number", 3);
       Transformer transformer = transformerFactory.newTransformer();
+      transformer.setOutputProperty(OutputKeys.INDENT, "yes");
       DOMSource source = new DOMSource(doc);
       StreamResult result = new StreamResult(new File(path));
       transformer.transform(source, result);
@@ -146,28 +173,42 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
         Element eElement = (Element) nNode;
         String tickerSymbol = eElement.getElementsByTagName("tickerSymbol")
           .item(0).getTextContent();
-        long stockQuantity = Long.parseLong(eElement.getElementsByTagName("stockQuantity")
-          .item(0).getTextContent());
-        String modificationDate = eElement.getElementsByTagName("modificationDate")
-          .item(0).getFirstChild().getNodeValue();
+
+        int numDates = eElement.getElementsByTagName("stockQuantity").getLength();
+        int stockQuantityIdx = 0;
+
         IStock newStock = apiOptimizer.cacheGetObj(tickerSymbol);
         if (newStock == null) {
           newStock = new Stock(tickerSymbol, this.stockService);
           apiOptimizer.cacheSetObj(tickerSymbol, newStock);
         }
-        this.stockQuantityMap.put(newStock, stockQuantity);
-        LocalDate modDate = LocalDate.parse(modificationDate);
-        Map<IStock, Long> stockQty;
-        if(!this.dateWiseStockQty.containsKey(modDate)) {
-          stockQty = new HashMap<>();
-        }
-        else {
-          stockQty = this.dateWiseStockQty.get(modDate);
+
+        while(stockQuantityIdx < numDates) {
+          String modificationDate = eElement.getElementsByTagName("stockQuantity")
+            .item(stockQuantityIdx).getAttributes().getNamedItem("date").getNodeValue();
+
+          long stockQuantity = Long.parseLong(eElement.getElementsByTagName("stockQuantity")
+            .item(stockQuantityIdx).getTextContent());
+
+          LocalDate modDate = LocalDate.parse(modificationDate);
+          Map<IStock, Long> stockQty = null;
+          if(this.dateWiseStockQty.containsKey(modDate)) {
+            stockQty = this.dateWiseStockQty.get(modDate);
+          } else {
+            stockQty = new HashMap<>();
+          }
+
+          stockQty.put(newStock, stockQuantity);
+          this.dateWiseStockQty.put(modDate, stockQty);
+          stockQuantityIdx++;
         }
 
-        stockQty.put(newStock, stockQuantity);
-        this.dateWiseStockQty.put(modDate,stockQty);
-        //load creation date as well... this.creationDate = xml.creationDate
+//        String creationTime = eElement.getElementsByTagName("created")
+//          .item(0).getTextContent();
+//        this.creationDate = LocalDate.parse(creationTime);
+        long currentHolding = Long.parseLong(eElement.getElementsByTagName("currentHolding")
+          .item(0).getTextContent());
+        this.stockQuantityMap.put(newStock, currentHolding);
       }
     }
   }
