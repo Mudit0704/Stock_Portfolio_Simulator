@@ -1,26 +1,23 @@
 package portfolio.model;
 
-import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import javax.xml.parsers.ParserConfigurationException;
-import org.xml.sax.SAXException;
 
 public class FlexiblePortfoliosModelImpl extends AbstractPortfolioModel {
 
   public FlexiblePortfoliosModelImpl() {
     apiOptimizer = StockCache.getInstance();
-    portfolioList = new ArrayList<>();
+    portfolioMap = new LinkedHashMap<>();
   }
 
   @Override
   public void addStocksToPortfolio(String tickerSymbol, Long quantity, int portfolioId) {
-    if (portfolioId < 0 || portfolioId > portfolioList.size()) {
-      throw new IllegalArgumentException("Invalid portfolio ID");
+    if (portfolioId < 0 || portfolioId > portfolioMap.size()) {
+      throw new IllegalArgumentException("Invalid portfolio Id");
     }
 
-    IFlexiblePortfolio portfolio = portfolioList.get(portfolioId - 1);
+    IFlexiblePortfolio portfolio = getPortfolioFromMap(portfolioId).getValue();
     IStock stock = apiOptimizer.cacheGetObj(tickerSymbol);
     if (stock == null) {
       stock = new Stock(tickerSymbol, this.stockService);
@@ -31,11 +28,11 @@ public class FlexiblePortfoliosModelImpl extends AbstractPortfolioModel {
 
   @Override
   public void sellStockFromPortfolio(String tickerSymbol, Long quantity, int portfolioId) {
-    if (portfolioId < 0 || portfolioId > portfolioList.size()) {
+    if (portfolioId < 0 || portfolioId > portfolioMap.size()) {
       throw new IllegalArgumentException("Invalid portfolio Id");
     }
 
-    IFlexiblePortfolio portfolio = this.portfolioList.get(portfolioId - 1);
+    IFlexiblePortfolio portfolio = getPortfolioFromMap(portfolioId).getValue();
     IStock stock = apiOptimizer.cacheGetObj(tickerSymbol);
     if (stock == null) {
       stock = new Stock(tickerSymbol, this.stockService);

@@ -4,15 +4,18 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
 public abstract class AbstractPortfolioModel implements IFlexiblePortfoliosModel {
 
-  List<AbstractPortfolio> portfolioList;
+  Map<String, AbstractPortfolio> portfolioMap;
   IStockService stockService;
   IStockAPIOptimizer apiOptimizer;
 
@@ -30,16 +33,17 @@ public abstract class AbstractPortfolioModel implements IFlexiblePortfoliosModel
     }
 
     AbstractPortfolio portfolio = createPortfolio(stockQty);
-    portfolioList.add(portfolio);
+    portfolioMap.put(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+        portfolio);
   }
 
   @Override
   public Double getPortfolioValue(LocalDate date, int portfolioId) throws IllegalArgumentException {
-    if (date.isAfter(LocalDate.now()) || portfolioId > portfolioList.size() || portfolioId <= 0) {
+    if (date.isAfter(LocalDate.now()) || portfolioId > portfolioMap.size() || portfolioId <= 0) {
       throw new IllegalArgumentException();
     }
 
-    return portfolioList.get(portfolioId - 1).getPortfolioValue(date);
+    return getPortfolioFromMap(portfolioId).getValue().getPortfolioValue(date);
   }
 
   @Override
@@ -47,9 +51,10 @@ public abstract class AbstractPortfolioModel implements IFlexiblePortfoliosModel
     int portfolioNo = 0;
     StringBuilder composition = new StringBuilder();
 
-    if (portfolioList.size() > 0) {
-      while (portfolioNo < portfolioList.size()) {
-        composition.append("Portfolio").append(portfolioNo + 1).append("\n");
+    if (portfolioMap.size() > 0) {
+      for (Entry<String, AbstractPortfolio> entry : portfolioMap.entrySet()) {
+        composition.append("Portfolio").append(portfolioNo + 1).append(" -> ")
+            .append(entry.getKey()).append("\n");
         portfolioNo++;
       }
     } else {
@@ -65,36 +70,36 @@ public abstract class AbstractPortfolioModel implements IFlexiblePortfoliosModel
 
   @Override
   public String getPortfolioComposition(int portfolioId) {
-    if (portfolioId > portfolioList.size() || portfolioId <= 0) {
+    if (portfolioId > portfolioMap.size() || portfolioId <= 0) {
       throw new IllegalArgumentException();
     }
+
     StringBuilder composition = new StringBuilder();
     composition.append("Portfolio").append(portfolioId).append("\n")
-        .append(portfolioList.get(portfolioId - 1).getPortfolioComposition()).append("\n");
+        .append(getPortfolioFromMap(portfolioId).getValue().getPortfolioComposition()).append("\n");
     return composition.toString();
   }
 
   @Override
   public void savePortfolios() throws RuntimeException, ParserConfigurationException {
-    if (portfolioList.size() == 0) {
+    if (portfolioMap.size() == 0) {
       throw new RuntimeException("No portfolios to save\n");
     }
-    int portfolioNo = 0;
+
     String userDirectory = System.getProperty("user.dir");
-    for (AbstractPortfolio portfolio : portfolioList) {
-      portfolioNo++;
-      portfolio.savePortfolio(userDirectory + "/" + getPath() + "portfolio" + portfolioNo + ".xml");
+    for (Entry<String, AbstractPortfolio> entry : portfolioMap.entrySet()) {
+      entry.getValue().savePortfolio(userDirectory + "/" + getPath() + entry.getKey() + ".xml");
     }
   }
 
   @Override
   public void retrievePortfolios()
       throws IOException, ParserConfigurationException, SAXException {
-    if (portfolioList.size() > 0) {
+    if (portfolioMap.size() > 0) {
       throw new RuntimeException("Portfolios already populated\n");
     }
 
-    String userDirectory = System.getProperty("user.dir") + "/" + getPath() ;
+    String userDirectory = System.getProperty("user.dir") + "/" + getPath();
     File dir = new File(userDirectory);
     File[] files = dir.listFiles((dir1, name) -> name.toLowerCase().endsWith(".xml"));
 
@@ -102,11 +107,23 @@ public abstract class AbstractPortfolioModel implements IFlexiblePortfoliosModel
       for (File file : files) {
         AbstractPortfolio portfolio = createPortfolio(new HashMap<>());
         portfolio.retrievePortfolio(userDirectory + file.getName());
-        portfolioList.add(portfolio);
+        portfolioMap.put(file.getName(), portfolio);
       }
     } else {
       throw new FileNotFoundException("No portfolios found to retrieve");
     }
+  }
+
+  protected Entry<String, AbstractPortfolio> getPortfolioFromMap(int portfolioId) {
+    int counter = 1;
+    Iterator<Entry<String, AbstractPortfolio>> entryIterator = portfolioMap.entrySet().iterator();
+    Entry<String, AbstractPortfolio> valueToCheck = entryIterator.next();
+
+    while (counter != portfolioId && entryIterator.hasNext()) {
+      valueToCheck = entryIterator.next();
+      counter++;
+    }
+    return valueToCheck;
   }
 
   protected abstract AbstractPortfolio createPortfolio(Map<IStock, Long> stockQty);

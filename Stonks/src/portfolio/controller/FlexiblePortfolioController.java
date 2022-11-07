@@ -125,32 +125,42 @@ public class FlexiblePortfolioController extends PortfolioController implements
 
   void performTransaction(IFlexiblePortfoliosModel portfolios, Scanner scan) throws IOException {
     view.displayCustomText("NOTE : You will be charged a commission fee for each transaction \n");
-    Integer portfolioId;
-    portfolioId = controllerHelper.populatePortfolioIdFromUser(portfolios, scan);
-    if (portfolioId == null) {
-      return;
-    }
-    view.displayCustomText("Please provide stock details for the transaction: \n");
-    Map<String, Long> stock = new LinkedHashMap<>();
-    controllerHelper.populateStockDateFromUser(scan, portfolios, stock);
-    Entry<String, Long> entry = stock.entrySet().iterator().next();
 
     while (true) {
+      Integer portfolioId;
+      portfolioId = controllerHelper.populatePortfolioIdFromUser(portfolios, scan);
+      if (portfolioId == null) {
+        return;
+      }
+      view.displayCustomText("Please provide stock details for the transaction: \n");
+      Map<String, Long> stock = new LinkedHashMap<>();
+      controllerHelper.populateStockDateFromUser(scan, portfolios, stock);
+      Entry<String, Long> entry = stock.entrySet().iterator().next();
       view.displayCustomText(TRANSACTION_MENU);
       view.askForInput();
-      switch (scan.next()) {
-        case "1":
-          portfolios.addStocksToPortfolio(entry.getKey(), entry.getValue(), portfolioId);
-          break;
-        case "2":
-          portfolios.sellStockFromPortfolio(entry.getKey(), entry.getValue(), portfolioId);
-          break;
-        case "E":
-          return;
-        default:
-          view.displayInvalidInput();
-          scan.nextLine();
-          break;
+      try {
+        switch (scan.next()) {
+          case "1":
+            portfolios.addStocksToPortfolio(entry.getKey(), entry.getValue(), portfolioId);
+            view.displayCustomText("Purchased\n");
+            controllerHelper.displayExitOperationSequence(scan);
+            return;
+          case "2":
+            portfolios.sellStockFromPortfolio(entry.getKey(), entry.getValue(), portfolioId);
+            view.displayCustomText("Sold\n");
+            controllerHelper.displayExitOperationSequence(scan);
+            return;
+          case "E":
+            return;
+          default:
+            view.displayInvalidInput();
+            scan.nextLine();
+            break;
+        }
+      } catch (IllegalArgumentException e){
+        if("Invalid portfolio Id".equals(e.getMessage())) {
+          view.displayCustomText(e.getMessage()+"\n");
+        }
       }
     }
   }
