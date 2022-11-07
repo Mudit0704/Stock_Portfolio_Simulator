@@ -49,16 +49,12 @@ public class FlexiblePortfoliosModelImpl extends AbstractPortfolioModel {
     return 0;
   }
 
-  @Override
-  public void savePortfolios() throws RuntimeException, ParserConfigurationException {
-
-  }
-
-  @Override
-  public void retrievePortfolios() throws IOException, ParserConfigurationException, SAXException {
-
-  }
   protected AbstractPortfolio createPortfolio(Map<IStock, Long> stockQty) {
     return new FlexiblePortfolioImpl(this.stockService, stockQty);
+  }
+
+  @Override
+  protected String getPath() {
+    return "flexiblePortfolio/portfolio";
   }
 }

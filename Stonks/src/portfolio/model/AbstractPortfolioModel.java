@@ -1,9 +1,14 @@
 package portfolio.model;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.xml.parsers.ParserConfigurationException;
+import org.xml.sax.SAXException;
 
 public abstract class AbstractPortfolioModel implements IFlexiblePortfoliosModel {
 
@@ -69,6 +74,43 @@ public abstract class AbstractPortfolioModel implements IFlexiblePortfoliosModel
     return composition.toString();
   }
 
+  @Override
+  public void savePortfolios() throws RuntimeException, ParserConfigurationException {
+    if (portfolioList.size() == 0) {
+      throw new RuntimeException("No portfolios to save\n");
+    }
+    int portfolioNo = 0;
+    String userDirectory = System.getProperty("user.dir");
+    for (AbstractPortfolio portfolio : portfolioList) {
+      portfolioNo++;
+      portfolio.savePortfolio(userDirectory + "/" + getPath() + portfolioNo + ".xml");
+    }
+  }
+
+  @Override
+  public void retrievePortfolios()
+      throws IOException, ParserConfigurationException, SAXException {
+    if (portfolioList.size() > 0) {
+      throw new RuntimeException("Portfolios already populated\n");
+    }
+
+    String userDirectory = System.getProperty("user.dir") + "/" + getPath() + "/";
+    File dir = new File(userDirectory);
+    File[] files = dir.listFiles((dir1, name) -> name.toLowerCase().endsWith(".xml"));
+
+    if (files != null && files.length != 0) {
+      for (File file : files) {
+        AbstractPortfolio portfolio = createPortfolio(new HashMap<>());
+        portfolio.retrievePortfolio(userDirectory + file.getName());
+        portfolioList.add(portfolio);
+      }
+    } else {
+      throw new FileNotFoundException("No portfolios found to retrieve");
+    }
+  }
+
   protected abstract AbstractPortfolio createPortfolio(Map<IStock, Long> stockQty);
+
+  protected abstract String getPath();
 
 }
