@@ -6,7 +6,9 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import javax.xml.parsers.DocumentBuilder;
@@ -26,6 +28,7 @@ import org.xml.sax.SAXException;
 
 public class FlexiblePortfolioImpl extends AbstractPortfolio {
   private Map<IStock, Map<LocalDate, Long>> stockHistoryQty;
+  private Map<LocalDate, Double> costBasisHistory;
   /**
    * Constructs an object of Portfolio and initializes its members.
    *
@@ -36,13 +39,14 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
     super(stockService, stocks);
     this.stockHistoryQty = new HashMap<>();
 
-
+    costBasisHistory = new HashMap<>();
     if(stocks.size() != 0) {
       for(Map.Entry<IStock, Long> mapEntry:stocks.entrySet()) {
         Map<LocalDate, Long> dateQtyMap = new HashMap<>();
         dateQtyMap.put(this.creationDate, mapEntry.getValue());
         this.stockHistoryQty.put(mapEntry.getKey(),dateQtyMap);
       }
+      costBasisHistory.put(creationDate, getPortfolioValue(creationDate));
     }
   }
 
@@ -61,6 +65,8 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
     }
     stockQuantityMap.put(stock, stockQty + quantity);
     updateHistoricHoldings();
+
+    costBasisHistory.put(LocalDate.now(), this.getPortfolioValue(LocalDate.now()));
   }
 
   @Override
@@ -83,7 +89,21 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
 
   @Override
   public double getPortfolioCostBasisByDate(LocalDate date) {
-    return 0;
+    //dump this into a function.
+    List<LocalDate> listOfDates = new ArrayList<>();
+    for(Map.Entry<LocalDate, Double> costBasis:costBasisHistory.entrySet()) {
+      listOfDates.add(costBasis.getKey());
+    }
+
+    LocalDate recentDate = date;
+    //todo troubleshoot the scenario when cost-basis date input is present in the hash map.
+    if(!costBasisHistory.containsKey(date)) {
+      recentDate = getClosestDate(date, listOfDates);
+    }
+    if(recentDate == null) {
+      return 0;
+    }
+    return costBasisHistory.get(getClosestDate(date, listOfDates));
   }
 
   @Override
@@ -103,6 +123,15 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
       Element creationDateElement = doc.createElement("created");
       creationDateElement.appendChild(doc.createTextNode(super.creationDate.toString()));
       rootElement.appendChild(creationDateElement);
+
+      for(Map.Entry<LocalDate, Double> costBasis: this.costBasisHistory.entrySet()) {
+        Element costBasisXML;
+        costBasisXML = doc.createElement("cost-basis");
+        costBasisXML.appendChild(doc.createTextNode(String.valueOf(costBasis.getValue())));
+
+        costBasisXML.setAttribute("date", costBasis.getKey().toString());
+        rootElement.appendChild(costBasisXML);
+      }
 
       for (Map.Entry<IStock, Long>  stock : this.stockQuantityMap.entrySet()) {
         Element stockElement = doc.createElement("stock");
@@ -166,6 +195,19 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
     String creationTime = doc.getDocumentElement().getElementsByTagName("created")
       .item(0).getTextContent();
     this.creationDate = LocalDate.parse(creationTime);
+    int numCostBasisDates = doc.getDocumentElement().getElementsByTagName("cost-basis").getLength();
+    int costBasisIdx = 0;
+    while(costBasisIdx < numCostBasisDates) {
+      String date = doc.getDocumentElement().getElementsByTagName("cost-basis")
+        .item(costBasisIdx).getAttributes().getNamedItem("date").getNodeValue();
+
+      double costBasis = Double.parseDouble(doc.getDocumentElement().getElementsByTagName("cost-basis")
+        .item(costBasisIdx).getTextContent());
+
+      this.costBasisHistory.put(LocalDate.parse(date), costBasis);
+      costBasisIdx++;
+    }
+
     NodeList nList = doc.getDocumentElement().getElementsByTagName("stock");
 
     for (int temp = 0; temp < nList.getLength(); temp++) {
@@ -217,17 +259,19 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
 
     for(Map.Entry<IStock, Map<LocalDate, Long>> mapEntry:this.stockHistoryQty.entrySet()) {
       Map<LocalDate, Long> qtyHistory = mapEntry.getValue();
-      LocalDate closestDate = null;
+      LocalDate closestDate = date;
+
+      List<LocalDate> listOfDates = new ArrayList<>();
+      for(Map.Entry<LocalDate, Long> dates:qtyHistory.entrySet()) {
+        listOfDates.add(dates.getKey());
+      }
 
       if(!qtyHistory.containsKey(date)) {
-        closestDate = getClosestDate(date, qtyHistory);
+        closestDate = getClosestDate(date, listOfDates);
       }
 
       long qty = 0;
-      if(!qtyHistory.containsKey(date) && closestDate == null) {
-        qty = 0;
-      }
-      else {
+      if(qtyHistory.containsKey(date) || closestDate != null) {
         qty = mapEntry.getValue().get(closestDate);
       }
 
@@ -236,12 +280,11 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
     return portfolioValue;
   }
 
-  private LocalDate getClosestDate(LocalDate date, Map<LocalDate, Long> qtyHistory) {
+  private LocalDate getClosestDate(LocalDate date, List<LocalDate> qtyHistory) {
     long minDiff = Long.MAX_VALUE;
     LocalDate result = null;
 
-    for (Map.Entry<LocalDate, Long> dateEntry : qtyHistory.entrySet()) {
-      LocalDate currDate = dateEntry.getKey();
+    for (LocalDate currDate : qtyHistory) {
       long diff = ChronoUnit.DAYS.between(currDate, date);
 
       if (currDate.isBefore(date) && minDiff > diff) {

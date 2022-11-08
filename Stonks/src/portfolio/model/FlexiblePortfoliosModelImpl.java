@@ -43,7 +43,9 @@ public class FlexiblePortfoliosModelImpl extends AbstractPortfolioModel {
 
   @Override
   public double getCostBasis(LocalDate date, int portfolioId) {
-    return 0;
+    //TODO add validations here.
+    IFlexiblePortfolio portfolio = getPortfolioFromMap(portfolioId).getValue();
+    return portfolio.getPortfolioCostBasisByDate(date);
   }
 
   protected AbstractPortfolio createPortfolio(Map<IStock, Long> stockQty) {
