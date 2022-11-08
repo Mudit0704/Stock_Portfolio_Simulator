@@ -60,19 +60,7 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
       stockQty = stockQuantityMap.get(stock);
     }
     stockQuantityMap.put(stock, stockQty + quantity);
-
-    for(Map.Entry<IStock, Long> mapEntry:stockQuantityMap.entrySet()) {
-      Map<LocalDate, Long> map;
-      if(this.stockHistoryQty.containsKey(mapEntry.getKey())) {
-        map = this.stockHistoryQty.get(mapEntry.getKey());
-      }
-      else {
-        map = new HashMap<>();
-      }
-      map.put(LocalDate.now(), mapEntry.getValue());
-      this.stockHistoryQty.put(mapEntry.getKey(),map);
-    }
-//    this.dateWiseStockQty.put(LocalDate.now(), stockQuantityMap);
+    updateHistoricHoldings();
   }
 
   @Override
@@ -90,18 +78,7 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
 
     stockQuantityMap.put(stock, stockQty - quantity);
 
-    //put the below in a function.
-    for(Map.Entry<IStock, Long> mapEntry:stockQuantityMap.entrySet()) {
-      Map<LocalDate, Long> map;
-      if(this.stockHistoryQty.containsKey(mapEntry.getKey())) {
-        map = this.stockHistoryQty.get(mapEntry.getKey());
-      }
-      else {
-        map = new HashMap<>();
-      }
-      map.put(LocalDate.now(), mapEntry.getValue());
-      this.stockHistoryQty.put(mapEntry.getKey(),map);
-    }
+    updateHistoricHoldings();
   }
 
   @Override
@@ -273,5 +250,19 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
       }
     }
     return result;
+  }
+
+  private void updateHistoricHoldings() {
+    for(Map.Entry<IStock, Long> mapEntry:stockQuantityMap.entrySet()) {
+      Map<LocalDate, Long> map;
+      if(this.stockHistoryQty.containsKey(mapEntry.getKey())) {
+        map = this.stockHistoryQty.get(mapEntry.getKey());
+      }
+      else {
+        map = new HashMap<>();
+      }
+      map.put(LocalDate.now(), mapEntry.getValue());
+      this.stockHistoryQty.put(mapEntry.getKey(),map);
+    }
   }
 }
