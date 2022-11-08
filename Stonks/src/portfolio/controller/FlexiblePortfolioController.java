@@ -108,13 +108,17 @@ public class FlexiblePortfolioController extends PortfolioController implements
     }
   }
 
-  void getPortfolioPerformance(IFlexiblePortfoliosModel portfolios, Scanner scan) {
-    //view.displayCustomText(portfolios);
+  void getPortfolioPerformance(IFlexiblePortfoliosModel portfolios, Scanner scan)
+      throws IOException {
+    Integer portfolioId = controllerHelper.populatePortfolioIdFromUser(portfolios, scan);
+    if (portfolioId == null) {
+      return;
+    }
+    //view.displayCustomText(portfolios.getPortfolioPerformance(portfolioId, ));
   }
 
   void getPortfolioCostBasis(IFlexiblePortfoliosModel portfolios, Scanner scan) throws IOException {
-    Integer portfolioId;
-    portfolioId = controllerHelper.populatePortfolioIdFromUser(portfolios, scan);
+    Integer portfolioId = controllerHelper.populatePortfolioIdFromUser(portfolios, scan);
     if (portfolioId == null) {
       return;
     }
@@ -136,19 +140,24 @@ public class FlexiblePortfolioController extends PortfolioController implements
       Map<String, Long> stock = new LinkedHashMap<>();
       controllerHelper.populateStockDateFromUser(scan, portfolios, stock);
       Entry<String, Long> entry = stock.entrySet().iterator().next();
-      view.displayCustomText(TRANSACTION_MENU);
-      view.askForInput();
-      try {
+      view.displayCustomText("Please enter date for the transaction: \n");
+      LocalDate date = controllerHelper.populateDateFromUser(scan);
+      try{
+        if(date.isAfter(LocalDate.now())) {
+          throw new IllegalArgumentException("Invalid date for transaction.");
+        }
+        view.displayCustomText(TRANSACTION_MENU);
+        view.askForInput();
         switch (scan.next()) {
           case "1":
-            portfolios.addStocksToPortfolio(entry.getKey(), entry.getValue(), portfolioId);
+            portfolios.addStocksToPortfolio(entry.getKey(), entry.getValue(), portfolioId, date);
             view.displayCustomText("Purchased\n");
-            controllerHelper.displayExitOperationSequence(scan);
+            controllerHelper.performExitOperationSequence(scan);
             return;
           case "2":
-            portfolios.sellStockFromPortfolio(entry.getKey(), entry.getValue(), portfolioId);
+            portfolios.sellStockFromPortfolio(entry.getKey(), entry.getValue(), portfolioId, date);
             view.displayCustomText("Sold\n");
-            controllerHelper.displayExitOperationSequence(scan);
+            controllerHelper.performExitOperationSequence(scan);
             return;
           case "E":
             return;
@@ -157,9 +166,10 @@ public class FlexiblePortfolioController extends PortfolioController implements
             scan.nextLine();
             break;
         }
-      } catch (IllegalArgumentException e){
-        if("Invalid portfolio Id".equals(e.getMessage())) {
-          view.displayCustomText(e.getMessage()+"\n");
+      } catch (IllegalArgumentException e) {
+        if ("Invalid portfolio Id".equals(e.getMessage()) || "Invalid date for transaction.".equals(
+            e.getMessage())) {
+          view.displayCustomText(e.getMessage() + "\n");
         }
       }
     }

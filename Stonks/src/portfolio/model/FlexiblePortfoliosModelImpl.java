@@ -12,7 +12,7 @@ public class FlexiblePortfoliosModelImpl extends AbstractPortfolioModel {
   }
 
   @Override
-  public void addStocksToPortfolio(String tickerSymbol, Long quantity, int portfolioId) {
+  public void addStocksToPortfolio(String tickerSymbol, Long quantity, int portfolioId, LocalDate date) {
     if (portfolioId < 0 || portfolioId > portfolioMap.size()) {
       throw new IllegalArgumentException("Invalid portfolio Id");
     }
@@ -23,11 +23,11 @@ public class FlexiblePortfoliosModelImpl extends AbstractPortfolioModel {
       stock = new Stock(tickerSymbol, this.stockService);
       apiOptimizer.cacheSetObj(tickerSymbol, stock);
     }
-    portfolio.addStocksToPortfolio(stock, quantity);
+    portfolio.addStocksToPortfolio(stock, quantity, date);
   }
 
   @Override
-  public void sellStockFromPortfolio(String tickerSymbol, Long quantity, int portfolioId) {
+  public void sellStockFromPortfolio(String tickerSymbol, Long quantity, int portfolioId, LocalDate date) {
     if (portfolioId < 0 || portfolioId > portfolioMap.size()) {
       throw new IllegalArgumentException("Invalid portfolio Id");
     }
@@ -38,7 +38,7 @@ public class FlexiblePortfoliosModelImpl extends AbstractPortfolioModel {
       stock = new Stock(tickerSymbol, this.stockService);
       apiOptimizer.cacheSetObj(tickerSymbol, stock);
     }
-    portfolio.sellStocksFromPortfolio(stock, quantity);
+    portfolio.sellStocksFromPortfolio(stock, quantity, date);
   }
 
   @Override
@@ -46,6 +46,11 @@ public class FlexiblePortfoliosModelImpl extends AbstractPortfolioModel {
     //TODO add validations here.
     IFlexiblePortfolio portfolio = getPortfolioFromMap(portfolioId).getValue();
     return portfolio.getPortfolioCostBasisByDate(date);
+  }
+
+  @Override
+  public String getPortfolioPerformance(int portfolioId, String rangeStart, String rangeEnd) {
+    return null;
   }
 
   protected AbstractPortfolio createPortfolio(Map<IStock, Long> stockQty) {

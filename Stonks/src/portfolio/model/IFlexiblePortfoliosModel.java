@@ -16,7 +16,7 @@ public interface IFlexiblePortfoliosModel extends IPortfoliosModel {
    * @param quantity
    * @param portfolioId
    */
-  void addStocksToPortfolio(String tickerSymbol, Long quantity, int portfolioId);
+  void addStocksToPortfolio(String tickerSymbol, Long quantity, int portfolioId, LocalDate date);
 
   /**
    * Sells current stocks and their respective quantities from the given portfolio.
@@ -26,7 +26,7 @@ public interface IFlexiblePortfoliosModel extends IPortfoliosModel {
    * @param portfolioId
    * @throws IllegalArgumentException
    */
-  void sellStockFromPortfolio(String tickerSymbol, Long quantity, int portfolioId)
+  void sellStockFromPortfolio(String tickerSymbol, Long quantity, int portfolioId, LocalDate date)
       throws IllegalArgumentException;
 
   /**
@@ -37,6 +37,8 @@ public interface IFlexiblePortfoliosModel extends IPortfoliosModel {
    * @return
    */
   double getCostBasis(LocalDate date, int portfolioId);
+
+  String getPortfolioPerformance(int portfolioId, String rangeStart, String rangeEnd);
 
   void setServiceType(ServiceType serviceType);
 

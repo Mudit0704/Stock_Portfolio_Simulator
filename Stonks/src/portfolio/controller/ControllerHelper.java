@@ -37,7 +37,7 @@ class ControllerHelper {
       } catch (InputMismatchException | IllegalArgumentException e) {
         if ("No portfolios".equals(e.getMessage())) {
           view.displayCustomText("No portfolios\n");
-          displayExitOperationSequence(scan);
+          performExitOperationSequence(scan);
           return null;
         }
         view.displayInvalidInput();
@@ -93,7 +93,7 @@ class ControllerHelper {
     }
   }
 
-  protected void displayExitOperationSequence(Scanner scan) throws IOException {
+  protected void performExitOperationSequence(Scanner scan) throws IOException {
     view.displayEscapeFromOperation();
     scan.nextLine();
     while (!"E".equals(scan.next())) {
