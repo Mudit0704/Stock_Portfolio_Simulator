@@ -56,7 +56,6 @@ public class PortfolioController implements IPortfolioController {
     try {
       while (true) {
         view.displayMenu();
-        view.displayEscapeFromOperation();
         view.askForInput();
         switch (scan.next()) {
           case "1":
