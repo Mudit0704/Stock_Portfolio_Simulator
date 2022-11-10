@@ -19,11 +19,12 @@ public class FlexibleView extends View implements IView {
   @Override
   public void displayMenu() throws IOException {
     this.out.append("Choose from the below menu: \n 1 -> Create a new portfolio \n"
-        + " 2 -> Get portfolio composition (Stock Symbol -> Stock Quantity)"
-        + "\n 3 -> Get a portfolio value at a given date \n 4 -> Save/Retrieve portfolio at a "
+        + " 2 -> Get portfolio composition (Stock Symbol -> Stock Quantity) \n"
+        + " 3 -> Get a portfolio value at a given date \n 4 -> Save/Retrieve portfolio at a "
         + "given path\n"
-        +" 5 -> Perform a transaction on an existing portfolio \n"
+        + " 5 -> Perform a transaction on an existing portfolio \n"
         + " 6 -> Determine the cost basis of an existing portfolio at a given date \n"
-        + " 7 -> Display portfolio performance\n E -> Exit from the application \n");
+        + " 7 -> Display portfolio performance\n"
+        + " 8 -> Set the commission fee\n E -> Exit from the application \n");
   }
 }

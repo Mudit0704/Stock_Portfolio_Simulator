@@ -2,6 +2,7 @@ package portfolio.controller;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.InputMismatchException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -98,12 +99,34 @@ public class FlexiblePortfolioController extends PortfolioController implements
         case "7":
           getPortfolioPerformance(portfolios, scan);
           break;
+        case "8":
+          setCommissionFee(portfolios, scan);
+          break;
         case "E":
           return;
         default:
           view.displayInvalidInput();
           scan.nextLine();
           break;
+      }
+    }
+  }
+
+  void setCommissionFee(IFlexiblePortfoliosModel portfolios, Scanner scan)
+      throws IOException {
+
+    while(true) {
+      try {
+        view.displayCustomText("Please enter the fee value: \n");
+        view.askForInput();
+        int commissionFee = scan.nextInt();
+        portfolios.setCommissionFee(commissionFee);
+        view.displayCustomText("Fee updated.\n");
+        controllerHelper.performExitOperationSequence(scan);
+        return;
+      } catch (InputMismatchException e) {
+        scan.nextLine();
+        view.displayInvalidInput();
       }
     }
   }
