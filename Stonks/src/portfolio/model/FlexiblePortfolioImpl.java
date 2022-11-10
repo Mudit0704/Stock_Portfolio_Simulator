@@ -45,19 +45,22 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
    * @param stockService the service responsible for calling the API required for stocks data.
    * @param stocks       stocks that will be stored in this portfolio.
    */
-  public FlexiblePortfolioImpl(IStockService stockService, Map<IStock, Long> stocks) {
+  public FlexiblePortfolioImpl(IStockService stockService, Map<IStock, Long> stocks,
+      double transactionFee) {
     super(stockService, stocks);
     this.stockHistoryQty = new HashMap<>();
 
     costBasisHistory = new HashMap<>();
+    double transactionFeeCostBasis = 0.0;
 
     if (stocks.size() != 0) {
       for (Map.Entry<IStock, Long> mapEntry : stocks.entrySet()) {
         Map<LocalDate, Long> dateQtyMap = new HashMap<>();
         dateQtyMap.put(this.creationDate, mapEntry.getValue());
         this.stockHistoryQty.put(mapEntry.getKey(), dateQtyMap);
+        transactionFeeCostBasis += transactionFee;
       }
-      costBasisHistory.put(creationDate, getPortfolioValue(creationDate));
+      costBasisHistory.put(creationDate, getPortfolioValue(creationDate) + transactionFeeCostBasis);
     }
   }
 
@@ -70,7 +73,7 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
 
   @Override
   public void addStocksToPortfolio(IStock stock, Long quantity,
-    LocalDate date, double transactionFee) {
+      LocalDate date, double transactionFee) {
     long stockQty = 0;
 
     if (!isTransactionSequenceValid(stock, date)) {
@@ -84,7 +87,9 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
     stockQuantityMap.put(stock, updatedQty);
     updateHistoricHoldings(stock, date, updatedQty);
 
-    costBasisHistory.put(date, this.getPortfolioValue(LocalDate.now()));
+    double prevCostBasis = this.getPortfolioCostBasisByDate(date);
+    double updateCostBasisBy = stock.getValue(date) * quantity + transactionFee;
+    costBasisHistory.put(date, prevCostBasis + updateCostBasisBy);
   }
 
   @Override
@@ -111,6 +116,9 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
     stockQuantityMap.put(stock, updatedQty);
 
     updateHistoricHoldings(stock, date, updatedQty);
+
+    double prevCostBasis = this.getPortfolioCostBasisByDate(date);
+    costBasisHistory.put(date, prevCostBasis + transactionFee);
   }
 
   @Override
@@ -476,13 +484,7 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
   }
 
   private void updateHistoricHoldings(IStock stock, LocalDate date, Long updatedQty) {
-    Map<LocalDate, Long> map;
-
-    if (this.stockHistoryQty.containsKey(stock)) {
-      map = this.stockHistoryQty.get(stock);
-    } else {
-      map = new HashMap<>();
-    }
+    Map<LocalDate, Long> map = this.stockHistoryQty.getOrDefault(stock, new HashMap<>());
     map.put(date, updatedQty);
     this.stockHistoryQty.put(stock, map);
   }

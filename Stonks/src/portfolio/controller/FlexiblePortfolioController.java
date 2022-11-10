@@ -119,7 +119,7 @@ public class FlexiblePortfolioController extends PortfolioController implements
       try {
         view.displayCustomText("Please enter the fee value: \n");
         view.askForInput();
-        int commissionFee = scan.nextInt();
+        double commissionFee = scan.nextDouble();
         portfolios.setCommissionFee(commissionFee);
         view.displayCustomText("Fee updated.\n");
         controllerHelper.performExitOperationSequence(scan);

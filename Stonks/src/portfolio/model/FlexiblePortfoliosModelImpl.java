@@ -62,7 +62,7 @@ public class FlexiblePortfoliosModelImpl extends AbstractPortfolioModel {
   }
 
   protected AbstractPortfolio createPortfolio(Map<IStock, Long> stockQty) {
-    return new FlexiblePortfolioImpl(this.stockService, stockQty);
+    return new FlexiblePortfolioImpl(this.stockService, stockQty, this.transactionFee);
   }
 
   @Override
