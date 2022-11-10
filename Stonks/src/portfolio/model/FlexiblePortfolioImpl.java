@@ -5,20 +5,14 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
-import java.time.format.TextStyle;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import javax.print.Doc;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -137,210 +131,32 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
 
   @Override
   public String getPortfolioPerformance(LocalDate start, LocalDate end) {
-    if (start.isAfter(end) || start.isEqual(end)) { //TODO check the equal condition
-      throw new IllegalArgumentException();
+    if (start.isAfter(end) || start.isEqual(end) || start.isBefore(this.creationDate)) { //TODO check the equal condition
+      throw new IllegalArgumentException("Invalid dates\n");
     }
 
+    LocalDate tempDate = start;
+    Map<LocalDate, Double> dateValue = new LinkedHashMap<>();
     long timespan = ChronoUnit.DAYS.between(start, end);
+    IPerformanceVisualizer visualizer;
+
     if (timespan <= 30) {
-
-      LocalDate tempDate = start;
-      Map<LocalDate, Double> dateValue = new LinkedHashMap<>();
-
-      double minValue = Double.MAX_VALUE;
-      double maxValue = Double.MIN_VALUE;
-
-      while (!tempDate.isEqual(end)) {
-        Double value = this.getPortfolioValue(tempDate);
-        minValue = Math.min(minValue, value);
-        maxValue = Math.max(maxValue, value);
-
-        dateValue.put(tempDate, value);
-        tempDate = tempDate.plusDays(1);
-      }
-      int scale = 1;
-      double diff = maxValue - minValue;
-      int quotient = (int) (diff / scale);
-      while (quotient >= 50) {
-        scale++;
-        quotient = (int) (diff / scale);
-      }
-
-      StringBuilder sb = new StringBuilder();
-      for (Map.Entry<LocalDate, Double> mapEntry : dateValue.entrySet()) {
-        sb.append(mapEntry.getKey().toString()).append(": ");
-        double portfolioVal = mapEntry.getValue();
-        int portfolioValInt = (int) portfolioVal;
-        int minValInt = (int) minValue;
-        while (portfolioValInt > minValInt) {
-          sb.append("*");
-          portfolioValInt -= scale;
-        }
-        sb.append("\n");
-      }
-      sb.append("Scale: ").append(scale).append("\n");
-      return sb.toString();
+      visualizer = new DaysPerformanceVisualizer(this);
+      return visualizer.visualize(tempDate, end, 1, dateValue);
     } else if (timespan <= 150) {
       int ts = (int) (timespan / 5);
-      LocalDate tempDate = start;
-      Map<LocalDate, Double> dateValue = new LinkedHashMap<>();
-
-      double minValue = Double.MAX_VALUE;
-      double maxValue = Double.MIN_VALUE;
-
-      while (!(tempDate.isEqual(end) || tempDate.isAfter(end))) {
-        tempDate = tempDate.plusDays(ts);
-        double value = this.getPortfolioValue(tempDate);
-        minValue = Math.min(minValue, value);
-        maxValue = Math.max(maxValue, value);
-
-        dateValue.put(tempDate, value);
-      }
-      int scale = 1;
-      double diff = maxValue - minValue;
-      int quotient = (int) (diff / scale);
-      while (quotient >= 50) {
-        scale++;
-        quotient = (int) (diff / scale);
-      }
-
-      StringBuilder sb = new StringBuilder();
-      for (Map.Entry<LocalDate, Double> mapEntry : dateValue.entrySet()) {
-        sb.append(mapEntry.getKey().toString()).append(": ");
-        double portfolioVal = mapEntry.getValue();
-        int portfolioValInt = (int) portfolioVal;
-        int minValInt = (int) minValue;
-        while (portfolioValInt > minValInt) {
-          sb.append("*");
-          portfolioValInt -= scale;
-        }
-        sb.append("\n");
-      }
-      sb.append("Scale: ").append(scale).append("\n");
-      return sb.toString();
-
+      tempDate = tempDate.plusDays(ts);
+      visualizer = new DaysPerformanceVisualizer(this);
+      return visualizer.visualize(tempDate, end, ts, dateValue);
     } else if (timespan <= 912) {
-      LocalDate tempDate = start;
-      Map<LocalDate, Double> dateValue = new LinkedHashMap<>();
-
-      double minValue = Double.MAX_VALUE;
-      double maxValue = Double.MIN_VALUE;
-
-      while (tempDate.isBefore(end) ) {
-        LocalDate monthEndDate = tempDate.withDayOfMonth(
-            tempDate.getMonth().length(tempDate.isLeapYear()));
-        double value = this.getPortfolioValue(monthEndDate);
-        minValue = Math.min(minValue, value);
-        maxValue = Math.max(maxValue, value);
-
-        dateValue.put(monthEndDate, value);
-        tempDate = tempDate.plusMonths(1);
-      }
-      int scale = 1;
-      double diff = maxValue - minValue;
-      int quotient = (int) (diff / scale);
-      while (quotient >= 50) {
-        scale++;
-        quotient = (int) (diff / scale);
-      }
-
-      StringBuilder sb = new StringBuilder();
-      for (Map.Entry<LocalDate, Double> mapEntry : dateValue.entrySet()) {
-        sb.append(mapEntry.getKey().getMonth().getDisplayName(TextStyle.SHORT, Locale.getDefault()))
-            .append(mapEntry.getKey().getYear()).append(": ");
-        double portfolioVal = mapEntry.getValue();
-        int portfolioValInt = (int) portfolioVal;
-        int minValInt = (int) minValue;
-        while (portfolioValInt > minValInt) {
-          sb.append("*");
-          portfolioValInt -= scale;
-        }
-        sb.append("\n");
-      }
-      sb.append("Scale: ").append(scale).append("\n");
-      return sb.toString();
+      visualizer = new MonthsPerformanceVisualizer(this);
+      return visualizer.visualize(tempDate, end, 1, dateValue);
     } else if (timespan <= 1826) {
-      int numberOfMonths = (int) (timespan / 30);
-      int ts = numberOfMonths/2;
-      LocalDate tempDate = start;
-      Map<LocalDate, Double> dateValue = new LinkedHashMap<>();
-
-      double minValue = Double.MAX_VALUE;
-      double maxValue = Double.MIN_VALUE;
-
-      while (tempDate.isBefore(end)) {
-        LocalDate monthEndDate = tempDate.withDayOfMonth(
-            tempDate.getMonth().length(tempDate.isLeapYear()));
-        double value = this.getPortfolioValue(monthEndDate);
-        minValue = Math.min(minValue, value);
-        maxValue = Math.max(maxValue, value);
-
-        dateValue.put(monthEndDate, value);
-        tempDate = tempDate.plusMonths(2);
-      }
-      int scale = 1;
-      double diff = maxValue - minValue;
-      int quotient = (int) (diff / scale);
-      while (quotient >= 50) {
-        scale++;
-        quotient = (int) (diff / scale);
-      }
-
-      StringBuilder sb = new StringBuilder();
-      for (Map.Entry<LocalDate, Double> mapEntry : dateValue.entrySet()) {
-        sb.append(mapEntry.getKey().getMonth().getDisplayName(TextStyle.SHORT, Locale.getDefault()))
-            .append(mapEntry.getKey().getYear()).append(": ");
-        double portfolioVal = mapEntry.getValue();
-        int portfolioValInt = (int) portfolioVal;
-        int minValInt = (int) minValue;
-        while (portfolioValInt > minValInt) {
-          sb.append("*");
-          portfolioValInt -= scale;
-        }
-        sb.append("\n");
-      }
-      sb.append("Scale: ").append(scale).append("\n");
-      return sb.toString();
-
+      visualizer = new MonthsPerformanceVisualizer(this);
+      return visualizer.visualize(tempDate, end, 2, dateValue);
     } else {
-      LocalDate tempDate = start;
-      Map<LocalDate, Double> dateValue = new LinkedHashMap<>();
-
-      double minValue = Double.MAX_VALUE;
-      double maxValue = Double.MIN_VALUE;
-
-      while (tempDate.isBefore(end)) {
-        LocalDate yearEndDate = tempDate.withDayOfYear(tempDate.lengthOfYear());
-        double value = this.getPortfolioValue(yearEndDate);
-        minValue = Math.min(minValue, value);
-        maxValue = Math.max(maxValue, value);
-
-        dateValue.put(yearEndDate, value);
-        tempDate = tempDate.plusYears(1);
-      }
-      int scale = 1;
-      double diff = maxValue - minValue;
-      int quotient = (int) (diff / scale);
-      while (quotient >= 50) {
-        scale++;
-        quotient = (int) (diff / scale);
-      }
-
-      StringBuilder sb = new StringBuilder();
-      for (Map.Entry<LocalDate, Double> mapEntry : dateValue.entrySet()) {
-        sb.append(mapEntry.getKey().getMonth().getDisplayName(TextStyle.SHORT, Locale.getDefault()))
-            .append(mapEntry.getKey().getYear()).append(": ");
-        double portfolioVal = mapEntry.getValue();
-        int portfolioValInt = (int) portfolioVal;
-        int minValInt = (int) minValue;
-        while (portfolioValInt > minValInt) {
-          sb.append("*");
-          portfolioValInt -= scale;
-        }
-        sb.append("\n");
-      }
-      sb.append("Scale: ").append(scale).append("\n");
-      return sb.toString();
+      visualizer = new YearsPerformanceVisualizer(this);
+      return visualizer.visualize(tempDate, end, 1, dateValue);
     }
   }
 
@@ -496,14 +312,14 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
 
     if (stockHistoryQty.containsKey(stock) && stockHistoryQty.get(stock).size() > 1) {
       Optional<LocalDate> maxStockHistory = this.stockHistoryQty.get(stock).keySet().stream()
-          .max(new LocalDateComparator());
+          .max(LocalDate::compareTo);
       Optional<LocalDate> minStockHistory = this.stockHistoryQty.get(stock).keySet().stream()
-          .min(new LocalDateComparator());
+          .min(LocalDate::compareTo);
       return (!date.isAfter(minStockHistory.get()) || !date.isBefore(maxStockHistory.get()))
           && !date.isBefore(minStockHistory.get());
     } else if (stockHistoryQty.containsKey(stock) && stockHistoryQty.get(stock).size() == 1) {
       Optional<LocalDate> minStockHistory = this.stockHistoryQty.get(stock).keySet().stream()
-          .min(new LocalDateComparator());
+          .min(LocalDate::compareTo);
       return !date.isBefore(minStockHistory.get());
     }
     return true;
@@ -577,13 +393,5 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
     DOMSource source = new DOMSource(doc);
     StreamResult result = new StreamResult(new File(path));
     transformer.transform(source, result);
-  }
-}
-
-class LocalDateComparator implements Comparator<LocalDate> {
-
-  @Override
-  public int compare(LocalDate c1, LocalDate c2) {
-    return c1.compareTo(c2);
   }
 }

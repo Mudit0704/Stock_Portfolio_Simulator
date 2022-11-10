@@ -133,13 +133,21 @@ public class FlexiblePortfolioController extends PortfolioController implements
 
   void getPortfolioPerformance(IFlexiblePortfoliosModel portfolios, Scanner scan)
       throws IOException {
-    Integer portfolioId = controllerHelper.populatePortfolioIdFromUser(portfolios, scan);
-    if (portfolioId == null) {
-      return;
+    while (true)
+    {
+      try {
+        Integer portfolioId = controllerHelper.populatePortfolioIdFromUser(portfolios, scan);
+        if (portfolioId == null) {
+          return;
+        }
+        LocalDate startDate = controllerHelper.populateDateFromUser(scan);
+        LocalDate endDate = controllerHelper.populateDateFromUser(scan);
+        view.displayCustomText(portfolios.getPortfolioPerformance(portfolioId, startDate, endDate));
+        controllerHelper.performExitOperationSequence(scan);
+      } catch (IllegalArgumentException e) {
+        view.displayCustomText(e.getMessage());
+      }
     }
-    LocalDate startDate = controllerHelper.populateDateFromUser(scan);
-    LocalDate endDate = controllerHelper.populateDateFromUser(scan);
-    view.displayCustomText(portfolios.getPortfolioPerformance(portfolioId, startDate, endDate));
   }
 
   void getPortfolioCostBasis(IFlexiblePortfoliosModel portfolios, Scanner scan) throws IOException {
