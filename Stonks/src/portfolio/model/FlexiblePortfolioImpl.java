@@ -5,12 +5,14 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.time.format.TextStyle;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -70,7 +72,7 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
   public void addStocksToPortfolio(IStock stock, Long quantity, LocalDate date) {
     long stockQty = 0;
 
-    if(!isTransactionSequenceValid(stock, date)) {
+    if (!isTransactionSequenceValid(stock, date)) {
       throw new IllegalArgumentException("Invalid date for transaction.");
     }
 
@@ -89,7 +91,7 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
       throws IllegalArgumentException {
     long stockQty = 0;
 
-    if(!isTransactionSequenceValid(stock, date)) {
+    if (!isTransactionSequenceValid(stock, date)) {
       throw new IllegalArgumentException("Invalid date for transaction.");
     }
 
@@ -125,7 +127,7 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
 
   @Override
   public String getPortfolioPerformance(LocalDate start, LocalDate end) {
-    if(start.isAfter(end) || start.isEqual(end)) { //TODO check the equal condition
+    if (start.isAfter(end) || start.isEqual(end)) { //TODO check the equal condition
       throw new IllegalArgumentException();
     }
 
@@ -138,7 +140,7 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
       double minValue = Double.MAX_VALUE;
       double maxValue = Double.MIN_VALUE;
 
-      while(!tempDate.isEqual(end)) {
+      while (!tempDate.isEqual(end)) {
         Double value = this.getPortfolioValue(tempDate);
         minValue = Math.min(minValue, value);
         maxValue = Math.max(maxValue, value);
@@ -148,19 +150,19 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
       }
       int scale = 1;
       double diff = maxValue - minValue;
-      int quotient = (int) (diff/scale);
-      while(quotient >= 50) {
+      int quotient = (int) (diff / scale);
+      while (quotient >= 50) {
         scale++;
-        quotient = (int) (diff/scale);
+        quotient = (int) (diff / scale);
       }
 
       StringBuilder sb = new StringBuilder();
-      for(Map.Entry<LocalDate, Double> mapEntry: dateValue.entrySet()) {
+      for (Map.Entry<LocalDate, Double> mapEntry : dateValue.entrySet()) {
         sb.append(mapEntry.getKey().toString()).append(": ");
         double portfolioVal = mapEntry.getValue();
         int portfolioValInt = (int) portfolioVal;
         int minValInt = (int) minValue;
-        while(portfolioValInt > minValInt) {
+        while (portfolioValInt > minValInt) {
           sb.append("*");
           portfolioValInt -= scale;
         }
@@ -176,9 +178,9 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
       double minValue = Double.MAX_VALUE;
       double maxValue = Double.MIN_VALUE;
 
-      while(!(tempDate.isEqual(end) || tempDate.isAfter(end))) {
+      while (!(tempDate.isEqual(end) || tempDate.isAfter(end))) {
         tempDate = tempDate.plusDays(ts);
-        Double value = this.getPortfolioValue(tempDate);
+        double value = this.getPortfolioValue(tempDate);
         minValue = Math.min(minValue, value);
         maxValue = Math.max(maxValue, value);
 
@@ -186,19 +188,102 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
       }
       int scale = 1;
       double diff = maxValue - minValue;
-      int quotient = (int) (diff/scale);
-      while(quotient >= 50) {
+      int quotient = (int) (diff / scale);
+      while (quotient >= 50) {
         scale++;
-        quotient = (int) (diff/scale);
+        quotient = (int) (diff / scale);
       }
 
       StringBuilder sb = new StringBuilder();
-      for(Map.Entry<LocalDate, Double> mapEntry: dateValue.entrySet()) {
+      for (Map.Entry<LocalDate, Double> mapEntry : dateValue.entrySet()) {
         sb.append(mapEntry.getKey().toString()).append(": ");
         double portfolioVal = mapEntry.getValue();
         int portfolioValInt = (int) portfolioVal;
         int minValInt = (int) minValue;
-        while(portfolioValInt > minValInt) {
+        while (portfolioValInt > minValInt) {
+          sb.append("*");
+          portfolioValInt -= scale;
+        }
+        sb.append("\n");
+      }
+      sb.append("Scale: ").append(scale).append("\n");
+      return sb.toString();
+
+    } else if (timespan <= 912) {
+      LocalDate tempDate = start;
+      Map<LocalDate, Double> dateValue = new LinkedHashMap<>();
+
+      double minValue = Double.MAX_VALUE;
+      double maxValue = Double.MIN_VALUE;
+
+      while (tempDate.isBefore(end) ) {
+        LocalDate monthEndDate = tempDate.withDayOfMonth(
+            tempDate.getMonth().length(tempDate.isLeapYear()));
+        double value = this.getPortfolioValue(monthEndDate);
+        minValue = Math.min(minValue, value);
+        maxValue = Math.max(maxValue, value);
+
+        dateValue.put(monthEndDate, value);
+        tempDate = tempDate.plusMonths(1);
+      }
+      int scale = 1;
+      double diff = maxValue - minValue;
+      int quotient = (int) (diff / scale);
+      while (quotient >= 50) {
+        scale++;
+        quotient = (int) (diff / scale);
+      }
+
+      StringBuilder sb = new StringBuilder();
+      for (Map.Entry<LocalDate, Double> mapEntry : dateValue.entrySet()) {
+        sb.append(mapEntry.getKey().getMonth().getDisplayName(TextStyle.SHORT, Locale.getDefault()))
+            .append(mapEntry.getKey().getYear()).append(": ");
+        double portfolioVal = mapEntry.getValue();
+        int portfolioValInt = (int) portfolioVal;
+        int minValInt = (int) minValue;
+        while (portfolioValInt > minValInt) {
+          sb.append("*");
+          portfolioValInt -= scale;
+        }
+        sb.append("\n");
+      }
+      sb.append("Scale: ").append(scale).append("\n");
+      return sb.toString();
+    } else if (timespan <= 1826) {
+      int numberOfMonths = (int) (timespan / 30);
+      int ts = numberOfMonths/2;
+      LocalDate tempDate = start;
+      Map<LocalDate, Double> dateValue = new LinkedHashMap<>();
+
+      double minValue = Double.MAX_VALUE;
+      double maxValue = Double.MIN_VALUE;
+
+      while (tempDate.isBefore(end)) {
+        LocalDate monthEndDate = tempDate.withDayOfMonth(
+            tempDate.getMonth().length(tempDate.isLeapYear()));
+        double value = this.getPortfolioValue(monthEndDate);
+        minValue = Math.min(minValue, value);
+        maxValue = Math.max(maxValue, value);
+
+        dateValue.put(monthEndDate, value);
+        tempDate = tempDate.plusMonths(2);
+      }
+      int scale = 1;
+      double diff = maxValue - minValue;
+      int quotient = (int) (diff / scale);
+      while (quotient >= 50) {
+        scale++;
+        quotient = (int) (diff / scale);
+      }
+
+      StringBuilder sb = new StringBuilder();
+      for (Map.Entry<LocalDate, Double> mapEntry : dateValue.entrySet()) {
+        sb.append(mapEntry.getKey().getMonth().getDisplayName(TextStyle.SHORT, Locale.getDefault()))
+            .append(mapEntry.getKey().getYear()).append(": ");
+        double portfolioVal = mapEntry.getValue();
+        int portfolioValInt = (int) portfolioVal;
+        int minValInt = (int) minValue;
+        while (portfolioValInt > minValInt) {
           sb.append("*");
           portfolioValInt -= scale;
         }
@@ -208,8 +293,44 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
       return sb.toString();
 
     } else {
-      return null;
-      //year  timespan <= 912
+      LocalDate tempDate = start;
+      Map<LocalDate, Double> dateValue = new LinkedHashMap<>();
+
+      double minValue = Double.MAX_VALUE;
+      double maxValue = Double.MIN_VALUE;
+
+      while (tempDate.isBefore(end)) {
+        LocalDate yearEndDate = tempDate.withDayOfYear(tempDate.lengthOfYear());
+        double value = this.getPortfolioValue(yearEndDate);
+        minValue = Math.min(minValue, value);
+        maxValue = Math.max(maxValue, value);
+
+        dateValue.put(yearEndDate, value);
+        tempDate = tempDate.plusYears(1);
+      }
+      int scale = 1;
+      double diff = maxValue - minValue;
+      int quotient = (int) (diff / scale);
+      while (quotient >= 50) {
+        scale++;
+        quotient = (int) (diff / scale);
+      }
+
+      StringBuilder sb = new StringBuilder();
+      for (Map.Entry<LocalDate, Double> mapEntry : dateValue.entrySet()) {
+        sb.append(mapEntry.getKey().getMonth().getDisplayName(TextStyle.SHORT, Locale.getDefault()))
+            .append(mapEntry.getKey().getYear()).append(": ");
+        double portfolioVal = mapEntry.getValue();
+        int portfolioValInt = (int) portfolioVal;
+        int minValInt = (int) minValue;
+        while (portfolioValInt > minValInt) {
+          sb.append("*");
+          portfolioValInt -= scale;
+        }
+        sb.append("\n");
+      }
+      sb.append("Scale: ").append(scale).append("\n");
+      return sb.toString();
     }
   }
 
@@ -365,20 +486,20 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
   }
 
   private boolean isTransactionSequenceValid(IStock stock, LocalDate date) {
-    if(date.isBefore(this.creationDate)) {
+    if (date.isBefore(this.creationDate)) {
       return false;
     }
 
-    if(stockHistoryQty.containsKey(stock) && stockHistoryQty.get(stock).size() > 1) {
+    if (stockHistoryQty.containsKey(stock) && stockHistoryQty.get(stock).size() > 1) {
       Optional<LocalDate> maxStockHistory = this.stockHistoryQty.get(stock).keySet().stream()
-        .max(new LocalDateComparator());
+          .max(new LocalDateComparator());
       Optional<LocalDate> minStockHistory = this.stockHistoryQty.get(stock).keySet().stream()
-        .min(new LocalDateComparator());
+          .min(new LocalDateComparator());
       return (!date.isAfter(minStockHistory.get()) || !date.isBefore(maxStockHistory.get()))
-        && !date.isBefore(minStockHistory.get());
-    } else if(stockHistoryQty.containsKey(stock) && stockHistoryQty.get(stock).size() == 1) {
+          && !date.isBefore(minStockHistory.get());
+    } else if (stockHistoryQty.containsKey(stock) && stockHistoryQty.get(stock).size() == 1) {
       Optional<LocalDate> minStockHistory = this.stockHistoryQty.get(stock).keySet().stream()
-        .min(new LocalDateComparator());
+          .min(new LocalDateComparator());
       return !date.isBefore(minStockHistory.get());
     }
     return true;
@@ -389,11 +510,11 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
     int costBasisIdx = 0;
     while (costBasisIdx < numCostBasisDates) {
       String date = doc.getDocumentElement().getElementsByTagName("cost-basis")
-        .item(costBasisIdx).getAttributes().getNamedItem("date").getNodeValue();
+          .item(costBasisIdx).getAttributes().getNamedItem("date").getNodeValue();
 
       double costBasis = Double.parseDouble(
-        doc.getDocumentElement().getElementsByTagName("cost-basis")
-          .item(costBasisIdx).getTextContent());
+          doc.getDocumentElement().getElementsByTagName("cost-basis")
+              .item(costBasisIdx).getTextContent());
 
       this.costBasisHistory.put(LocalDate.parse(date), costBasis);
       costBasisIdx++;
@@ -407,10 +528,10 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
     Map<LocalDate, Long> dateQtyMap = new HashMap<>();
     while (stockQuantityIdx < numDates) {
       String modificationDate = eElement.getElementsByTagName("stockQuantity")
-        .item(stockQuantityIdx).getAttributes().getNamedItem("date").getNodeValue();
+          .item(stockQuantityIdx).getAttributes().getNamedItem("date").getNodeValue();
 
       long stockQuantity = Long.parseLong(eElement.getElementsByTagName("stockQuantity")
-        .item(stockQuantityIdx).getTextContent());
+          .item(stockQuantityIdx).getTextContent());
 
       LocalDate modDate = LocalDate.parse(modificationDate);
       dateQtyMap.put(modDate, stockQuantity);
@@ -437,7 +558,7 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
       Element stockQuantityXML;
       stockQuantityXML = doc.createElement("stockQuantity");
       stockQuantityXML.appendChild(
-        doc.createTextNode(String.valueOf(stockQuantity.getValue())));
+          doc.createTextNode(String.valueOf(stockQuantity.getValue())));
 
       stockQuantityXML.setAttribute("date", stockQuantity.getKey().toString());
       stockElement.appendChild(stockQuantityXML);
@@ -456,6 +577,7 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
 }
 
 class LocalDateComparator implements Comparator<LocalDate> {
+
   @Override
   public int compare(LocalDate c1, LocalDate c2) {
     return c1.compareTo(c2);
