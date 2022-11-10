@@ -69,7 +69,8 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
   }
 
   @Override
-  public void addStocksToPortfolio(IStock stock, Long quantity, LocalDate date) {
+  public void addStocksToPortfolio(IStock stock, Long quantity,
+    LocalDate date, double transactionFee) {
     long stockQty = 0;
 
     if (!isTransactionSequenceValid(stock, date)) {
@@ -87,7 +88,8 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
   }
 
   @Override
-  public void sellStocksFromPortfolio(IStock stock, Long quantity, LocalDate date)
+  public void sellStocksFromPortfolio(IStock stock, Long quantity,
+      LocalDate date, double transactionFee)
       throws IllegalArgumentException {
     long stockQty = 0;
 

@@ -42,4 +42,6 @@ public interface IFlexiblePortfoliosModel extends IPortfoliosModel {
 
   void setServiceType(ServiceType serviceType);
 
+  void setCommissionFee(double commissionFee);
+
 }

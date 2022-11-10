@@ -6,6 +6,8 @@ import java.util.Map;
 
 public class FlexiblePortfoliosModelImpl extends AbstractPortfolioModel {
 
+  private double transactionFee;
+
   public FlexiblePortfoliosModelImpl() {
     apiOptimizer = StockCache.getInstance();
     portfolioMap = new LinkedHashMap<>();
@@ -23,7 +25,7 @@ public class FlexiblePortfoliosModelImpl extends AbstractPortfolioModel {
       stock = new Stock(tickerSymbol, this.stockService);
       apiOptimizer.cacheSetObj(tickerSymbol, stock);
     }
-    portfolio.addStocksToPortfolio(stock, quantity, date);
+    portfolio.addStocksToPortfolio(stock, quantity, date, transactionFee);
   }
 
   @Override
@@ -38,7 +40,7 @@ public class FlexiblePortfoliosModelImpl extends AbstractPortfolioModel {
       stock = new Stock(tickerSymbol, this.stockService);
       apiOptimizer.cacheSetObj(tickerSymbol, stock);
     }
-    portfolio.sellStocksFromPortfolio(stock, quantity, date);
+    portfolio.sellStocksFromPortfolio(stock, quantity, date, transactionFee);
   }
 
   @Override
@@ -52,6 +54,11 @@ public class FlexiblePortfoliosModelImpl extends AbstractPortfolioModel {
   public String getPortfolioPerformance(int portfolioId, LocalDate rangeStart, LocalDate rangeEnd) {
     IFlexiblePortfolio portfolio = getPortfolioFromMap(portfolioId).getValue();
     return portfolio.getPortfolioPerformance(rangeStart, rangeEnd);
+  }
+
+  @Override
+  public void setCommissionFee(double commissionFee) {
+    this.transactionFee = commissionFee;
   }
 
   protected AbstractPortfolio createPortfolio(Map<IStock, Long> stockQty) {
