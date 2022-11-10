@@ -114,7 +114,9 @@ public class FlexiblePortfolioController extends PortfolioController implements
     if (portfolioId == null) {
       return;
     }
-    //view.displayCustomText(portfolios.getPortfolioPerformance(portfolioId, ));
+    LocalDate startDate = controllerHelper.populateDateFromUser(scan);
+    LocalDate endDate = controllerHelper.populateDateFromUser(scan);
+    view.displayCustomText(portfolios.getPortfolioPerformance(portfolioId, startDate, endDate));
   }
 
   void getPortfolioCostBasis(IFlexiblePortfoliosModel portfolios, Scanner scan) throws IOException {

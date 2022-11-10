@@ -38,7 +38,7 @@ public interface IFlexiblePortfoliosModel extends IPortfoliosModel {
    */
   double getCostBasis(LocalDate date, int portfolioId);
 
-  String getPortfolioPerformance(int portfolioId, String rangeStart, String rangeEnd);
+  String getPortfolioPerformance(int portfolioId, LocalDate rangeStart, LocalDate rangeEnd);
 
   void setServiceType(ServiceType serviceType);
 

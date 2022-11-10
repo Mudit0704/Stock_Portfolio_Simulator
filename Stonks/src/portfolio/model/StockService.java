@@ -73,7 +73,7 @@ class StockService implements IStockService {
   public Map getStockPrices(String tickerSymbol) {
     String queryString = "https://www.alphavantage"
         + ".co/query?function=TIME_SERIES_DAILY"
-        + "&outputsize=compact"
+        + "&outputsize=full"
         + "&symbol"
         + "=" + tickerSymbol + "&apikey=" + APIKEY + "&datatype=csv";
     InputStream in;

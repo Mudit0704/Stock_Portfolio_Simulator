@@ -31,4 +31,6 @@ public interface IFlexiblePortfolio extends IPortfolio {
    * @return
    */
   double getPortfolioCostBasisByDate(LocalDate date);
+
+  String getPortfolioPerformance(LocalDate start, LocalDate end);
 }

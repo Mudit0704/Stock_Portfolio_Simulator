@@ -9,6 +9,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -76,8 +77,9 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
     if (stockQuantityMap.containsKey(stock)) {
       stockQty = stockQuantityMap.get(stock);
     }
-    stockQuantityMap.put(stock, stockQty + quantity);
-    updateHistoricHoldings(date);
+    long updatedQty = stockQty + quantity;
+    stockQuantityMap.put(stock, updatedQty);
+    updateHistoricHoldings(stock, date, updatedQty);
 
     costBasisHistory.put(date, this.getPortfolioValue(LocalDate.now()));
   }
@@ -101,9 +103,10 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
       throw new IllegalArgumentException("Do not have more than " + quantity + " shares presently");
     }
 
-    stockQuantityMap.put(stock, stockQty - quantity);
+    Long updatedQty = stockQty - quantity;
+    stockQuantityMap.put(stock, updatedQty);
 
-    updateHistoricHoldings(date);
+    updateHistoricHoldings(stock, date, updatedQty);
   }
 
   @Override
@@ -118,6 +121,96 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
       return 0;
     }
     return costBasisHistory.get(recentDate);
+  }
+
+  @Override
+  public String getPortfolioPerformance(LocalDate start, LocalDate end) {
+    if(start.isAfter(end) || start.isEqual(end)) { //TODO check the equal condition
+      throw new IllegalArgumentException();
+    }
+
+    long timespan = ChronoUnit.DAYS.between(start, end);
+    if (timespan <= 30) {
+
+      LocalDate tempDate = start;
+      Map<LocalDate, Double> dateValue = new LinkedHashMap<>();
+
+      double minValue = Double.MAX_VALUE;
+      double maxValue = Double.MIN_VALUE;
+
+      while(!tempDate.isEqual(end)) {
+        Double value = this.getPortfolioValue(tempDate);
+        minValue = Math.min(minValue, value);
+        maxValue = Math.max(maxValue, value);
+
+        dateValue.put(tempDate, value);
+        tempDate = tempDate.plusDays(1);
+      }
+      int scale = 1;
+      double diff = maxValue - minValue;
+      int quotient = (int) (diff/scale);
+      while(quotient >= 50) {
+        scale++;
+        quotient = (int) (diff/scale);
+      }
+
+      StringBuilder sb = new StringBuilder();
+      for(Map.Entry<LocalDate, Double> mapEntry: dateValue.entrySet()) {
+        sb.append(mapEntry.getKey().toString()).append(": ");
+        double portfolioVal = mapEntry.getValue();
+        int portfolioValInt = (int) portfolioVal;
+        int minValInt = (int) minValue;
+        while(portfolioValInt > minValInt) {
+          sb.append("*");
+          portfolioValInt -= scale;
+        }
+        sb.append("\n");
+      }
+      sb.append("Scale: ").append(scale).append("\n");
+      return sb.toString();
+    } else if (timespan <= 150) {
+      int ts = (int) (timespan / 5);
+      LocalDate tempDate = start;
+      Map<LocalDate, Double> dateValue = new LinkedHashMap<>();
+
+      double minValue = Double.MAX_VALUE;
+      double maxValue = Double.MIN_VALUE;
+
+      while(!(tempDate.isEqual(end) || tempDate.isAfter(end))) {
+        tempDate = tempDate.plusDays(ts);
+        Double value = this.getPortfolioValue(tempDate);
+        minValue = Math.min(minValue, value);
+        maxValue = Math.max(maxValue, value);
+
+        dateValue.put(tempDate, value);
+      }
+      int scale = 1;
+      double diff = maxValue - minValue;
+      int quotient = (int) (diff/scale);
+      while(quotient >= 50) {
+        scale++;
+        quotient = (int) (diff/scale);
+      }
+
+      StringBuilder sb = new StringBuilder();
+      for(Map.Entry<LocalDate, Double> mapEntry: dateValue.entrySet()) {
+        sb.append(mapEntry.getKey().toString()).append(": ");
+        double portfolioVal = mapEntry.getValue();
+        int portfolioValInt = (int) portfolioVal;
+        int minValInt = (int) minValue;
+        while(portfolioValInt > minValInt) {
+          sb.append("*");
+          portfolioValInt -= scale;
+        }
+        sb.append("\n");
+      }
+      sb.append("Scale: ").append(scale).append("\n");
+      return sb.toString();
+
+    } else {
+      return null;
+      //year  timespan <= 912
+    }
   }
 
   @Override
@@ -239,7 +332,7 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
         qty = mapEntry.getValue().get(closestDate);
       }
 
-      portfolioValue += mapEntry.getKey().getValue(date) * qty;
+      portfolioValue += mapEntry.getKey().getValue(date) * qty; //TODO fix this shit
     }
     return portfolioValue;
   }
@@ -259,17 +352,16 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
     return result;
   }
 
-  private void updateHistoricHoldings(LocalDate date) {
-    for (Map.Entry<IStock, Long> mapEntry : stockQuantityMap.entrySet()) {
-      Map<LocalDate, Long> map;
-      if (this.stockHistoryQty.containsKey(mapEntry.getKey())) {
-        map = this.stockHistoryQty.get(mapEntry.getKey());
-      } else {
-        map = new HashMap<>();
-      }
-      map.put(date, mapEntry.getValue());
-      this.stockHistoryQty.put(mapEntry.getKey(), map);
+  private void updateHistoricHoldings(IStock stock, LocalDate date, Long updatedQty) {
+    Map<LocalDate, Long> map;
+
+    if (this.stockHistoryQty.containsKey(stock)) {
+      map = this.stockHistoryQty.get(stock);
+    } else {
+      map = new HashMap<>();
     }
+    map.put(date, updatedQty);
+    this.stockHistoryQty.put(stock, map);
   }
 
   private boolean isTransactionSequenceValid(IStock stock, LocalDate date) {

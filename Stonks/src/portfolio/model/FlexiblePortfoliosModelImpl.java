@@ -49,8 +49,9 @@ public class FlexiblePortfoliosModelImpl extends AbstractPortfolioModel {
   }
 
   @Override
-  public String getPortfolioPerformance(int portfolioId, String rangeStart, String rangeEnd) {
-    return null;
+  public String getPortfolioPerformance(int portfolioId, LocalDate rangeStart, LocalDate rangeEnd) {
+    IFlexiblePortfolio portfolio = getPortfolioFromMap(portfolioId).getValue();
+    return portfolio.getPortfolioPerformance(rangeStart, rangeEnd);
   }
 
   protected AbstractPortfolio createPortfolio(Map<IStock, Long> stockQty) {
