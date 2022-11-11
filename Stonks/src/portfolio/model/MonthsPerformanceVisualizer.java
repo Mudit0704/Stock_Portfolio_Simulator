@@ -14,7 +14,7 @@ public class MonthsPerformanceVisualizer extends AbstractPerformanceVisualizer {
   @Override
   public void populatePortfolioValues(LocalDate tempDate, LocalDate end, int timeSpan,
       Map<LocalDate, Double> dateValue) {
-    while (tempDate.isBefore(end)) {
+    while (tempDate.isBefore(end) || tempDate.getMonth().equals(end.getMonth())) {
       LocalDate monthEndDate = tempDate.withDayOfMonth(
           tempDate.getMonth().length(tempDate.isLeapYear()));
       double value = portfolio.getPortfolioValue(monthEndDate);

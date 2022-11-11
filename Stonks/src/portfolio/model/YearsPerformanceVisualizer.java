@@ -12,7 +12,7 @@ public class YearsPerformanceVisualizer extends AbstractPerformanceVisualizer {
   @Override
   public void populatePortfolioValues(LocalDate tempDate, LocalDate end, int timeSpan,
       Map<LocalDate, Double> dateValue) {
-    while (tempDate.isBefore(end)) {
+    while (tempDate.isBefore(end) || tempDate.getYear() == end.getYear()) {
       LocalDate yearEndDate = tempDate.withDayOfYear(tempDate.lengthOfYear());
       double value = portfolio.getPortfolioValue(yearEndDate);
 

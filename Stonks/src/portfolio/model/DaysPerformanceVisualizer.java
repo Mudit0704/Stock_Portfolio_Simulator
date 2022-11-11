@@ -12,7 +12,7 @@ public class DaysPerformanceVisualizer extends AbstractPerformanceVisualizer{
   @Override
   public void populatePortfolioValues(LocalDate tempDate, LocalDate end, int timeSpan,
       Map<LocalDate, Double> dateValue) {
-    while (tempDate.isBefore(end)) {
+    while (tempDate.isBefore(end) || tempDate.isEqual(end)) {
       double value = portfolio.getPortfolioValue(tempDate);
 
       dateValue.put(tempDate, value);
