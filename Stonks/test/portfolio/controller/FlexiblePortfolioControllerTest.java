@@ -95,6 +95,47 @@ public class FlexiblePortfolioControllerTest {
   }
 
   @Test
+  public void testRunWhenOption2WithValidValues() throws IOException {
+    Reader in = new StringReader("2 2\n 1\n 2019-10-25\n E E E");
+    controller = new FlexiblePortfolioController(in, mockView);
+
+    controller.run(new MockFlexiblePortfolioModel(log, true));
+
+    assertEquals("ALPHAVANTAGEAvailable_Portfolios 1 ", log.toString());
+    assertEquals("Choose from the below menu: \n"
+        + " 1 -> Create a static portfolio \n"
+        + " 2 -> Create a flexible portfolio \n"
+        + " E -> Exit from the application \n"
+        + "Ask_For_Input Menu Ask_For_Input Choose from available portfolios (eg: Portfolio1 -> give 1):\n"
+        + "Available_Portfolios Ask_For_Input Please enter the date (yyyy-mm-dd): Composition Escape Menu Ask_For_Input Choose from the below menu: \n"
+        + " 1 -> Create a static portfolio \n"
+        + " 2 -> Create a flexible portfolio \n"
+        + " E -> Exit from the application \n"
+        + "Ask_For_Input ", out.toString());
+  }
+
+  @Test
+  public void testRunWhenOption2WhenNoPortfolios() throws IOException {
+    Reader in = new StringReader("2 2\n E E E");
+    controller = new FlexiblePortfolioController(in, mockView);
+
+    controller.run(new MockFlexiblePortfolioModel(log, false));
+
+    assertEquals("ALPHAVANTAGE", log.toString());
+    assertEquals("Choose from the below menu: \n"
+        + " 1 -> Create a static portfolio \n"
+        + " 2 -> Create a flexible portfolio \n"
+        + " E -> Exit from the application \n"
+        + "Ask_For_Input Menu Ask_For_Input Choose from available portfolios (eg: Portfolio1 -> give 1):\n"
+        + "No portfolios\n"
+        + "Escape Menu Ask_For_Input Choose from the below menu: \n"
+        + " 1 -> Create a static portfolio \n"
+        + " 2 -> Create a flexible portfolio \n"
+        + " E -> Exit from the application \n"
+        + "Ask_For_Input ", out.toString());
+  }
+
+  @Test
   public void testRunWhenOption5ExitWithoutPerformingTransaction() throws IOException {
     Reader in = new StringReader("2 5\n 1\nTICKER_SYMBOL\n 2 2019-10-25 E E E");
     controller = new FlexiblePortfolioController(in, mockView);

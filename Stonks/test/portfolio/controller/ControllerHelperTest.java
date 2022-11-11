@@ -135,7 +135,7 @@ public class ControllerHelperTest {
     controllerHelper = new ControllerHelper(mockView);
     Map<String, Long> stocks = new HashMap<>();
 
-    controllerHelper.populateStockDateFromUser(scanner,
+    controllerHelper.populateStockDataFromUser(scanner,
         new MockFlexiblePortfolioModel(log, true), stocks);
 
     assertTrue(stocks.containsKey("TICKER_SYMBOL"));
@@ -152,7 +152,7 @@ public class ControllerHelperTest {
     Map<String, Long> stocks = new HashMap<>();
     stocks.put("TICKER_SYMBOL", 2L);
 
-    controllerHelper.populateStockDateFromUser(scanner,
+    controllerHelper.populateStockDataFromUser(scanner,
         new MockFlexiblePortfolioModel(log, true), stocks);
 
     assertTrue(stocks.containsKey("TICKER_SYMBOL"));
@@ -168,7 +168,7 @@ public class ControllerHelperTest {
     controllerHelper = new ControllerHelper(mockView);
     Map<String, Long> stocks = new HashMap<>();
 
-    controllerHelper.populateStockDateFromUser(scanner,
+    controllerHelper.populateStockDataFromUser(scanner,
         new MockFlexiblePortfolioModel(log, true), stocks);
 
     assertTrue(stocks.containsKey("TICKER_SYMBOL"));
@@ -185,7 +185,7 @@ public class ControllerHelperTest {
     controllerHelper = new ControllerHelper(mockView);
     Map<String, Long> stocks = new HashMap<>();
 
-    controllerHelper.populateStockDateFromUser(scanner,
+    controllerHelper.populateStockDataFromUser(scanner,
         new MockFlexiblePortfolioModel(log, true), stocks);
 
     assertTrue(stocks.containsKey("TICKER_SYMBOL"));
@@ -201,7 +201,7 @@ public class ControllerHelperTest {
     controllerHelper = new ControllerHelper(mockView);
     Map<String, Long> stocks = new HashMap<>();
 
-    controllerHelper.populateStockDateFromUser(scanner,
+    controllerHelper.populateStockDataFromUser(scanner,
         new MockFlexiblePortfolioModel(log, true), stocks);
 
     assertTrue(stocks.containsKey("TICKER_SYMBOL"));

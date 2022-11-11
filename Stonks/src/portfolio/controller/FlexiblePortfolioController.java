@@ -9,12 +9,16 @@ import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 import portfolio.model.IFlexiblePortfoliosModel;
-import portfolio.model.IPortfoliosModel;
 import portfolio.model.PortfoliosModel;
 import portfolio.model.ServiceType;
 import portfolio.view.IView;
 import portfolio.view.View;
 
+/**
+ * This class represents the implementation of the controller of this application. It takes user
+ * inputs and performs the operations by forwarding them to the model. Also takes model's response
+ * and outputs to the view.
+ */
 public class FlexiblePortfolioController extends PortfolioController implements
     IFlexiblePortfolioController {
 
@@ -72,7 +76,7 @@ public class FlexiblePortfolioController extends PortfolioController implements
     }
   }
 
-  void runFlexiblePortfolioOperations(IFlexiblePortfoliosModel portfolios, Scanner scan)
+  protected void runFlexiblePortfolioOperations(IFlexiblePortfoliosModel portfolios, Scanner scan)
       throws IOException {
     portfolios.setServiceType(ServiceType.ALPHAVANTAGE);
     while (true) {
@@ -113,10 +117,9 @@ public class FlexiblePortfolioController extends PortfolioController implements
     }
   }
 
-  void setCommissionFee(IFlexiblePortfoliosModel portfolios, Scanner scan)
+  protected void setCommissionFee(IFlexiblePortfoliosModel portfolios, Scanner scan)
       throws IOException {
-
-    while(true) {
+    while (true) {
       try {
         view.displayCustomText("Please enter the fee value: \n");
         view.askForInput();
@@ -132,10 +135,9 @@ public class FlexiblePortfolioController extends PortfolioController implements
     }
   }
 
-  void getPortfolioPerformance(IFlexiblePortfoliosModel portfolios, Scanner scan)
+  protected void getPortfolioPerformance(IFlexiblePortfoliosModel portfolios, Scanner scan)
       throws IOException {
-    while (true)
-    {
+    while (true) {
       try {
         Integer portfolioId = controllerHelper.populatePortfolioIdFromUser(portfolios, scan);
         if (portfolioId == null) {
@@ -152,32 +154,40 @@ public class FlexiblePortfolioController extends PortfolioController implements
     }
   }
 
-  void getPortfolioCostBasis(IFlexiblePortfoliosModel portfolios, Scanner scan) throws IOException {
-    Integer portfolioId = controllerHelper.populatePortfolioIdFromUser(portfolios, scan);
-    if (portfolioId == null) {
-      return;
+  protected void getPortfolioCostBasis(IFlexiblePortfoliosModel portfolios, Scanner scan)
+      throws IOException {
+    while (true) {
+      try {
+        Integer portfolioId = controllerHelper.populatePortfolioIdFromUser(portfolios, scan);
+        if (portfolioId == null) {
+          return;
+        }
+        LocalDate date = controllerHelper.populateDateFromUser(scan);
+        view.displayCustomText(String.valueOf(portfolios.getCostBasis(date, portfolioId)));
+        controllerHelper.performExitOperationSequence(scan);
+        break;
+      } catch (IllegalArgumentException e) {
+        view.displayCustomText(e.getMessage());
+      }
     }
-    LocalDate date = controllerHelper.populateDateFromUser(scan);
-
-    view.displayCustomText(String.valueOf(portfolios.getCostBasis(date, portfolioId)));
-    controllerHelper.performExitOperationSequence(scan);
   }
 
-  void performTransaction(IFlexiblePortfoliosModel portfolios, Scanner scan) throws IOException {
+  protected void performTransaction(IFlexiblePortfoliosModel portfolios, Scanner scan)
+      throws IOException {
     while (true) {
       Integer portfolioId;
-      try{
+      try {
         portfolioId = controllerHelper.populatePortfolioIdFromUser(portfolios, scan);
         if (portfolioId == null) {
           return;
         }
         view.displayCustomText("Please provide stock details for the transaction: \n");
         Map<String, Long> stock = new LinkedHashMap<>();
-        controllerHelper.populateStockDateFromUser(scan, portfolios, stock);
+        controllerHelper.populateStockDataFromUser(scan, portfolios, stock);
         Entry<String, Long> entry = stock.entrySet().iterator().next();
         view.displayCustomText("Please enter date for the transaction: \n");
         LocalDate date = controllerHelper.populateDateFromUser(scan);
-        if(date.isAfter(LocalDate.now())) {
+        if (date.isAfter(LocalDate.now())) {
           throw new IllegalArgumentException("Invalid date for transaction.");
         }
         view.displayCustomText(TRANSACTION_MENU);
@@ -207,20 +217,20 @@ public class FlexiblePortfolioController extends PortfolioController implements
   }
 
   protected void getPortfolioComposition(IFlexiblePortfoliosModel portfolios, Scanner scan)
-    throws IOException {
+      throws IOException {
 
     String result;
     while (true) {
       try {
         Integer portfolioId = controllerHelper.populatePortfolioIdFromUser(portfolios, scan);
-        if(portfolioId == null) {
+        if (portfolioId == null) {
           return;
         }
         LocalDate date = controllerHelper.populateDateFromUser(scan);
         result = portfolios.getPortfolioCompositionOnADate(portfolioId, date);
         break;
-      } catch (InputMismatchException | IllegalArgumentException e) {
-        view.displayInvalidInput();
+      } catch (IllegalArgumentException e) {
+        view.displayCustomText(e.getMessage());
       }
     }
 

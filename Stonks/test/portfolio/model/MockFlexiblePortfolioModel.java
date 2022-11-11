@@ -54,7 +54,14 @@ public class MockFlexiblePortfolioModel implements IFlexiblePortfoliosModel {
 
   @Override
   public String getPortfolioCompositionOnADate(int portfolioId, LocalDate date) {
-    return null;
+    log.append(portfolioId).append(" ");
+    if (!dataPresent) {
+      throw new IllegalArgumentException();
+    }
+    if (portfolioId <= 0) {
+      throw new IllegalArgumentException("Invalid portfolio id");
+    }
+    return "Composition ";
   }
 
   @Override

@@ -2,12 +2,16 @@ package portfolio.view;
 
 import java.io.IOException;
 
+/**
+ * Responsible for displaying output of the flexible portfolio application, implements
+ * {@link IView} and extends {@link View}.
+ */
 public class FlexibleView extends View implements IView {
 
   private final Appendable out;
 
   /**
-   * Constructs an object of View and initializes its members.
+   * Constructs an object of Flexible View and initializes its members.
    *
    * @param out an {@link Appendable} to display output in the application.
    */

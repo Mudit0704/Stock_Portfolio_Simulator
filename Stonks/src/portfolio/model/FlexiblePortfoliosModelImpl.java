@@ -45,7 +45,10 @@ public class FlexiblePortfoliosModelImpl extends AbstractPortfolioModel {
 
   @Override
   public double getCostBasis(LocalDate date, int portfolioId) {
-    //TODO add validations here.
+    if (portfolioId > portfolioMap.size() || portfolioId <= 0) {
+      throw new IllegalArgumentException("Invalid portfolioId");
+    }
+
     IFlexiblePortfolio portfolio = getPortfolioFromMap(portfolioId).getValue();
     return portfolio.getPortfolioCostBasisByDate(date);
   }
@@ -58,13 +61,8 @@ public class FlexiblePortfoliosModelImpl extends AbstractPortfolioModel {
 
   @Override
   public String getPortfolioCompositionOnADate(int portfolioId, LocalDate date) {
-//    IFlexiblePortfolio portfolio = getPortfolioFromMap(portfolioId).getValue();
-//    return portfolio.getPortfolioPerformance(rangeStart, rangeEnd);
-//    return null;
-//
-
     if (portfolioId > portfolioMap.size() || portfolioId <= 0) {
-      throw new IllegalArgumentException();
+      throw new IllegalArgumentException("Invalid portfolioId");
     }
 
     StringBuilder composition = new StringBuilder();

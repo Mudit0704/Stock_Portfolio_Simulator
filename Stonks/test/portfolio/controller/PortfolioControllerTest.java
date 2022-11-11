@@ -350,21 +350,18 @@ public class PortfolioControllerTest {
   @Test
   public void testRunWhenOption3InvalidDate()
       throws IOException {
-    Reader in = new StringReader("3\n 2 2022A10-25\n 2 2022-10-25 E E");
+    Reader in = new StringReader("3\n 2\n 2022A10-25\n 2022-10-25\n E E");
     IPortfolioController controller = new PortfolioController(in, mockView);
 
     controller.run(new MockModel(log, true));
 
-    assertEquals("Available_Portfolios Available_Portfolios 2022-10-25 2",
+    assertEquals("Available_Portfolios 2022-10-25 2",
         log.toString());
-    assertEquals("Menu Ask_For_Input Choose from available portfolios "
-        + "(eg: Portfolio1 -> give 1):\n"
-        + "Available_Portfolios Ask_For_Input Please enter the date (yyyy-mm-dd): "
-        + "Invalid_Input Choose from available portfolios (eg: Portfolio1 -> give 1):\n"
-        + "Available_Portfolios Ask_For_Input Please enter the date (yyyy-mm-dd): Portfolio2\n"
-        + "2.00\n"
-        + "Escape \n"
-        + "----Exiting----\n", out.toString());
+    assertEquals("Menu Ask_For_Input Choose from available portfolios (eg: Portfolio1 -> "
+        + "give 1):\n"
+        + "Available_Portfolios Ask_For_Input Please enter the date (yyyy-mm-dd): Invalid_Input "
+        + "Please enter the date (yyyy-mm-dd): Portfolio2\n"
+        + "2.00\nEscape Menu Ask_For_Input ", out.toString());
   }
 
   @Test

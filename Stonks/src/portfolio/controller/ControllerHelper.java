@@ -11,10 +11,17 @@ import java.util.Scanner;
 import portfolio.model.IPortfoliosModel;
 import portfolio.view.IView;
 
+/**
+ * Controller helper class which stores the common logic used by the controllers.
+ */
 class ControllerHelper {
 
   IView view;
 
+  /**
+   * Constructs an object of Controller helper and initializes its members.
+   * @param view view object to display the output to the user.
+   */
   ControllerHelper(IView view) {
     this.view = view;
   }
@@ -53,7 +60,7 @@ class ControllerHelper {
         view.displayCustomText("Please enter the date (yyyy-mm-dd): ");
         date = LocalDate.parse(scan.next());
         break;
-      } catch (DateTimeParseException | IllegalArgumentException | InputMismatchException e) {
+      } catch (DateTimeParseException e) {
         scan.nextLine();
         view.displayInvalidInput();
       }
@@ -61,7 +68,7 @@ class ControllerHelper {
     return date;
   }
 
-  protected void populateStockDateFromUser(Scanner scan, IPortfoliosModel portfolios,
+  protected void populateStockDataFromUser(Scanner scan, IPortfoliosModel portfolios,
       Map<String, Long> stocks)
       throws IOException {
     String tickerSymbol;
