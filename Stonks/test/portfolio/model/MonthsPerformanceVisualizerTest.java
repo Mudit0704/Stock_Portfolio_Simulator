@@ -56,7 +56,7 @@ public class MonthsPerformanceVisualizerTest {
           .append(mapEntry.getKey().getYear()).append(": ");
       AbstractPerformanceVisualizer.populateBar(minValue.orElseThrow(), scale, expectedString, mapEntry);
     }
-    expectedString.append("Scale: ").append(scale).append("\n");
+    expectedString.append("Scale: * = $").append(scale).append("\n");
 
     String actualString = monthsPerformanceVisualizer.populateString(dateValue,
         minValue.orElseThrow(), scale);

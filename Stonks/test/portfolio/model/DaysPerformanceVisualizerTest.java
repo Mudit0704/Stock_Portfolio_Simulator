@@ -57,7 +57,7 @@ public class DaysPerformanceVisualizerTest {
       AbstractPerformanceVisualizer.populateBar(minValue.orElseThrow(), scale, expectedString,
           mapEntry);
     }
-    expectedString.append("Scale: ").append(scale).append("\n");
+    expectedString.append("Scale: * = $").append(scale).append("\n");
 
     String actualString = daysPerformanceVisualizer.populateString(dateValue,
         minValue.orElseThrow(),

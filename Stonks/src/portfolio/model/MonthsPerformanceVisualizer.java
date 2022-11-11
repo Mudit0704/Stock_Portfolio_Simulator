@@ -32,7 +32,7 @@ public class MonthsPerformanceVisualizer extends AbstractPerformanceVisualizer {
           .append(mapEntry.getKey().getYear()).append(": ");
       populateBar(minValue, scale, sb, mapEntry);
     }
-    sb.append("Scale: ").append(scale).append("\n");
+    sb.append("Scale: * = ").append("$" + scale).append("\n");
     return sb.toString();
   }
 }

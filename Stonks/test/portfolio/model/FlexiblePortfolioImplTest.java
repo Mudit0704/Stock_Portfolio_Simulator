@@ -1,6 +1,7 @@
 package portfolio.model;
 
 import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 
 import java.io.IOException;
@@ -8,7 +9,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 import javax.xml.parsers.ParserConfigurationException;
 import org.junit.Before;
 import org.junit.Test;
@@ -499,17 +502,37 @@ public class FlexiblePortfolioImplTest {
 
   @Test
   public void testGetPortfolioCostBasisByDateAfterSell() {
+    assertEquals(7342.56, testCostBasisAfterTransactions.getPortfolioCostBasisByDate(LocalDate.now()));
 
-  }
+    IStock pubMatic = new Stock("PUBM", mockExtensive);
+    testCostBasisAfterTransactions.addStocksToPortfolio(pubMatic, 2L,
+      LocalDate.of(2019,11,30), 10);
 
-  @Test
-  public void testGetPortfolioCostBasisByDateAfterAddSell() {
+    assertEquals(9962.48, testCostBasisAfterTransactions.getPortfolioCostBasisByDate(LocalDate.now()));
 
+    testCostBasisAfterTransactions.sellStocksFromPortfolio(pubMatic, 1L,
+      LocalDate.of(2019,11,30), 10);
+
+    assertEquals(9972.48, testCostBasisAfterTransactions.getPortfolioCostBasisByDate(LocalDate.now()));
   }
 
   @Test
   public void testGetPortfolioCostBasisByDateAfterSellAdd() {
+    assertEquals(7342.56, testCostBasisAfterTransactions.getPortfolioCostBasisByDate(LocalDate.now()));
 
+    IStock pubMatic = new Stock("PUBM", mockExtensive);
+    testCostBasisAfterTransactions.addStocksToPortfolio(pubMatic, 2L,
+      LocalDate.of(2019,11,30), 10);
+
+    assertEquals(9962.48, testCostBasisAfterTransactions.getPortfolioCostBasisByDate(LocalDate.now()));
+
+    testCostBasisAfterTransactions.sellStocksFromPortfolio(pubMatic, 1L,
+      LocalDate.of(2019,11,30), 10);
+
+    testCostBasisAfterTransactions.addStocksToPortfolio(pubMatic, 2L,
+      LocalDate.of(2019,11,30), 10);
+
+    assertEquals(12592.4, testCostBasisAfterTransactions.getPortfolioCostBasisByDate(LocalDate.now()));
   }
 
   @Test
@@ -548,8 +571,24 @@ public class FlexiblePortfolioImplTest {
   }
 
   @Test
-  public void testRetrievePortfolio() {
+  public void testGetPortfolioCompositionAtGivenDate() {
+    String result1 = testAnyDateObj.getPortfolioCompositionOnADate(LocalDate.of(2019,10,27));
+    assertTrue(result1.contains("GOOG -> 2\n"));
+    assertTrue(result1.contains("AAPL -> 2\n"));
+    assertFalse(result1.contains("A -> 2\n"));
 
+
+    String result2 = testAnyDateObj.getPortfolioCompositionOnADate(LocalDate.of(2019,10,30));
+    assertTrue(result2.contains("GOOG -> 2\n"));
+    assertTrue(result2.contains("AAPL -> 2\n"));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testGetPortfolioCompositionBeforeCreation() {
+    String result1 = testAnyDateObj.getPortfolioCompositionOnADate(LocalDate.of(2017,10,23));
+    assertTrue(result1.contains("GOOG -> 2\n"));
+    assertTrue(result1.contains("AAPL -> 2\n"));
+    assertFalse(result1.contains("A -> 2\n"));
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -603,8 +642,148 @@ public class FlexiblePortfolioImplTest {
     assertEquals(0.0, testPastAvailableDatePortfolio.getPortfolioValue(LocalDate.of(2013, 10, 29)), 0.0);
   }
 
+  @Test(expected = RuntimeException.class)
+  public void testSaveEmptyPortfolio() throws ParserConfigurationException {
+    AbstractPortfolio portfolio = new FlexiblePortfolioImpl(mockExtensive, new HashMap<>(), 0.0);
+    portfolio.savePortfolio("test/test_empty.xml");
+  }
+
+  @Test(expected = RuntimeException.class)
+  public void testRetrieveAlreadyRetrievedPortfolio()
+    throws IOException, ParserConfigurationException, SAXException {
+    AbstractPortfolio portfolio = new FlexiblePortfolioImpl(mockStockService, new HashMap<>(), 0.0);
+    portfolio.retrievePortfolio("test/test_any_date.xml");
+    portfolio.retrievePortfolio("test/test_past_oldest.xml");
+  }
+
   @Test
   public void testGetPortfolioValuePastCreationDate() {
     assertEquals(0.0, testModifyPortfolioAnyDate.getPortfolioValue(LocalDate.of(2019,10,23)));
+  }
+
+  @Test
+  public void testGetPortfolioPerformanceOverDays() {
+    Map<LocalDate, Double> dateValue = new LinkedHashMap<>();
+    LocalDate startDate = LocalDate.of(2019,10,24);
+    LocalDate endDate = LocalDate.of(2019,11,23);
+    AbstractPerformanceVisualizer daysPerformanceVisualizer
+        = new DaysPerformanceVisualizer(testAnyDateObj);
+
+    daysPerformanceVisualizer.populatePortfolioValues(startDate,
+        endDate, 1, dateValue);
+    Optional<Double> minValue = dateValue.values().stream().min(Double::compareTo);
+    Optional<Double> maxValue = dateValue.values().stream().max(Double::compareTo);
+    int scale = AbstractPerformanceVisualizer.getScale(minValue.orElseThrow(),
+      maxValue.orElseThrow(), 1);
+
+    StringBuilder expectedString =
+        new StringBuilder("Performance of portfolio XXX"
+          + " from " + startDate + " to " + endDate + "\n");
+
+    for (Map.Entry<LocalDate, Double> mapEntry : dateValue.entrySet()) {
+      expectedString.append(mapEntry.getKey().toString()).append(": ");
+      AbstractPerformanceVisualizer.populateBar(minValue.orElseThrow(), scale, expectedString,
+        mapEntry);
+    }
+    expectedString.append("Scale: * = $").append(scale).append("\n");
+
+    String actualString = testAnyDateObj.getPortfolioPerformance(startDate, endDate);
+    assertEquals(expectedString.toString(), actualString);
+  }
+
+  @Test
+  public void testGetPortfolioPerformanceOverMultipleDays() {
+    LocalDate startDate = LocalDate.of(2019,10,24);
+    LocalDate endDate = LocalDate.of(2019,11,30);
+
+    String expectedString = "Performance of portfolio XXX from 2019-10-24 to 2019-11-30\n"
+      + "2019-10-31: \n"
+      + "2019-11-07: *****\n"
+      + "2019-11-14: ******\n"
+      + "2019-11-21: *************************************************\n"
+      + "2019-11-28: **************************************************\n"
+      + "Scale: * = $59\n";
+
+
+    String actualString = testAnyDateObj.getPortfolioPerformance(startDate, endDate);
+    assertEquals(expectedString, actualString);
+  }
+
+  @Test
+  public void testGetPortfolioPerformanceOverMonths() {
+    LocalDate startDate = LocalDate.of(2019,10,24);
+    LocalDate endDate = LocalDate.of(2020,4,23);
+
+    String expected = "Performance of portfolio XXX from 2019-10-24 to 2020-04-23\n"
+      + "Oct2019: \n"
+      + "Nov2019: *************************************\n"
+      + "Dec2019: ****************************************\n"
+      + "Jan2020: **************************************************\n"
+      + "Feb2020: ****************************************\n"
+      + "Mar2020: ***********************\n"
+      + "Apr2020: *****************************************\n"
+      + "Scale: * = $79\n";
+
+    String actual = testAnyDateObj.getPortfolioPerformance(startDate, endDate);
+    assertEquals(expected, actual);
+  }
+
+  @Test
+  public void testGetPortfolioPerformanceOverMultipleMonths() {
+    LocalDate startDate = LocalDate.of(2019,10,24);
+    LocalDate endDate = LocalDate.of(2022,5,23);
+
+    String expected = "Performance of portfolio XXX from 2019-10-24 to 2022-05-23\n"
+      + "Oct2019: \n"
+      + "Dec2019: **********\n"
+      + "Feb2020: **********\n"
+      + "Apr2020: **********\n"
+      + "Jun2020: ************\n"
+      + "Aug2020: ******************\n"
+      + "Oct2020: *****************\n"
+      + "Dec2020: ********************\n"
+      + "Feb2021: ***************************\n"
+      + "Apr2021: *************************************\n"
+      + "Jun2021: ***************************************\n"
+      + "Aug2021: *************************************************\n"
+      + "Oct2021: **************************************************\n"
+      + "Dec2021: *************************************************\n"
+      + "Feb2022: ********************************************\n"
+      + "Apr2022: **********************************\n"
+      + "Scale: * = $324\n";
+
+    String actual = testAnyDateObj.getPortfolioPerformance(startDate, endDate);
+    assertEquals(expected, actual);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testGetPortfolioPerformanceOverInvalidYear() {
+    System.out.println(testAnyDateObj.getPortfolioPerformance(LocalDate.of(2016,10,24),
+      LocalDate.of(2020,11,23)));
+  }
+
+  @Test
+  public void testGetPortfolioPerformanceOverYears()
+    throws IOException, ParserConfigurationException, SAXException {
+    LocalDate startDate = LocalDate.of(2016,10,24);
+    LocalDate endDate = LocalDate.of(2022,5,23);
+
+    AbstractPortfolio testVeryOldPortfolio =
+        new FlexiblePortfolioImpl(mockExtensive, new HashMap<>(), 0);
+    testVeryOldPortfolio.retrievePortfolio("test/test_very_old.xml");
+
+
+    String expected = "Performance of portfolio XXX from 2016-10-24 to 2022-05-23\n"
+      + "2016: **************\n"
+      + "2017: *******************\n"
+      + "2018: ******************\n"
+      + "2019: ************************\n"
+      + "2020: *******************************\n"
+      + "2021: **************************************************\n"
+      + "2022: \n"
+      + "Scale: * = $463\n";
+
+    String actual = testVeryOldPortfolio.getPortfolioPerformance(startDate, endDate);
+    assertEquals(expected, actual);
   }
 }
