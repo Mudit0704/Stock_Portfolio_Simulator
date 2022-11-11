@@ -20,15 +20,20 @@ public class FlexiblePortfolioImplTest {
   private IStockService mockExtensive;
   private AbstractPortfolio testAnyDateObj;
   private AbstractPortfolio testModifyPortfolioAnyDate;
+  private AbstractPortfolio testInvalidSequence;
 
   @Before
   public void setup() throws IOException, ParserConfigurationException, SAXException {
     mockStockService = new MockStockService("/test/testData.txt");
     mockExtensive = new MockStockService("/test/testExtensiveData.txt");
+
     testAnyDateObj = new FlexiblePortfolioImpl(new MockStockService("/test/testExtensiveData.txt"), new HashMap<>(), 0);
     testAnyDateObj.retrievePortfolio("test/test_any_date.xml");
+
     testModifyPortfolioAnyDate = new FlexiblePortfolioImpl(mockExtensive, new HashMap<>(), 0);
     testModifyPortfolioAnyDate.retrievePortfolio("test/test_multiple_transaction.xml");
+
+    testInvalidSequence = new FlexiblePortfolioImpl(mockExtensive, new HashMap<>(), 0);
   }
 
   @Test
@@ -319,22 +324,14 @@ public class FlexiblePortfolioImplTest {
     String path = System.getProperty("user.dir") + "/test/test_multiple_transaction_save.xml";
     testModifyPortfolioAnyDate.savePortfolio(path);
 
-    AbstractPortfolio retrievedPortfolio = new FlexiblePortfolioImpl(mockExtensive, new HashMap<>(), 10);
-
-    try {
-      retrievedPortfolio.retrievePortfolio(path);
-    } catch (IOException | ParserConfigurationException | SAXException e) {
-      throw new RuntimeException(e);
-    }
-
-    testModifyPortfolioAnyDate.addStocksToPortfolio(pubMatic, 2L, LocalDate.of(2020,1,10), 10);
+    testModifyPortfolioAnyDate.sellStocksFromPortfolio(pubMatic, 2L, LocalDate.of(2020,1,10), 10);
 
     String result = testModifyPortfolioAnyDate.getPortfolioComposition();
     assertTrue(result.contains("GOOG -> 4\n"));
     assertTrue(result.contains("AAPL -> 2\n"));
-    assertTrue(result.contains("PUBM -> 3\n"));
+    assertTrue(result.contains("PUBM -> 1\n"));
     assertTrue(result.contains("A -> 2\n"));
-    assertEquals( 848.18, retrievedPortfolio.getPortfolioValue(LocalDate.now()), 0.1);
+    assertEquals( 847.53, testModifyPortfolioAnyDate.getPortfolioValue(LocalDate.now()), 0.1);
 
     try {
       Files.delete(Path.of(path));
@@ -346,7 +343,6 @@ public class FlexiblePortfolioImplTest {
   @Test(expected = IllegalArgumentException.class)
   public void testSellStocksFromPortfolioBeforeCreationDate() throws ParserConfigurationException {
     String path = System.getProperty("user.dir") + "/test/test_multiple_transaction_save.xml";
-    testModifyPortfolioAnyDate.savePortfolio(path);
 
     AbstractPortfolio retrievedPortfolio = new FlexiblePortfolioImpl(mockExtensive, new HashMap<>(), 10);
     try {
@@ -357,7 +353,7 @@ public class FlexiblePortfolioImplTest {
 
     IStock pubMatic = new Stock("PUBM", mockExtensive);
 
-    testModifyPortfolioAnyDate.sellStocksFromPortfolio(pubMatic, 1L, LocalDate.of(2019,10,23), 10);
+    retrievedPortfolio.sellStocksFromPortfolio(pubMatic, 1L, LocalDate.of(2019,10,23), 10);
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -368,21 +364,10 @@ public class FlexiblePortfolioImplTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void testSellStocksFromPortfolioIntermediateDate() throws ParserConfigurationException {
+  public void testSellStocksFromPortfolioIntermediateDate() {
     IStock msft = new Stock("MSFT", mockExtensive);
 
     testModifyPortfolioAnyDate.addStocksToPortfolio(msft, 3L, LocalDate.of(2019,10,27), 10);
-
-    String path = System.getProperty("user.dir") + "/test/test_multiple_transaction_save.xml";
-    testModifyPortfolioAnyDate.savePortfolio(path);
-
-    AbstractPortfolio retrievedPortfolio = new FlexiblePortfolioImpl(mockExtensive, new HashMap<>(), 10);
-
-    try {
-      retrievedPortfolio.retrievePortfolio(path);
-    } catch (IOException | ParserConfigurationException | SAXException e) {
-      throw new RuntimeException(e);
-    }
 
 
     try {
@@ -390,24 +375,18 @@ public class FlexiblePortfolioImplTest {
     } catch (Exception e) {
       throw e;
     }
-    testModifyPortfolioAnyDate.addStocksToPortfolio(msft, 1L, LocalDate.of(2019,10,28), 10);
+    testModifyPortfolioAnyDate.sellStocksFromPortfolio(msft, 1L, LocalDate.of(2019,10,28), 10);
 
-    String result = retrievedPortfolio.getPortfolioComposition();
+    String result = testModifyPortfolioAnyDate.getPortfolioComposition();
     assertTrue(result.contains("GOOG -> 4\n"));
     assertTrue(result.contains("AAPL -> 2\n"));
     assertTrue(result.contains("PUBM -> 1\n"));
     assertTrue(result.contains("A -> 2\n"));
-    assertEquals( 848.18, retrievedPortfolio.getPortfolioValue(LocalDate.now()), 0.1);
-
-    try {
-      Files.delete(Path.of(path));
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
+    assertEquals( 848.18, testModifyPortfolioAnyDate.getPortfolioValue(LocalDate.now()), 0.1);
   }
 
   @Test
-  public void testSellStocksFromPortfolioAfterSell() throws ParserConfigurationException {
+  public void testSellStocksFromPortfolioAfterAdd() throws ParserConfigurationException {
     IStock msft = new Stock("MSFT", mockExtensive);
 
     testModifyPortfolioAnyDate.addStocksToPortfolio(msft, 3L, LocalDate.of(2019,10,27), 10);
@@ -468,10 +447,6 @@ public class FlexiblePortfolioImplTest {
 
     assertEquals(703.74, portfolio.getPortfolioCostBasisByDate(LocalDate.now()), 0.0);
   }
-
-  /*
-   *
-   */
 
   @Test
   public void testGetPortfolioCostBasisByDate() {
@@ -542,9 +517,10 @@ public class FlexiblePortfolioImplTest {
 
   }
 
-  @Test
-  public void testRetrievePortfolioIncorrectTransactionSequence() {
-
+  @Test(expected = IllegalArgumentException.class)
+  public void testRetrievePortfolioIncorrectTransactionSequence()
+    throws IOException, ParserConfigurationException, SAXException {
+    testInvalidSequence.retrievePortfolio("test/test_invalid_seq.xml");
   }
 
   @Test
