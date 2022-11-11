@@ -54,6 +54,7 @@ class ControllerHelper {
         date = LocalDate.parse(scan.next());
         break;
       } catch (DateTimeParseException | IllegalArgumentException | InputMismatchException e) {
+        scan.nextLine();
         view.displayInvalidInput();
       }
     }

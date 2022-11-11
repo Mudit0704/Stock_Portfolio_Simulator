@@ -144,6 +144,7 @@ public class FlexiblePortfolioController extends PortfolioController implements
         LocalDate endDate = controllerHelper.populateDateFromUser(scan);
         view.displayCustomText(portfolios.getPortfolioPerformance(portfolioId, startDate, endDate));
         controllerHelper.performExitOperationSequence(scan);
+        return;
       } catch (IllegalArgumentException e) {
         view.displayCustomText(e.getMessage());
       }
@@ -158,24 +159,23 @@ public class FlexiblePortfolioController extends PortfolioController implements
     LocalDate date = controllerHelper.populateDateFromUser(scan);
 
     view.displayCustomText(String.valueOf(portfolios.getCostBasis(date, portfolioId)));
+    controllerHelper.performExitOperationSequence(scan);
   }
 
   void performTransaction(IFlexiblePortfoliosModel portfolios, Scanner scan) throws IOException {
-    view.displayCustomText("NOTE : You will be charged a commission fee for each transaction \n");
-
     while (true) {
       Integer portfolioId;
-      portfolioId = controllerHelper.populatePortfolioIdFromUser(portfolios, scan);
-      if (portfolioId == null) {
-        return;
-      }
-      view.displayCustomText("Please provide stock details for the transaction: \n");
-      Map<String, Long> stock = new LinkedHashMap<>();
-      controllerHelper.populateStockDateFromUser(scan, portfolios, stock);
-      Entry<String, Long> entry = stock.entrySet().iterator().next();
-      view.displayCustomText("Please enter date for the transaction: \n");
-      LocalDate date = controllerHelper.populateDateFromUser(scan);
       try{
+        portfolioId = controllerHelper.populatePortfolioIdFromUser(portfolios, scan);
+        if (portfolioId == null) {
+          return;
+        }
+        view.displayCustomText("Please provide stock details for the transaction: \n");
+        Map<String, Long> stock = new LinkedHashMap<>();
+        controllerHelper.populateStockDateFromUser(scan, portfolios, stock);
+        Entry<String, Long> entry = stock.entrySet().iterator().next();
+        view.displayCustomText("Please enter date for the transaction: \n");
+        LocalDate date = controllerHelper.populateDateFromUser(scan);
         if(date.isAfter(LocalDate.now())) {
           throw new IllegalArgumentException("Invalid date for transaction.");
         }
@@ -200,10 +200,7 @@ public class FlexiblePortfolioController extends PortfolioController implements
             break;
         }
       } catch (IllegalArgumentException e) {
-        if ("Invalid portfolio Id".equals(e.getMessage()) || "Invalid date for transaction.".equals(
-            e.getMessage())) {
-          view.displayCustomText(e.getMessage() + "\n");
-        }
+        view.displayCustomText(e.getMessage() + "\n");
       }
     }
   }

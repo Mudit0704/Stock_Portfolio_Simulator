@@ -70,7 +70,7 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
       LocalDate date, double transactionFee) {
     long stockQty = 0;
 
-    if (!isTransactionSequenceValid(stock, date)) {
+    if (isTransactionSequenceInvalid(stock, date)) {
       throw new IllegalArgumentException("Invalid date for transaction.");
     }
 
@@ -92,7 +92,7 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
       throws IllegalArgumentException {
     long stockQty = 0;
 
-    if (!isTransactionSequenceValid(stock, date)) {
+    if (isTransactionSequenceInvalid(stock, date)) {
       throw new IllegalArgumentException("Invalid date for transaction.");
     }
 
@@ -131,7 +131,8 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
 
   @Override
   public String getPortfolioPerformance(LocalDate start, LocalDate end) {
-    if (start.isAfter(end) || start.isEqual(end) || start.isBefore(this.creationDate)) { //TODO check the equal condition
+    if (start.isAfter(end) || start.isEqual(end) || start.isBefore(
+        this.creationDate)) { //TODO check the equal condition
       throw new IllegalArgumentException("Invalid dates\n");
     }
 
@@ -139,25 +140,27 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
     Map<LocalDate, Double> dateValue = new LinkedHashMap<>();
     long timespan = ChronoUnit.DAYS.between(start, end);
     IPerformanceVisualizer visualizer;
+    int timeSpanJump;
 
     if (timespan <= 30) {
+      timeSpanJump = 1;
       visualizer = new DaysPerformanceVisualizer(this);
-      return visualizer.visualize(tempDate, end, 1, dateValue);
     } else if (timespan <= 150) {
-      int ts = (int) (timespan / 5);
-      tempDate = tempDate.plusDays(ts);
+      timeSpanJump = (int) (timespan / 5);
+      tempDate = tempDate.plusDays(timeSpanJump);
       visualizer = new DaysPerformanceVisualizer(this);
-      return visualizer.visualize(tempDate, end, ts, dateValue);
     } else if (timespan <= 912) {
+      timeSpanJump = 1;
       visualizer = new MonthsPerformanceVisualizer(this);
-      return visualizer.visualize(tempDate, end, 1, dateValue);
     } else if (timespan <= 1826) {
+      timeSpanJump = 2;
       visualizer = new MonthsPerformanceVisualizer(this);
-      return visualizer.visualize(tempDate, end, 2, dateValue);
     } else {
+      timeSpanJump = 1;
       visualizer = new YearsPerformanceVisualizer(this);
-      return visualizer.visualize(tempDate, end, 1, dateValue);
     }
+    return ("Performance of portfolio XXX from "+ start + " to " + end +"\n").concat(
+        visualizer.visualize(tempDate, end, timeSpanJump, dateValue));
   }
 
   @Override
@@ -305,9 +308,9 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
     this.stockHistoryQty.put(stock, map);
   }
 
-  private boolean isTransactionSequenceValid(IStock stock, LocalDate date) {
+  private boolean isTransactionSequenceInvalid(IStock stock, LocalDate date) {
     if (date.isBefore(this.creationDate)) {
-      return false;
+      return true;
     }
 
     if (stockHistoryQty.containsKey(stock) && stockHistoryQty.get(stock).size() > 1) {
@@ -315,14 +318,14 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
           .max(LocalDate::compareTo);
       Optional<LocalDate> minStockHistory = this.stockHistoryQty.get(stock).keySet().stream()
           .min(LocalDate::compareTo);
-      return (!date.isAfter(minStockHistory.get()) || !date.isBefore(maxStockHistory.get()))
-          && !date.isBefore(minStockHistory.get());
+      return (date.isAfter(minStockHistory.get()) && date.isBefore(maxStockHistory.get()))
+          || date.isBefore(minStockHistory.get());
     } else if (stockHistoryQty.containsKey(stock) && stockHistoryQty.get(stock).size() == 1) {
       Optional<LocalDate> minStockHistory = this.stockHistoryQty.get(stock).keySet().stream()
           .min(LocalDate::compareTo);
-      return !date.isBefore(minStockHistory.get());
+      return date.isBefore(minStockHistory.get());
     }
-    return true;
+    return false;
   }
 
   private void populateCostBasisHistoryFromXML(Document doc) {
