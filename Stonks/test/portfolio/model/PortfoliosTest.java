@@ -39,8 +39,8 @@ public class PortfoliosTest {
 
     portfolios.createNewPortfolio(map);
 
-    assertEquals(568.92, portfolios.getPortfolioValue(LocalDate.of(2022, 10, 28), 1), 0.0);
-    assertEquals(284.46, portfolios.getPortfolioValue(LocalDate.of(2022, 10, 28), 2), 0.0);
+    assertEquals(568.92, portfolios.getPortfolioValue(LocalDate.of(2022, 10, 28), 1), 0.1);
+    assertEquals(284.46, portfolios.getPortfolioValue(LocalDate.of(2022, 10, 28), 2), 0.1);
   }
 
   @Test(expected = IllegalArgumentException.class)

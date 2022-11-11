@@ -117,6 +117,9 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
 
   @Override
   public double getPortfolioCostBasisByDate(LocalDate date) {
+    if(date.isBefore(this.creationDate)) {
+      throw new IllegalArgumentException("Portfolio didn't exist before this date.");
+    }
     List<LocalDate> listOfDates = new ArrayList<>(costBasisHistory.keySet());
 
     LocalDate recentDate = date;
