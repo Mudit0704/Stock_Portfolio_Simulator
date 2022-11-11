@@ -53,6 +53,11 @@ public class MockFlexiblePortfolioModel implements IFlexiblePortfoliosModel {
   }
 
   @Override
+  public String getPortfolioCompositionOnADate(int portfolioId, LocalDate date) {
+    return null;
+  }
+
+  @Override
   public void setServiceType(ServiceType serviceType) {
     log.append(serviceType);
   }

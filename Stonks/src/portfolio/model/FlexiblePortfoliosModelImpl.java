@@ -57,6 +57,24 @@ public class FlexiblePortfoliosModelImpl extends AbstractPortfolioModel {
   }
 
   @Override
+  public String getPortfolioCompositionOnADate(int portfolioId, LocalDate date) {
+//    IFlexiblePortfolio portfolio = getPortfolioFromMap(portfolioId).getValue();
+//    return portfolio.getPortfolioPerformance(rangeStart, rangeEnd);
+//    return null;
+//
+
+    if (portfolioId > portfolioMap.size() || portfolioId <= 0) {
+      throw new IllegalArgumentException();
+    }
+
+    StringBuilder composition = new StringBuilder();
+    composition.append("Portfolio").append(portfolioId).append("\n")
+      .append(getPortfolioFromMap(portfolioId).getValue().getPortfolioCompositionOnADate(date)).append("\n");
+    return composition.toString();
+
+  }
+
+  @Override
   public void setCommissionFee(double commissionFee) {
     this.transactionFee = commissionFee;
   }

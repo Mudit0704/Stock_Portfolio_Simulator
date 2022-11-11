@@ -40,6 +40,8 @@ public interface IFlexiblePortfoliosModel extends IPortfoliosModel {
 
   String getPortfolioPerformance(int portfolioId, LocalDate rangeStart, LocalDate rangeEnd);
 
+  String getPortfolioCompositionOnADate(int portfolioId, LocalDate date);
+
   void setServiceType(ServiceType serviceType);
 
   void setCommissionFee(double commissionFee);

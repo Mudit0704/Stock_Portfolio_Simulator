@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 import portfolio.model.IFlexiblePortfoliosModel;
+import portfolio.model.IPortfoliosModel;
 import portfolio.model.PortfoliosModel;
 import portfolio.model.ServiceType;
 import portfolio.view.IView;
@@ -82,7 +83,7 @@ public class FlexiblePortfolioController extends PortfolioController implements
           super.generatePortfolios(scan, portfolios);
           break;
         case "2":
-          super.getPortfolioComposition(portfolios, scan);
+          getPortfolioComposition(portfolios, scan);
           break;
         case "3":
           super.getPortfolioValuesForGivenDate(portfolios, scan);
@@ -203,5 +204,27 @@ public class FlexiblePortfolioController extends PortfolioController implements
         view.displayCustomText(e.getMessage() + "\n");
       }
     }
+  }
+
+  protected void getPortfolioComposition(IFlexiblePortfoliosModel portfolios, Scanner scan)
+    throws IOException {
+
+    String result;
+    while (true) {
+      try {
+        Integer portfolioId = controllerHelper.populatePortfolioIdFromUser(portfolios, scan);
+        if(portfolioId == null) {
+          return;
+        }
+        LocalDate date = controllerHelper.populateDateFromUser(scan);
+        result = portfolios.getPortfolioCompositionOnADate(portfolioId, date);
+        break;
+      } catch (InputMismatchException | IllegalArgumentException e) {
+        view.displayInvalidInput();
+      }
+    }
+
+    view.displayCustomText(result);
+    controllerHelper.performExitOperationSequence(scan);
   }
 }

@@ -7,6 +7,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -133,9 +135,40 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
   }
 
   @Override
+  public String getPortfolioCompositionOnADate(LocalDate date) {
+
+    if (date.isBefore(this.creationDate)) {
+      throw new IllegalArgumentException("Portfolio didn't exist at this date") ;
+    }
+    StringBuilder composition = new StringBuilder();
+
+    for (Map.Entry<IStock, Map<LocalDate, Long>> mapEntry : this.stockHistoryQty.entrySet()) {
+      Map<LocalDate, Long> qtyHistory = mapEntry.getValue();
+      LocalDate closestDate = date;
+
+      List<LocalDate> listOfDates = new ArrayList<>(qtyHistory.keySet());
+
+      if (!qtyHistory.containsKey(date)) {
+        closestDate = getClosestDate(date, listOfDates);
+      }
+
+      long qty = 0;
+      if (qtyHistory.containsKey(date) || closestDate != null) {
+        qty = mapEntry.getValue().get(closestDate);
+      }
+
+      if (qty != 0) {
+        composition.append(mapEntry.getKey().getStockTicker()).append(" -> ")
+          .append(qty).append("\n");
+      }
+    }
+    return composition.toString();
+  }
+
+  @Override
   public String getPortfolioPerformance(LocalDate start, LocalDate end) {
     if (start.isAfter(end) || start.isEqual(end) || start.isBefore(
-        this.creationDate)) { //TODO check the equal condition
+        this.creationDate)) {
       throw new IllegalArgumentException("Invalid dates\n");
     }
 
@@ -285,7 +318,14 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
         qty = mapEntry.getValue().get(closestDate);
       }
 
-      portfolioValue += mapEntry.getKey().getValue(date) * qty; //TODO fix this shit
+      double stockValue;
+      try {
+        stockValue = mapEntry.getKey().getValue(date);
+      } catch (IllegalArgumentException e) {
+        stockValue = 0.0;
+      }
+
+      portfolioValue += stockValue * qty;
     }
     return portfolioValue;
   }
@@ -352,6 +392,8 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
     int stockQuantityIdx = 0;
 
     Map<LocalDate, Long> dateQtyMap = new HashMap<>();
+    List<LocalDate> dateList = new ArrayList<>();
+
     while (stockQuantityIdx < numDates) {
       String modificationDate = eElement.getElementsByTagName("stockQuantity")
           .item(stockQuantityIdx).getAttributes().getNamedItem("date").getNodeValue();
@@ -360,10 +402,19 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
           .item(stockQuantityIdx).getTextContent());
 
       LocalDate modDate = LocalDate.parse(modificationDate);
+      if(dateList.size() > 0) {
+        Optional<LocalDate> minStockHistory = dateList.stream().min(LocalDate::compareTo);
+
+        if ((modDate.isAfter(minStockHistory.get()))) {
+          throw new IllegalArgumentException("Invalid transaction sequence\n");
+        }
+      }
+      dateList.add(modDate);
       dateQtyMap.put(modDate, stockQuantity);
       stockQuantityIdx++;
-
     }
+
+
     this.stockHistoryQty.put(newStock, dateQtyMap);
   }
 
@@ -380,6 +431,10 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
 
   private void fillStockQuantityXMLHistory(IStock stock, Document doc, Element stockElement) {
     Map<LocalDate, Long> historicQty = this.stockHistoryQty.get(stock);
+    historicQty.entrySet()
+      .stream()
+      .sorted(Map.Entry.comparingByKey(Comparator.reverseOrder()))
+      .forEachOrdered(x -> historicQty.put(x.getKey(), x.getValue()));
     for (Map.Entry<LocalDate, Long> stockQuantity : historicQty.entrySet()) {
       Element stockQuantityXML;
       stockQuantityXML = doc.createElement("stockQuantity");
