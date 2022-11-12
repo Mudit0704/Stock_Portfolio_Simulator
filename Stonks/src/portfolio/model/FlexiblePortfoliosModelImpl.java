@@ -14,7 +14,12 @@ public class FlexiblePortfoliosModelImpl extends AbstractPortfolioModel {
   }
 
   @Override
-  public void addStocksToPortfolio(String tickerSymbol, Long quantity, int portfolioId, LocalDate date) {
+  public void addStocksToPortfolio(String tickerSymbol, Long quantity,
+      int portfolioId, LocalDate date) {
+    if (quantity < 0) {
+      throw new IllegalArgumentException("Invalid quantity");
+    }
+
     if (portfolioId < 0 || portfolioId > portfolioMap.size()) {
       throw new IllegalArgumentException("Invalid portfolio Id");
     }
@@ -30,6 +35,10 @@ public class FlexiblePortfoliosModelImpl extends AbstractPortfolioModel {
 
   @Override
   public void sellStockFromPortfolio(String tickerSymbol, Long quantity, int portfolioId, LocalDate date) {
+    if (quantity < 0) {
+     throw new IllegalArgumentException("Invalid quantity");
+    }
+
     if (portfolioId < 0 || portfolioId > portfolioMap.size()) {
       throw new IllegalArgumentException("Invalid portfolio Id");
     }
