@@ -575,14 +575,6 @@ public class PortfoliosTest {
     }
   }
 
-  @Test(expected = FileNotFoundException.class)
-  public void testRetrievePortfolioWithNoFiles()
-      throws IOException, ParserConfigurationException, SAXException {
-    IPortfoliosModel portfolios =
-        new MockPortfoliosModel(new MockStockService("/test/testData.txt"));
-    portfolios.retrievePortfolios();
-  }
-
   @Test(expected = IllegalArgumentException.class)
   public void testSetStocksInPortfolioZeroStocks() {
     IPortfoliosModel portfolios =

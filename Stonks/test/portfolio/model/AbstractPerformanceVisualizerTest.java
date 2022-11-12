@@ -52,7 +52,7 @@ public class AbstractPerformanceVisualizerTest {
       AbstractPerformanceVisualizer.populateBar(minValue.orElseThrow(), scale, expectedString,
           mapEntry);
     }
-    expectedString.append("Scale: ").append(scale).append("\n");
+    expectedString.append("Scale: * = $").append(scale).append("\n");
 
     assertEquals(expectedString.toString(),
         visualizer.visualize(start, end, timeSpanJump, dateValue));

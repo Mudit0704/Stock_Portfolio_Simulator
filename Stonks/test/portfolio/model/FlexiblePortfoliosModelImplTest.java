@@ -1,8 +1,8 @@
 package portfolio.model;
 
 import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -16,23 +16,25 @@ import org.xml.sax.SAXException;
 
 public class FlexiblePortfoliosModelImplTest {
 
-  private IStockService mockExtensive;
   private AbstractPortfolioModel portfolios;
   private AbstractPortfolioModel portfolioMockModel = new MockModelForFlexiPortfolio();
+  private AbstractPortfolioModel portfolioNew;
 
   @Before
   public void setup() throws IllegalAccessException, NoSuchFieldException {
-    mockExtensive = new MockStockService("/test/testExtensiveData.txt");
+    IStockService mockExtensive = new MockStockService("/test/testExtensiveData.txt");
+
     portfolios = new FlexiblePortfoliosModelImpl();
     portfolioMockModel = new MockModelForFlexiPortfolio();
+    portfolioNew = new FlexiblePortfoliosModelImpl();
 
     Field stockService = AbstractPortfolioModel.class.getDeclaredField("stockService");
-    stockService.setAccessible(true);
+
     stockService.set(portfolios, mockExtensive);
 
-    stockService = AbstractPortfolioModel.class.getDeclaredField("stockService");
-    stockService.setAccessible(true);
     stockService.set(portfolioMockModel, mockExtensive);
+
+    stockService.set(portfolioNew, mockExtensive);
   }
 
   @Test
@@ -434,5 +436,40 @@ public class FlexiblePortfoliosModelImplTest {
     throws IOException, ParserConfigurationException, SAXException {
     portfolioMockModel.retrievePortfolios();
     portfolioMockModel.retrievePortfolios();
+  }
+
+  @Test
+  public void testSaveRetrieve()
+    throws IOException, ParserConfigurationException, SAXException {
+    portfolioMockModel.retrievePortfolios();
+    portfolioMockModel.savePortfolios();
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testGetCompositionOnADateInvalidPortfolioId()
+    throws IOException, ParserConfigurationException, SAXException {
+    portfolioMockModel.retrievePortfolios();
+    portfolioMockModel.getPortfolioCompositionOnADate(2, LocalDate.now());
+  }
+
+  @Test
+  public void testGetPath() {
+    assertEquals("flexiblePortfolio/", new FlexiblePortfoliosModelImpl().getPath());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testSaveNothing() throws ParserConfigurationException {
+    portfolioMockModel.setCommissionFee(10);
+    portfolioMockModel.getPortfolioComposition(1);
+
+    portfolioMockModel.savePortfolios();
+  }
+
+  @Test
+  public void testTransactionCache() throws ParserConfigurationException, IOException, SAXException {
+    portfolioNew.setCommissionFee(10);
+    portfolioNew.retrievePortfolios();
+    portfolioNew.addStocksToPortfolio("GGO", 1L, 1, LocalDate.now());
+    portfolioNew.getPortfolioCompositionOnADate(1, LocalDate.now());
   }
 }
