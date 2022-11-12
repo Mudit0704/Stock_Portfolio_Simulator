@@ -64,6 +64,10 @@ public class FlexiblePortfoliosModelImpl extends AbstractPortfolioModel {
 
   @Override
   public String getPortfolioPerformance(int portfolioId, LocalDate rangeStart, LocalDate rangeEnd) {
+    if (portfolioId > portfolioMap.size() || portfolioId <= 0) {
+      throw new IllegalArgumentException("Invalid portfolioId");
+    }
+
     IFlexiblePortfolio portfolio = getPortfolioFromMap(portfolioId).getValue();
     return portfolio.getPortfolioPerformance(rangeStart, rangeEnd);
   }

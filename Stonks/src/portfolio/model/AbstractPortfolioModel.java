@@ -108,7 +108,11 @@ public abstract class AbstractPortfolioModel implements IFlexiblePortfoliosModel
     if (files != null && files.length != 0) {
       for (File file : files) {
         AbstractPortfolio portfolio = createPortfolio(new HashMap<>());
-        portfolio.retrievePortfolio(userDirectory + file.getName());
+        try {
+          portfolio.retrievePortfolio(userDirectory + file.getName());
+        } catch (IllegalArgumentException e) {
+          // TODO add some handling here.
+        }
         portfolioMap.put(file.getName().replaceAll(".xml", ""), portfolio);
       }
     } else {
