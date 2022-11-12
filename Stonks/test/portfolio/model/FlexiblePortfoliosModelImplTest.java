@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import javax.xml.parsers.ParserConfigurationException;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.xml.sax.SAXException;
@@ -301,7 +302,7 @@ public class FlexiblePortfoliosModelImplTest {
 
     portfolios.addStocksToPortfolio("GOOG", 1L, 1, LocalDate.now());
     portfolios.getPortfolioComposition(1);
-    assertEquals(1789.23, portfolios.getPortfolioValue(LocalDate.now(), 1), 0.0);
+    assertEquals(1789.23, portfolios.getPortfolioValue(LocalDate.now(), 1), 0.1);
     assertEquals(1839.23, portfolios.getCostBasis(LocalDate.now(), 1), 0.0);
 
     String result = portfolios.getPortfolioComposition(1);

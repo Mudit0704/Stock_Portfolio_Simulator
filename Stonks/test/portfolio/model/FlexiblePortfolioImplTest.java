@@ -32,19 +32,22 @@ public class FlexiblePortfolioImplTest {
     mockStockService = new MockStockService("/test/testData.txt");
     mockExtensive = new MockStockService("/test/testExtensiveData.txt");
 
-    testAnyDateObj = new FlexiblePortfolioImpl(new MockStockService("/test/testExtensiveData.txt"), new HashMap<>(), 0);
-    testAnyDateObj.retrievePortfolio("test/test_any_date.xml");
+    testAnyDateObj = new FlexiblePortfolioImpl(
+        new MockStockService("/test/testExtensiveData.txt"), new HashMap<>(), 0);
+    testAnyDateObj.retrievePortfolio("test/test_model_inner/test_any_date.xml");
 
     testModifyPortfolioAnyDate = new FlexiblePortfolioImpl(mockExtensive, new HashMap<>(), 0);
-    testModifyPortfolioAnyDate.retrievePortfolio("test/test_multiple_transaction.xml");
+    testModifyPortfolioAnyDate.retrievePortfolio(
+        "test/test_model_inner/test_multiple_transaction.xml");
 
     testInvalidSequence = new FlexiblePortfolioImpl(mockExtensive, new HashMap<>(), 0);
 
     testPastAvailableDatePortfolio = new FlexiblePortfolioImpl(mockExtensive, new HashMap<>(), 0);
-    testPastAvailableDatePortfolio.retrievePortfolio("test/test_past_oldest.xml");
+    testPastAvailableDatePortfolio.retrievePortfolio("test/test_model_inner/test_past_oldest.xml");
 
     testCostBasisAfterTransactions = new FlexiblePortfolioImpl(mockExtensive, new HashMap<>(), 0);
-    testCostBasisAfterTransactions.retrievePortfolio("test/test_cost_basis_txn.xml");
+    testCostBasisAfterTransactions.retrievePortfolio(
+        "test/test_model_inner/test_cost_basis_txn.xml");
   }
 
   @Test
@@ -594,7 +597,7 @@ public class FlexiblePortfolioImplTest {
   @Test(expected = IllegalArgumentException.class)
   public void testRetrievePortfolioIncorrectTransactionSequence()
     throws IOException, ParserConfigurationException, SAXException {
-    testInvalidSequence.retrievePortfolio("test/test_invalid_seq.xml");
+    testInvalidSequence.retrievePortfolio("test/test_model_inner/test_invalid_seq.xml");
   }
 
   @Test
@@ -652,8 +655,8 @@ public class FlexiblePortfolioImplTest {
   public void testRetrieveAlreadyRetrievedPortfolio()
     throws IOException, ParserConfigurationException, SAXException {
     AbstractPortfolio portfolio = new FlexiblePortfolioImpl(mockStockService, new HashMap<>(), 0.0);
-    portfolio.retrievePortfolio("test/test_any_date.xml");
-    portfolio.retrievePortfolio("test/test_past_oldest.xml");
+    portfolio.retrievePortfolio("test/test_model_inner/test_any_date.xml");
+    portfolio.retrievePortfolio("test/test_model_inner/test_past_oldest.xml");
   }
 
   @Test
@@ -770,7 +773,7 @@ public class FlexiblePortfolioImplTest {
 
     AbstractPortfolio testVeryOldPortfolio =
         new FlexiblePortfolioImpl(mockExtensive, new HashMap<>(), 0);
-    testVeryOldPortfolio.retrievePortfolio("test/test_very_old.xml");
+    testVeryOldPortfolio.retrievePortfolio("test/test_model_inner/test_very_old.xml");
 
 
     String expected = "Performance of portfolio XXX from 2016-10-24 to 2022-05-23\n"

@@ -46,7 +46,7 @@ class Stock implements IStock {
       }
     }
 
-    if (dateClosingPriceMap.containsKey(date)) { // TODO fix this shit
+    if (dateClosingPriceMap.containsKey(date)) {
       return dateClosingPriceMap.get(date);
     } else {
       LocalDate latestDate = getClosestDate(date);

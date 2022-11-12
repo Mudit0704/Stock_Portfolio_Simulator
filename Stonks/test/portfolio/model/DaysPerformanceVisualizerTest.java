@@ -24,7 +24,7 @@ public class DaysPerformanceVisualizerTest {
   public void setUp() throws Exception {
     mockStockService = new MockStockService("/test/testExtensiveData.txt");
     portfolio = new FlexiblePortfolioImpl(mockStockService, new HashMap<>(), 0);
-    portfolio.retrievePortfolio("test/test_multiple_transaction.xml");
+    portfolio.retrievePortfolio("test/test_model_inner/test_multiple_transaction.xml");
     daysPerformanceVisualizer = new DaysPerformanceVisualizer(portfolio);
   }
 
