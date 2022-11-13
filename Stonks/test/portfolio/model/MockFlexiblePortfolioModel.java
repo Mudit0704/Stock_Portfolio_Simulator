@@ -27,6 +27,11 @@ public class MockFlexiblePortfolioModel implements IFlexiblePortfoliosModel {
   }
 
   @Override
+  public void createNewPortfolioOnADate(Map<String, Long> stocks, LocalDate date) {
+
+  }
+
+  @Override
   public void addStocksToPortfolio(String tickerSymbol, Long quantity, int portfolioId,
       LocalDate date) {
     log.append(tickerSymbol).append("_").append(quantity).append("_").append(portfolioId)

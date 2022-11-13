@@ -25,7 +25,7 @@ public abstract class AbstractPortfolioModel implements IFlexiblePortfoliosModel
   }
 
   @Override
-  public void createNewPortfolio(Map<String, Long> stocks) {
+  public void createNewPortfolioOnADate(Map<String, Long> stocks, LocalDate date) {
     Map<IStock, Long> stockQty = new HashMap<>();
 
     for (Map.Entry<String, Long> entry : stocks.entrySet()) {
@@ -34,9 +34,14 @@ public abstract class AbstractPortfolioModel implements IFlexiblePortfoliosModel
       stockQty.put(stock, entry.getValue());
     }
 
-    AbstractPortfolio portfolio = createPortfolio(stockQty);
+    AbstractPortfolio portfolio = createPortfolio(stockQty, date);
     portfolioMap.put(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
         portfolio);
+  }
+
+  @Override
+  public void createNewPortfolio(Map<String, Long> stocks) {
+    createNewPortfolioOnADate(stocks, LocalDate.now());
   }
 
   @Override
@@ -107,7 +112,7 @@ public abstract class AbstractPortfolioModel implements IFlexiblePortfoliosModel
 
     if (files != null && files.length != 0) {
       for (File file : files) {
-        AbstractPortfolio portfolio = createPortfolio(new HashMap<>());
+        AbstractPortfolio portfolio = createPortfolio(new HashMap<>(), LocalDate.now());
         try {
           portfolio.retrievePortfolio(userDirectory + file.getName());
         } catch (IllegalArgumentException e) {
@@ -132,7 +137,7 @@ public abstract class AbstractPortfolioModel implements IFlexiblePortfoliosModel
     return valueToCheck;
   }
 
-  protected abstract AbstractPortfolio createPortfolio(Map<IStock, Long> stockQty);
+  protected abstract AbstractPortfolio createPortfolio(Map<IStock, Long> stockQty, LocalDate date);
 
   protected abstract String getPath();
 

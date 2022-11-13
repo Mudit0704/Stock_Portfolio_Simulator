@@ -12,6 +12,9 @@ Enhancement:
 ---------------------
 We can now support stock values more than 100 days(upto year 2014) for earlier inflexible portfolio.
 
+
+NO EXISTING INTERFACES HAVE CHANGED.
+
 This is the only place where we changed our existing design in order to reuse the existing code and
 avoid duplication.
 

@@ -33,6 +33,8 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
 
   private Map<IStock, Map<LocalDate, Long>> stockHistoryQty;
   private Map<LocalDate, Double> costBasisHistory;
+  protected LocalDate creationDate;
+
 
   /**
    * Constructs an object of Portfolio and initializes its members.
@@ -41,7 +43,7 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
    * @param stocks       stocks that will be stored in this portfolio.
    */
   public FlexiblePortfolioImpl(IStockService stockService, Map<IStock, Long> stocks,
-      double transactionFee) {
+      double transactionFee, LocalDate date) {
     super(stockService, stocks);
     this.stockHistoryQty = new HashMap<>();
 
@@ -49,6 +51,7 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
     double transactionFeeCostBasis = 0.0;
 
     if (stocks.size() != 0) {
+      creationDate = date;
       for (Map.Entry<IStock, Long> mapEntry : stocks.entrySet()) {
         Map<LocalDate, Long> dateQtyMap = new HashMap<>();
         dateQtyMap.put(this.creationDate, mapEntry.getValue());

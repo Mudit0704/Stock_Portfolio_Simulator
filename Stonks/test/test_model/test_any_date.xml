@@ -9,18 +9,18 @@
       <stockQuantity date="2019-10-24">2</stockQuantity>
       <tickerSymbol>GOOG</tickerSymbol>
       <stockPrice>94.17</stockPrice>
-      <currentHolding date="2022-11-12">4</currentHolding>
+      <currentHolding date="2022-11-13">4</currentHolding>
    </stock>
    <stock>
       <stockQuantity date="2019-10-24">2</stockQuantity>
       <tickerSymbol>AAPL</tickerSymbol>
       <stockPrice>94.17</stockPrice>
-      <currentHolding date="2022-11-12">2</currentHolding>
+      <currentHolding date="2022-11-13">2</currentHolding>
    </stock>
    <stock>
       <stockQuantity date="2019-10-30">2</stockQuantity>
       <tickerSymbol>A</tickerSymbol>
       <stockPrice>94.17</stockPrice>
-      <currentHolding date="2022-11-12">2</currentHolding>
+      <currentHolding date="2022-11-13">2</currentHolding>
    </stock>
 </portfolio>

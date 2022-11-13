@@ -93,8 +93,8 @@ public class FlexiblePortfoliosModelImpl extends AbstractPortfolioModel {
     this.transactionFee = commissionFee;
   }
 
-  protected AbstractPortfolio createPortfolio(Map<IStock, Long> stockQty) {
-    return new FlexiblePortfolioImpl(this.stockService, stockQty, this.transactionFee);
+  protected AbstractPortfolio createPortfolio(Map<IStock, Long> stockQty, LocalDate date) {
+    return new FlexiblePortfolioImpl(this.stockService, stockQty, this.transactionFee, date);
   }
 
   @Override
