@@ -22,7 +22,7 @@ public class YearsPerformanceVisualizerTest {
   @Before
   public void setUp() throws Exception {
     mockStockService = new MockStockService("/test/testExtensiveData.txt");
-    portfolio = new FlexiblePortfolioImpl(mockStockService, new HashMap<>(), 0, LocalDate.now());
+    portfolio = new FlexiblePortfolio(mockStockService, new HashMap<>(), 0, LocalDate.now());
     portfolio.retrievePortfolio("test/test_model_inner/test_multiple_transaction.xml");
     yearsPerformanceVisualizer = new YearsPerformanceVisualizer(portfolio);
   }
@@ -35,7 +35,7 @@ public class YearsPerformanceVisualizerTest {
 
     assertEquals(LocalDate.parse("2016-12-31"),
         dateValue.keySet().stream().min(LocalDate::compareTo).orElseThrow());
-    assertEquals(LocalDate.parse("2021-12-31"),
+    assertEquals(LocalDate.parse("2021-10-24"),
         dateValue.keySet().stream().max(LocalDate::compareTo).orElseThrow());
   }
 

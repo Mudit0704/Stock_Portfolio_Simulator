@@ -18,6 +18,9 @@ import portfolio.model.MockFlexiblePortfolioModel;
 import portfolio.view.IView;
 import portfolio.view.MockView;
 
+/**
+ * JUnit test class for {@link ControllerHelper}.
+ */
 public class ControllerHelperTest {
 
   private StringBuffer out;

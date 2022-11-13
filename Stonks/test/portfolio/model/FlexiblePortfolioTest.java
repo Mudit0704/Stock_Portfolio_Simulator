@@ -17,7 +17,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
-public class FlexiblePortfolioImplTest {
+/**
+ * JUnit test class for {@link FlexiblePortfolio}.
+ */
+public class FlexiblePortfolioTest {
 
   private IStockService mockStockService;
   private IStockService mockExtensive;
@@ -32,20 +35,20 @@ public class FlexiblePortfolioImplTest {
     mockStockService = new MockStockService("/test/testData.txt");
     mockExtensive = new MockStockService("/test/testExtensiveData.txt");
 
-    testAnyDateObj = new FlexiblePortfolioImpl(
+    testAnyDateObj = new FlexiblePortfolio(
         new MockStockService("/test/testExtensiveData.txt"), new HashMap<>(), 0, LocalDate.now());
     testAnyDateObj.retrievePortfolio("test/test_model_inner/test_any_date.xml");
 
-    testModifyPortfolioAnyDate = new FlexiblePortfolioImpl(mockExtensive, new HashMap<>(), 0, LocalDate.now());
+    testModifyPortfolioAnyDate = new FlexiblePortfolio(mockExtensive, new HashMap<>(), 0, LocalDate.now());
     testModifyPortfolioAnyDate.retrievePortfolio(
         "test/test_model_inner/test_multiple_transaction.xml");
 
-    testInvalidSequence = new FlexiblePortfolioImpl(mockExtensive, new HashMap<>(), 0, LocalDate.now());
+    testInvalidSequence = new FlexiblePortfolio(mockExtensive, new HashMap<>(), 0, LocalDate.now());
 
-    testPastAvailableDatePortfolio = new FlexiblePortfolioImpl(mockExtensive, new HashMap<>(), 0, LocalDate.now());
+    testPastAvailableDatePortfolio = new FlexiblePortfolio(mockExtensive, new HashMap<>(), 0, LocalDate.now());
     testPastAvailableDatePortfolio.retrievePortfolio("test/test_model_inner/test_past_oldest.xml");
 
-    testCostBasisAfterTransactions = new FlexiblePortfolioImpl(mockExtensive, new HashMap<>(), 0, LocalDate.now());
+    testCostBasisAfterTransactions = new FlexiblePortfolio(mockExtensive, new HashMap<>(), 0, LocalDate.now());
     testCostBasisAfterTransactions.retrievePortfolio(
         "test/test_model_inner/test_cost_basis_txn.xml");
   }
@@ -57,7 +60,7 @@ public class FlexiblePortfolioImplTest {
     map.put(new Stock("PUBM", mockStockService), 1L);
     map.put(new Stock("MSFT", mockStockService), 2L);
 
-    AbstractPortfolio portfolio = new FlexiblePortfolioImpl(mockStockService, map, 10,
+    AbstractPortfolio portfolio = new FlexiblePortfolio(mockStockService, map, 10,
       LocalDate.now());
 
     String result = portfolio.getPortfolioComposition();
@@ -73,7 +76,7 @@ public class FlexiblePortfolioImplTest {
     map.put(new Stock("PUBM", mockStockService), 1L);
     map.put(new Stock("MSFT", mockStockService), 2L);
 
-    AbstractPortfolio portfolio = new FlexiblePortfolioImpl(mockStockService, map, 10,
+    AbstractPortfolio portfolio = new FlexiblePortfolio(mockStockService, map, 10,
       LocalDate.now());
 
     portfolio.addStocksToPortfolio(new Stock("AAPL", mockStockService), 1L, LocalDate.now(), 20);
@@ -91,7 +94,7 @@ public class FlexiblePortfolioImplTest {
     String path = System.getProperty("user.dir") + "/test/test_multiple_transaction_save.xml";
     testModifyPortfolioAnyDate.savePortfolio(path);
 
-    AbstractPortfolio retrievedPortfolio = new FlexiblePortfolioImpl(mockExtensive, new HashMap<>(),
+    AbstractPortfolio retrievedPortfolio = new FlexiblePortfolio(mockExtensive, new HashMap<>(),
         10, LocalDate.now());
 
     try {
@@ -122,7 +125,7 @@ public class FlexiblePortfolioImplTest {
     String path = System.getProperty("user.dir") + "/test/test_multiple_transaction_save.xml";
     testModifyPortfolioAnyDate.savePortfolio(path);
 
-    AbstractPortfolio retrievedPortfolio = new FlexiblePortfolioImpl(mockExtensive, new HashMap<>(),
+    AbstractPortfolio retrievedPortfolio = new FlexiblePortfolio(mockExtensive, new HashMap<>(),
         10, LocalDate.now());
 
     try {
@@ -153,7 +156,7 @@ public class FlexiblePortfolioImplTest {
     String path = System.getProperty("user.dir") + "/test/test_multiple_transaction_save.xml";
     testModifyPortfolioAnyDate.savePortfolio(path);
 
-    AbstractPortfolio retrievedPortfolio = new FlexiblePortfolioImpl(mockExtensive, new HashMap<>(),
+    AbstractPortfolio retrievedPortfolio = new FlexiblePortfolio(mockExtensive, new HashMap<>(),
         10, LocalDate.now());
 
     try {
@@ -184,7 +187,7 @@ public class FlexiblePortfolioImplTest {
     String path = System.getProperty("user.dir") + "/test/test_multiple_transaction_save.xml";
     testModifyPortfolioAnyDate.savePortfolio(path);
 
-    AbstractPortfolio retrievedPortfolio = new FlexiblePortfolioImpl(mockExtensive, new HashMap<>(),
+    AbstractPortfolio retrievedPortfolio = new FlexiblePortfolio(mockExtensive, new HashMap<>(),
         10, LocalDate.now());
 
     try {
@@ -223,7 +226,7 @@ public class FlexiblePortfolioImplTest {
     String path = System.getProperty("user.dir") + "/test/test_multiple_transaction_save.xml";
     testModifyPortfolioAnyDate.savePortfolio(path);
 
-    AbstractPortfolio retrievedPortfolio = new FlexiblePortfolioImpl(mockExtensive, new HashMap<>(),
+    AbstractPortfolio retrievedPortfolio = new FlexiblePortfolio(mockExtensive, new HashMap<>(),
         10, LocalDate.now());
 
     try {
@@ -265,7 +268,7 @@ public class FlexiblePortfolioImplTest {
     map.put(pubMatic, 1L);
     map.put(microsoft, 2L);
 
-    AbstractPortfolio portfolio = new FlexiblePortfolioImpl(mockStockService, map, 10,
+    AbstractPortfolio portfolio = new FlexiblePortfolio(mockStockService, map, 10,
       LocalDate.now());
 
     portfolio.addStocksToPortfolio(apple, 1L, LocalDate.now(), 10);
@@ -288,7 +291,7 @@ public class FlexiblePortfolioImplTest {
     map.put(pubMatic, 1L);
     map.put(microsoft, 2L);
 
-    AbstractPortfolio portfolio = new FlexiblePortfolioImpl(mockStockService, map, 10,
+    AbstractPortfolio portfolio = new FlexiblePortfolio(mockStockService, map, 10,
       LocalDate.now());
 
     portfolio.sellStocksFromPortfolio(google, 1L, LocalDate.now(), 10);
@@ -304,7 +307,7 @@ public class FlexiblePortfolioImplTest {
     map.put(new Stock("PUBM", mockStockService), 1L);
     map.put(new Stock("MSFT", mockStockService), 2L);
 
-    AbstractPortfolio portfolio = new FlexiblePortfolioImpl(mockStockService, map, 10,
+    AbstractPortfolio portfolio = new FlexiblePortfolio(mockStockService, map, 10,
       LocalDate.now());
 
     portfolio.sellStocksFromPortfolio(new Stock("AAPL", mockStockService), 1L, LocalDate.now(), 10);
@@ -323,7 +326,7 @@ public class FlexiblePortfolioImplTest {
     map.put(pubMatic, 1L);
     map.put(microsoft, 2L);
 
-    AbstractPortfolio portfolio = new FlexiblePortfolioImpl(mockStockService, map,
+    AbstractPortfolio portfolio = new FlexiblePortfolio(mockStockService, map,
         10, LocalDate.now());
 
     portfolio.sellStocksFromPortfolio(google, 4L, LocalDate.now(), 10);
@@ -367,7 +370,7 @@ public class FlexiblePortfolioImplTest {
   public void testSellStocksFromPortfolioBeforeCreationDate() throws ParserConfigurationException {
     String path = System.getProperty("user.dir") + "/test/test_multiple_transaction_save.xml";
 
-    AbstractPortfolio retrievedPortfolio = new FlexiblePortfolioImpl(mockExtensive, new HashMap<>(),
+    AbstractPortfolio retrievedPortfolio = new FlexiblePortfolio(mockExtensive, new HashMap<>(),
         10, LocalDate.now());
     try {
       retrievedPortfolio.retrievePortfolio(path);
@@ -417,7 +420,7 @@ public class FlexiblePortfolioImplTest {
     String path = System.getProperty("user.dir") + "/test/test_multiple_transaction_save.xml";
     testModifyPortfolioAnyDate.savePortfolio(path);
 
-    AbstractPortfolio retrievedPortfolio = new FlexiblePortfolioImpl(mockExtensive, new HashMap<>(),
+    AbstractPortfolio retrievedPortfolio = new FlexiblePortfolio(mockExtensive, new HashMap<>(),
         10, LocalDate.now());
 
     try {
@@ -460,7 +463,7 @@ public class FlexiblePortfolioImplTest {
     map.put(microsoft, 2L);
     map.put(apple, 2L);
 
-    AbstractPortfolio portfolio = new FlexiblePortfolioImpl(mockStockService, map, 10,
+    AbstractPortfolio portfolio = new FlexiblePortfolio(mockStockService, map, 10,
       LocalDate.now());
 
     portfolio.sellStocksFromPortfolio(apple, 1L, LocalDate.now(), 10);
@@ -566,7 +569,7 @@ public class FlexiblePortfolioImplTest {
     map.put(pubMatic, 1L);
     map.put(microsoft, 2L);
 
-    AbstractPortfolio portfolio = new FlexiblePortfolioImpl(mockStockService, map, 10,
+    AbstractPortfolio portfolio = new FlexiblePortfolio(mockStockService, map, 10,
       LocalDate.now());
 
     String path = System.getProperty("user.dir") + "/test_save.xml";
@@ -628,7 +631,7 @@ public class FlexiblePortfolioImplTest {
     map.put(pubMatic, 1L);
     map.put(microsoft, 2L);
 
-    AbstractPortfolio portfolio = new FlexiblePortfolioImpl(mockStockService, map, 10,
+    AbstractPortfolio portfolio = new FlexiblePortfolio(mockStockService, map, 10,
       LocalDate.now());
 
     portfolio.sellStocksFromPortfolio(google, 1L, LocalDate.now(), 10);
@@ -667,7 +670,7 @@ public class FlexiblePortfolioImplTest {
 
   @Test(expected = RuntimeException.class)
   public void testSaveEmptyPortfolio() throws ParserConfigurationException {
-    AbstractPortfolio portfolio = new FlexiblePortfolioImpl(mockExtensive, new HashMap<>(), 0.0,
+    AbstractPortfolio portfolio = new FlexiblePortfolio(mockExtensive, new HashMap<>(), 0.0,
       LocalDate.now());
     portfolio.savePortfolio("test/test_empty.xml");
   }
@@ -675,7 +678,7 @@ public class FlexiblePortfolioImplTest {
   @Test(expected = RuntimeException.class)
   public void testRetrieveAlreadyRetrievedPortfolio()
       throws IOException, ParserConfigurationException, SAXException {
-    AbstractPortfolio portfolio = new FlexiblePortfolioImpl(mockStockService, new HashMap<>(), 0.0,
+    AbstractPortfolio portfolio = new FlexiblePortfolio(mockStockService, new HashMap<>(), 0.0,
       LocalDate.now());
     portfolio.retrievePortfolio("test/test_model_inner/test_any_date.xml");
     portfolio.retrievePortfolio("test/test_model_inner/test_past_oldest.xml");
@@ -810,23 +813,22 @@ public class FlexiblePortfolioImplTest {
     LocalDate endDate = LocalDate.of(2022, 5, 23);
 
     AbstractPortfolio testVeryOldPortfolio =
-        new FlexiblePortfolioImpl(mockExtensive, new HashMap<>(), 0, LocalDate.now());
+        new FlexiblePortfolio(mockExtensive, new HashMap<>(), 0, LocalDate.now());
     testVeryOldPortfolio.retrievePortfolio("test/test_model_inner/test_very_old.xml");
 
     String expected = "\n"
         + "Visualizing using the period of years\n"
-        + "2016: **************\n"
-        + "2017: *******************\n"
-        + "2018: ******************\n"
-        + "2019: ************************\n"
-        + "2020: *******************************\n"
+        + "2016: \n"
+        + "2017: *******\n"
+        + "2018: *******\n"
+        + "2019: **************\n"
+        + "2020: ************************\n"
         + "2021: **************************************************\n"
-        + "2022: \n"
+        + "2022: ***********************************\n"
         + "\n"
-        + "Base: 0.00\n"
-        + "A line without asterisk means the performance during that timespan was less than "
-        + "or equal to the base given above\n"
-        + "Scale: * = Base+$463\n";
+        + "Base: 6,174.56\n"
+        + "A line without asterisk means the performance during that timespan was less than or equal to the base given above\n"
+        + "Scale: * = Base+$340\n";
 
     String actual = testVeryOldPortfolio.getPortfolioPerformance(startDate, endDate);
     assertEquals(expected, actual);

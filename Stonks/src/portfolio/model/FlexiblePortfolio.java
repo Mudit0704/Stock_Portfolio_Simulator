@@ -29,7 +29,11 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-public class FlexiblePortfolioImpl extends AbstractPortfolio {
+/**
+ * Represents a single flexible portfolio and the set of operations related to it. Extends
+ * {@link AbstractPortfolio}.
+ */
+public class FlexiblePortfolio extends AbstractPortfolio {
 
   private Map<IStock, Map<LocalDate, Long>> stockHistoryQty;
   private Map<LocalDate, Double> costBasisHistory;
@@ -43,7 +47,7 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
    * @param stocks       stocks that will be stored in this portfolio.
    * @param date         date on which this portfolio is created.
    */
-  public FlexiblePortfolioImpl(IStockService stockService, Map<IStock, Long> stocks,
+  public FlexiblePortfolio(IStockService stockService, Map<IStock, Long> stocks,
       double transactionFee, LocalDate date) {
     super(stockService, stocks);
     this.stockHistoryQty = new HashMap<>();
@@ -334,7 +338,7 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
     return portfolioValue;
   }
 
-  private LocalDate getClosestDate(LocalDate date, List<LocalDate> qtyHistory) {
+  protected LocalDate getClosestDate(LocalDate date, List<LocalDate> qtyHistory) {
     long minDiff = Long.MAX_VALUE;
     LocalDate result = null;
 
@@ -349,13 +353,13 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
     return result;
   }
 
-  private void updateHistoricHoldings(IStock stock, LocalDate date, Long updatedQty) {
+  protected void updateHistoricHoldings(IStock stock, LocalDate date, Long updatedQty) {
     Map<LocalDate, Long> map = this.stockHistoryQty.getOrDefault(stock, new HashMap<>());
     map.put(date, updatedQty);
     this.stockHistoryQty.put(stock, map);
   }
 
-  private boolean isTransactionSequenceInvalid(IStock stock, LocalDate date) {
+  protected boolean isTransactionSequenceInvalid(IStock stock, LocalDate date) {
     if (date.isBefore(this.creationDate)) {
       throw new IllegalArgumentException("Portfolio didn't exist at this date.");
     }
@@ -375,7 +379,7 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
     return false;
   }
 
-  private void populateCostBasisHistoryFromXML(Document doc) {
+  protected void populateCostBasisHistoryFromXML(Document doc) {
     int numCostBasisDates = doc.getDocumentElement().getElementsByTagName("cost-basis").getLength();
     int costBasisIdx = 0;
     while (costBasisIdx < numCostBasisDates) {
@@ -391,7 +395,7 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
     }
   }
 
-  private void getHistoricQtyFromXML(Element eElement, IStock newStock) {
+  protected void getHistoricQtyFromXML(Element eElement, IStock newStock) {
     int numDates = eElement.getElementsByTagName("stockQuantity").getLength();
     int stockQuantityIdx = 0;
 
@@ -421,7 +425,7 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
     this.stockHistoryQty.put(newStock, dateQtyMap);
   }
 
-  private void fillCostBasisXMLHistory(Document doc, Element rootElement) {
+  protected void fillCostBasisXMLHistory(Document doc, Element rootElement) {
     for (Map.Entry<LocalDate, Double> costBasis : this.costBasisHistory.entrySet()) {
       Element costBasisXML;
       costBasisXML = doc.createElement("cost-basis");
@@ -432,7 +436,7 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
     }
   }
 
-  private void fillStockQuantityXMLHistory(IStock stock, Document doc, Element stockElement) {
+  protected void fillStockQuantityXMLHistory(IStock stock, Document doc, Element stockElement) {
     Map<LocalDate, Long> historicQty = this.stockHistoryQty.get(stock);
     historicQty.entrySet()
         .stream()
@@ -449,7 +453,7 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
     }
   }
 
-  private void writeXMLFile(Document doc, String path) throws TransformerException {
+  protected void writeXMLFile(Document doc, String path) throws TransformerException {
     TransformerFactory transformerFactory = TransformerFactory.newInstance();
     transformerFactory.setAttribute("indent-number", 3);
     Transformer transformer = transformerFactory.newTransformer();

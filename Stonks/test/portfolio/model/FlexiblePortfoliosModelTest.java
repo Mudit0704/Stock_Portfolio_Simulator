@@ -10,12 +10,14 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import javax.xml.parsers.ParserConfigurationException;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
-public class FlexiblePortfoliosModelImplTest {
+/**
+ * JUnit test class for {@link FlexiblePortfoliosModel}.
+ */
+public class FlexiblePortfoliosModelTest {
 
   private AbstractPortfolioModel portfolios;
   private AbstractPortfolioModel portfolioMockModel = new MockModelForFlexiPortfolio();
@@ -25,9 +27,9 @@ public class FlexiblePortfoliosModelImplTest {
   public void setup() throws IllegalAccessException, NoSuchFieldException {
     IStockService mockExtensive = new MockStockService("/test/testExtensiveData.txt");
 
-    portfolios = new FlexiblePortfoliosModelImpl();
+    portfolios = new FlexiblePortfoliosModel();
     portfolioMockModel = new MockModelForFlexiPortfolio();
-    portfolioNew = new FlexiblePortfoliosModelImpl();
+    portfolioNew = new FlexiblePortfoliosModel();
 
     Field stockService = AbstractPortfolioModel.class.getDeclaredField("stockService");
 
@@ -505,7 +507,7 @@ public class FlexiblePortfoliosModelImplTest {
 
   @Test
   public void testGetPath() {
-    assertEquals("flexiblePortfolio/", new FlexiblePortfoliosModelImpl().getPath());
+    assertEquals("flexiblePortfolio/", new FlexiblePortfoliosModel().getPath());
   }
 
   @Test(expected = IllegalArgumentException.class)

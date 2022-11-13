@@ -3,7 +3,7 @@ package portfolio;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import portfolio.controller.FlexiblePortfolioController;
-import portfolio.model.FlexiblePortfoliosModelImpl;
+import portfolio.model.FlexiblePortfoliosModel;
 import portfolio.view.FlexibleView;
 import portfolio.view.IView;
 
@@ -22,7 +22,7 @@ public class Main {
     try {
       IView view = new FlexibleView(System.out);
       new FlexiblePortfolioController(new InputStreamReader(System.in), view).run(
-          new FlexiblePortfoliosModelImpl());
+          new FlexiblePortfoliosModel());
     } catch (IOException e) {
       e.printStackTrace();
     }

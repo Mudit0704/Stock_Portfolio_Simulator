@@ -4,11 +4,19 @@ import java.time.LocalDate;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class FlexiblePortfoliosModelImpl extends AbstractPortfolioModel {
+/**
+ * This class represents the entry point of the Model of this enhanced application. This extends the
+ * {@link AbstractPortfolioModel} interface and represents a list of Portfolios and the applicable
+ * operations on them.
+ */
+public class FlexiblePortfoliosModel extends AbstractPortfolioModel {
 
   private double transactionFee;
 
-  public FlexiblePortfoliosModelImpl() {
+  /**
+   * Constructs an object of {@link FlexiblePortfoliosModel} and initializes its members.
+   */
+  public FlexiblePortfoliosModel() {
     apiOptimizer = StockCache.getInstance();
     portfolioMap = new LinkedHashMap<>();
   }
@@ -94,7 +102,7 @@ public class FlexiblePortfoliosModelImpl extends AbstractPortfolioModel {
   }
 
   protected AbstractPortfolio createPortfolio(Map<IStock, Long> stockQty, LocalDate date) {
-    return new FlexiblePortfolioImpl(this.stockService, stockQty, this.transactionFee, date);
+    return new FlexiblePortfolio(this.stockService, stockQty, this.transactionFee, date);
   }
 
   @Override
