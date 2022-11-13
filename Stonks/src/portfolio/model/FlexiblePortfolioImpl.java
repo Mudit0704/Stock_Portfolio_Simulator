@@ -217,7 +217,7 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
       doc.appendChild(rootElement);
 
       Element creationDateElement = doc.createElement("created");
-      creationDateElement.appendChild(doc.createTextNode(super.creationDate.toString()));
+      creationDateElement.appendChild(doc.createTextNode(this.creationDate.toString()));
       rootElement.appendChild(creationDateElement);
 
       fillCostBasisXMLHistory(doc, rootElement);

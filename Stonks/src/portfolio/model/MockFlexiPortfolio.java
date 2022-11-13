@@ -1,5 +1,6 @@
 package portfolio.model;
 
+import java.time.LocalDate;
 import java.util.Map;
 
 public class MockFlexiPortfolio extends FlexiblePortfolioImpl {
@@ -13,6 +14,6 @@ public class MockFlexiPortfolio extends FlexiblePortfolioImpl {
    */
   public MockFlexiPortfolio(IStockService stockService, Map<IStock, Long> stocks,
     double transactionFee) {
-    super(stockService, stocks, transactionFee);
+    super(stockService, stocks, transactionFee, LocalDate.now());
   }
 }
