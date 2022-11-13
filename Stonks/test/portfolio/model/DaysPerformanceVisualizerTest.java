@@ -56,8 +56,7 @@ public class DaysPerformanceVisualizerTest {
     expectedString.append("\nVisualizing using the period of days\n");
 
     for (Map.Entry<LocalDate, Double> mapEntry : dateValue.entrySet()) {
-      expectedString.append(mapEntry.getKey().minusDays(1)).append(" -> ")
-          .append(mapEntry.getKey().toString()).append(": ");
+      expectedString.append(mapEntry.getKey().toString()).append(": ");
       AbstractPerformanceVisualizer.populateBar(minValue.orElseThrow(), scale, expectedString,
           mapEntry);
     }
