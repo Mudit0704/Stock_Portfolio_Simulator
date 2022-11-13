@@ -192,7 +192,8 @@ public class FlexiblePortfolioController extends PortfolioController implements
           return;
         }
         LocalDate date = controllerHelper.populateDateFromUser(scan);
-        view.displayCustomText(String.valueOf(portfolios.getCostBasis(date, portfolioId)));
+        view.displayCustomText(String.format("%,.2f", portfolios.getCostBasis(date, portfolioId))
+            .concat("\n"));
         controllerHelper.performExitOperationSequence(scan);
         break;
       } catch (IllegalArgumentException e) {
@@ -269,7 +270,7 @@ public class FlexiblePortfolioController extends PortfolioController implements
       }
     }
 
-    view.displayCustomText(result);
+    view.displayCustomText(result+"\n");
     controllerHelper.performExitOperationSequence(scan);
   }
 }
