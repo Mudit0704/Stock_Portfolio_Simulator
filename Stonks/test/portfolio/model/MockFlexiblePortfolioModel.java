@@ -28,7 +28,7 @@ public class MockFlexiblePortfolioModel implements IFlexiblePortfoliosModel {
 
   @Override
   public void createNewPortfolioOnADate(Map<String, Long> stocks, LocalDate date) {
-
+    log.append(stocks).append(" ").append(date);
   }
 
   @Override

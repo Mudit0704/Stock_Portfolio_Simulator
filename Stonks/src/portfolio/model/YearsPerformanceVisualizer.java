@@ -23,6 +23,7 @@ public class YearsPerformanceVisualizer extends AbstractPerformanceVisualizer {
       Map<LocalDate, Double> dateValue) {
     while (tempDate.isBefore(end) || tempDate.getYear() == end.getYear()) {
       LocalDate yearEndDate = tempDate.withDayOfYear(tempDate.lengthOfYear());
+      yearEndDate = tempDate.getYear() == end.getYear() ? end : yearEndDate;
       double value = portfolio.getPortfolioValue(yearEndDate);
 
       dateValue.put(yearEndDate, value);

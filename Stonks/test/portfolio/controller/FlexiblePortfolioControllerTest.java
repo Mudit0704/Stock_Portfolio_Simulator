@@ -8,6 +8,7 @@ import java.io.StringReader;
 import org.junit.Before;
 import org.junit.Test;
 import portfolio.model.MockFlexiblePortfolioModel;
+import portfolio.model.MockModel;
 import portfolio.view.IView;
 import portfolio.view.MockView;
 
@@ -92,6 +93,59 @@ public class FlexiblePortfolioControllerTest {
         + "Ask_For_Input Fee updated.\n"
         + "Escape Invalid_Input Escape \n"
         + "----Exiting----\n", out.toString());
+  }
+
+  @Test
+  public void testRunWhenOption1AddingOneStock() throws IOException {
+    Reader in = new StringReader("2 1 2019-10-25 1\nTICKER_SYMBOL\n 12 E E E");
+    controller = new FlexiblePortfolioController(in, mockView);
+
+    controller.run(new MockFlexiblePortfolioModel(log, true));
+
+    assertEquals("ALPHAVANTAGETICKER_SYMBOL {TICKER_SYMBOL=12} 2019-10-25", log.toString());
+    assertEquals("Choose from the below menu: \n"
+        + " 1 -> Create a static portfolio \n"
+        + " 2 -> Create a flexible portfolio \n"
+        + " E -> Exit from the application \n"
+        + "Ask_For_Input Menu Ask_For_Input Please enter the date (yyyy-mm-dd): Choose from the below menu: \n"
+        + " 1 -> Add a new stock \n"
+        + " E -> Exit from the operation \n"
+        + "Ask_For_Input Stock Symbol: Stock Quantity: Choose from the below menu: \n"
+        + " 1 -> Add a new stock \n"
+        + " E -> Exit from the operation \n"
+        + "Ask_For_Input Menu Ask_For_Input Choose from the below menu: \n"
+        + " 1 -> Create a static portfolio \n"
+        + " 2 -> Create a flexible portfolio \n"
+        + " E -> Exit from the application \n"
+        + "Ask_For_Input ", out.toString());
+  }
+
+  @Test
+  public void testRunWhenOption1AddingOneStockWithInvalidInput() throws IOException {
+    Reader in = new StringReader("2 1 2019-10-25 3\n 1\nTICKER_SYMBOL\n 12 E E E");
+    controller = new FlexiblePortfolioController(in, mockView);
+
+    controller.run(new MockFlexiblePortfolioModel(log, true));
+
+    assertEquals("ALPHAVANTAGETICKER_SYMBOL {TICKER_SYMBOL=12} 2019-10-25", log.toString());
+    assertEquals("Choose from the below menu: \n"
+        + " 1 -> Create a static portfolio \n"
+        + " 2 -> Create a flexible portfolio \n"
+        + " E -> Exit from the application \n"
+        + "Ask_For_Input Menu Ask_For_Input Please enter the date (yyyy-mm-dd): Choose from the below menu: \n"
+        + " 1 -> Add a new stock \n"
+        + " E -> Exit from the operation \n"
+        + "Ask_For_Input Invalid_Input Choose from the below menu: \n"
+        + " 1 -> Add a new stock \n"
+        + " E -> Exit from the operation \n"
+        + "Ask_For_Input Stock Symbol: Stock Quantity: Choose from the below menu: \n"
+        + " 1 -> Add a new stock \n"
+        + " E -> Exit from the operation \n"
+        + "Ask_For_Input Menu Ask_For_Input Choose from the below menu: \n"
+        + " 1 -> Create a static portfolio \n"
+        + " 2 -> Create a flexible portfolio \n"
+        + " E -> Exit from the application \n"
+        + "Ask_For_Input ", out.toString());
   }
 
   @Test
