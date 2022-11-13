@@ -44,13 +44,19 @@ For new FlexiblePortfolio, we have extended the IPortfoliosModel interface with
 IFlexiblePortfoliosModel interface. The new interface specifies new methods for supporting the new
 features in addition to inheriting all the IPortfoliosModel methods. Likewise, the inner layer also
 does the same. It extends IPortfolio by IFlexiblePortfolio, and it also offers the new methods for
-new features.
+new features. In addition, to avoid repeating code for future classes, we abstracted the Flexible
+Model into AbstractPortfoliosModel abstract class and made specific methods
+such as creating new portfolio instance, etc. have been declared as abstract methods.
 
 The inner Stock layer does not need any changes, even if we need to change the service, we just need
 to implement a new service as per the IStockService specification and pass the new service to the
-Stock instances.
+Stock instances. Furthermore, we created a new Factory class that creates any type of stock service
+instance to be used by the model and the inner.
 
 Thus, our stock layer continues to be unchanged with respect to different features and services.
+
+Since performance visualizer on its own has a functionality, we have created a separate class
+that is responsible to generate performance graphs based on any data input by the FlexiblePortfolio.
 
 For controller, we created another interface IFlexibleController which extends the original
 IPortfolioController. The FlexiblePortfolioController implements IFlexiblePortfolioController and
