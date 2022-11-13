@@ -34,9 +34,10 @@ public class FlexiblePortfoliosModelImpl extends AbstractPortfolioModel {
   }
 
   @Override
-  public void sellStockFromPortfolio(String tickerSymbol, Long quantity, int portfolioId, LocalDate date) {
+  public void sellStockFromPortfolio(String tickerSymbol, Long quantity, int portfolioId,
+      LocalDate date) {
     if (quantity < 0) {
-     throw new IllegalArgumentException("Invalid quantity");
+      throw new IllegalArgumentException("Invalid quantity");
     }
 
     if (portfolioId < 0 || portfolioId > portfolioMap.size()) {
@@ -69,7 +70,8 @@ public class FlexiblePortfoliosModelImpl extends AbstractPortfolioModel {
     }
 
     IFlexiblePortfolio portfolio = getPortfolioFromMap(portfolioId).getValue();
-    return portfolio.getPortfolioPerformance(rangeStart, rangeEnd);
+    return ("\nPerformance of Portfolio" + portfolioId + " from " + rangeStart + " to " + rangeEnd
+        + "\n").concat(portfolio.getPortfolioPerformance(rangeStart, rangeEnd));
   }
 
   @Override
@@ -80,7 +82,8 @@ public class FlexiblePortfoliosModelImpl extends AbstractPortfolioModel {
 
     StringBuilder composition = new StringBuilder();
     composition.append("Portfolio").append(portfolioId).append("\n")
-      .append(getPortfolioFromMap(portfolioId).getValue().getPortfolioCompositionOnADate(date)).append("\n");
+        .append(getPortfolioFromMap(portfolioId).getValue().getPortfolioCompositionOnADate(date))
+        .append("\n");
     return composition.toString();
 
   }

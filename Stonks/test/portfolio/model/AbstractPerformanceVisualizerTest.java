@@ -47,12 +47,17 @@ public class AbstractPerformanceVisualizerTest {
         maxValue.orElseThrow(), 1);
 
     StringBuilder expectedString = new StringBuilder();
+    expectedString.append("\nVisualizing using the period of days\n");
+
     for (Map.Entry<LocalDate, Double> mapEntry : dateValue.entrySet()) {
-      expectedString.append(mapEntry.getKey().toString()).append(": ");
-      AbstractPerformanceVisualizer.populateBar(minValue.orElseThrow(), scale, expectedString,
-          mapEntry);
+      expectedString.append(mapEntry.getKey().minusDays(1)).append(" -> ")
+          .append(mapEntry.getKey().toString()).append(": ");
+      AbstractPerformanceVisualizer.populateBar(minValue.orElseThrow(), scale, expectedString, mapEntry);
     }
-    expectedString.append("Scale: * = $").append(scale).append("\n");
+    expectedString.append("\nBase: ").append(String.format("%,.2f", minValue.orElseThrow())).append("\n");
+    expectedString.append("A line without asterisk means the performance during that timespan was"
+        + " less than or equal to the base given above").append("\n");
+    expectedString.append("Scale: * = ").append("Base+").append("$").append(scale).append("\n");
 
     assertEquals(expectedString.toString(),
         visualizer.visualize(start, end, timeSpanJump, dateValue));
@@ -70,7 +75,7 @@ public class AbstractPerformanceVisualizerTest {
     int actualScale = AbstractPerformanceVisualizer.getScale(minValue.orElseThrow(),
         maxValue.orElseThrow(), 1);
 
-    assertEquals(113, actualScale);
+    assertEquals(107, actualScale);
   }
 
   @Test

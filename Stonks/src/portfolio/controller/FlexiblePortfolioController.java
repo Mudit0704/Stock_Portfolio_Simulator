@@ -143,13 +143,17 @@ public class FlexiblePortfolioController extends PortfolioController implements
         if (portfolioId == null) {
           return;
         }
+        view.displayCustomText("Please provide start date:\n");
         LocalDate startDate = controllerHelper.populateDateFromUser(scan);
+        view.displayCustomText("Please provide end date:\n");
         LocalDate endDate = controllerHelper.populateDateFromUser(scan);
         view.displayCustomText(portfolios.getPortfolioPerformance(portfolioId, startDate, endDate));
         controllerHelper.performExitOperationSequence(scan);
         return;
       } catch (IllegalArgumentException e) {
-        view.displayCustomText(e.getMessage());
+        view.displayCustomText(e.getMessage()+"\n");
+        controllerHelper.performExitOperationSequence(scan);
+        return;
       }
     }
   }
@@ -167,7 +171,9 @@ public class FlexiblePortfolioController extends PortfolioController implements
         controllerHelper.performExitOperationSequence(scan);
         break;
       } catch (IllegalArgumentException e) {
-        view.displayCustomText(e.getMessage());
+        view.displayCustomText(e.getMessage()+"\n");
+        controllerHelper.performExitOperationSequence(scan);
+        return;
       }
     }
   }
@@ -212,6 +218,8 @@ public class FlexiblePortfolioController extends PortfolioController implements
         }
       } catch (IllegalArgumentException e) {
         view.displayCustomText(e.getMessage() + "\n");
+        controllerHelper.performExitOperationSequence(scan);
+        return;
       }
     }
   }
@@ -230,7 +238,9 @@ public class FlexiblePortfolioController extends PortfolioController implements
         result = portfolios.getPortfolioCompositionOnADate(portfolioId, date);
         break;
       } catch (IllegalArgumentException e) {
-        view.displayCustomText(e.getMessage());
+        view.displayCustomText(e.getMessage() + "\n");
+        controllerHelper.performExitOperationSequence(scan);
+        return;
       }
     }
 

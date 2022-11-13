@@ -16,6 +16,7 @@ import org.junit.Test;
  * JUnit test class for {@link MonthsPerformanceVisualizer}.
  */
 public class MonthsPerformanceVisualizerTest {
+
   AbstractPortfolio portfolio;
   MockStockService mockStockService;
   AbstractPerformanceVisualizer monthsPerformanceVisualizer;
@@ -48,15 +49,23 @@ public class MonthsPerformanceVisualizerTest {
 
     Optional<Double> minValue = dateValue.values().stream().min(Double::compareTo);
     Optional<Double> maxValue = dateValue.values().stream().max(Double::compareTo);
-    int scale = AbstractPerformanceVisualizer.getScale(minValue.orElseThrow(), maxValue.orElseThrow(), 1);
+    int scale = AbstractPerformanceVisualizer.getScale(minValue.orElseThrow(),
+        maxValue.orElseThrow(), 1);
 
     StringBuilder expectedString = new StringBuilder();
+    expectedString.append("\nVisualizing using the period of ").append(1).append("month(s)\n");
+
     for (Map.Entry<LocalDate, Double> mapEntry : dateValue.entrySet()) {
-      expectedString.append(mapEntry.getKey().getMonth().getDisplayName(TextStyle.SHORT, Locale.getDefault()))
+      expectedString.append(mapEntry.getKey().getMonth().getDisplayName(TextStyle.SHORT, Locale.US))
           .append(mapEntry.getKey().getYear()).append(": ");
-      AbstractPerformanceVisualizer.populateBar(minValue.orElseThrow(), scale, expectedString, mapEntry);
+      AbstractPerformanceVisualizer.populateBar(minValue.orElseThrow(), scale, expectedString,
+          mapEntry);
     }
-    expectedString.append("Scale: * = $").append(scale).append("\n");
+    expectedString.append("\nBase: ").append(String.format("%,.2f", minValue.orElseThrow()))
+        .append("\n");
+    expectedString.append("A line without asterisk means the performance during that timespan was"
+        + " less than or equal to the base given above").append("\n");
+    expectedString.append("Scale: * = ").append("Base+").append("$").append(scale).append("\n");
 
     String actualString = monthsPerformanceVisualizer.populateString(dateValue,
         minValue.orElseThrow(), scale);

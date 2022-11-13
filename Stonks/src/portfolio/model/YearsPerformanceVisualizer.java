@@ -3,9 +3,13 @@ package portfolio.model;
 import java.time.LocalDate;
 import java.util.Map;
 
+/**
+ * Class for visualizing the performance of a portfolio in terms of years and contains the
+ * implementation of necessary operations required for it.
+ */
 public class YearsPerformanceVisualizer extends AbstractPerformanceVisualizer {
 
-  YearsPerformanceVisualizer(IPortfolio portfolio){
+  YearsPerformanceVisualizer(IPortfolio portfolio) {
     super(portfolio);
   }
 
@@ -21,14 +25,20 @@ public class YearsPerformanceVisualizer extends AbstractPerformanceVisualizer {
     }
   }
 
+  @Override
   String populateString(Map<LocalDate, Double> dateValue, Double minValue,
       int scale) {
     StringBuilder sb = new StringBuilder();
+    sb.append("\nVisualizing using the period of years\n");
+
     for (Map.Entry<LocalDate, Double> mapEntry : dateValue.entrySet()) {
       sb.append(mapEntry.getKey().getYear()).append(": ");
       populateBar(minValue, scale, sb, mapEntry);
     }
-    sb.append("Scale: * = ").append("$" + scale).append("\n");
+    sb.append("\nBase: ").append(String.format("%,.2f", minValue)).append("\n");
+    sb.append("A line without asterisk means the performance during that timespan was"
+        + " less than or equal to the base given above").append("\n");
+    sb.append("Scale: * = ").append("Base+").append("$").append(scale).append("\n");
     return sb.toString();
   }
 }

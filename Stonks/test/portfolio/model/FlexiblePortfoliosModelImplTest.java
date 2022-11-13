@@ -60,7 +60,6 @@ public class FlexiblePortfoliosModelImplTest {
     assertTrue(result.contains("MSFT -> 1\n"));
     assertTrue(result.contains("MUN -> 12\n"));
 
-
     map = new HashMap<>();
     map.put("AAPL", 7L);
     map.put("OCL", 9L);
@@ -104,7 +103,7 @@ public class FlexiblePortfoliosModelImplTest {
 
     portfolios.createNewPortfolio(map);
 
-    portfolios.addStocksToPortfolio("GOOG", 1L, 1, LocalDate.of(2022,10,10));
+    portfolios.addStocksToPortfolio("GOOG", 1L, 1, LocalDate.of(2022, 10, 10));
     portfolios.getPortfolioComposition(1);
     String result = portfolios.getPortfolioComposition(1);
     assertTrue(result.contains("GOOG -> 4\n"));
@@ -144,7 +143,7 @@ public class FlexiblePortfoliosModelImplTest {
 
     portfolios.createNewPortfolio(map);
 
-    portfolios.sellStockFromPortfolio("GOOG", 1L, 1, LocalDate.of(2022,10,10));
+    portfolios.sellStockFromPortfolio("GOOG", 1L, 1, LocalDate.of(2022, 10, 10));
     portfolios.getPortfolioComposition(1);
     String result = portfolios.getPortfolioComposition(1);
     assertTrue(result.contains("GOOG -> 2\n"));
@@ -258,7 +257,7 @@ public class FlexiblePortfoliosModelImplTest {
     portfolios.setCommissionFee(10);
     portfolios.createNewPortfolio(map);
 
-    assertEquals(1735.06, portfolios.getCostBasis(LocalDate.of(2022,10,10), 1), 0.0);
+    assertEquals(1735.06, portfolios.getCostBasis(LocalDate.of(2022, 10, 10), 1), 0.0);
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -314,40 +313,44 @@ public class FlexiblePortfoliosModelImplTest {
 
   @Test
   public void testGetPortfolioPerformance()
-    throws IOException, ParserConfigurationException, SAXException {
+      throws IOException, ParserConfigurationException, SAXException {
 
     portfolioMockModel.retrievePortfolios();
 
-    LocalDate startDate = LocalDate.of(2019,10,24);
-    LocalDate endDate = LocalDate.of(2019,11,30);
+    LocalDate startDate = LocalDate.of(2019, 10, 24);
+    LocalDate endDate = LocalDate.of(2019, 11, 30);
 
-    String expectedString = "Performance of portfolio XXX from 2019-10-24 to 2019-11-30\n"
-      + "2019-10-31: \n"
-      + "2019-11-07: *****\n"
-      + "2019-11-14: ******\n"
-      + "2019-11-21: *************************************************\n"
-      + "2019-11-28: **************************************************\n"
-      + "Scale: * = $59\n";
+    String expectedString = "\n"
+        + "Performance of Portfolio1 from 2019-10-24 to 2019-11-30\n"
+        + "\n"
+        + "Visualizing using the period of days\n"
+        + "2019-10-24 -> 2019-10-31: \n"
+        + "2019-11-23 -> 2019-11-30: **************************************************\n"
+        + "\n"
+        + "Base: 7,560.66\n"
+        + "A line without asterisk means the performance during that timespan was less than "
+        + "or equal to the base given above\n"
+        + "Scale: * = Base+$58\n";
 
     assertEquals(expectedString, portfolioMockModel.getPortfolioPerformance(1, startDate, endDate));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testGetPortfolioPerformanceInvalidId()
-    throws IOException, ParserConfigurationException, SAXException {
+      throws IOException, ParserConfigurationException, SAXException {
 
     portfolioMockModel.retrievePortfolios();
 
-    LocalDate startDate = LocalDate.of(2019,10,24);
-    LocalDate endDate = LocalDate.of(2019,11,30);
+    LocalDate startDate = LocalDate.of(2019, 10, 24);
+    LocalDate endDate = LocalDate.of(2019, 11, 30);
 
     String expectedString = "Performance of portfolio XXX from 2019-10-24 to 2019-11-30\n"
-      + "2019-10-31: \n"
-      + "2019-11-07: *****\n"
-      + "2019-11-14: ******\n"
-      + "2019-11-21: *************************************************\n"
-      + "2019-11-28: **************************************************\n"
-      + "Scale: * = $59\n";
+        + "2019-10-31: \n"
+        + "2019-11-07: *****\n"
+        + "2019-11-14: ******\n"
+        + "2019-11-21: *************************************************\n"
+        + "2019-11-28: **************************************************\n"
+        + "Scale: * = $59\n";
 
     assertEquals(expectedString, portfolioMockModel.getPortfolioPerformance(2, startDate, endDate));
   }
@@ -367,14 +370,14 @@ public class FlexiblePortfoliosModelImplTest {
 
   @Test
   public void testGetPortfolioCompositionOnAGivenDate()
-    throws IOException, ParserConfigurationException, SAXException {
+      throws IOException, ParserConfigurationException, SAXException {
 
     portfolioMockModel.retrievePortfolios();
     portfolioMockModel.setCommissionFee(10);
     portfolioMockModel.getPortfolioComposition(1);
 
     String result = portfolioMockModel.getPortfolioCompositionOnADate(1,
-        LocalDate.of(2019,11,11));
+        LocalDate.of(2019, 11, 11));
 
     assertTrue(result.contains("AAPL -> 2\n"));
     assertTrue(result.contains("GOOG -> 2\n"));
@@ -383,14 +386,14 @@ public class FlexiblePortfoliosModelImplTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void testGetPortfolioCompositionOnInvalidGivenDate()
-    throws IOException, ParserConfigurationException, SAXException {
+      throws IOException, ParserConfigurationException, SAXException {
 
     portfolioMockModel.retrievePortfolios();
     portfolioMockModel.setCommissionFee(10);
     portfolioMockModel.getPortfolioComposition(1);
 
     String result = portfolioMockModel.getPortfolioCompositionOnADate(1,
-      LocalDate.of(2015,11,11));
+        LocalDate.of(2015, 11, 11));
 
     assertTrue(result.contains("AAPL -> 2\n"));
     assertTrue(result.contains("GOOG -> 2\n"));
@@ -399,19 +402,19 @@ public class FlexiblePortfoliosModelImplTest {
 
   @Test
   public void testGetAvailablePortfolios()
-    throws IOException, ParserConfigurationException, SAXException {
+      throws IOException, ParserConfigurationException, SAXException {
 
     portfolioMockModel.retrievePortfolios();
     portfolioMockModel.setCommissionFee(10);
     portfolioMockModel.getPortfolioComposition(1);
 
     String result = portfolioMockModel.getAvailablePortfolios();
-    assertTrue(result.equals("Portfolio1 -> test_any_date\n"));
+    assertTrue(result.equals("Portfolio1(Creation datetime: test_any_date)\n"));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testGetAvailablePortfoliosNothing()
-    throws IOException, ParserConfigurationException, SAXException {
+      throws IOException, ParserConfigurationException, SAXException {
 
     portfolioMockModel.setCommissionFee(10);
     portfolioMockModel.getPortfolioComposition(1);
@@ -422,33 +425,33 @@ public class FlexiblePortfoliosModelImplTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void testGetPortfolioCompositionNegativeId()
-    throws IOException, ParserConfigurationException, SAXException {
+      throws IOException, ParserConfigurationException, SAXException {
     portfolios.getPortfolioComposition(-1);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testGetPortfolioCompositionInvalidId()
-    throws IOException, ParserConfigurationException, SAXException {
+      throws IOException, ParserConfigurationException, SAXException {
     portfolios.getPortfolioComposition(2);
   }
 
   @Test(expected = RuntimeException.class)
   public void testMultipleRetrieve()
-    throws IOException, ParserConfigurationException, SAXException {
+      throws IOException, ParserConfigurationException, SAXException {
     portfolioMockModel.retrievePortfolios();
     portfolioMockModel.retrievePortfolios();
   }
 
   @Test
   public void testSaveRetrieve()
-    throws IOException, ParserConfigurationException, SAXException {
+      throws IOException, ParserConfigurationException, SAXException {
     portfolioMockModel.retrievePortfolios();
     portfolioMockModel.savePortfolios();
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testGetCompositionOnADateInvalidPortfolioId()
-    throws IOException, ParserConfigurationException, SAXException {
+      throws IOException, ParserConfigurationException, SAXException {
     portfolioMockModel.retrievePortfolios();
     portfolioMockModel.getPortfolioCompositionOnADate(2, LocalDate.now());
   }
@@ -467,7 +470,8 @@ public class FlexiblePortfoliosModelImplTest {
   }
 
   @Test
-  public void testTransactionCache() throws ParserConfigurationException, IOException, SAXException {
+  public void testTransactionCache()
+      throws ParserConfigurationException, IOException, SAXException {
     portfolioNew.setCommissionFee(10);
     portfolioNew.retrievePortfolios();
     portfolioNew.addStocksToPortfolio("GGO", 1L, 1, LocalDate.now());

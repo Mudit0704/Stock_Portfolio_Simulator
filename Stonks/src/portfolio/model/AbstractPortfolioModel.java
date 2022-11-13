@@ -55,8 +55,8 @@ public abstract class AbstractPortfolioModel implements IFlexiblePortfoliosModel
 
     if (portfolioMap.size() > 0) {
       for (Entry<String, AbstractPortfolio> entry : portfolioMap.entrySet()) {
-        composition.append("Portfolio").append(portfolioNo + 1).append(" -> ")
-            .append(entry.getKey()).append("\n");
+        composition.append("Portfolio").append(portfolioNo + 1).append("(Creation datetime: ")
+            .append(entry.getKey()).append(")\n");
         portfolioNo++;
       }
     } else {

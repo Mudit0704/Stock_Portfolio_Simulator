@@ -257,14 +257,12 @@ public class FlexiblePortfolioControllerTest {
   @Test
   public void testRunWhenOption5InvalidDate() throws IOException {
     Reader in = new StringReader(
-        "2 5\n 1\nTICKER_SYMBOL\n 2 3019-10-25\n 1\nTICKER_SYMBOL\n 2 2019-10-25 E E E");
+        "2 5\n 1\nTICKER_SYMBOL\n 2 3019-10-25\n E E E");
     controller = new FlexiblePortfolioController(in, mockView);
 
     controller.run(new MockFlexiblePortfolioModel(log, true));
 
-    assertEquals(
-        "ALPHAVANTAGEAvailable_Portfolios TICKER_SYMBOL Available_Portfolios TICKER_SYMBOL ",
-        log.toString());
+    assertEquals("ALPHAVANTAGEAvailable_Portfolios TICKER_SYMBOL ", log.toString());
     assertEquals("Choose from the below menu: \n"
         + " 1 -> Create a static portfolio \n"
         + " 2 -> Create a flexible portfolio \n"
@@ -273,14 +271,7 @@ public class FlexiblePortfolioControllerTest {
         + "Available_Portfolios Ask_For_Input Please provide stock details for the transaction: \n"
         + "Stock Symbol: Stock Quantity: Please enter date for the transaction: \n"
         + "Please enter the date (yyyy-mm-dd): Invalid date for transaction.\n"
-        + "Choose from available portfolios (eg: Portfolio1 -> give 1):\n"
-        + "Available_Portfolios Ask_For_Input Please provide stock details for the transaction: \n"
-        + "Stock Symbol: Stock Quantity: Please enter date for the transaction: \n"
-        + "Please enter the date (yyyy-mm-dd): Choose from the below menu: \n"
-        + " 1 -> Purchase a new stock \n"
-        + " 2 -> Sell a stock \n"
-        + " E -> Exit from the operation \n"
-        + "Ask_For_Input Menu Ask_For_Input Choose from the below menu: \n"
+        + "Escape Menu Ask_For_Input Choose from the below menu: \n"
         + " 1 -> Create a static portfolio \n"
         + " 2 -> Create a flexible portfolio \n"
         + " E -> Exit from the application \n"
@@ -387,7 +378,9 @@ public class FlexiblePortfolioControllerTest {
         + " 2 -> Create a flexible portfolio \n"
         + " E -> Exit from the application \n"
         + "Ask_For_Input Menu Ask_For_Input Choose from available portfolios (eg: Portfolio1 -> give 1):\n"
-        + "Available_Portfolios Ask_For_Input Please enter the date (yyyy-mm-dd): Please enter the date (yyyy-mm-dd): PerformanceEscape Menu Ask_For_Input Choose from the below menu: \n"
+        + "Available_Portfolios Ask_For_Input Please provide start date:\n"
+        + "Please enter the date (yyyy-mm-dd): Please provide end date:\n"
+        + "Please enter the date (yyyy-mm-dd): PerformanceEscape Menu Ask_For_Input Choose from the below menu: \n"
         + " 1 -> Create a static portfolio \n"
         + " 2 -> Create a flexible portfolio \n"
         + " E -> Exit from the application \n"
