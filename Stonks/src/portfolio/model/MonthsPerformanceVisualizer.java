@@ -11,6 +11,11 @@ import java.util.Map;
  */
 public class MonthsPerformanceVisualizer extends AbstractPerformanceVisualizer {
 
+  /**
+   * Constructs an object of {@link MonthsPerformanceVisualizer} and initializes its members.
+   *
+   * @param portfolio portfolio object for which the performance has to be visualized
+   */
   MonthsPerformanceVisualizer(IPortfolio portfolio) {
     super(portfolio);
   }

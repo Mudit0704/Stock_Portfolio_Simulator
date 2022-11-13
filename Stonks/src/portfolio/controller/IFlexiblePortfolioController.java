@@ -4,6 +4,9 @@ import java.io.IOException;
 import portfolio.model.IFlexiblePortfoliosModel;
 import portfolio.model.IPortfoliosModel;
 
+/**
+ * Represents the flexible controller and its related operations required to implement portfolios.
+ */
 public interface IFlexiblePortfolioController extends IPortfolioController {
 
   /**

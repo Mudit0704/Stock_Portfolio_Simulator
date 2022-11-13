@@ -9,6 +9,11 @@ import java.util.Map;
  */
 public class YearsPerformanceVisualizer extends AbstractPerformanceVisualizer {
 
+  /**
+   * Constructs an object of {@link YearsPerformanceVisualizer} and initializes its members.
+   *
+   * @param portfolio portfolio object for which the performance has to be visualized
+   */
   YearsPerformanceVisualizer(IPortfolio portfolio) {
     super(portfolio);
   }

@@ -2,6 +2,7 @@ package portfolio.controller;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -84,7 +85,7 @@ public class FlexiblePortfolioController extends PortfolioController implements
       view.askForInput();
       switch (scan.next()) {
         case "1":
-          super.generatePortfolios(scan, portfolios);
+          generatePortfolioOnASpecificDate(scan, portfolios);
           break;
         case "2":
           getPortfolioComposition(portfolios, scan);
@@ -109,6 +110,30 @@ public class FlexiblePortfolioController extends PortfolioController implements
           break;
         case "E":
           return;
+        default:
+          view.displayInvalidInput();
+          scan.nextLine();
+          break;
+      }
+    }
+  }
+
+  protected void generatePortfolioOnASpecificDate(Scanner scan, IFlexiblePortfoliosModel portfolios)
+      throws IOException {
+    Map<String, Long> stocks = new HashMap<>();
+    LocalDate date = controllerHelper.populateDateFromUser(scan);
+    while (true) {
+      view.displayCustomText(CREATE_PORTFOLIO_SUB_MENU);
+      view.askForInput();
+      switch (scan.next()) {
+        case "E":
+          if (stocks.size() > 0) {
+            portfolios.createNewPortfolioOnADate(stocks, date);
+          }
+          return;
+        case "1":
+          controllerHelper.populateStockDataFromUser(scan, portfolios, stocks);
+          break;
         default:
           view.displayInvalidInput();
           scan.nextLine();
@@ -151,7 +176,7 @@ public class FlexiblePortfolioController extends PortfolioController implements
         controllerHelper.performExitOperationSequence(scan);
         return;
       } catch (IllegalArgumentException e) {
-        view.displayCustomText(e.getMessage()+"\n");
+        view.displayCustomText(e.getMessage() + "\n");
         controllerHelper.performExitOperationSequence(scan);
         return;
       }
@@ -171,7 +196,7 @@ public class FlexiblePortfolioController extends PortfolioController implements
         controllerHelper.performExitOperationSequence(scan);
         break;
       } catch (IllegalArgumentException e) {
-        view.displayCustomText(e.getMessage()+"\n");
+        view.displayCustomText(e.getMessage() + "\n");
         controllerHelper.performExitOperationSequence(scan);
         return;
       }

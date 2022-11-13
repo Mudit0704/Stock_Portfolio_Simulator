@@ -13,6 +13,9 @@ import java.util.Map.Entry;
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
+/**
+ * Abstract class to store common logic and abstract method declarations for a portfolio model.
+ */
 public abstract class AbstractPortfolioModel implements IFlexiblePortfoliosModel {
 
   Map<String, AbstractPortfolio> portfolioMap;

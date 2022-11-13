@@ -9,6 +9,11 @@ import java.util.Map;
  */
 public class DaysPerformanceVisualizer extends AbstractPerformanceVisualizer {
 
+  /**
+   * Constructs an object of {@link DaysPerformanceVisualizer} and initializes its members.
+   *
+   * @param portfolio portfolio object for which the performance has to be visualized
+   */
   DaysPerformanceVisualizer(IPortfolio portfolio) {
     super(portfolio);
   }
