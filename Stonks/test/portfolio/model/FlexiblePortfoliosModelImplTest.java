@@ -72,6 +72,53 @@ public class FlexiblePortfoliosModelImplTest {
     assertTrue(result.contains("AAPL -> 7\n"));
   }
 
+
+  @Test
+  public void testCreatePortfolioOnADate() throws ParserConfigurationException {
+
+    Map<String, Long> map = new HashMap<>();
+    map.put("GOOG", 3L);
+    map.put("PUBM", 2L);
+    map.put("MSFT", 1L);
+    map.put("MUN", 12L);
+
+    portfolios.createNewPortfolioOnADate(map, LocalDate.of(2020,10,10));
+
+    try {
+      Thread.sleep(1000);
+    } catch (InterruptedException e) {
+      throw new RuntimeException(e);
+    }
+
+    portfolios.addStocksToPortfolio("GOOG", 1L, 1,
+        LocalDate.of(2021,10,9));
+    String result = portfolios.getPortfolioComposition(1);
+    assertTrue(result.contains("GOOG -> 4\n"));
+    assertTrue(result.contains("PUBM -> 2\n"));
+    assertTrue(result.contains("MSFT -> 1\n"));
+    assertTrue(result.contains("MUN -> 12\n"));
+
+    portfolios.sellStockFromPortfolio("MSFT", 1L, 1,
+      LocalDate.of(2022,10,9));
+
+    result = portfolios.getPortfolioComposition(1);
+    assertTrue(result.contains("GOOG -> 4\n"));
+    assertTrue(result.contains("PUBM -> 2\n"));
+    assertTrue(result.contains("MSFT -> 0\n"));
+    assertTrue(result.contains("MUN -> 12\n"));
+
+    map = new HashMap<>();
+    map.put("AAPL", 7L);
+    map.put("OCL", 9L);
+
+    portfolios.createNewPortfolio(map);
+
+    result = portfolios.getPortfolioComposition(2);
+
+    assertTrue(result.contains("OCL -> 9\n"));
+    assertTrue(result.contains("AAPL -> 7\n"));
+  }
+
   @Test
   public void testAddStocksToPortfolio() {
 

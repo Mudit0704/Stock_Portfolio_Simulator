@@ -41,6 +41,7 @@ public class FlexiblePortfolioImpl extends AbstractPortfolio {
    *
    * @param stockService the service responsible for calling the API required for stocks data.
    * @param stocks       stocks that will be stored in this portfolio.
+   * @param date         date on which this portfolio is created.
    */
   public FlexiblePortfolioImpl(IStockService stockService, Map<IStock, Long> stocks,
       double transactionFee, LocalDate date) {

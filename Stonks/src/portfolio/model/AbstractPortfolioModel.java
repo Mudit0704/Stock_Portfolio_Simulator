@@ -119,7 +119,7 @@ public abstract class AbstractPortfolioModel implements IFlexiblePortfoliosModel
         try {
           portfolio.retrievePortfolio(userDirectory + file.getName());
         } catch (IllegalArgumentException e) {
-          // TODO add some handling here.
+          System.out.println("Failed to retrieve portfolio " + userDirectory + file.getName());
         }
         portfolioMap.put(file.getName().replaceAll(".xml", ""), portfolio);
       }

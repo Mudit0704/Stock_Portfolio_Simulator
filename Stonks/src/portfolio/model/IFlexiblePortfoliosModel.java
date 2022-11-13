@@ -9,6 +9,12 @@ import java.util.Map;
  */
 public interface IFlexiblePortfoliosModel extends IPortfoliosModel {
 
+  /**
+   * Creates new portfolio on the specified date.
+   *
+   * @param stocks mapping of stock ticker symbols and quantities.
+   * @param date the date on which the portfolio is to be created.
+   */
   void createNewPortfolioOnADate(Map<String, Long> stocks, LocalDate date);
 
   /**

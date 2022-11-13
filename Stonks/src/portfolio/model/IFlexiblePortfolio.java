@@ -4,8 +4,6 @@ import java.time.LocalDate;
 
 public interface IFlexiblePortfolio extends IPortfolio {
 
-  double COMMISSION_FEE_PERCENT = 0.20d;
-
   /**
    * Adds a given set of stocks to the portfolio.
    *
