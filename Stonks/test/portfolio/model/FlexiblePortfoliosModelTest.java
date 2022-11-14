@@ -1,7 +1,6 @@
 package portfolio.model;
 
 import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 
 import java.io.IOException;
@@ -12,6 +11,7 @@ import java.util.Map;
 import javax.xml.parsers.ParserConfigurationException;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.Test.None;
 import org.xml.sax.SAXException;
 
 /**
@@ -101,7 +101,7 @@ public class FlexiblePortfoliosModelTest {
     assertTrue(result.contains("MUN -> 12\n"));
 
     portfolios.sellStockFromPortfolio("MSFT", 1L, 1,
-      LocalDate.of(2022,10,9));
+        LocalDate.of(2022,10,9));
 
     result = portfolios.getPortfolioComposition(1);
     assertTrue(result.contains("GOOG -> 4\n"));
@@ -491,7 +491,7 @@ public class FlexiblePortfoliosModelTest {
     portfolioMockModel.retrievePortfolios();
   }
 
-  @Test
+  @Test(expected = None.class)
   public void testSaveRetrieve()
       throws IOException, ParserConfigurationException, SAXException {
     portfolioMockModel.retrievePortfolios();
@@ -518,7 +518,7 @@ public class FlexiblePortfoliosModelTest {
     portfolioMockModel.savePortfolios();
   }
 
-  @Test
+  @Test(expected = None.class)
   public void testTransactionCache()
       throws ParserConfigurationException, IOException, SAXException {
     portfolioNew.setCommissionFee(10);

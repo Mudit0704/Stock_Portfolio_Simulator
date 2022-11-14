@@ -8,7 +8,6 @@ import java.io.StringReader;
 import org.junit.Before;
 import org.junit.Test;
 import portfolio.model.MockFlexiblePortfolioModel;
-import portfolio.model.MockModel;
 import portfolio.view.IView;
 import portfolio.view.MockView;
 
@@ -69,7 +68,8 @@ public class FlexiblePortfolioControllerTest {
         + " 1 -> Create a static portfolio \n"
         + " 2 -> Create a flexible portfolio \n"
         + " E -> Exit from the application \n"
-        + "Ask_For_Input Menu Ask_For_Input Invalid_Input Menu Ask_For_Input Invalid_Input Menu Ask_For_Input Choose from the below menu: \n"
+        + "Ask_For_Input Menu Ask_For_Input Invalid_Input Menu Ask_For_Input Invalid_Input "
+        + "Menu Ask_For_Input Choose from the below menu: \n"
         + " 1 -> Create a static portfolio \n"
         + " 2 -> Create a flexible portfolio \n"
         + " E -> Exit from the application \n"
@@ -102,12 +102,14 @@ public class FlexiblePortfolioControllerTest {
 
     controller.run(new MockFlexiblePortfolioModel(log, true));
 
-    assertEquals("ALPHAVANTAGETICKER_SYMBOL {TICKER_SYMBOL=12} 2019-10-25", log.toString());
+    assertEquals("ALPHAVANTAGETICKER_SYMBOL {TICKER_SYMBOL=12} 2019-10-25",
+        log.toString());
     assertEquals("Choose from the below menu: \n"
         + " 1 -> Create a static portfolio \n"
         + " 2 -> Create a flexible portfolio \n"
         + " E -> Exit from the application \n"
-        + "Ask_For_Input Menu Ask_For_Input Please enter the date (yyyy-mm-dd): Choose from the below menu: \n"
+        + "Ask_For_Input Menu Ask_For_Input Please enter the date (yyyy-mm-dd): Choose from the "
+        + "below menu: \n"
         + " 1 -> Add a new stock \n"
         + " E -> Exit from the operation \n"
         + "Ask_For_Input Stock Symbol: Stock Quantity: Choose from the below menu: \n"
@@ -127,12 +129,14 @@ public class FlexiblePortfolioControllerTest {
 
     controller.run(new MockFlexiblePortfolioModel(log, true));
 
-    assertEquals("ALPHAVANTAGETICKER_SYMBOL {TICKER_SYMBOL=12} 2019-10-25", log.toString());
+    assertEquals("ALPHAVANTAGETICKER_SYMBOL {TICKER_SYMBOL=12} 2019-10-25",
+        log.toString());
     assertEquals("Choose from the below menu: \n"
         + " 1 -> Create a static portfolio \n"
         + " 2 -> Create a flexible portfolio \n"
         + " E -> Exit from the application \n"
-        + "Ask_For_Input Menu Ask_For_Input Please enter the date (yyyy-mm-dd): Choose from the below menu: \n"
+        + "Ask_For_Input Menu Ask_For_Input Please enter the date (yyyy-mm-dd): Choose from the "
+        + "below menu: \n"
         + " 1 -> Add a new stock \n"
         + " E -> Exit from the operation \n"
         + "Ask_For_Input Invalid_Input Choose from the below menu: \n"
@@ -160,7 +164,8 @@ public class FlexiblePortfolioControllerTest {
         + " 1 -> Create a static portfolio \n"
         + " 2 -> Create a flexible portfolio \n"
         + " E -> Exit from the application \n"
-        + "Ask_For_Input Menu Ask_For_Input Choose from available portfolios (eg: Portfolio1 -> give 1):\n"
+        + "Ask_For_Input Menu Ask_For_Input Choose from available portfolios (eg: Portfolio1 -> "
+        + "give 1):\n"
         + "Available_Portfolios Ask_For_Input Please enter the date (yyyy-mm-dd): Composition \n"
         + "Escape Menu Ask_For_Input Choose from the below menu: \n"
         + " 1 -> Create a static portfolio \n"
@@ -181,7 +186,8 @@ public class FlexiblePortfolioControllerTest {
         + " 1 -> Create a static portfolio \n"
         + " 2 -> Create a flexible portfolio \n"
         + " E -> Exit from the application \n"
-        + "Ask_For_Input Menu Ask_For_Input Choose from available portfolios (eg: Portfolio1 -> give 1):\n"
+        + "Ask_For_Input Menu Ask_For_Input Choose from available portfolios (eg: Portfolio1 -> "
+        + "give 1):\n"
         + "No portfolios\n"
         + "Escape Menu Ask_For_Input Choose from the below menu: \n"
         + " 1 -> Create a static portfolio \n"
@@ -202,7 +208,8 @@ public class FlexiblePortfolioControllerTest {
         + " 1 -> Create a static portfolio \n"
         + " 2 -> Create a flexible portfolio \n"
         + " E -> Exit from the application \n"
-        + "Ask_For_Input Menu Ask_For_Input Choose from available portfolios (eg: Portfolio1 -> give 1):\n"
+        + "Ask_For_Input Menu Ask_For_Input Choose from available portfolios (eg: Portfolio1 -> "
+        + "give 1):\n"
         + "Available_Portfolios Ask_For_Input Please provide stock details for the transaction: \n"
         + "Stock Symbol: Stock Quantity: Please enter date for the transaction: \n"
         + "Please enter the date (yyyy-mm-dd): Choose from the below menu: \n"
@@ -220,26 +227,30 @@ public class FlexiblePortfolioControllerTest {
   public void testRunWhenOption5InvalidInput()
       throws IOException {
     Reader in = new StringReader(
-        "2 5\n 1\nTICKER_SYMBOL\n 2 2019-10-25 Invalid_Input\n\n 1\nTICKER_SYMBOL\n 2 2019-10-25 E E E");
+        "2 5\n 1\nTICKER_SYMBOL\n 2 2019-10-25 Invalid_Input\n\n 1\nTICKER_SYMBOL\n "
+            + "2 2019-10-25 E E E");
     controller = new FlexiblePortfolioController(in, mockView);
 
     controller.run(new MockFlexiblePortfolioModel(log, true));
 
     assertEquals(
-        "ALPHAVANTAGEAvailable_Portfolios TICKER_SYMBOL Available_Portfolios TICKER_SYMBOL ",
+        "ALPHAVANTAGEAvailable_Portfolios TICKER_SYMBOL Available_Portfolios "
+            + "TICKER_SYMBOL ",
         log.toString());
     assertEquals("Choose from the below menu: \n"
         + " 1 -> Create a static portfolio \n"
         + " 2 -> Create a flexible portfolio \n"
         + " E -> Exit from the application \n"
-        + "Ask_For_Input Menu Ask_For_Input Choose from available portfolios (eg: Portfolio1 -> give 1):\n"
+        + "Ask_For_Input Menu Ask_For_Input Choose from available portfolios (eg: Portfolio1 ->"
+        + " give 1):\n"
         + "Available_Portfolios Ask_For_Input Please provide stock details for the transaction: \n"
         + "Stock Symbol: Stock Quantity: Please enter date for the transaction: \n"
         + "Please enter the date (yyyy-mm-dd): Choose from the below menu: \n"
         + " 1 -> Purchase a new stock \n"
         + " 2 -> Sell a stock \n"
         + " E -> Exit from the operation \n"
-        + "Ask_For_Input Invalid_Input Choose from available portfolios (eg: Portfolio1 -> give 1):\n"
+        + "Ask_For_Input Invalid_Input Choose from available portfolios (eg: Portfolio1 -> "
+        + "give 1):\n"
         + "Available_Portfolios Ask_For_Input Please provide stock details for the transaction: \n"
         + "Stock Symbol: Stock Quantity: Please enter date for the transaction: \n"
         + "Please enter the date (yyyy-mm-dd): Choose from the below menu: \n"
@@ -260,13 +271,15 @@ public class FlexiblePortfolioControllerTest {
 
     controller.run(new MockFlexiblePortfolioModel(log, true));
 
-    assertEquals("ALPHAVANTAGEAvailable_Portfolios TICKER_SYMBOL TICKER_SYMBOL_2_1_2019-10-25",
+    assertEquals("ALPHAVANTAGEAvailable_Portfolios TICKER_SYMBOL "
+          + "TICKER_SYMBOL_2_1_2019-10-25",
         log.toString());
     assertEquals("Choose from the below menu: \n"
         + " 1 -> Create a static portfolio \n"
         + " 2 -> Create a flexible portfolio \n"
         + " E -> Exit from the application \n"
-        + "Ask_For_Input Menu Ask_For_Input Choose from available portfolios (eg: Portfolio1 -> give 1):\n"
+        + "Ask_For_Input Menu Ask_For_Input Choose from available portfolios (eg: Portfolio1 -> "
+        + "give 1):\n"
         + "Available_Portfolios Ask_For_Input Please provide stock details for the transaction: \n"
         + "Stock Symbol: Stock Quantity: Please enter date for the transaction: \n"
         + "Please enter the date (yyyy-mm-dd): Choose from the below menu: \n"
@@ -288,13 +301,15 @@ public class FlexiblePortfolioControllerTest {
 
     controller.run(new MockFlexiblePortfolioModel(log, true));
 
-    assertEquals("ALPHAVANTAGEAvailable_Portfolios TICKER_SYMBOL TICKER_SYMBOL_2_1_2019-10-25",
+    assertEquals("ALPHAVANTAGEAvailable_Portfolios TICKER_SYMBOL "
+          + "TICKER_SYMBOL_2_1_2019-10-25",
         log.toString());
     assertEquals("Choose from the below menu: \n"
         + " 1 -> Create a static portfolio \n"
         + " 2 -> Create a flexible portfolio \n"
         + " E -> Exit from the application \n"
-        + "Ask_For_Input Menu Ask_For_Input Choose from available portfolios (eg: Portfolio1 -> give 1):\n"
+        + "Ask_For_Input Menu Ask_For_Input Choose from available portfolios (eg: Portfolio1 -> "
+        + "give 1):\n"
         + "Available_Portfolios Ask_For_Input Please provide stock details for the transaction: \n"
         + "Stock Symbol: Stock Quantity: Please enter date for the transaction: \n"
         + "Please enter the date (yyyy-mm-dd): Choose from the below menu: \n"
@@ -322,7 +337,8 @@ public class FlexiblePortfolioControllerTest {
         + " 1 -> Create a static portfolio \n"
         + " 2 -> Create a flexible portfolio \n"
         + " E -> Exit from the application \n"
-        + "Ask_For_Input Menu Ask_For_Input Choose from available portfolios (eg: Portfolio1 -> give 1):\n"
+        + "Ask_For_Input Menu Ask_For_Input Choose from available portfolios (eg: Portfolio1 -> "
+        + "give 1):\n"
         + "Available_Portfolios Ask_For_Input Please provide stock details for the transaction: \n"
         + "Stock Symbol: Stock Quantity: Please enter date for the transaction: \n"
         + "Please enter the date (yyyy-mm-dd): Invalid date for transaction.\n"
@@ -346,7 +362,8 @@ public class FlexiblePortfolioControllerTest {
         + " 1 -> Create a static portfolio \n"
         + " 2 -> Create a flexible portfolio \n"
         + " E -> Exit from the application \n"
-        + "Ask_For_Input Menu Ask_For_Input Choose from available portfolios (eg: Portfolio1 -> give 1):\n"
+        + "Ask_For_Input Menu Ask_For_Input Choose from available portfolios (eg: Portfolio1 -> "
+        + "give 1):\n"
         + "No portfolios\n"
         + "Escape Invalid_Input Escape Menu Ask_For_Input Choose from the below menu: \n"
         + " 1 -> Create a static portfolio \n"
@@ -368,7 +385,8 @@ public class FlexiblePortfolioControllerTest {
         + " 1 -> Create a static portfolio \n"
         + " 2 -> Create a flexible portfolio \n"
         + " E -> Exit from the application \n"
-        + "Ask_For_Input Menu Ask_For_Input Choose from available portfolios (eg: Portfolio1 -> give 1):\n"
+        + "Ask_For_Input Menu Ask_For_Input Choose from available portfolios (eg: Portfolio1 -> "
+        + "give 1):\n"
         + "No portfolios\n"
         + "Escape Invalid_Input Escape Menu Ask_For_Input Choose from the below menu: \n"
         + " 1 -> Create a static portfolio \n"
@@ -389,7 +407,8 @@ public class FlexiblePortfolioControllerTest {
         + " 1 -> Create a static portfolio \n"
         + " 2 -> Create a flexible portfolio \n"
         + " E -> Exit from the application \n"
-        + "Ask_For_Input Menu Ask_For_Input Choose from available portfolios (eg: Portfolio1 -> give 1):\n"
+        + "Ask_For_Input Menu Ask_For_Input Choose from available portfolios (eg: Portfolio1 -> "
+        + "give 1):\n"
         + "Available_Portfolios Ask_For_Input Please enter the date (yyyy-mm-dd): 1.00\n"
         + "Escape Menu Ask_For_Input Choose from the below menu: \n"
         + " 1 -> Create a static portfolio \n"
@@ -411,7 +430,8 @@ public class FlexiblePortfolioControllerTest {
         + " 1 -> Create a static portfolio \n"
         + " 2 -> Create a flexible portfolio \n"
         + " E -> Exit from the application \n"
-        + "Ask_For_Input Menu Ask_For_Input Choose from available portfolios (eg: Portfolio1 -> give 1):\n"
+        + "Ask_For_Input Menu Ask_For_Input Choose from available portfolios (eg: Portfolio1 -> "
+        + "give 1):\n"
         + "No portfolios\n"
         + "Escape Invalid_Input Escape Menu Ask_For_Input Choose from the below menu: \n"
         + " 1 -> Create a static portfolio \n"
@@ -428,15 +448,19 @@ public class FlexiblePortfolioControllerTest {
 
     controller.run(new MockFlexiblePortfolioModel(log, true));
 
-    assertEquals("ALPHAVANTAGEAvailable_Portfolios 1_2019-10-25_2019-11-23", log.toString());
+    assertEquals("ALPHAVANTAGEAvailable_Portfolios 1_2019-10-25_2019-11-23",
+        log.toString());
     assertEquals("Choose from the below menu: \n"
         + " 1 -> Create a static portfolio \n"
         + " 2 -> Create a flexible portfolio \n"
         + " E -> Exit from the application \n"
-        + "Ask_For_Input Menu Ask_For_Input Choose from available portfolios (eg: Portfolio1 -> give 1):\n"
+        + "Ask_For_Input Menu Ask_For_Input Choose from available portfolios (eg: Portfolio1 -> "
+        + "give 1):\n"
         + "Available_Portfolios Ask_For_Input Please provide start date:\n"
         + "Please enter the date (yyyy-mm-dd): Please provide end date:\n"
-        + "Please enter the date (yyyy-mm-dd): PerformanceEscape Menu Ask_For_Input Choose from the below menu: \n"
+        + "Please enter the date (yyyy-mm-dd): PerformanceEscape Menu Ask_For_Input Choose from "
+        + "the "
+        + "below menu: \n"
         + " 1 -> Create a static portfolio \n"
         + " 2 -> Create a flexible portfolio \n"
         + " E -> Exit from the application \n"

@@ -82,7 +82,8 @@ public class ControllerHelperTest {
     assertEquals(1, actualId);
     assertEquals("Available_Portfolios Available_Portfolios ", log.toString());
     assertEquals("Choose from available portfolios (eg: Portfolio1 -> give 1):\n"
-        + "Available_Portfolios Ask_For_Input Invalid_Input Choose from available portfolios (eg: Portfolio1 -> give 1):\n"
+        + "Available_Portfolios Ask_For_Input Invalid_Input Choose from available portfolios "
+        + "(eg: Portfolio1 -> give 1):\n"
         + "Available_Portfolios Ask_For_Input ", out.toString());
   }
 
@@ -99,7 +100,8 @@ public class ControllerHelperTest {
     assertEquals(1, actualId);
     assertEquals("Available_Portfolios Available_Portfolios ", log.toString());
     assertEquals("Choose from available portfolios (eg: Portfolio1 -> give 1):\n"
-        + "Available_Portfolios Ask_For_Input Invalid_Input Choose from available portfolios (eg: Portfolio1 -> give 1):\n"
+        + "Available_Portfolios Ask_For_Input Invalid_Input Choose from available portfolios "
+        + "(eg: Portfolio1 -> give 1):\n"
         + "Available_Portfolios Ask_For_Input ", out.toString());
   }
 
@@ -127,7 +129,8 @@ public class ControllerHelperTest {
     assertEquals(LocalDate.parse("2019-10-25"), actualDate);
     assertEquals("", log.toString());
     assertEquals(
-        "Please enter the date (yyyy-mm-dd): Invalid_Input Please enter the date (yyyy-mm-dd): ",
+        "Please enter the date (yyyy-mm-dd): Invalid_Input Please enter the date "
+            + "(yyyy-mm-dd): ",
         out.toString());
   }
 
@@ -148,7 +151,8 @@ public class ControllerHelperTest {
   }
 
   @Test
-  public void testPopulateStockDateFromUserValidStockValuesStocksAlreadyExisting() throws IOException {
+  public void testPopulateStockDateFromUserValidStockValuesStocksAlreadyExisting()
+      throws IOException {
     Reader in = new StringReader("\nTICKER_SYMBOL\n2");
     scanner = new Scanner(in);
     controllerHelper = new ControllerHelper(mockView);
@@ -194,7 +198,8 @@ public class ControllerHelperTest {
     assertTrue(stocks.containsKey("TICKER_SYMBOL"));
     assertEquals(Optional.of(2L).get(), stocks.get("TICKER_SYMBOL"));
     assertEquals("TICKER_SYMBOL ", log.toString());
-    assertEquals("Stock Symbol: Stock Quantity: Invalid_Input Stock Quantity: ", out.toString());
+    assertEquals("Stock Symbol: Stock Quantity: Invalid_Input Stock Quantity: ",
+        out.toString());
   }
 
   @Test
@@ -210,7 +215,8 @@ public class ControllerHelperTest {
     assertTrue(stocks.containsKey("TICKER_SYMBOL"));
     assertEquals(Optional.of(2L).get(), stocks.get("TICKER_SYMBOL"));
     assertEquals("TICKER_SYMBOL ", log.toString());
-    assertEquals("Stock Symbol: Stock Quantity: Invalid_Input Stock Quantity: ", out.toString());
+    assertEquals("Stock Symbol: Stock Quantity: Invalid_Input Stock Quantity: ",
+        out.toString());
   }
 
   @Test

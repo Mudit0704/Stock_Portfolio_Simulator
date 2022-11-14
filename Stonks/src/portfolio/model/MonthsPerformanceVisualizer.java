@@ -14,7 +14,7 @@ public class MonthsPerformanceVisualizer extends AbstractPerformanceVisualizer {
   /**
    * Constructs an object of {@link MonthsPerformanceVisualizer} and initializes its members.
    *
-   * @param portfolio portfolio object for which the performance has to be visualized
+   * @param portfolio portfolio object for which the performance has to be visualized.
    */
   MonthsPerformanceVisualizer(IPortfolio portfolio) {
     super(portfolio);
@@ -30,7 +30,9 @@ public class MonthsPerformanceVisualizer extends AbstractPerformanceVisualizer {
           tempDate.getMonth().length(tempDate.isLeapYear()));
       if (tempDate.getMonth().equals(end.getMonth().plus(1))
           && tempDate.getYear() == end.getYear()) {
-        if(timeSpan == 1) break;
+        if (timeSpan == 1) {
+          break;
+        }
         monthEndDate = end;
       }
 

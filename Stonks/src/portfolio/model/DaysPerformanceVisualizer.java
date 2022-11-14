@@ -37,7 +37,7 @@ public class DaysPerformanceVisualizer extends AbstractPerformanceVisualizer {
     sb.append("\nVisualizing using the period of days\n");
 
     for (Map.Entry<LocalDate, Double> mapEntry : dateValue.entrySet()) {
-      if(timeSpan != 1) {
+      if (timeSpan != 1) {
         sb.append(mapEntry.getKey().minusDays(timeSpan)).append(" -> ");
       }
       sb.append(mapEntry.getKey().toString()).append(": ");

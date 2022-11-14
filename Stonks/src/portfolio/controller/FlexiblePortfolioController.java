@@ -270,7 +270,7 @@ public class FlexiblePortfolioController extends PortfolioController implements
       }
     }
 
-    view.displayCustomText(result+"\n");
+    view.displayCustomText(result + "\n");
     controllerHelper.performExitOperationSequence(scan);
   }
 }

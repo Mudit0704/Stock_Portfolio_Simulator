@@ -28,7 +28,8 @@ public class PortfolioController implements IPortfolioController {
   protected static final String SAVE_RETRIEVE_PORTFOLIO_MENU =
       "Choose from the below menu: \n 1 -> Save portfolio "
           + "\n 2 -> Retrieve portfolio \n E -> Exit from the operation \n";
-  protected static final String CHOOSE_FROM_AVAILABLE_PORTFOLIOS = "Choose from available portfolios "
+  protected static final String CHOOSE_FROM_AVAILABLE_PORTFOLIOS = "Choose from available "
+      + "portfolios "
       + "(eg: Portfolio1 -> give 1):\n";
 
   private final Readable in;

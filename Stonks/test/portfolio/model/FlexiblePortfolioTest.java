@@ -36,19 +36,25 @@ public class FlexiblePortfolioTest {
     mockExtensive = new MockStockService("/test/testExtensiveData.txt");
 
     testAnyDateObj = new FlexiblePortfolio(
-        new MockStockService("/test/testExtensiveData.txt"), new HashMap<>(), 0, LocalDate.now());
+        new MockStockService("/test/testExtensiveData.txt"), new HashMap<>(),
+        0, LocalDate.now());
     testAnyDateObj.retrievePortfolio("test/test_model_inner/test_any_date.xml");
 
-    testModifyPortfolioAnyDate = new FlexiblePortfolio(mockExtensive, new HashMap<>(), 0, LocalDate.now());
+    testModifyPortfolioAnyDate = new FlexiblePortfolio(mockExtensive, new HashMap<>(),
+        0, LocalDate.now());
     testModifyPortfolioAnyDate.retrievePortfolio(
         "test/test_model_inner/test_multiple_transaction.xml");
 
-    testInvalidSequence = new FlexiblePortfolio(mockExtensive, new HashMap<>(), 0, LocalDate.now());
+    testInvalidSequence = new FlexiblePortfolio(mockExtensive, new HashMap<>(),
+        0, LocalDate.now());
 
-    testPastAvailableDatePortfolio = new FlexiblePortfolio(mockExtensive, new HashMap<>(), 0, LocalDate.now());
-    testPastAvailableDatePortfolio.retrievePortfolio("test/test_model_inner/test_past_oldest.xml");
+    testPastAvailableDatePortfolio = new FlexiblePortfolio(mockExtensive, new HashMap<>(),
+        0, LocalDate.now());
+    testPastAvailableDatePortfolio
+        .retrievePortfolio("test/test_model_inner/test_past_oldest.xml");
 
-    testCostBasisAfterTransactions = new FlexiblePortfolio(mockExtensive, new HashMap<>(), 0, LocalDate.now());
+    testCostBasisAfterTransactions = new FlexiblePortfolio(mockExtensive, new HashMap<>(),
+        0, LocalDate.now());
     testCostBasisAfterTransactions.retrievePortfolio(
         "test/test_model_inner/test_cost_basis_txn.xml");
   }
@@ -61,7 +67,7 @@ public class FlexiblePortfolioTest {
     map.put(new Stock("MSFT", mockStockService), 2L);
 
     AbstractPortfolio portfolio = new FlexiblePortfolio(mockStockService, map, 10,
-      LocalDate.now());
+        LocalDate.now());
 
     String result = portfolio.getPortfolioComposition();
     assertTrue(result.contains("GOOG -> 3\n"));
@@ -77,7 +83,7 @@ public class FlexiblePortfolioTest {
     map.put(new Stock("MSFT", mockStockService), 2L);
 
     AbstractPortfolio portfolio = new FlexiblePortfolio(mockStockService, map, 10,
-      LocalDate.now());
+        LocalDate.now());
 
     portfolio.addStocksToPortfolio(new Stock("AAPL", mockStockService), 1L, LocalDate.now(), 20);
     String result = portfolio.getPortfolioComposition();
@@ -269,7 +275,7 @@ public class FlexiblePortfolioTest {
     map.put(microsoft, 2L);
 
     AbstractPortfolio portfolio = new FlexiblePortfolio(mockStockService, map, 10,
-      LocalDate.now());
+        LocalDate.now());
 
     portfolio.addStocksToPortfolio(apple, 1L, LocalDate.now(), 10);
     String result = portfolio.getPortfolioComposition();
@@ -292,7 +298,7 @@ public class FlexiblePortfolioTest {
     map.put(microsoft, 2L);
 
     AbstractPortfolio portfolio = new FlexiblePortfolio(mockStockService, map, 10,
-      LocalDate.now());
+        LocalDate.now());
 
     portfolio.sellStocksFromPortfolio(google, 1L, LocalDate.now(), 10);
     String result = portfolio.getPortfolioComposition();
@@ -308,7 +314,7 @@ public class FlexiblePortfolioTest {
     map.put(new Stock("MSFT", mockStockService), 2L);
 
     AbstractPortfolio portfolio = new FlexiblePortfolio(mockStockService, map, 10,
-      LocalDate.now());
+        LocalDate.now());
 
     portfolio.sellStocksFromPortfolio(new Stock("AAPL", mockStockService), 1L, LocalDate.now(), 10);
     String result = portfolio.getPortfolioComposition();
@@ -464,7 +470,7 @@ public class FlexiblePortfolioTest {
     map.put(apple, 2L);
 
     AbstractPortfolio portfolio = new FlexiblePortfolio(mockStockService, map, 10,
-      LocalDate.now());
+        LocalDate.now());
 
     portfolio.sellStocksFromPortfolio(apple, 1L, LocalDate.now(), 10);
     String result = portfolio.getPortfolioComposition();
@@ -570,7 +576,7 @@ public class FlexiblePortfolioTest {
     map.put(microsoft, 2L);
 
     AbstractPortfolio portfolio = new FlexiblePortfolio(mockStockService, map, 10,
-      LocalDate.now());
+        LocalDate.now());
 
     String path = System.getProperty("user.dir") + "/test_save.xml";
     portfolio.savePortfolio(path);
@@ -632,7 +638,7 @@ public class FlexiblePortfolioTest {
     map.put(microsoft, 2L);
 
     AbstractPortfolio portfolio = new FlexiblePortfolio(mockStockService, map, 10,
-      LocalDate.now());
+        LocalDate.now());
 
     portfolio.sellStocksFromPortfolio(google, 1L, LocalDate.now(), 10);
     String result = portfolio.getPortfolioComposition();
@@ -671,7 +677,7 @@ public class FlexiblePortfolioTest {
   @Test(expected = RuntimeException.class)
   public void testSaveEmptyPortfolio() throws ParserConfigurationException {
     AbstractPortfolio portfolio = new FlexiblePortfolio(mockExtensive, new HashMap<>(), 0.0,
-      LocalDate.now());
+        LocalDate.now());
     portfolio.savePortfolio("test/test_empty.xml");
   }
 
@@ -679,7 +685,7 @@ public class FlexiblePortfolioTest {
   public void testRetrieveAlreadyRetrievedPortfolio()
       throws IOException, ParserConfigurationException, SAXException {
     AbstractPortfolio portfolio = new FlexiblePortfolio(mockStockService, new HashMap<>(), 0.0,
-      LocalDate.now());
+        LocalDate.now());
     portfolio.retrievePortfolio("test/test_model_inner/test_any_date.xml");
     portfolio.retrievePortfolio("test/test_model_inner/test_past_oldest.xml");
   }
@@ -826,7 +832,8 @@ public class FlexiblePortfolioTest {
         + "2022: ***********************************\n"
         + "\n"
         + "Base: 6,174.56\n"
-        + "A line without asterisk means the performance during that timespan was less than or equal to the base given above\n"
+        + "A line without asterisk means the performance during that "
+        + "timespan was less than or equal to the base given above\n"
         + "Scale: * = Base+$340\n";
 
     String actual = testVeryOldPortfolio.getPortfolioPerformance(startDate, endDate);

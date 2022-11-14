@@ -1,6 +1,6 @@
 package portfolio.model;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.time.LocalDate;
 import java.util.AbstractMap.SimpleEntry;
@@ -50,9 +50,11 @@ public class AbstractPerformanceVisualizerTest {
 
     for (Map.Entry<LocalDate, Double> mapEntry : dateValue.entrySet()) {
       expectedString.append(mapEntry.getKey().toString()).append(": ");
-      AbstractPerformanceVisualizer.populateBar(minValue.orElseThrow(), scale, expectedString, mapEntry);
+      AbstractPerformanceVisualizer.populateBar(minValue.orElseThrow(), scale,
+          expectedString, mapEntry);
     }
-    expectedString.append("\nBase: ").append(String.format("%,.2f", minValue.orElseThrow())).append("\n");
+    expectedString.append("\nBase: ").append(String.format("%,.2f", minValue.orElseThrow()))
+        .append("\n");
     expectedString.append("A line without asterisk means the performance during that timespan was"
         + " less than or equal to the base given above").append("\n");
     expectedString.append("Scale: * = ").append("Base+").append("$").append(scale).append("\n");
@@ -78,7 +80,8 @@ public class AbstractPerformanceVisualizerTest {
 
   @Test
   public void populateBar() {
-    Entry<LocalDate, Double> dateValue = new SimpleEntry<>(LocalDate.parse("2019-10-25"), 6000D);
+    Entry<LocalDate, Double> dateValue = new SimpleEntry<>(LocalDate.parse("2019-10-25"),
+        6000D);
 
     StringBuilder expectedString = new StringBuilder();
     AbstractPerformanceVisualizer.populateBar(5500D, 100, expectedString,
