@@ -16,7 +16,7 @@ import portfolio.view.IView;
  */
 class ControllerHelper {
 
-  IView view;
+  private final IView view;
 
   /**
    * Constructs an object of Controller helper and initializes its members.
