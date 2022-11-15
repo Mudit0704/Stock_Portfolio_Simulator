@@ -79,4 +79,9 @@ public interface IFlexiblePortfoliosModel extends IPortfoliosModel {
    */
   void setCommissionFee(double commissionFee);
 
+  /**
+   * Gets the commission fee for the portfolio model.
+   */
+  double getCommissionFee();
+
 }

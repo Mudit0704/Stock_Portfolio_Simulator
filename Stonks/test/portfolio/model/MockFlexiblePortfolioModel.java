@@ -80,6 +80,11 @@ public class MockFlexiblePortfolioModel implements IFlexiblePortfoliosModel {
   }
 
   @Override
+  public double getCommissionFee() {
+    return 2d;
+  }
+
+  @Override
   public String getPortfolioComposition(int portfolioId) {
     log.append(portfolioId).append(" ");
     if (!dataPresent) {

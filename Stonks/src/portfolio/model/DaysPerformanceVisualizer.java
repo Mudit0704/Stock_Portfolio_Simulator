@@ -23,6 +23,8 @@ public class DaysPerformanceVisualizer extends AbstractPerformanceVisualizer {
       Map<LocalDate, Double> dateValue) {
     this.timeSpan = timeSpan;
     while (tempDate.isBefore(end) || tempDate.isEqual(end)) {
+      tempDate = tempDate.plusDays(this.timeSpan).isAfter(end) && tempDate.isBefore(end) ?
+          end : tempDate;
       double value = portfolio.getPortfolioValue(tempDate);
 
       dateValue.put(tempDate, value);
@@ -33,13 +35,19 @@ public class DaysPerformanceVisualizer extends AbstractPerformanceVisualizer {
   @Override
   public String populateString(Map<LocalDate, Double> dateValue, Double minValue, int scale) {
     StringBuilder sb = new StringBuilder();
+    LocalDate previousDateEnd = dateValue.keySet().stream().min(LocalDate::compareTo).get();
     sb.append("\nVisualizing using the period of days\n");
 
     for (Map.Entry<LocalDate, Double> mapEntry : dateValue.entrySet()) {
       if (timeSpan != 1) {
-        sb.append(mapEntry.getKey().minusDays(timeSpan)).append(" -> ");
+        if(mapEntry.getKey().isAfter(previousDateEnd)) {
+          sb.append(previousDateEnd.plusDays(1)).append(" -> ");
+        } else {
+          sb.append(mapEntry.getKey().minusDays(timeSpan - 1)).append(" -> ");
+        }
       }
-      sb.append(mapEntry.getKey().toString()).append(": ");
+      previousDateEnd = mapEntry.getKey();
+      sb.append(previousDateEnd).append(": ");
       populateBar(minValue, scale, sb, mapEntry);
     }
     sb.append("\nBase: ").append(String.format("%,.2f", minValue)).append("\n");

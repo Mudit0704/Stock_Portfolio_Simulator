@@ -176,9 +176,11 @@ public class FlexiblePortfolio extends AbstractPortfolio {
 
   @Override
   public String getPortfolioPerformance(LocalDate start, LocalDate end) {
-    if (start.isAfter(end) || start.isEqual(end) || start.isBefore(
-        this.creationDate)) {
+    if (start.isAfter(end) || start.isEqual(end)) {
       throw new IllegalArgumentException("Invalid dates\n");
+    } else if (start.isBefore(this.creationDate)) {
+      throw new IllegalArgumentException(
+          "Invalid start date. It is before the portfolio creation date.");
     }
 
     LocalDate tempDate = start;
@@ -192,7 +194,7 @@ public class FlexiblePortfolio extends AbstractPortfolio {
       visualizer = new DaysPerformanceVisualizer(this);
     } else if (timespan <= 150) {
       timeSpanJump = (int) (timespan / 5);
-      tempDate = tempDate.plusDays(timeSpanJump);
+      tempDate = tempDate.plusDays(timeSpanJump - 1);
       visualizer = new DaysPerformanceVisualizer(this);
     } else if (timespan <= 912) {
       timeSpanJump = 1;

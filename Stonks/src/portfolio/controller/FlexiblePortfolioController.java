@@ -192,8 +192,8 @@ public class FlexiblePortfolioController extends PortfolioController implements
           return;
         }
         LocalDate date = controllerHelper.populateDateFromUser(scan);
-        view.displayCustomText(String.format("%,.2f", portfolios.getCostBasis(date, portfolioId))
-            .concat("\n"));
+        view.displayCustomText(
+            "$" + String.format("%,.2f", portfolios.getCostBasis(date, portfolioId)).concat("\n"));
         controllerHelper.performExitOperationSequence(scan);
         break;
       } catch (IllegalArgumentException e) {
@@ -206,6 +206,8 @@ public class FlexiblePortfolioController extends PortfolioController implements
 
   protected void performTransaction(IFlexiblePortfoliosModel portfolios, Scanner scan)
       throws IOException {
+    view.displayCustomText("NOTE: You will be charged a $" + portfolios.getCommissionFee()
+        + "commission fee for each transaction\n");
     while (true) {
       Integer portfolioId;
       try {
