@@ -370,16 +370,19 @@ public class FlexiblePortfoliosModelTest {
     LocalDate endDate = LocalDate.of(2019, 11, 30);
 
     String expectedString = "\n"
-        + "Performance of Portfolio1 from 2019-10-24 to 2019-11-30\n"
-        + "\n"
-        + "Visualizing using the period of days\n"
-        + "2019-10-24 -> 2019-10-31: \n"
-        + "2019-11-23 -> 2019-11-30: **************************************************\n"
-        + "\n"
-        + "Base: 7,560.66\n"
-        + "A line without asterisk means the performance during that timespan was less than "
-        + "or equal to the base given above\n"
-        + "Scale: * = Base+$58\n";
+      + "Performance of Portfolio1 from 2019-10-24 to 2019-11-30\n"
+      + "\n"
+      + "Visualizing using the period of days\n"
+      + "2019-10-24 -> 2019-10-31: \n"
+      + "2019-10-31 -> 2019-11-07: *****\n"
+      + "2019-11-07 -> 2019-11-14: ******\n"
+      + "2019-11-14 -> 2019-11-21: *************************************************\n"
+      + "2019-11-21 -> 2019-11-28: **************************************************\n"
+      + "\n"
+      + "Base: 7,560.66\n"
+      + "A line without asterisk means the performance during that timespan was equal to the base "
+      + "given above\n"
+      + "Scale: * = Base+$59\n";
 
     assertEquals(expectedString, portfolioMockModel.getPortfolioPerformance(1, startDate, endDate));
   }

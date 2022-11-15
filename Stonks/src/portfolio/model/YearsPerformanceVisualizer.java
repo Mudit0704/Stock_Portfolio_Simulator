@@ -43,7 +43,7 @@ public class YearsPerformanceVisualizer extends AbstractPerformanceVisualizer {
     }
     sb.append("\nBase: ").append(String.format("%,.2f", minValue)).append("\n");
     sb.append("A line without asterisk means the performance during that timespan was"
-        + " less than or equal to the base given above").append("\n");
+        + " equal to the base given above").append("\n");
     sb.append("Scale: * = ").append("Base+").append("$").append(scale).append("\n");
     return sb.toString();
   }

@@ -56,7 +56,7 @@ public class AbstractPerformanceVisualizerTest {
     expectedString.append("\nBase: ").append(String.format("%,.2f", minValue.orElseThrow()))
         .append("\n");
     expectedString.append("A line without asterisk means the performance during that timespan was"
-        + " less than or equal to the base given above").append("\n");
+        + " equal to the base given above").append("\n");
     expectedString.append("Scale: * = ").append("Base+").append("$").append(scale).append("\n");
 
     assertEquals(expectedString.toString(),
@@ -75,7 +75,7 @@ public class AbstractPerformanceVisualizerTest {
     int actualScale = AbstractPerformanceVisualizer.getScale(minValue.orElseThrow(),
         maxValue.orElseThrow(), 1);
 
-    assertEquals(107, actualScale);
+    assertEquals(113, actualScale);
   }
 
   @Test

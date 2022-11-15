@@ -63,7 +63,7 @@ public class DaysPerformanceVisualizerTest {
     expectedString.append("\nBase: ").append(String.format("%,.2f", minValue.orElseThrow()))
         .append("\n");
     expectedString.append("A line without asterisk means the performance during that timespan was"
-        + " less than or equal to the base given above").append("\n");
+        + " equal to the base given above").append("\n");
     expectedString.append("Scale: * = ").append("Base+").append("$").append(scale).append("\n");
 
     String actualString = daysPerformanceVisualizer.populateString(dateValue,

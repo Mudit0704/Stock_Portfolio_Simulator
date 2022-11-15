@@ -721,7 +721,7 @@ public class FlexiblePortfolioTest {
     expectedString.append("\nBase: ").append(String.format("%,.2f", minValue.orElseThrow()))
         .append("\n");
     expectedString.append("A line without asterisk means the performance during that timespan was"
-        + " less than or equal to the base given above").append("\n");
+        + " equal to the base given above").append("\n");
     expectedString.append("Scale: * = ").append("Base+").append("$").append(scale).append("\n");
 
     String actualString = testAnyDateObj.getPortfolioPerformance(startDate, endDate);
@@ -734,14 +734,17 @@ public class FlexiblePortfolioTest {
     LocalDate endDate = LocalDate.of(2019, 11, 30);
 
     String expectedString = "\n"
-        + "Visualizing using the period of days\n"
-        + "2019-10-24 -> 2019-10-31: \n"
-        + "2019-11-23 -> 2019-11-30: **************************************************\n"
-        + "\n"
-        + "Base: 7,560.66\n"
-        + "A line without asterisk means the performance during that timespan was less than "
-        + "or equal to the base given above\n"
-        + "Scale: * = Base+$58\n";
+      + "Visualizing using the period of days\n"
+      + "2019-10-24 -> 2019-10-31: \n"
+      + "2019-10-31 -> 2019-11-07: *****\n"
+      + "2019-11-07 -> 2019-11-14: ******\n"
+      + "2019-11-14 -> 2019-11-21: *************************************************\n"
+      + "2019-11-21 -> 2019-11-28: **************************************************\n"
+      + "\n"
+      + "Base: 7,560.66\n"
+      + "A line without asterisk means the performance during that timespan was equal to the base "
+      + "given above\n"
+      + "Scale: * = Base+$59\n";
 
     String actualString = testAnyDateObj.getPortfolioPerformance(startDate, endDate);
     assertEquals(expectedString, actualString);
@@ -763,8 +766,8 @@ public class FlexiblePortfolioTest {
         + "Apr2020: *****************************************\n"
         + "\n"
         + "Base: 7,560.66\n"
-        + "A line without asterisk means the performance during that timespan was less than "
-        + "or equal to the base given above\n"
+        + "A line without asterisk means the performance during that timespan was"
+        + " equal to the base given above\n"
         + "Scale: * = Base+$79\n";
 
     String actual = testAnyDateObj.getPortfolioPerformance(startDate, endDate);
@@ -797,8 +800,8 @@ public class FlexiblePortfolioTest {
         + "May2022: ********************************\n"
         + "\n"
         + "Base: 7,560.66\n"
-        + "A line without asterisk means the performance during that timespan was less than "
-        + "or equal to the base given above\n"
+        + "A line without asterisk means the performance during that timespan was "
+        + "equal to the base given above\n"
         + "Scale: * = Base+$324\n";
 
     String actual = testAnyDateObj.getPortfolioPerformance(startDate, endDate);
@@ -833,7 +836,7 @@ public class FlexiblePortfolioTest {
         + "\n"
         + "Base: 6,174.56\n"
         + "A line without asterisk means the performance during that "
-        + "timespan was less than or equal to the base given above\n"
+        + "timespan was equal to the base given above\n"
         + "Scale: * = Base+$340\n";
 
     String actual = testVeryOldPortfolio.getPortfolioPerformance(startDate, endDate);
