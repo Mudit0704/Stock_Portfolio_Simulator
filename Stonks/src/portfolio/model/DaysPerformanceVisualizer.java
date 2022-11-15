@@ -23,8 +23,8 @@ public class DaysPerformanceVisualizer extends AbstractPerformanceVisualizer {
       Map<LocalDate, Double> dateValue) {
     this.timeSpan = timeSpan;
     while (tempDate.isBefore(end) || tempDate.isEqual(end)) {
-      tempDate = tempDate.plusDays(this.timeSpan).isAfter(end) && tempDate.isBefore(end) ?
-          end : tempDate;
+      tempDate = tempDate.plusDays(this.timeSpan).isAfter(end) && tempDate.isBefore(end)
+          ? end : tempDate;
       double value = portfolio.getPortfolioValue(tempDate);
 
       dateValue.put(tempDate, value);
@@ -40,7 +40,7 @@ public class DaysPerformanceVisualizer extends AbstractPerformanceVisualizer {
 
     for (Map.Entry<LocalDate, Double> mapEntry : dateValue.entrySet()) {
       if (timeSpan != 1) {
-        if(mapEntry.getKey().isAfter(previousDateEnd)) {
+        if (mapEntry.getKey().isAfter(previousDateEnd)) {
           sb.append(previousDateEnd.plusDays(1)).append(" -> ");
         } else {
           sb.append(mapEntry.getKey().minusDays(timeSpan - 1)).append(" -> ");
