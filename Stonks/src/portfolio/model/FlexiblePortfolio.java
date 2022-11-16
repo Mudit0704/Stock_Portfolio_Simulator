@@ -181,6 +181,8 @@ public class FlexiblePortfolio extends AbstractPortfolio {
     } else if (start.isBefore(this.creationDate)) {
       throw new IllegalArgumentException(
           "Invalid start date. It is before the portfolio creation date.");
+    } else if (end.isAfter(LocalDate.now())) {
+      throw new IllegalArgumentException("Invalid end date. It is after today's date.");
     }
 
     LocalDate tempDate = start;
