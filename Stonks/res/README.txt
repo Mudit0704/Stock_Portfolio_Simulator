@@ -25,5 +25,5 @@ have been added in assignment 4.
 5. Specifying commission fees at any point in time as a fixed fee per transaction.
 6. Web API integration was already done in the previous iteration.
 7. Providing a graph of a specified portfolio's performance over a specified period of time with a
-   minimum timespan of 5 days and maximum timespan of 30 years.
+   maximum timespan of 30 years.
 8. The same text based view with additional functionalities for new features.
