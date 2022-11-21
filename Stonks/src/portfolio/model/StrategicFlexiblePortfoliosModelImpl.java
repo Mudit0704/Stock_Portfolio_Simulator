@@ -8,7 +8,7 @@ public class StrategicFlexiblePortfoliosModelImpl extends FlexiblePortfoliosMode
 
   @Override
   public void createStrategicPortfolio(Map<String, Double> stockProportions, Double totalAmount,
-    int portfolioId, LocalDate date) {
+    int portfolioId, LocalDate date, LocalDate endDate) {
 
   }
 

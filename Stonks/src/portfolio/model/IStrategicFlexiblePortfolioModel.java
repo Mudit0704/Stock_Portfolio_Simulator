@@ -17,7 +17,7 @@ public interface IStrategicFlexiblePortfolioModel extends IFlexiblePortfoliosMod
    * @param date
    */
   void createStrategicPortfolio(Map<String, Double> stockProportions, Double totalAmount,
-      int portfolioId, LocalDate date);
+      int portfolioId, LocalDate date, LocalDate endDate);
 
   void investStrategicPortfolio(Map<String, Double> stockProportions, Double totalAmount,
     int portfolioId, LocalDate date);

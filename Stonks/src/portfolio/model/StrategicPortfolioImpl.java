@@ -5,6 +5,7 @@ import java.util.Map;
 
 public class StrategicPortfolioImpl extends FlexiblePortfolio implements IStrategicPortfolio {
 
+  protected LocalDate strategyStartDate;
   /**
    * Constructs an object of Portfolio and initializes its members.
    *
@@ -24,16 +25,21 @@ public class StrategicPortfolioImpl extends FlexiblePortfolio implements IStrate
 
   }
 
-  public static class StrategicPortfolio extends AbstractStrategicPortfolioBuilder {
+  public static class StrategicPortfolioBuilder extends AbstractStrategicPortfolioBuilder {
+    protected LocalDate strategyStartDate ;
+    protected Double totalAmount;
+    static AbstractStrategicPortfolioBuilder strategicPortfolioBuilder = new StrategicPortfolioBuilder();
 
     @Override
-    protected AbstractStrategicPortfolioBuilder setStrategyStartDate() {
-      return null;
+    protected AbstractStrategicPortfolioBuilder setStrategyStartDate(LocalDate startDate) {
+      this.strategyStartDate = startDate;
+      return strategicPortfolioBuilder;
     }
 
     @Override
-    protected AbstractStrategicPortfolioBuilder setTotalAmount() {
-      return null;
+    protected AbstractStrategicPortfolioBuilder setTotalAmount(Double totalAmount) {
+      this.totalAmount = totalAmount;
+      return strategicPortfolioBuilder;
     }
 
     @Override
