@@ -1,10 +1,21 @@
 package portfolio.model;
 
 import java.time.LocalDate;
+import java.util.Map;
 
+/**
+ * This interface represents a strategic portfolio giving the ability to add fractional shares.
+ */
 public interface IStrategicFlexiblePortfolioModel extends IFlexiblePortfoliosModel {
-  void createStrategicPortfolio();
 
-  void addFractionalStocksToPortfolio(String tickerSymbol, Double quantity,
+  /**
+   * Creates a strategic portfolio based on the total amount and proportion of each share.
+   *
+   * @param stockProportions
+   * @param totalAmount
+   * @param portfolioId
+   * @param date
+   */
+  void createStrategicPortfolio(Map<String, Double> stockProportions, Double totalAmount,
       int portfolioId, LocalDate date);
 }
