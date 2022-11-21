@@ -2,8 +2,8 @@ package portfolio;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import portfolio.controller.FlexiblePortfolioController;
-import portfolio.model.FlexiblePortfoliosModel;
+import portfolio.controller.GUIPortfolioController;
+import portfolio.model.StrategicFlexiblePortfoliosModel;
 import portfolio.view.FlexibleView;
 import portfolio.view.IView;
 
@@ -21,8 +21,8 @@ public class Main {
   public static void main(String[] args) {
     try {
       IView view = new FlexibleView(System.out);
-      new FlexiblePortfolioController(new InputStreamReader(System.in), view).run(
-          new FlexiblePortfoliosModel());
+      new GUIPortfolioController(new StrategicFlexiblePortfoliosModel(),
+          new InputStreamReader(System.in), view);
     } catch (IOException e) {
       e.printStackTrace();
     }

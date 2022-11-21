@@ -3,7 +3,7 @@ package portfolio.model;
 import java.time.LocalDate;
 import java.util.Map;
 
-public class StrategicPortfolioImpl extends FlexiblePortfolio implements IStrategicPortfolio {
+public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicPortfolio {
 
   protected IStrategy strategy;
   /**
@@ -14,7 +14,7 @@ public class StrategicPortfolioImpl extends FlexiblePortfolio implements IStrate
    * @param transactionFee
    * @param date           date on which this portfolio is created.
    */
-  public StrategicPortfolioImpl(IStockService stockService, Map<IStock, Double> stocks,
+  public StrategicPortfolio(IStockService stockService, Map<IStock, Double> stocks,
     double transactionFee, LocalDate date) {
     super(stockService, stocks, transactionFee, date);
   }

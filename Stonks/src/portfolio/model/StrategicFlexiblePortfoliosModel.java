@@ -3,7 +3,7 @@ package portfolio.model;
 import java.time.LocalDate;
 import java.util.Map;
 
-public class StrategicFlexiblePortfoliosModelImpl extends FlexiblePortfoliosModel
+public class StrategicFlexiblePortfoliosModel extends FlexiblePortfoliosModel
     implements IStrategicFlexiblePortfolioModel {
 
   @Override
