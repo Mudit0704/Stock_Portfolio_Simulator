@@ -27,19 +27,19 @@ public class MockFlexiblePortfolioModel implements IFlexiblePortfoliosModel {
   }
 
   @Override
-  public void createNewPortfolioOnADate(Map<String, Long> stocks, LocalDate date) {
+  public void createNewPortfolioOnADate(Map<String, Double> stocks, LocalDate date) {
     log.append(stocks).append(" ").append(date);
   }
 
   @Override
-  public void addStocksToPortfolio(String tickerSymbol, Long quantity, int portfolioId,
+  public void addStocksToPortfolio(String tickerSymbol, Double quantity, int portfolioId,
       LocalDate date) {
     log.append(tickerSymbol).append("_").append(quantity).append("_").append(portfolioId)
         .append("_").append(date);
   }
 
   @Override
-  public void sellStockFromPortfolio(String tickerSymbol, Long quantity, int portfolioId,
+  public void sellStockFromPortfolio(String tickerSymbol, Double quantity, int portfolioId,
       LocalDate date) throws IllegalArgumentException {
     log.append(tickerSymbol).append("_").append(quantity).append("_").append(portfolioId)
         .append("_").append(date);
@@ -121,7 +121,7 @@ public class MockFlexiblePortfolioModel implements IFlexiblePortfoliosModel {
   }
 
   @Override
-  public void createNewPortfolio(Map<String, Long> stocks) {
+  public void createNewPortfolio(Map<String, Double> stocks) {
     log.append(stocks).append(" ");
   }
 

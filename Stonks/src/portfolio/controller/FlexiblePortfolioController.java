@@ -120,7 +120,7 @@ public class FlexiblePortfolioController extends PortfolioController implements
 
   protected void generatePortfolioOnASpecificDate(Scanner scan, IFlexiblePortfoliosModel portfolios)
       throws IOException {
-    Map<String, Long> stocks = new HashMap<>();
+    Map<String, Double> stocks = new HashMap<>();
     LocalDate date = controllerHelper.populateDateFromUser(scan);
     while (true) {
       view.displayCustomText(CREATE_PORTFOLIO_SUB_MENU);
@@ -216,9 +216,9 @@ public class FlexiblePortfolioController extends PortfolioController implements
           return;
         }
         view.displayCustomText("Please provide stock details for the transaction: \n");
-        Map<String, Long> stock = new LinkedHashMap<>();
+        Map<String, Double> stock = new LinkedHashMap<>();
         controllerHelper.populateStockDataFromUser(scan, portfolios, stock);
-        Entry<String, Long> entry = stock.entrySet().iterator().next();
+        Entry<String, Double> entry = stock.entrySet().iterator().next();
         view.displayCustomText("Please enter date for the transaction: \n");
         LocalDate date = controllerHelper.populateDateFromUser(scan);
         if (date.isAfter(LocalDate.now())) {

@@ -14,7 +14,7 @@ public class StrategicPortfolioImpl extends FlexiblePortfolio implements IStrate
    * @param transactionFee
    * @param date           date on which this portfolio is created.
    */
-  public StrategicPortfolioImpl(IStockService stockService, Map<IStock, Long> stocks,
+  public StrategicPortfolioImpl(IStockService stockService, Map<IStock, Double> stocks,
     double transactionFee, LocalDate date) {
     super(stockService, stocks, transactionFee, date);
   }

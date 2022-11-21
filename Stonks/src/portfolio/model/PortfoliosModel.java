@@ -86,14 +86,14 @@ public class PortfoliosModel implements IPortfoliosModel {
   }
 
   @Override
-  public void createNewPortfolio(Map<String, Long> stocks) {
+  public void createNewPortfolio(Map<String, Double> stocks) {
     if (stocks.size() == 0) {
       return;
     }
 
-    Map<IStock, Long> stockList = new HashMap<>();
+    Map<IStock, Double> stockList = new HashMap<>();
 
-    for (Map.Entry<String, Long> entry : stocks.entrySet()) {
+    for (Map.Entry<String, Double> entry : stocks.entrySet()) {
       IStock newStock = apiOptimizer.cacheGetObj(entry.getKey());
       if (newStock == null) {
         newStock = new Stock(entry.getKey(), this.stockService);

@@ -61,33 +61,33 @@ public class FlexiblePortfolioTest {
 
   @Test
   public void testGetPortfolioComposition() {
-    Map<IStock, Long> map = new HashMap<>();
-    map.put(new Stock("GOOG", mockStockService), 3L);
-    map.put(new Stock("PUBM", mockStockService), 1L);
-    map.put(new Stock("MSFT", mockStockService), 2L);
+    Map<IStock, Double> map = new HashMap<>();
+    map.put(new Stock("GOOG", mockStockService), 3d);
+    map.put(new Stock("PUBM", mockStockService), 1d);
+    map.put(new Stock("MSFT", mockStockService), 2d);
 
     AbstractPortfolio portfolio = new FlexiblePortfolio(mockStockService, map, 10,
         LocalDate.now());
 
     String result = portfolio.getPortfolioComposition();
-    assertTrue(result.contains("GOOG -> 3\n"));
-    assertTrue(result.contains("MSFT -> 2\n"));
-    assertTrue(result.contains("PUBM -> 1\n"));
+    assertTrue(result.contains("GOOG -> 3.0\n"));
+    assertTrue(result.contains("MSFT -> 2.0\n"));
+    assertTrue(result.contains("PUBM -> 1.0\n"));
   }
 
   @Test
   public void testAddStocksToPortfolio() {
-    Map<IStock, Long> map = new HashMap<>();
-    map.put(new Stock("GOOG", mockStockService), 3L);
-    map.put(new Stock("PUBM", mockStockService), 1L);
-    map.put(new Stock("MSFT", mockStockService), 2L);
+    Map<IStock, Double> map = new HashMap<>();
+    map.put(new Stock("GOOG", mockStockService), 3d);
+    map.put(new Stock("PUBM", mockStockService), 1d);
+    map.put(new Stock("MSFT", mockStockService), 2d);
 
     AbstractPortfolio portfolio = new FlexiblePortfolio(mockStockService, map, 10,
         LocalDate.now());
 
-    portfolio.addStocksToPortfolio(new Stock("AAPL", mockStockService), 1L, LocalDate.now(), 20);
+    portfolio.addStocksToPortfolio(new Stock("AAPL", mockStockService), 1d, LocalDate.now(), 20);
     String result = portfolio.getPortfolioComposition();
-    assertTrue(result.contains("AAPL -> 1\n"));
+    assertTrue(result.contains("AAPL -> 1.0\n"));
     assertEquals(713.74, portfolio.getPortfolioCostBasisByDate(LocalDate.now()), 0.0);
   }
 
@@ -95,7 +95,7 @@ public class FlexiblePortfolioTest {
   public void testAddStocksToPortfolioAnyDate() throws ParserConfigurationException {
     IStock pubMatic = new Stock("PUBM", mockExtensive);
 
-    testModifyPortfolioAnyDate.addStocksToPortfolio(pubMatic, 1L, LocalDate.of(2019, 12, 12), 10);
+    testModifyPortfolioAnyDate.addStocksToPortfolio(pubMatic, 1d, LocalDate.of(2019, 12, 12), 10);
 
     String path = System.getProperty("user.dir") + "/test/test_multiple_transaction_save.xml";
     testModifyPortfolioAnyDate.savePortfolio(path);
@@ -109,10 +109,10 @@ public class FlexiblePortfolioTest {
       throw new RuntimeException(e);
     }
     String result = retrievedPortfolio.getPortfolioComposition();
-    assertTrue(result.contains("GOOG -> 4\n"));
-    assertTrue(result.contains("AAPL -> 2\n"));
-    assertTrue(result.contains("PUBM -> 1\n"));
-    assertTrue(result.contains("A -> 2\n"));
+    assertTrue(result.contains("GOOG -> 4.0\n"));
+    assertTrue(result.contains("AAPL -> 2.0\n"));
+    assertTrue(result.contains("PUBM -> 1.0\n"));
+    assertTrue(result.contains("A -> 2.0\n"));
     assertEquals(848.18, retrievedPortfolio.getPortfolioValue(LocalDate.now()), 0.1);
 
     try {
@@ -126,7 +126,7 @@ public class FlexiblePortfolioTest {
   public void testAddStocksToPortfolioBeforeCreationDate() throws ParserConfigurationException {
     IStock pubMatic = new Stock("PUBM", mockExtensive);
 
-    testModifyPortfolioAnyDate.addStocksToPortfolio(pubMatic, 1L, LocalDate.of(2019, 10, 23), 10);
+    testModifyPortfolioAnyDate.addStocksToPortfolio(pubMatic, 1d, LocalDate.of(2019, 10, 23), 10);
 
     String path = System.getProperty("user.dir") + "/test/test_multiple_transaction_save.xml";
     testModifyPortfolioAnyDate.savePortfolio(path);
@@ -157,7 +157,7 @@ public class FlexiblePortfolioTest {
   public void testAddStocksToPortfolioFutureDate() throws ParserConfigurationException {
     IStock pubMatic = new Stock("PUBM", mockExtensive);
 
-    testModifyPortfolioAnyDate.addStocksToPortfolio(pubMatic, 1L, LocalDate.of(2023, 10, 23), 10);
+    testModifyPortfolioAnyDate.addStocksToPortfolio(pubMatic, 1d, LocalDate.of(2023, 10, 23), 10);
 
     String path = System.getProperty("user.dir") + "/test/test_multiple_transaction_save.xml";
     testModifyPortfolioAnyDate.savePortfolio(path);
@@ -188,7 +188,7 @@ public class FlexiblePortfolioTest {
   public void testAddStocksToPortfolioIntermediateDate() throws ParserConfigurationException {
     IStock msft = new Stock("MSFT", mockExtensive);
 
-    testModifyPortfolioAnyDate.addStocksToPortfolio(msft, 3L, LocalDate.of(2019, 10, 27), 10);
+    testModifyPortfolioAnyDate.addStocksToPortfolio(msft, 3d, LocalDate.of(2019, 10, 27), 10);
 
     String path = System.getProperty("user.dir") + "/test/test_multiple_transaction_save.xml";
     testModifyPortfolioAnyDate.savePortfolio(path);
@@ -203,11 +203,11 @@ public class FlexiblePortfolioTest {
     }
 
     try {
-      testModifyPortfolioAnyDate.sellStocksFromPortfolio(msft, 1L, LocalDate.of(2019, 11, 28), 10);
+      testModifyPortfolioAnyDate.sellStocksFromPortfolio(msft, 1d, LocalDate.of(2019, 11, 28), 10);
     } catch (Exception e) {
       throw e;
     }
-    testModifyPortfolioAnyDate.addStocksToPortfolio(msft, 1L, LocalDate.of(2019, 10, 28), 10);
+    testModifyPortfolioAnyDate.addStocksToPortfolio(msft, 1d, LocalDate.of(2019, 10, 28), 10);
 
     String result = retrievedPortfolio.getPortfolioComposition();
     assertTrue(result.contains("GOOG -> 4\n"));
@@ -227,7 +227,7 @@ public class FlexiblePortfolioTest {
   public void testAddStocksToPortfolioAfterSell() throws ParserConfigurationException {
     IStock msft = new Stock("MSFT", mockExtensive);
 
-    testModifyPortfolioAnyDate.addStocksToPortfolio(msft, 3L, LocalDate.of(2019, 10, 27), 10);
+    testModifyPortfolioAnyDate.addStocksToPortfolio(msft, 3d, LocalDate.of(2019, 10, 27), 10);
 
     String path = System.getProperty("user.dir") + "/test/test_multiple_transaction_save.xml";
     testModifyPortfolioAnyDate.savePortfolio(path);
@@ -242,17 +242,17 @@ public class FlexiblePortfolioTest {
     }
 
     try {
-      testModifyPortfolioAnyDate.sellStocksFromPortfolio(msft, 1L, LocalDate.of(2019, 11, 28), 10);
+      testModifyPortfolioAnyDate.sellStocksFromPortfolio(msft, 1d, LocalDate.of(2019, 11, 28), 10);
     } catch (Exception e) {
       throw e;
     }
-    testModifyPortfolioAnyDate.addStocksToPortfolio(msft, 1L, LocalDate.of(2019, 12, 01), 10);
+    testModifyPortfolioAnyDate.addStocksToPortfolio(msft, 1d, LocalDate.of(2019, 12, 01), 10);
 
     String result = retrievedPortfolio.getPortfolioComposition();
-    assertTrue(result.contains("GOOG -> 4\n"));
-    assertTrue(result.contains("AAPL -> 2\n"));
-    assertTrue(result.contains("MSFT -> 3\n"));
-    assertTrue(result.contains("A -> 2\n"));
+    assertTrue(result.contains("GOOG -> 4.0\n"));
+    assertTrue(result.contains("AAPL -> 2.0\n"));
+    assertTrue(result.contains("MSFT -> 3.0\n"));
+    assertTrue(result.contains("A -> 2.0\n"));
     assertEquals(1035.87, retrievedPortfolio.getPortfolioValue(LocalDate.now()), 0.1);
 
     try {
@@ -264,59 +264,59 @@ public class FlexiblePortfolioTest {
 
   @Test
   public void testAddStocksToPortfolioNonExistent() {
-    Map<IStock, Long> map = new HashMap<>();
+    Map<IStock, Double> map = new HashMap<>();
     IStock google = new Stock("GOOG", mockStockService);
     IStock pubMatic = new Stock("PUBM", mockStockService);
     IStock microsoft = new Stock("MSFT", mockStockService);
     IStock apple = new Stock("AAPL", mockStockService);
 
-    map.put(google, 3L);
-    map.put(pubMatic, 1L);
-    map.put(microsoft, 2L);
+    map.put(google, 3d);
+    map.put(pubMatic, 1d);
+    map.put(microsoft, 2d);
 
     AbstractPortfolio portfolio = new FlexiblePortfolio(mockStockService, map, 10,
         LocalDate.now());
 
-    portfolio.addStocksToPortfolio(apple, 1L, LocalDate.now(), 10);
+    portfolio.addStocksToPortfolio(apple, 1d, LocalDate.now(), 10);
     String result = portfolio.getPortfolioComposition();
-    assertTrue(result.contains("GOOG -> 3\n"));
-    assertTrue(result.contains("MSFT -> 2\n"));
-    assertTrue(result.contains("PUBM -> 1\n"));
-    assertTrue(result.contains("AAPL -> 1\n"));
+    assertTrue(result.contains("GOOG -> 3.0\n"));
+    assertTrue(result.contains("MSFT -> 2.0\n"));
+    assertTrue(result.contains("PUBM -> 1.0\n"));
+    assertTrue(result.contains("AAPL -> 1.0\n"));
 
     assertEquals(703.74, portfolio.getPortfolioCostBasisByDate(LocalDate.now()), 0.0);
   }
 
   @Test
   public void testSellStocksFromPortfolio() {
-    Map<IStock, Long> map = new HashMap<>();
+    Map<IStock, Double> map = new HashMap<>();
     IStock google = new Stock("GOOG", mockStockService);
     IStock pubMatic = new Stock("PUBM", mockStockService);
     IStock microsoft = new Stock("MSFT", mockStockService);
-    map.put(google, 3L);
-    map.put(pubMatic, 1L);
-    map.put(microsoft, 2L);
+    map.put(google, 3d);
+    map.put(pubMatic, 1d);
+    map.put(microsoft, 2d);
 
     AbstractPortfolio portfolio = new FlexiblePortfolio(mockStockService, map, 10,
         LocalDate.now());
 
-    portfolio.sellStocksFromPortfolio(google, 1L, LocalDate.now(), 10);
+    portfolio.sellStocksFromPortfolio(google, 1d, LocalDate.now(), 10);
     String result = portfolio.getPortfolioComposition();
-    assertTrue(result.contains("GOOG -> 2\n"));
+    assertTrue(result.contains("GOOG -> 2.0\n"));
     assertEquals(608.92, portfolio.getPortfolioCostBasisByDate(LocalDate.now()), 0.0);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testSellStocksFromPortfolioNonExistingStock() {
-    Map<IStock, Long> map = new HashMap<>();
-    map.put(new Stock("GOOG", mockStockService), 3L);
-    map.put(new Stock("PUBM", mockStockService), 1L);
-    map.put(new Stock("MSFT", mockStockService), 2L);
+    Map<IStock, Double> map = new HashMap<>();
+    map.put(new Stock("GOOG", mockStockService), 3d);
+    map.put(new Stock("PUBM", mockStockService), 1d);
+    map.put(new Stock("MSFT", mockStockService), 2d);
 
     AbstractPortfolio portfolio = new FlexiblePortfolio(mockStockService, map, 10,
         LocalDate.now());
 
-    portfolio.sellStocksFromPortfolio(new Stock("AAPL", mockStockService), 1L, LocalDate.now(), 10);
+    portfolio.sellStocksFromPortfolio(new Stock("AAPL", mockStockService), 1d, LocalDate.now(), 10);
     String result = portfolio.getPortfolioComposition();
     assertTrue(result.contains("GOOG -> 2\n"));
     assertEquals(713.74, portfolio.getPortfolioCostBasisByDate(LocalDate.now()), 0.0);
@@ -324,18 +324,18 @@ public class FlexiblePortfolioTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void testSellStocksFromPortfolioInvalidQty() {
-    Map<IStock, Long> map = new HashMap<>();
+    Map<IStock, Double> map = new HashMap<>();
     IStock google = new Stock("GOOG", mockStockService);
     IStock pubMatic = new Stock("PUBM", mockStockService);
     IStock microsoft = new Stock("MSFT", mockStockService);
-    map.put(google, 3L);
-    map.put(pubMatic, 1L);
-    map.put(microsoft, 2L);
+    map.put(google, 3d);
+    map.put(pubMatic, 1d);
+    map.put(microsoft, 2d);
 
     AbstractPortfolio portfolio = new FlexiblePortfolio(mockStockService, map,
         10, LocalDate.now());
 
-    portfolio.sellStocksFromPortfolio(google, 4L, LocalDate.now(), 10);
+    portfolio.sellStocksFromPortfolio(google, 4d, LocalDate.now(), 10);
     String result = portfolio.getPortfolioComposition();
     assertTrue(result.contains("GOOG -> 2\n"));
     assertEquals(608.92, portfolio.getPortfolioCostBasisByDate(LocalDate.now()), 0.0);
@@ -351,18 +351,18 @@ public class FlexiblePortfolioTest {
   public void testSellStocksFromPortfolioAnyDate() throws ParserConfigurationException {
     IStock pubMatic = new Stock("PUBM", mockExtensive);
 
-    testModifyPortfolioAnyDate.addStocksToPortfolio(pubMatic, 3L, LocalDate.of(2019, 12, 12), 10);
+    testModifyPortfolioAnyDate.addStocksToPortfolio(pubMatic, 3d, LocalDate.of(2019, 12, 12), 10);
 
     String path = System.getProperty("user.dir") + "/test/test_multiple_transaction_save.xml";
     testModifyPortfolioAnyDate.savePortfolio(path);
 
-    testModifyPortfolioAnyDate.sellStocksFromPortfolio(pubMatic, 2L, LocalDate.of(2020, 1, 10), 10);
+    testModifyPortfolioAnyDate.sellStocksFromPortfolio(pubMatic, 2d, LocalDate.of(2020, 1, 10), 10);
 
     String result = testModifyPortfolioAnyDate.getPortfolioComposition();
-    assertTrue(result.contains("GOOG -> 4\n"));
-    assertTrue(result.contains("AAPL -> 2\n"));
-    assertTrue(result.contains("PUBM -> 1\n"));
-    assertTrue(result.contains("A -> 2\n"));
+    assertTrue(result.contains("GOOG -> 4.0\n"));
+    assertTrue(result.contains("AAPL -> 2.0\n"));
+    assertTrue(result.contains("PUBM -> 1.0\n"));
+    assertTrue(result.contains("A -> 2.0\n"));
     assertEquals(847.53, testModifyPortfolioAnyDate.getPortfolioValue(LocalDate.now()), 0.1);
 
     try {
@@ -386,28 +386,28 @@ public class FlexiblePortfolioTest {
 
     IStock pubMatic = new Stock("PUBM", mockExtensive);
 
-    retrievedPortfolio.sellStocksFromPortfolio(pubMatic, 1L, LocalDate.of(2019, 10, 23), 10);
+    retrievedPortfolio.sellStocksFromPortfolio(pubMatic, 1d, LocalDate.of(2019, 10, 23), 10);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testSellStocksFromPortfolioFutureDate() throws ParserConfigurationException {
     IStock pubMatic = new Stock("PUBM", mockExtensive);
 
-    testModifyPortfolioAnyDate.addStocksToPortfolio(pubMatic, 1L, LocalDate.of(2023, 10, 23), 10);
+    testModifyPortfolioAnyDate.addStocksToPortfolio(pubMatic, 1d, LocalDate.of(2023, 10, 23), 10);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testSellStocksFromPortfolioIntermediateDate() {
     IStock msft = new Stock("MSFT", mockExtensive);
 
-    testModifyPortfolioAnyDate.addStocksToPortfolio(msft, 3L, LocalDate.of(2019, 10, 27), 10);
+    testModifyPortfolioAnyDate.addStocksToPortfolio(msft, 3d, LocalDate.of(2019, 10, 27), 10);
 
     try {
-      testModifyPortfolioAnyDate.sellStocksFromPortfolio(msft, 1L, LocalDate.of(2019, 11, 28), 10);
+      testModifyPortfolioAnyDate.sellStocksFromPortfolio(msft, 1d, LocalDate.of(2019, 11, 28), 10);
     } catch (Exception e) {
       throw e;
     }
-    testModifyPortfolioAnyDate.sellStocksFromPortfolio(msft, 1L, LocalDate.of(2019, 10, 28), 10);
+    testModifyPortfolioAnyDate.sellStocksFromPortfolio(msft, 1d, LocalDate.of(2019, 10, 28), 10);
 
     String result = testModifyPortfolioAnyDate.getPortfolioComposition();
     assertTrue(result.contains("GOOG -> 4\n"));
@@ -421,7 +421,7 @@ public class FlexiblePortfolioTest {
   public void testSellStocksFromPortfolioAfterAdd() throws ParserConfigurationException {
     IStock msft = new Stock("MSFT", mockExtensive);
 
-    testModifyPortfolioAnyDate.addStocksToPortfolio(msft, 3L, LocalDate.of(2019, 10, 27), 10);
+    testModifyPortfolioAnyDate.addStocksToPortfolio(msft, 3d, LocalDate.of(2019, 10, 27), 10);
 
     String path = System.getProperty("user.dir") + "/test/test_multiple_transaction_save.xml";
     testModifyPortfolioAnyDate.savePortfolio(path);
@@ -436,17 +436,17 @@ public class FlexiblePortfolioTest {
     }
 
     try {
-      testModifyPortfolioAnyDate.sellStocksFromPortfolio(msft, 1L, LocalDate.of(2019, 11, 28), 10);
+      testModifyPortfolioAnyDate.sellStocksFromPortfolio(msft, 1d, LocalDate.of(2019, 11, 28), 10);
     } catch (Exception e) {
       throw e;
     }
-    testModifyPortfolioAnyDate.addStocksToPortfolio(msft, 1L, LocalDate.of(2019, 12, 01), 10);
+    testModifyPortfolioAnyDate.addStocksToPortfolio(msft, 1d, LocalDate.of(2019, 12, 01), 10);
 
     String result = retrievedPortfolio.getPortfolioComposition();
-    assertTrue(result.contains("GOOG -> 4\n"));
-    assertTrue(result.contains("AAPL -> 2\n"));
-    assertTrue(result.contains("MSFT -> 3\n"));
-    assertTrue(result.contains("A -> 2\n"));
+    assertTrue(result.contains("GOOG -> 4.0\n"));
+    assertTrue(result.contains("AAPL -> 2.0\n"));
+    assertTrue(result.contains("MSFT -> 3.0\n"));
+    assertTrue(result.contains("A -> 2.0\n"));
     assertEquals(1035.87, retrievedPortfolio.getPortfolioValue(LocalDate.now()), 0.1);
 
     try {
@@ -458,26 +458,26 @@ public class FlexiblePortfolioTest {
 
   @Test
   public void testSellStocksFromPortfolioNonExistent() {
-    Map<IStock, Long> map = new HashMap<>();
+    Map<IStock, Double> map = new HashMap<>();
     IStock google = new Stock("GOOG", mockStockService);
     IStock pubMatic = new Stock("PUBM", mockStockService);
     IStock microsoft = new Stock("MSFT", mockStockService);
     IStock apple = new Stock("AAPL", mockStockService);
 
-    map.put(google, 3L);
-    map.put(pubMatic, 1L);
-    map.put(microsoft, 2L);
-    map.put(apple, 2L);
+    map.put(google, 3d);
+    map.put(pubMatic, 1d);
+    map.put(microsoft, 2d);
+    map.put(apple, 2d);
 
     AbstractPortfolio portfolio = new FlexiblePortfolio(mockStockService, map, 10,
         LocalDate.now());
 
-    portfolio.sellStocksFromPortfolio(apple, 1L, LocalDate.now(), 10);
+    portfolio.sellStocksFromPortfolio(apple, 1d, LocalDate.now(), 10);
     String result = portfolio.getPortfolioComposition();
-    assertTrue(result.contains("GOOG -> 3\n"));
-    assertTrue(result.contains("MSFT -> 2\n"));
-    assertTrue(result.contains("PUBM -> 1\n"));
-    assertTrue(result.contains("AAPL -> 1\n"));
+    assertTrue(result.contains("GOOG -> 3.0\n"));
+    assertTrue(result.contains("MSFT -> 2.0\n"));
+    assertTrue(result.contains("PUBM -> 1.0\n"));
+    assertTrue(result.contains("AAPL -> 1.0\n"));
 
     assertEquals(808.56, portfolio.getPortfolioCostBasisByDate(LocalDate.now()), 0.0);
   }
@@ -517,7 +517,7 @@ public class FlexiblePortfolioTest {
         testCostBasisAfterTransactions.getPortfolioCostBasisByDate(LocalDate.now()));
 
     IStock pubMatic = new Stock("PUBM", mockExtensive);
-    testCostBasisAfterTransactions.addStocksToPortfolio(pubMatic, 2L,
+    testCostBasisAfterTransactions.addStocksToPortfolio(pubMatic, 2d,
         LocalDate.of(2019, 11, 30), 10);
 
     assertEquals(9962.48,
@@ -530,13 +530,13 @@ public class FlexiblePortfolioTest {
         testCostBasisAfterTransactions.getPortfolioCostBasisByDate(LocalDate.now()));
 
     IStock pubMatic = new Stock("PUBM", mockExtensive);
-    testCostBasisAfterTransactions.addStocksToPortfolio(pubMatic, 2L,
+    testCostBasisAfterTransactions.addStocksToPortfolio(pubMatic, 2d,
         LocalDate.of(2019, 11, 30), 10);
 
     assertEquals(9962.48,
         testCostBasisAfterTransactions.getPortfolioCostBasisByDate(LocalDate.now()));
 
-    testCostBasisAfterTransactions.sellStocksFromPortfolio(pubMatic, 1L,
+    testCostBasisAfterTransactions.sellStocksFromPortfolio(pubMatic, 1d,
         LocalDate.of(2019, 11, 30), 10);
 
     assertEquals(9972.48,
@@ -549,16 +549,16 @@ public class FlexiblePortfolioTest {
         testCostBasisAfterTransactions.getPortfolioCostBasisByDate(LocalDate.now()));
 
     IStock pubMatic = new Stock("PUBM", mockExtensive);
-    testCostBasisAfterTransactions.addStocksToPortfolio(pubMatic, 2L,
+    testCostBasisAfterTransactions.addStocksToPortfolio(pubMatic, 2d,
         LocalDate.of(2019, 11, 30), 10);
 
     assertEquals(9962.48,
         testCostBasisAfterTransactions.getPortfolioCostBasisByDate(LocalDate.now()));
 
-    testCostBasisAfterTransactions.sellStocksFromPortfolio(pubMatic, 1L,
+    testCostBasisAfterTransactions.sellStocksFromPortfolio(pubMatic, 1d,
         LocalDate.of(2019, 11, 30), 10);
 
-    testCostBasisAfterTransactions.addStocksToPortfolio(pubMatic, 2L,
+    testCostBasisAfterTransactions.addStocksToPortfolio(pubMatic, 2d,
         LocalDate.of(2019, 11, 30), 10);
 
     assertEquals(12592.4,
@@ -567,13 +567,13 @@ public class FlexiblePortfolioTest {
 
   @Test
   public void testSavePortfolio() throws ParserConfigurationException {
-    Map<IStock, Long> map = new HashMap<>();
+    Map<IStock, Double> map = new HashMap<>();
     IStock google = new Stock("GOOG", mockStockService);
     IStock pubMatic = new Stock("PUBM", mockStockService);
     IStock microsoft = new Stock("MSFT", mockStockService);
-    map.put(google, 3L);
-    map.put(pubMatic, 1L);
-    map.put(microsoft, 2L);
+    map.put(google, 3d);
+    map.put(pubMatic, 1d);
+    map.put(microsoft, 2d);
 
     AbstractPortfolio portfolio = new FlexiblePortfolio(mockStockService, map, 10,
         LocalDate.now());
@@ -590,9 +590,9 @@ public class FlexiblePortfolioTest {
     }
 
     String result = retrievedPortfolio.getPortfolioComposition();
-    assertTrue(result.contains("GOOG -> 3\n"));
-    assertTrue(result.contains("MSFT -> 2\n"));
-    assertTrue(result.contains("PUBM -> 1\n"));
+    assertTrue(result.contains("GOOG -> 3.0\n"));
+    assertTrue(result.contains("MSFT -> 2.0\n"));
+    assertTrue(result.contains("PUBM -> 1.0\n"));
 
     try {
       Files.delete(Path.of(path));
@@ -604,21 +604,21 @@ public class FlexiblePortfolioTest {
   @Test
   public void testGetPortfolioCompositionAtGivenDate() {
     String result1 = testAnyDateObj.getPortfolioCompositionOnADate(LocalDate.of(2019, 10, 27));
-    assertTrue(result1.contains("GOOG -> 2\n"));
-    assertTrue(result1.contains("AAPL -> 2\n"));
-    assertFalse(result1.contains("A -> 2\n"));
+    assertTrue(result1.contains("GOOG -> 2.0\n"));
+    assertTrue(result1.contains("AAPL -> 2.0\n"));
+    assertFalse(result1.contains("A -> 2.0\n"));
 
     String result2 = testAnyDateObj.getPortfolioCompositionOnADate(LocalDate.of(2019, 10, 30));
-    assertTrue(result2.contains("GOOG -> 2\n"));
-    assertTrue(result2.contains("AAPL -> 2\n"));
+    assertTrue(result2.contains("GOOG -> 2.0\n"));
+    assertTrue(result2.contains("AAPL -> 2.0\n"));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testGetPortfolioCompositionBeforeCreation() {
     String result1 = testAnyDateObj.getPortfolioCompositionOnADate(LocalDate.of(2017, 10, 23));
-    assertTrue(result1.contains("GOOG -> 2\n"));
-    assertTrue(result1.contains("AAPL -> 2\n"));
-    assertFalse(result1.contains("A -> 2\n"));
+    assertTrue(result1.contains("GOOG -> 2.0\n"));
+    assertTrue(result1.contains("AAPL -> 2.0\n"));
+    assertFalse(result1.contains("A -> 2.0\n"));
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -629,20 +629,20 @@ public class FlexiblePortfolioTest {
 
   @Test
   public void testGetPortfolioValue() {
-    Map<IStock, Long> map = new HashMap<>();
+    Map<IStock, Double> map = new HashMap<>();
     IStock google = new Stock("GOOG", mockStockService);
     IStock pubMatic = new Stock("PUBM", mockStockService);
     IStock microsoft = new Stock("MSFT", mockStockService);
-    map.put(google, 3L);
-    map.put(pubMatic, 1L);
-    map.put(microsoft, 2L);
+    map.put(google, 3D);
+    map.put(pubMatic, 1D);
+    map.put(microsoft, 2D);
 
     AbstractPortfolio portfolio = new FlexiblePortfolio(mockStockService, map, 10,
         LocalDate.now());
 
-    portfolio.sellStocksFromPortfolio(google, 1L, LocalDate.now(), 10);
+    portfolio.sellStocksFromPortfolio(google, 1D, LocalDate.now(), 10);
     String result = portfolio.getPortfolioComposition();
-    assertTrue(result.contains("GOOG -> 2\n"));
+    assertTrue(result.contains("GOOG -> 2.0\n"));
     assertEquals(608.92, portfolio.getPortfolioCostBasisByDate(LocalDate.now()), 0.0);
 
     //check this
@@ -653,9 +653,9 @@ public class FlexiblePortfolioTest {
   public void testGetPortfolioValuePastDate() {
     String result = testAnyDateObj.getPortfolioComposition();
 
-    assertTrue(result.contains("AAPL -> 2\n"));
-    assertTrue(result.contains("A -> 2\n"));
-    assertTrue(result.contains("GOOG -> 4\n"));
+    assertTrue(result.contains("AAPL -> 2.0\n"));
+    assertTrue(result.contains("A -> 2.0\n"));
+    assertTrue(result.contains("GOOG -> 4.0\n"));
 
     assertEquals(5050.48, testAnyDateObj.getPortfolioValue(LocalDate.of(2019, 10, 29)), 0.0);
     assertEquals(7567.74, testAnyDateObj.getPortfolioValue(LocalDate.of(2019, 10, 30)), 0.0);
@@ -666,9 +666,9 @@ public class FlexiblePortfolioTest {
   public void testGetPortfolioValuePastOldestAvailableDate() {
     String result = testPastAvailableDatePortfolio.getPortfolioComposition();
 
-    assertTrue(result.contains("AAPL -> 2\n"));
-    assertTrue(result.contains("A -> 2\n"));
-    assertTrue(result.contains("GOOG -> 4\n"));
+    assertTrue(result.contains("AAPL -> 2.0\n"));
+    assertTrue(result.contains("A -> 2.0\n"));
+    assertTrue(result.contains("GOOG -> 4.0\n"));
 
     assertEquals(0.0, testPastAvailableDatePortfolio.getPortfolioValue(LocalDate.of(2013, 10, 29)),
         0.0);

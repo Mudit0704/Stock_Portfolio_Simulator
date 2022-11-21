@@ -69,10 +69,10 @@ class ControllerHelper {
   }
 
   protected void populateStockDataFromUser(Scanner scan, IPortfoliosModel portfolios,
-      Map<String, Long> stocks)
+      Map<String, Double> stocks)
       throws IOException {
     String tickerSymbol;
-    long stockQuantity;
+    double stockQuantity;
     view.displayCustomText("Stock Symbol: ");
     scan.nextLine();
     tickerSymbol = scan.nextLine();

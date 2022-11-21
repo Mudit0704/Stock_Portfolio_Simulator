@@ -43,11 +43,11 @@ public class FlexiblePortfoliosModelTest {
   @Test
   public void testCreatePortfolio() {
 
-    Map<String, Long> map = new HashMap<>();
-    map.put("GOOG", 3L);
-    map.put("PUBM", 2L);
-    map.put("MSFT", 1L);
-    map.put("MUN", 12L);
+    Map<String, Double> map = new HashMap<>();
+    map.put("GOOG", 3d);
+    map.put("PUBM", 2d);
+    map.put("MSFT", 1d);
+    map.put("MUN", 12d);
 
     portfolios.createNewPortfolio(map);
 
@@ -57,32 +57,32 @@ public class FlexiblePortfoliosModelTest {
       throw new RuntimeException(e);
     }
     String result = portfolios.getPortfolioComposition(1);
-    assertTrue(result.contains("GOOG -> 3\n"));
-    assertTrue(result.contains("PUBM -> 2\n"));
-    assertTrue(result.contains("MSFT -> 1\n"));
-    assertTrue(result.contains("MUN -> 12\n"));
+    assertTrue(result.contains("GOOG -> 3.0\n"));
+    assertTrue(result.contains("PUBM -> 2.0\n"));
+    assertTrue(result.contains("MSFT -> 1.0\n"));
+    assertTrue(result.contains("MUN -> 12.0\n"));
 
     map = new HashMap<>();
-    map.put("AAPL", 7L);
-    map.put("OCL", 9L);
+    map.put("AAPL", 7d);
+    map.put("OCL", 9d);
 
     portfolios.createNewPortfolio(map);
 
     result = portfolios.getPortfolioComposition(2);
 
-    assertTrue(result.contains("OCL -> 9\n"));
-    assertTrue(result.contains("AAPL -> 7\n"));
+    assertTrue(result.contains("OCL -> 9.0\n"));
+    assertTrue(result.contains("AAPL -> 7.0\n"));
   }
 
 
   @Test
   public void testCreatePortfolioOnADate() throws ParserConfigurationException {
 
-    Map<String, Long> map = new HashMap<>();
-    map.put("GOOG", 3L);
-    map.put("PUBM", 2L);
-    map.put("MSFT", 1L);
-    map.put("MUN", 12L);
+    Map<String, Double> map = new HashMap<>();
+    map.put("GOOG", 3d);
+    map.put("PUBM", 2d);
+    map.put("MSFT", 1d);
+    map.put("MUN", 12d);
 
     portfolios.createNewPortfolioOnADate(map, LocalDate.of(2020,10,10));
 
@@ -92,67 +92,67 @@ public class FlexiblePortfoliosModelTest {
       throw new RuntimeException(e);
     }
 
-    portfolios.addStocksToPortfolio("GOOG", 1L, 1,
+    portfolios.addStocksToPortfolio("GOOG", 1D, 1,
         LocalDate.of(2021,10,9));
     String result = portfolios.getPortfolioComposition(1);
-    assertTrue(result.contains("GOOG -> 4\n"));
-    assertTrue(result.contains("PUBM -> 2\n"));
-    assertTrue(result.contains("MSFT -> 1\n"));
-    assertTrue(result.contains("MUN -> 12\n"));
+    assertTrue(result.contains("GOOG -> 4.0\n"));
+    assertTrue(result.contains("PUBM -> 2.0\n"));
+    assertTrue(result.contains("MSFT -> 1.0\n"));
+    assertTrue(result.contains("MUN -> 12.0\n"));
 
-    portfolios.sellStockFromPortfolio("MSFT", 1L, 1,
+    portfolios.sellStockFromPortfolio("MSFT", 1D, 1,
         LocalDate.of(2022,10,9));
 
     result = portfolios.getPortfolioComposition(1);
-    assertTrue(result.contains("GOOG -> 4\n"));
-    assertTrue(result.contains("PUBM -> 2\n"));
-    assertTrue(result.contains("MSFT -> 0\n"));
-    assertTrue(result.contains("MUN -> 12\n"));
+    assertTrue(result.contains("GOOG -> 4.0\n"));
+    assertTrue(result.contains("PUBM -> 2.0\n"));
+    assertTrue(result.contains("MSFT -> 0.0\n"));
+    assertTrue(result.contains("MUN -> 12.0\n"));
 
     map = new HashMap<>();
-    map.put("AAPL", 7L);
-    map.put("OCL", 9L);
+    map.put("AAPL", 7d);
+    map.put("OCL", 9d);
 
     portfolios.createNewPortfolio(map);
 
     result = portfolios.getPortfolioComposition(2);
 
-    assertTrue(result.contains("OCL -> 9\n"));
-    assertTrue(result.contains("AAPL -> 7\n"));
+    assertTrue(result.contains("OCL -> 9.0\n"));
+    assertTrue(result.contains("AAPL -> 7.0\n"));
   }
 
   @Test
   public void testAddStocksToPortfolio() {
 
-    Map<String, Long> map = new HashMap<>();
-    map.put("GOOG", 3L);
-    map.put("PUBM", 2L);
-    map.put("MSFT", 1L);
-    map.put("MUN", 12L);
+    Map<String, Double> map = new HashMap<>();
+    map.put("GOOG", 3d);
+    map.put("PUBM", 2d);
+    map.put("MSFT", 1d);
+    map.put("MUN", 12d);
 
     portfolios.createNewPortfolio(map);
 
-    portfolios.addStocksToPortfolio("GOOG", 1L, 1, LocalDate.now());
+    portfolios.addStocksToPortfolio("GOOG", 1d, 1, LocalDate.now());
     portfolios.getPortfolioComposition(1);
     String result = portfolios.getPortfolioComposition(1);
-    assertTrue(result.contains("GOOG -> 4\n"));
-    assertTrue(result.contains("PUBM -> 2\n"));
-    assertTrue(result.contains("MSFT -> 1\n"));
-    assertTrue(result.contains("MUN -> 12\n"));
+    assertTrue(result.contains("GOOG -> 4.0\n"));
+    assertTrue(result.contains("PUBM -> 2.0\n"));
+    assertTrue(result.contains("MSFT -> 1.0\n"));
+    assertTrue(result.contains("MUN -> 12.0\n"));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testAddStocksToPortfolioInvalidDate() {
 
-    Map<String, Long> map = new HashMap<>();
-    map.put("GOOG", 3L);
-    map.put("PUBM", 2L);
-    map.put("MSFT", 1L);
-    map.put("MUN", 12L);
+    Map<String, Double> map = new HashMap<>();
+    map.put("GOOG", 3d);
+    map.put("PUBM", 2d);
+    map.put("MSFT", 1d);
+    map.put("MUN", 12d);
 
     portfolios.createNewPortfolio(map);
 
-    portfolios.addStocksToPortfolio("GOOG", 1L, 1, LocalDate.of(2022, 10, 10));
+    portfolios.addStocksToPortfolio("GOOG", 1d, 1, LocalDate.of(2022, 10, 10));
     portfolios.getPortfolioComposition(1);
     String result = portfolios.getPortfolioComposition(1);
     assertTrue(result.contains("GOOG -> 4\n"));
@@ -164,35 +164,35 @@ public class FlexiblePortfoliosModelTest {
   @Test
   public void testSellStockFromPortfolio() {
 
-    Map<String, Long> map = new HashMap<>();
-    map.put("GOOG", 3L);
-    map.put("PUBM", 2L);
-    map.put("MSFT", 1L);
-    map.put("MUN", 12L);
+    Map<String, Double> map = new HashMap<>();
+    map.put("GOOG", 3d);
+    map.put("PUBM", 2d);
+    map.put("MSFT", 1d);
+    map.put("MUN", 12d);
 
     portfolios.createNewPortfolio(map);
 
-    portfolios.sellStockFromPortfolio("GOOG", 1L, 1, LocalDate.now());
+    portfolios.sellStockFromPortfolio("GOOG", 1D, 1, LocalDate.now());
     portfolios.getPortfolioComposition(1);
     String result = portfolios.getPortfolioComposition(1);
-    assertTrue(result.contains("GOOG -> 2\n"));
-    assertTrue(result.contains("PUBM -> 2\n"));
-    assertTrue(result.contains("MSFT -> 1\n"));
-    assertTrue(result.contains("MUN -> 12\n"));
+    assertTrue(result.contains("GOOG -> 2.0\n"));
+    assertTrue(result.contains("PUBM -> 2.0\n"));
+    assertTrue(result.contains("MSFT -> 1.0\n"));
+    assertTrue(result.contains("MUN -> 12.0\n"));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testSellStockFromPortfolioInvalidDate() {
 
-    Map<String, Long> map = new HashMap<>();
-    map.put("GOOG", 3L);
-    map.put("PUBM", 2L);
-    map.put("MSFT", 1L);
-    map.put("MUN", 12L);
+    Map<String, Double> map = new HashMap<>();
+    map.put("GOOG", 3d);
+    map.put("PUBM", 2d);
+    map.put("MSFT", 1d);
+    map.put("MUN", 12d);
 
     portfolios.createNewPortfolio(map);
 
-    portfolios.sellStockFromPortfolio("GOOG", 1L, 1, LocalDate.of(2022, 10, 10));
+    portfolios.sellStockFromPortfolio("GOOG", 1D, 1, LocalDate.of(2022, 10, 10));
     portfolios.getPortfolioComposition(1);
     String result = portfolios.getPortfolioComposition(1);
     assertTrue(result.contains("GOOG -> 2\n"));
@@ -204,15 +204,15 @@ public class FlexiblePortfoliosModelTest {
   @Test(expected = IllegalArgumentException.class)
   public void testAddStocksToPortfolioInvalidPortfolio() {
 
-    Map<String, Long> map = new HashMap<>();
-    map.put("GOOG", 3L);
-    map.put("PUBM", 2L);
-    map.put("MSFT", 1L);
-    map.put("MUN", 12L);
+    Map<String, Double> map = new HashMap<>();
+    map.put("GOOG", 3d);
+    map.put("PUBM", 2d);
+    map.put("MSFT", 1d);
+    map.put("MUN", 12d);
 
     portfolios.createNewPortfolio(map);
 
-    portfolios.addStocksToPortfolio("GOOG", 1L, 2, LocalDate.now());
+    portfolios.addStocksToPortfolio("GOOG", 1d, 2, LocalDate.now());
     portfolios.getPortfolioComposition(1);
     String result = portfolios.getPortfolioComposition(2);
     assertTrue(result.contains("GOOG -> 4\n"));
@@ -224,15 +224,15 @@ public class FlexiblePortfoliosModelTest {
   @Test(expected = IllegalArgumentException.class)
   public void testSellStocksFromPortfolioInvalidPortfolio() {
 
-    Map<String, Long> map = new HashMap<>();
-    map.put("GOOG", 3L);
-    map.put("PUBM", 2L);
-    map.put("MSFT", 1L);
-    map.put("MUN", 12L);
+    Map<String, Double> map = new HashMap<>();
+    map.put("GOOG", 3d);
+    map.put("PUBM", 2d);
+    map.put("MSFT", 1d);
+    map.put("MUN", 12d);
 
     portfolios.createNewPortfolio(map);
 
-    portfolios.sellStockFromPortfolio("GOOG", 1L, 2, LocalDate.now());
+    portfolios.sellStockFromPortfolio("GOOG", 1D, 2, LocalDate.now());
     portfolios.getPortfolioComposition(1);
     String result = portfolios.getPortfolioComposition(2);
     assertTrue(result.contains("GOOG -> 4\n"));
@@ -244,15 +244,15 @@ public class FlexiblePortfoliosModelTest {
   @Test(expected = IllegalArgumentException.class)
   public void testSellStocksFromPortfolioInvalidQty() {
 
-    Map<String, Long> map = new HashMap<>();
-    map.put("GOOG", 3L);
-    map.put("PUBM", 2L);
-    map.put("MSFT", 1L);
-    map.put("MUN", 12L);
+    Map<String, Double> map = new HashMap<>();
+    map.put("GOOG", 3D);
+    map.put("PUBM", 2D);
+    map.put("MSFT", 1D);
+    map.put("MUN", 12D);
 
     portfolios.createNewPortfolio(map);
 
-    portfolios.sellStockFromPortfolio("GOOG", -1L, 1, LocalDate.now());
+    portfolios.sellStockFromPortfolio("GOOG", -1.0, 1, LocalDate.now());
     portfolios.getPortfolioComposition(1);
     String result = portfolios.getPortfolioComposition(1);
     assertTrue(result.contains("GOOG -> 4\n"));
@@ -264,15 +264,15 @@ public class FlexiblePortfoliosModelTest {
   @Test(expected = IllegalArgumentException.class)
   public void testAddStocksToPortfolioInvalidQty() {
 
-    Map<String, Long> map = new HashMap<>();
-    map.put("GOOG", 3L);
-    map.put("PUBM", 2L);
-    map.put("MSFT", 1L);
-    map.put("MUN", 12L);
+    Map<String, Double> map = new HashMap<>();
+    map.put("GOOG", 3d);
+    map.put("PUBM", 2d);
+    map.put("MSFT", 1d);
+    map.put("MUN", 12d);
 
     portfolios.createNewPortfolio(map);
 
-    portfolios.addStocksToPortfolio("GOOG", -1L, 1, LocalDate.now());
+    portfolios.addStocksToPortfolio("GOOG", -1.0, 1, LocalDate.now());
     portfolios.getPortfolioComposition(1);
     String result = portfolios.getPortfolioComposition(1);
     assertTrue(result.contains("GOOG -> 4\n"));
@@ -283,11 +283,11 @@ public class FlexiblePortfoliosModelTest {
 
   @Test
   public void testGetCostBasis() {
-    Map<String, Long> map = new HashMap<>();
-    map.put("GOOG", 3L);
-    map.put("PUBM", 2L);
-    map.put("MSFT", 1L);
-    map.put("MUN", 12L);
+    Map<String, Double> map = new HashMap<>();
+    map.put("GOOG", 3d);
+    map.put("PUBM", 2d);
+    map.put("MSFT", 1d);
+    map.put("MUN", 12d);
 
     portfolios.setCommissionFee(10);
     portfolios.createNewPortfolio(map);
@@ -297,11 +297,11 @@ public class FlexiblePortfoliosModelTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void testGetCostBasisInvalidDate() {
-    Map<String, Long> map = new HashMap<>();
-    map.put("GOOG", 3L);
-    map.put("PUBM", 2L);
-    map.put("MSFT", 1L);
-    map.put("MUN", 12L);
+    Map<String, Double> map = new HashMap<>();
+    map.put("GOOG", 3d);
+    map.put("PUBM", 2d);
+    map.put("MSFT", 1d);
+    map.put("MUN", 12d);
 
     portfolios.setCommissionFee(10);
     portfolios.createNewPortfolio(map);
@@ -311,11 +311,11 @@ public class FlexiblePortfoliosModelTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void testGetCostBasisInvalidPortfolio() {
-    Map<String, Long> map = new HashMap<>();
-    map.put("GOOG", 3L);
-    map.put("PUBM", 2L);
-    map.put("MSFT", 1L);
-    map.put("MUN", 12L);
+    Map<String, Double> map = new HashMap<>();
+    map.put("GOOG", 3d);
+    map.put("PUBM", 2d);
+    map.put("MSFT", 1d);
+    map.put("MUN", 12d);
 
     portfolios.setCommissionFee(10);
     portfolios.createNewPortfolio(map);
@@ -325,11 +325,11 @@ public class FlexiblePortfoliosModelTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void testGetCostBasisNegativePortfolio() {
-    Map<String, Long> map = new HashMap<>();
-    map.put("GOOG", 3L);
-    map.put("PUBM", 2L);
-    map.put("MSFT", 1L);
-    map.put("MUN", 12L);
+    Map<String, Double> map = new HashMap<>();
+    map.put("GOOG", 3d);
+    map.put("PUBM", 2d);
+    map.put("MSFT", 1d);
+    map.put("MUN", 12d);
 
     portfolios.setCommissionFee(10);
     portfolios.createNewPortfolio(map);
@@ -339,25 +339,25 @@ public class FlexiblePortfoliosModelTest {
 
   @Test
   public void testSetTransactionFeeAndGetCostBasis() {
-    Map<String, Long> map = new HashMap<>();
-    map.put("GOOG", 3L);
-    map.put("PUBM", 2L);
-    map.put("MSFT", 1L);
-    map.put("MUN", 12L);
+    Map<String, Double> map = new HashMap<>();
+    map.put("GOOG", 3d);
+    map.put("PUBM", 2d);
+    map.put("MSFT", 1d);
+    map.put("MUN", 12d);
 
     portfolios.setCommissionFee(10);
     portfolios.createNewPortfolio(map);
 
-    portfolios.addStocksToPortfolio("GOOG", 1L, 1, LocalDate.now());
+    portfolios.addStocksToPortfolio("GOOG", 1d, 1, LocalDate.now());
     portfolios.getPortfolioComposition(1);
     assertEquals(1789.23, portfolios.getPortfolioValue(LocalDate.now(), 1), 0.1);
     assertEquals(1839.23, portfolios.getCostBasis(LocalDate.now(), 1), 0.0);
 
     String result = portfolios.getPortfolioComposition(1);
-    assertTrue(result.contains("GOOG -> 4\n"));
-    assertTrue(result.contains("PUBM -> 2\n"));
-    assertTrue(result.contains("MSFT -> 1\n"));
-    assertTrue(result.contains("MUN -> 12\n"));
+    assertTrue(result.contains("GOOG -> 4.0\n"));
+    assertTrue(result.contains("PUBM -> 2.0\n"));
+    assertTrue(result.contains("MSFT -> 1.0\n"));
+    assertTrue(result.contains("MUN -> 12.0\n"));
   }
 
   @Test
@@ -409,14 +409,14 @@ public class FlexiblePortfoliosModelTest {
 
   @Test
   public void testSetCommissionFee() {
-    Map<String, Long> map = new HashMap<>();
-    map.put("GOOG", 3L);
+    Map<String, Double> map = new HashMap<>();
+    map.put("GOOG", 3D);
 
     portfolios.setCommissionFee(10);
     portfolios.createNewPortfolio(map);
 
     assertEquals(292.51, portfolios.getCostBasis(LocalDate.now(), 1), 0.0);
-    portfolios.sellStockFromPortfolio("GOOG", 1L, 1, LocalDate.now());
+    portfolios.sellStockFromPortfolio("GOOG", 1D, 1, LocalDate.now());
     assertEquals(302.51, portfolios.getCostBasis(LocalDate.now(), 1), 0.0);
   }
 
@@ -431,9 +431,9 @@ public class FlexiblePortfoliosModelTest {
     String result = portfolioMockModel.getPortfolioCompositionOnADate(1,
         LocalDate.of(2019, 11, 11));
 
-    assertTrue(result.contains("AAPL -> 2\n"));
-    assertTrue(result.contains("GOOG -> 2\n"));
-    assertTrue(result.contains("A -> 2\n"));
+    assertTrue(result.contains("AAPL -> 2.0\n"));
+    assertTrue(result.contains("GOOG -> 2.0\n"));
+    assertTrue(result.contains("A -> 2.0\n"));
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -526,7 +526,7 @@ public class FlexiblePortfoliosModelTest {
       throws ParserConfigurationException, IOException, SAXException {
     portfolioNew.setCommissionFee(10);
     portfolioNew.retrievePortfolios();
-    portfolioNew.addStocksToPortfolio("GGO", 1L, 1, LocalDate.now());
+    portfolioNew.addStocksToPortfolio("GGO", 1d, 1, LocalDate.now());
     portfolioNew.getPortfolioCompositionOnADate(1, LocalDate.now());
   }
 }

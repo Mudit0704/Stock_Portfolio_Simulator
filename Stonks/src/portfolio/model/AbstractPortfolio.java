@@ -7,7 +7,7 @@ import java.util.Map;
  */
 public abstract class AbstractPortfolio implements IFlexiblePortfolio {
 
-  protected Map<IStock, Long> stockQuantityMap;
+  protected Map<IStock, Double> stockQuantityMap;
   IStockService stockService;
   protected IStockAPIOptimizer apiOptimizer;
 
@@ -16,7 +16,7 @@ public abstract class AbstractPortfolio implements IFlexiblePortfolio {
    * @param stockService service object to fetch stock data from API
    * @param stocks map containing stocks and their quantities for a portfolio
    */
-  AbstractPortfolio(IStockService stockService, Map<IStock, Long> stocks) {
+  AbstractPortfolio(IStockService stockService, Map<IStock, Double> stocks) {
     this.stockService = stockService;
     this.stockQuantityMap = stocks;
     apiOptimizer = StockCache.getInstance();

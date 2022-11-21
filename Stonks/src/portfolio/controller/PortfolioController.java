@@ -182,7 +182,7 @@ public class PortfolioController implements IPortfolioController {
 
   protected void generatePortfolios(Scanner scan, IPortfoliosModel portfolios)
       throws IOException {
-    Map<String, Long> stocks = new HashMap<>();
+    Map<String, Double> stocks = new HashMap<>();
     while (true) {
       view.displayCustomText(CREATE_PORTFOLIO_SUB_MENU);
       view.askForInput();

@@ -56,7 +56,7 @@ public interface IPortfoliosModel {
    *
    * @param stocks the specified mapping of stocks and their quantity to be part of this portfolio.
    */
-  void createNewPortfolio(Map<String, Long> stocks);
+  void createNewPortfolio(Map<String, Double> stocks);
 
   /**
    * Gets all the available portfolios.
