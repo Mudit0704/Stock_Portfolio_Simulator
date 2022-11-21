@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class StrategicPortfolioImpl extends FlexiblePortfolio implements IStrategicPortfolio {
 
-  protected LocalDate strategyStartDate;
+  protected IStrategy strategy;
   /**
    * Constructs an object of Portfolio and initializes its members.
    *
@@ -20,31 +20,8 @@ public class StrategicPortfolioImpl extends FlexiblePortfolio implements IStrate
   }
 
   @Override
-  public void createPortfolioWithFractionalShares(Map<String, Double> stockProportions,
+  public void investStocksIntoStrategicPortfolio(Map<IStock, Double> stockProportions,
     Double totalAmount, int portfolioId, LocalDate date) {
 
-  }
-
-  public static class StrategicPortfolioBuilder extends AbstractStrategicPortfolioBuilder {
-    protected LocalDate strategyStartDate ;
-    protected Double totalAmount;
-    static AbstractStrategicPortfolioBuilder strategicPortfolioBuilder = new StrategicPortfolioBuilder();
-
-    @Override
-    protected AbstractStrategicPortfolioBuilder setStrategyStartDate(LocalDate startDate) {
-      this.strategyStartDate = startDate;
-      return strategicPortfolioBuilder;
-    }
-
-    @Override
-    protected AbstractStrategicPortfolioBuilder setTotalAmount(Double totalAmount) {
-      this.totalAmount = totalAmount;
-      return strategicPortfolioBuilder;
-    }
-
-    @Override
-    protected IStrategicPortfolio build() {
-      return null;
-    }
   }
 }

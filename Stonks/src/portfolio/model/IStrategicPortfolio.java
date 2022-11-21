@@ -12,6 +12,6 @@ public interface IStrategicPortfolio extends IFlexiblePortfolio {
    * @param portfolioId
    * @param date
    */
-  void createPortfolioWithFractionalShares(Map<String, Double> stockProportions, Double totalAmount,
+  void investStocksIntoStrategicPortfolio(Map<IStock, Double> stockProportions, Double totalAmount,
     int portfolioId, LocalDate date);
 }
