@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicPortfolio {
 
-  protected IStrategy strategy;
+  protected IStrategy<Map<IStock, Double>> strategy;
   /**
    * Constructs an object of Portfolio and initializes its members.
    *
@@ -20,8 +20,27 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
   }
 
   @Override
-  public void investStocksIntoStrategicPortfolio(Map<IStock, Double> stockProportions,
-    Double totalAmount, int portfolioId, LocalDate date) {
+  public void createFractionalStrategicPortfolio(Map<IStock, Double> stockProportions,
+    Double totalAmount, LocalDate date, double transactionFee) {
 
   }
+
+  @Override
+  public void investStocksIntoStrategicPortfolio(Map<IStock, Double> stockProportions,
+    Double totalAmount, LocalDate date, double transactionFee) {
+
+    strategy = new DollarCostAvgStrategy.StrategicPortfolioBuilder()
+        .setTotalAmount(totalAmount)
+        .setStrategyStartDate(date)
+        .build();
+
+    Map<IStock, Double> updatedFractionalQty = strategy.getPortfolioStocksPerStrategy(stockProportions);
+    for(Map.Entry<IStock, Double> stockQty: updatedFractionalQty.entrySet()) {
+      super.addStocksToPortfolio(stockQty.getKey(), stockQty.getValue(), date, transactionFee);
+    }
+  }
 }
+
+// Abstract the validation method in the FlexiblePortfolio class and implement the method appropriately for this class
+// remove the createFractionalStrategicPortfolio() from this class
+// use only the investStocksIntoStrategicPortfolio() method from the upper layer

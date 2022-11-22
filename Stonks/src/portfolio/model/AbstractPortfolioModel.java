@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import javax.xml.parsers.ParserConfigurationException;
@@ -21,7 +22,12 @@ public abstract class AbstractPortfolioModel implements IFlexiblePortfoliosModel
   Map<String, AbstractPortfolio> portfolioMap;
   IStockService stockService;
   IStockAPIOptimizer apiOptimizer;
+  protected double transactionFee;
 
+  AbstractPortfolioModel() {
+    apiOptimizer = StockCache.getInstance();
+    portfolioMap = new LinkedHashMap<>();
+  }
   @Override
   public void setServiceType(ServiceType serviceType) {
     stockService = AbstractServiceCreator.serviceCreator(serviceType);

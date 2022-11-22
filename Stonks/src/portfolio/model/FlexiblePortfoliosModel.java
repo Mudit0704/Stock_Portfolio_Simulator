@@ -11,14 +11,11 @@ import java.util.Map;
  */
 public class FlexiblePortfoliosModel extends AbstractPortfolioModel {
 
-  private double transactionFee;
-
   /**
    * Constructs an object of {@link FlexiblePortfoliosModel} and initializes its members.
    */
   public FlexiblePortfoliosModel() {
-    apiOptimizer = StockCache.getInstance();
-    portfolioMap = new LinkedHashMap<>();
+    super();
   }
 
   @Override

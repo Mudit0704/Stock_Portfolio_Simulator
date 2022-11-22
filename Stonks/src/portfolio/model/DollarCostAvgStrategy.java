@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DollarCostAvgStrategy implements IStrategy {
+public class DollarCostAvgStrategy implements IStrategy<Map<IStock, Double>> {
 
   protected LocalDate startDate;
   protected LocalDate endDate;
@@ -16,12 +16,12 @@ public class DollarCostAvgStrategy implements IStrategy {
   }
 
   @Override
-  public Map getPortfolioStocksPerStrategy(Map<IStock, Double> stockQtyRatio, LocalDate date) {
+  public Map getPortfolioStocksPerStrategy(Map<IStock, Double> stockQtyRatio) {
     Map<IStock, Double> stockQtyBasedOnStrategy = new HashMap<>();
 
     for(Map.Entry<IStock, Double> stockQty:stockQtyRatio.entrySet()) {
       Double proportion = totalAmount * stockQty.getValue() / 100.0;
-      Double qty = proportion / stockQty.getKey().getValue(date);
+      Double qty = proportion / stockQty.getKey().getValue(this.startDate);
       stockQtyBasedOnStrategy.put(stockQty.getKey(), qty);
     }
 
@@ -52,7 +52,7 @@ public class DollarCostAvgStrategy implements IStrategy {
     }
 
     @Override
-    protected IStrategy build() {
+    protected IStrategy<Map<IStock, Double>> build() {
       return new DollarCostAvgStrategy(this.strategyStartDate, this.strategyEndDate,
           this.totalAmount);
     }
