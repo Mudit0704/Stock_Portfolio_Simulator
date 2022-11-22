@@ -100,12 +100,12 @@ public class GUIPortfolioController implements Features {
   @Override
   public void specificInvestmentOnAGivenDate(Map<String, Double> stockProportions,
       Double totalAmount, int portfolioId, LocalDate date) {
-    model.investStrategicPortfolio(stockProportions, totalAmount, portfolioId, date);
+    //model.investStrategicPortfolio(stockProportions, totalAmount, portfolioId, date);
   }
 
   @Override
   public void createPortfolioUsingStrategy(Map<String, Double> stockProportions, Double totalAmount,
       LocalDate startDate, LocalDate endDate) {
-    model.createStrategicPortfolio(stockProportions, totalAmount, startDate, endDate);
+//    model.createStrategicPortfolio(stockProportions, totalAmount, startDate, endDate);
   }
 }

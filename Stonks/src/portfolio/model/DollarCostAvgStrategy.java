@@ -4,10 +4,10 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DollarCostAvgStrategy implements IStrategy<Map<IStock, Double>> {
+public class DollarCostAvgStrategy implements IStrategy {
 
-  protected LocalDate startDate;
-  protected LocalDate endDate;
+  private final LocalDate startDate;
+  private final LocalDate endDate;
   protected Double totalAmount;
   protected DollarCostAvgStrategy(LocalDate startDate, LocalDate endDate, Double totalAmount) {
     this.startDate = startDate;
@@ -16,49 +16,59 @@ public class DollarCostAvgStrategy implements IStrategy<Map<IStock, Double>> {
   }
 
   @Override
-  public Map getPortfolioStocksPerStrategy(Map<IStock, Double> stockQtyRatio) {
-    Map<IStock, Double> stockQtyBasedOnStrategy = new HashMap<>();
+  public Map<LocalDate, Map<IStock, Double>> applyStrategy(Map<IStock, Double> stockQtyRatio) {
+    Map<LocalDate, Map<IStock, Double>> stockQtyBasedOnStrategy = new HashMap<>();
+    LocalDate tempDate = startDate;
 
-    for(Map.Entry<IStock, Double> stockQty:stockQtyRatio.entrySet()) {
-      Double proportion = totalAmount * stockQty.getValue() / 100.0;
-      Double qty = proportion / stockQty.getKey().getValue(this.startDate);
-      stockQtyBasedOnStrategy.put(stockQty.getKey(), qty);
+    while(tempDate.isBefore(endDate) || !tempDate.isAfter(LocalDate.now())) {
+      Map<IStock, Double> stockQtyMap = new HashMap<>();
+
+      for(Map.Entry<IStock, Double> stockQty:stockQtyRatio.entrySet()) {
+        Double proportion = totalAmount * stockQty.getValue() / 100.0;
+        Double qty = proportion / stockQty.getKey().getValue(this.startDate);
+        stockQtyMap.put(stockQty.getKey(), qty);
+      }
+      stockQtyBasedOnStrategy.put(tempDate, stockQtyMap);
     }
 
     return stockQtyBasedOnStrategy;
   }
 
-  public static class StrategicPortfolioBuilder extends StrategyBuilder<StrategicPortfolioBuilder> {
-    protected LocalDate strategyStartDate;
+  public static class DollarCostAvgStrategyBuilder extends StrategyBuilder<DollarCostAvgStrategyBuilder> {
+    protected LocalDate strategyTimeFrame;
     protected LocalDate strategyEndDate;
+    protected LocalDate strategyStartDate;
     protected Double totalAmount;
 
-    @Override
-    protected StrategicPortfolioBuilder setStrategyStartDate(LocalDate startDate) {
+    protected DollarCostAvgStrategyBuilder setStrategyTimeFrame(LocalDate timeFrame) {
+      this.strategyTimeFrame = timeFrame;
+      return returnBuilder();
+    }
+
+    protected DollarCostAvgStrategyBuilder setStrategyStartDate(LocalDate startDate) {
       this.strategyStartDate = startDate;
       return returnBuilder();
     }
 
-    @Override
-    protected StrategicPortfolioBuilder setStrategyEndDate(LocalDate startDate) {
-      this.strategyStartDate = startDate;
+    protected DollarCostAvgStrategyBuilder setStrategyEndDate(LocalDate endDate) {
+      this.strategyEndDate = endDate;
       return returnBuilder();
     }
 
     @Override
-    protected StrategicPortfolioBuilder setTotalAmount(Double totalAmount) {
+    protected DollarCostAvgStrategyBuilder setTotalAmount(Double totalAmount) {
       this.totalAmount = totalAmount;
       return returnBuilder();
     }
 
     @Override
-    protected IStrategy<Map<IStock, Double>> build() {
+    protected IStrategy build() {
       return new DollarCostAvgStrategy(this.strategyStartDate, this.strategyEndDate,
           this.totalAmount);
     }
 
     @Override
-    protected StrategicPortfolioBuilder returnBuilder() {
+    protected DollarCostAvgStrategyBuilder returnBuilder() {
       return this;
     }
   }

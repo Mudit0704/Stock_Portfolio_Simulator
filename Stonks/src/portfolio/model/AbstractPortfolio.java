@@ -5,7 +5,7 @@ import java.util.Map;
 /**
  * Abstract class to store common logic for implementing the operations for a portfolio.
  */
-public abstract class AbstractPortfolio implements IFlexiblePortfolio {
+public abstract class AbstractPortfolio implements IStrategicPortfolio {
 
   protected Map<IStock, Double> stockQuantityMap;
   IStockService stockService;
