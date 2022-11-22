@@ -6,7 +6,7 @@ import java.util.Map;
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
-public class StrategicPortfolio extends AbstractPortfolio implements IStrategicPortfolio {
+public class StrategicPortfolio extends AbstractPortfolio {
 
   protected IStrategy strategy;
   protected AbstractPortfolio portfolio;

@@ -1,5 +1,6 @@
 package portfolio.model;
 
+import java.time.LocalDate;
 import java.util.Map;
 
 /**
@@ -20,6 +21,12 @@ public abstract class AbstractPortfolio implements IStrategicPortfolio {
     this.stockService = stockService;
     this.stockQuantityMap = stocks;
     apiOptimizer = StockCache.getInstance();
+  }
+
+  @Override
+  public void investStocksIntoStrategicPortfolio(Map<IStock, Double> stockProportions,
+    Double totalAmount, IStrategy strategy, double transactionFee) {
+
   }
 
 }
