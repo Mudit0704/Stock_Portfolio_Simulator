@@ -1,6 +1,8 @@
 package portfolio.model;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -11,6 +13,8 @@ public abstract class AbstractPortfolio implements IStrategicPortfolio {
   protected Map<IStock, Double> stockQuantityMap;
   IStockService stockService;
   protected IStockAPIOptimizer apiOptimizer;
+  protected Map<IStock, Map<LocalDate, Double>> stockHistoryQty;
+  protected Map<LocalDate, Double> costBasisHistory;
 
   protected enum TransactionType {
     SELL,
@@ -36,4 +40,19 @@ public abstract class AbstractPortfolio implements IStrategicPortfolio {
 
   protected abstract boolean isTransactionSequenceInvalid(IStock stock, LocalDate date,
     TransactionType transactionType);
+
+  protected LocalDate getClosestDate(LocalDate date, List<LocalDate> qtyHistory) {
+    long minDiff = Long.MAX_VALUE;
+    LocalDate result = null;
+
+    for (LocalDate currDate : qtyHistory) {
+      long diff = ChronoUnit.DAYS.between(currDate, date);
+
+      if (currDate.isBefore(date) && minDiff > diff) {
+        minDiff = diff;
+        result = currDate;
+      }
+    }
+    return result;
+  }
 }

@@ -8,6 +8,7 @@ import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,8 +35,6 @@ import org.xml.sax.SAXException;
  */
 public class FlexiblePortfolio extends AbstractPortfolio {
 
-  private Map<IStock, Map<LocalDate, Double>> stockHistoryQty;
-  private Map<LocalDate, Double> costBasisHistory;
   protected LocalDate creationDate;
 
 
@@ -49,15 +48,15 @@ public class FlexiblePortfolio extends AbstractPortfolio {
   public FlexiblePortfolio(IStockService stockService, Map<IStock, Double> stocks,
       double transactionFee, LocalDate date) {
     super(stockService, stocks);
-    this.stockHistoryQty = new LinkedHashMap<>();
+    this.stockHistoryQty = new HashMap<>();
 
-    costBasisHistory = new LinkedHashMap<>();
+    costBasisHistory = new HashMap<>();
     double transactionFeeCostBasis = 0.0;
 
     if (stocks.size() != 0) {
       creationDate = date;
       for (Map.Entry<IStock, Double> mapEntry : stocks.entrySet()) {
-        Map<LocalDate, Double> dateQtyMap = new LinkedHashMap<>();
+        Map<LocalDate, Double> dateQtyMap = new HashMap<>();
         dateQtyMap.put(this.creationDate, mapEntry.getValue());
         this.stockHistoryQty.put(mapEntry.getKey(), dateQtyMap);
         transactionFeeCostBasis += transactionFee;
@@ -341,23 +340,8 @@ public class FlexiblePortfolio extends AbstractPortfolio {
     return portfolioValue;
   }
 
-  protected LocalDate getClosestDate(LocalDate date, List<LocalDate> qtyHistory) {
-    long minDiff = Long.MAX_VALUE;
-    LocalDate result = null;
-
-    for (LocalDate currDate : qtyHistory) {
-      long diff = ChronoUnit.DAYS.between(currDate, date);
-
-      if (currDate.isBefore(date) && minDiff > diff) {
-        minDiff = diff;
-        result = currDate;
-      }
-    }
-    return result;
-  }
-
   protected void updateHistoricHoldings(IStock stock, LocalDate date, Double updatedQty) {
-    Map<LocalDate, Double> map = this.stockHistoryQty.getOrDefault(stock, new LinkedHashMap<>());
+    Map<LocalDate, Double> map = this.stockHistoryQty.getOrDefault(stock, new HashMap<>());
     map.put(date, updatedQty);
     this.stockHistoryQty.put(stock, map);
   }
@@ -403,7 +387,7 @@ public class FlexiblePortfolio extends AbstractPortfolio {
     int numDates = eElement.getElementsByTagName("stockQuantity").getLength();
     int stockQuantityIdx = 0;
 
-    Map<LocalDate, Double> dateQtyMap = new LinkedHashMap<>();
+    Map<LocalDate, Double> dateQtyMap = new HashMap<>();
     List<LocalDate> dateList = new ArrayList<>();
 
     while (stockQuantityIdx < numDates) {
@@ -442,10 +426,12 @@ public class FlexiblePortfolio extends AbstractPortfolio {
 
   protected void fillStockQuantityXMLHistory(IStock stock, Document doc, Element stockElement) {
     Map<LocalDate, Double> historicQty = this.stockHistoryQty.get(stock);
-    historicQty.entrySet()
-        .stream()
-        .sorted(Map.Entry.comparingByKey(Comparator.reverseOrder()))
-        .forEachOrdered(x -> historicQty.put(x.getKey(), x.getValue()));
+
+    historicQty = historicQty.entrySet().stream()
+      .sorted(Map.Entry.comparingByKey(Comparator.reverseOrder()))
+      .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+        (e1, e2) -> e2, LinkedHashMap::new));
+
     for (Map.Entry<LocalDate, Double> stockQuantity : historicQty.entrySet()) {
       Element stockQuantityXML;
       stockQuantityXML = doc.createElement("stockQuantity");
