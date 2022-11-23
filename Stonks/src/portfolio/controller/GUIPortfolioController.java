@@ -1,5 +1,6 @@
 package portfolio.controller;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Map;
@@ -9,6 +10,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 import portfolio.model.IStrategicFlexiblePortfolioModel;
+import portfolio.model.ServiceType;
 import portfolio.view.GUIView;
 import portfolio.view.IGUIView;
 import portfolio.view.IView;
@@ -26,7 +28,8 @@ public class GUIPortfolioController implements Features {
   public GUIPortfolioController(IStrategicFlexiblePortfolioModel model, Readable in, IView view)
       throws IOException {
     boolean done = false;
-    FlexiblePortfolioController x = new FlexiblePortfolioController(in, view);
+    FlexiblePortfolioController flexiblePortfolioController = new FlexiblePortfolioController(in,
+        view);
     Scanner scan = new Scanner(in);
 
     try {
@@ -35,10 +38,11 @@ public class GUIPortfolioController implements Features {
         view.askForInput();
         switch (scan.next()) {
           case "1":
-            x.run(model);
+            flexiblePortfolioController.run(model);
             break;
           case "2":
             this.model = model;
+            this.model.setServiceType(ServiceType.ALPHAVANTAGE);
             this.view = new GUIView("Stonks");
             this.view.addFeatures(this);
             done = true;
@@ -60,41 +64,69 @@ public class GUIPortfolioController implements Features {
   }
 
   @Override
-  public void createFlexiblePortfolio(Map<String, Double> stocks, LocalDate date) {
-    //model.createNewPortfolioOnADate(stocks, date);
+  public void createFlexiblePortfolio(Map<String, Double> stocks, String date) {
+    model.createNewPortfolioOnADate(stocks, LocalDate.parse(date));
   }
 
   @Override
-  public void sellPortfolioStocks(String tickerSymbol, Double quantity, int portfolioId,
-      LocalDate date) {
-    //model.sellStockFromPortfolio(tickerSymbol, quantity, portfolioId, date);
+  public void sellPortfolioStocks(String tickerSymbol, String quantity, String portfolioId,
+      String date) {
+    model.sellStockFromPortfolio(tickerSymbol, Double.parseDouble(quantity),
+        Integer.parseInt(portfolioId), LocalDate.parse(date));
   }
 
   @Override
-  public void buyPortfolioStocks(String tickerSymbol, Double quantity, int portfolioId,
-      LocalDate date) {
-    //model.addStocksToPortfolio(tickerSymbol, quantity, portfolioId, date);
+  public void buyPortfolioStocks(String tickerSymbol, String quantity, String portfolioId,
+      String date) {
+    model.addStocksToPortfolio(tickerSymbol, Double.parseDouble(quantity),
+        Integer.parseInt(portfolioId), LocalDate.parse(date));
   }
 
 
   @Override
-  public void getCostBasis(LocalDate date, int portfolioId) {
-    model.getCostBasis(date, portfolioId);
+  public double getCostBasis(String date, String portfolioId) {
+    return model.getCostBasis(LocalDate.parse(date), Integer.parseInt(portfolioId));
   }
 
   @Override
-  public void getPortfolioValue(LocalDate date, int portfolioId) {
-    model.getPortfolioValue(date, portfolioId);
+  public double getPortfolioValue(String date, String portfolioId) {
+    return model.getPortfolioValue(LocalDate.parse(date), Integer.parseInt(portfolioId));
   }
 
   @Override
-  public void savePortfolio() throws ParserConfigurationException {
-    model.savePortfolios();
+  public String savePortfolio() {
+    try {
+      model.savePortfolios();
+    } catch (ParserConfigurationException e) {
+      return "Error while saving";
+    } catch (RuntimeException e) {
+      return e.getLocalizedMessage();
+    }
+
+    return "Saved";
   }
 
   @Override
-  public void retrievePortfolio() throws IOException, ParserConfigurationException, SAXException {
-    model.retrievePortfolios();
+  public String retrievePortfolio() {
+    try {
+      model.retrievePortfolios();
+    } catch (ParserConfigurationException | SAXException e) {
+      return "Error while retrieving";
+    } catch (IOException | RuntimeException e) {
+      return e.getLocalizedMessage();
+    }
+
+    return "Retrieved";
+  }
+
+  @Override
+  public String getAvailablePortfolios() {
+    return model.getAvailablePortfolios();
+  }
+
+  @Override
+  public String getPortfolioComposition(String portfolioId) {
+    return model.getPortfolioComposition(Integer.parseInt(portfolioId));
   }
 
   @Override

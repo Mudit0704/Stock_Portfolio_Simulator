@@ -1,27 +1,28 @@
 package portfolio.controller;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Map;
-import javax.xml.parsers.ParserConfigurationException;
-import org.xml.sax.SAXException;
 
 public interface Features {
-  void createFlexiblePortfolio(Map<String, Double> stocks, LocalDate date);
+  void createFlexiblePortfolio(Map<String, Double> stocks, String date);
 
-  void sellPortfolioStocks(String tickerSymbol, Double quantity, int portfolioId,
-      LocalDate date);
+  void sellPortfolioStocks(String tickerSymbol, String quantity, String portfolioId,
+      String date);
 
-  void buyPortfolioStocks(String tickerSymbol, Double quantity, int portfolioId,
-      LocalDate date);
+  void buyPortfolioStocks(String tickerSymbol, String quantity, String portfolioId,
+      String date);
 
-  void getCostBasis(LocalDate date, int portfolioId);
+  double getCostBasis(String date, String portfolioId);
 
-  void getPortfolioValue(LocalDate date, int portfolioId);
+  double getPortfolioValue(String date, String portfolioId);
 
-  void savePortfolio() throws ParserConfigurationException;
+  String savePortfolio();
 
-  void retrievePortfolio() throws IOException, ParserConfigurationException, SAXException;
+  String retrievePortfolio();
+
+  String getAvailablePortfolios();
+
+  String getPortfolioComposition(String portfolioId);
 
   void specificInvestmentOnAGivenDate(Map<String, Double> stockProportions, Double totalAmount,
       int portfolioId, LocalDate date);
