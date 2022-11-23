@@ -1,15 +1,14 @@
 package portfolio.controller;
 
-import java.time.LocalDate;
 import java.util.Map;
 
 public interface Features {
-  void createFlexiblePortfolio(Map<String, Double> stocks, String date);
+  String createFlexiblePortfolio(Map<String, Double> stocks, String date);
 
-  void sellPortfolioStocks(String tickerSymbol, String quantity, String portfolioId,
+  String sellPortfolioStocks(String tickerSymbol, String quantity, String portfolioId,
       String date);
 
-  void buyPortfolioStocks(String tickerSymbol, String quantity, String portfolioId,
+  String buyPortfolioStocks(String tickerSymbol, String quantity, String portfolioId,
       String date);
 
   double getCostBasis(String date, String portfolioId);
@@ -24,10 +23,10 @@ public interface Features {
 
   String getPortfolioComposition(String portfolioId);
 
-  void specificInvestmentOnAGivenDate(Map<String, Double> stockProportions, Double totalAmount,
-      int portfolioId, LocalDate date);
+  String fractionalInvestmentOnAGivenDate(Map<String, Double> stockProportions, String totalAmount,
+      String portfolioId, String date);
 
-  void createPortfolioUsingStrategy(Map<String, Double> stockProportions, Double totalAmount,
-      LocalDate startDate, LocalDate endDate);
+  String createDollarCostAveragePortfolio(Map<String, Double> stockProportions, String totalAmount,
+      String startDate, String endDate, String timeFrame);
 
 }

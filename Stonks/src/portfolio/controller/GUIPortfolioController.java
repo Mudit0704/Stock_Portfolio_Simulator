@@ -1,6 +1,5 @@
 package portfolio.controller;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Map;
@@ -11,7 +10,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 import portfolio.model.IStrategicFlexiblePortfolioModel;
 import portfolio.model.ServiceType;
-import portfolio.view.GUIView;
+import portfolio.model.StrategyType;
+import portfolio.view.guiview.GUIView;
 import portfolio.view.IGUIView;
 import portfolio.view.IView;
 
@@ -64,22 +64,25 @@ public class GUIPortfolioController implements Features {
   }
 
   @Override
-  public void createFlexiblePortfolio(Map<String, Double> stocks, String date) {
+  public String createFlexiblePortfolio(Map<String, Double> stocks, String date) {
     model.createNewPortfolioOnADate(stocks, LocalDate.parse(date));
+    return "Created";
   }
 
   @Override
-  public void sellPortfolioStocks(String tickerSymbol, String quantity, String portfolioId,
+  public String sellPortfolioStocks(String tickerSymbol, String quantity, String portfolioId,
       String date) {
     model.sellStockFromPortfolio(tickerSymbol, Double.parseDouble(quantity),
         Integer.parseInt(portfolioId), LocalDate.parse(date));
+    return "Sold";
   }
 
   @Override
-  public void buyPortfolioStocks(String tickerSymbol, String quantity, String portfolioId,
+  public String buyPortfolioStocks(String tickerSymbol, String quantity, String portfolioId,
       String date) {
     model.addStocksToPortfolio(tickerSymbol, Double.parseDouble(quantity),
         Integer.parseInt(portfolioId), LocalDate.parse(date));
+    return "Bought";
   }
 
 
@@ -130,14 +133,20 @@ public class GUIPortfolioController implements Features {
   }
 
   @Override
-  public void specificInvestmentOnAGivenDate(Map<String, Double> stockProportions,
-      Double totalAmount, int portfolioId, LocalDate date) {
-    //model.investStrategicPortfolio(stockProportions, totalAmount, portfolioId, date);
+  public String fractionalInvestmentOnAGivenDate(Map<String, Double> stockProportions,
+      String totalAmount, String portfolioId, String date) {
+    model.setStrategy(StrategyType.NORMAL, LocalDate.parse(date), LocalDate.parse(date),
+        0, Double.parseDouble(totalAmount));
+    model.investStrategicPortfolio(stockProportions, Integer.parseInt(portfolioId));
+    return "Invested";
   }
 
   @Override
-  public void createPortfolioUsingStrategy(Map<String, Double> stockProportions, Double totalAmount,
-      LocalDate startDate, LocalDate endDate) {
-//    model.createStrategicPortfolio(stockProportions, totalAmount, startDate, endDate);
+  public String createDollarCostAveragePortfolio(Map<String, Double> stockProportions, String totalAmount,
+      String startDate, String endDate, String timeFrame) {
+    model.setStrategy(StrategyType.DOLLARCOSTAVERAGING, LocalDate.parse(startDate), LocalDate.parse(endDate),
+        Integer.parseInt(timeFrame), Double.parseDouble(totalAmount));
+    model.createStrategicPortfolio(stockProportions, LocalDate.parse(startDate));
+    return "Created";
   }
 }

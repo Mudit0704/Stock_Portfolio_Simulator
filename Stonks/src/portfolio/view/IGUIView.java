@@ -14,4 +14,8 @@ public interface IGUIView extends ICommonView {
   void displayBuyStocksWindow(Features features);
 
   void displayCreateNewFlexibleWindow(Features features);
+
+  void displayFractionInvestmentWindow(Features features);
+
+  void displayCreateDollarCostAveragingWindow(Features features);
 }
