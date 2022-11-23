@@ -18,11 +18,6 @@ public class StrategicFlexiblePortfoliosModel extends FlexiblePortfoliosModel
   }
 
   @Override
-  public void createStrategicPortfolio(Map<String, Double> stockProportions) {
-
-  }
-
-  @Override
   public void createNewPortfolioOnADate(Map<String, Double> stocks, LocalDate date) {
     Map<IStock, Double> stockQty = getStockQuantitiesFromTickerSymbol(stocks);
 
