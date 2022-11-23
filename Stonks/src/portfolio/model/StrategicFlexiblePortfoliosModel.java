@@ -36,8 +36,7 @@ public class StrategicFlexiblePortfoliosModel extends FlexiblePortfoliosModel
   }
 
   @Override
-  public void investStrategicPortfolio(Map<String, Double> stockProportions,
-      int portfolioId, IStrategy strategy) {
+  public void investStrategicPortfolio(Map<String, Double> stockProportions, int portfolioId) {
 
     Map<IStock, Double> stockQty = getStockQuantitiesFromTickerSymbol(stockProportions);
 
