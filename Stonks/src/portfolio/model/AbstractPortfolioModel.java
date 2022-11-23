@@ -33,8 +33,7 @@ public abstract class AbstractPortfolioModel implements IFlexiblePortfoliosModel
     stockService = AbstractServiceCreator.serviceCreator(serviceType);
   }
 
-  @Override
-  public void createNewPortfolioOnADate(Map<String, Double> stocks, LocalDate date) {
+  protected Map<IStock, Double> getStockQuantitiesFromTickerSymbol(Map<String, Double> stocks) {
     Map<IStock, Double> stockQty = new HashMap<>();
 
     for (Map.Entry<String, Double> entry : stocks.entrySet()) {
@@ -42,6 +41,12 @@ public abstract class AbstractPortfolioModel implements IFlexiblePortfoliosModel
       apiOptimizer.cacheSetObj(entry.getKey(), stock);
       stockQty.put(stock, entry.getValue());
     }
+    return stockQty;
+  }
+
+  @Override
+  public void createNewPortfolioOnADate(Map<String, Double> stocks, LocalDate date) {
+    Map<IStock, Double> stockQty = getStockQuantitiesFromTickerSymbol(stocks);
 
     AbstractPortfolio portfolio = createPortfolio(stockQty, date);
     portfolioMap.put(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),

@@ -8,7 +8,6 @@ import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,15 +49,15 @@ public class FlexiblePortfolio extends AbstractPortfolio {
   public FlexiblePortfolio(IStockService stockService, Map<IStock, Double> stocks,
       double transactionFee, LocalDate date) {
     super(stockService, stocks);
-    this.stockHistoryQty = new HashMap<>();
+    this.stockHistoryQty = new LinkedHashMap<>();
 
-    costBasisHistory = new HashMap<>();
+    costBasisHistory = new LinkedHashMap<>();
     double transactionFeeCostBasis = 0.0;
 
     if (stocks.size() != 0) {
       creationDate = date;
       for (Map.Entry<IStock, Double> mapEntry : stocks.entrySet()) {
-        Map<LocalDate, Double> dateQtyMap = new HashMap<>();
+        Map<LocalDate, Double> dateQtyMap = new LinkedHashMap<>();
         dateQtyMap.put(this.creationDate, mapEntry.getValue());
         this.stockHistoryQty.put(mapEntry.getKey(), dateQtyMap);
         transactionFeeCostBasis += transactionFee;
@@ -358,7 +357,7 @@ public class FlexiblePortfolio extends AbstractPortfolio {
   }
 
   protected void updateHistoricHoldings(IStock stock, LocalDate date, Double updatedQty) {
-    Map<LocalDate, Double> map = this.stockHistoryQty.getOrDefault(stock, new HashMap<>());
+    Map<LocalDate, Double> map = this.stockHistoryQty.getOrDefault(stock, new LinkedHashMap<>());
     map.put(date, updatedQty);
     this.stockHistoryQty.put(stock, map);
   }
@@ -403,7 +402,7 @@ public class FlexiblePortfolio extends AbstractPortfolio {
     int numDates = eElement.getElementsByTagName("stockQuantity").getLength();
     int stockQuantityIdx = 0;
 
-    Map<LocalDate, Double> dateQtyMap = new HashMap<>();
+    Map<LocalDate, Double> dateQtyMap = new LinkedHashMap<>();
     List<LocalDate> dateList = new ArrayList<>();
 
     while (stockQuantityIdx < numDates) {

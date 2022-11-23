@@ -25,8 +25,9 @@ public abstract class AbstractPortfolio implements IStrategicPortfolio {
 
   @Override
   public void investStocksIntoStrategicPortfolio(Map<IStock, Double> stockProportions,
-    Double totalAmount, IStrategy strategy, double transactionFee) {
+      LocalDate date, double transactionFee) {
 
   }
 
+  protected abstract boolean isTransactionSequenceInvalid(IStock stock, LocalDate date);
 }

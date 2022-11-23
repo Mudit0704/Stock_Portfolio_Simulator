@@ -1,30 +1,52 @@
 package portfolio.model;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
 public class StrategicFlexiblePortfoliosModel extends FlexiblePortfoliosModel
     implements IStrategicFlexiblePortfolioModel {
 
+  private IStrategy strategy;
+
   @Override
-  public void investStrategicPortfolio(Map<String, Double> stockProportions, Double totalAmount,
-    int portfolioId, IStrategy strategy) {
+  public void setStrategy(IStrategy strategy) {
+    this.strategy = strategy;
+  }
 
-    Map<IStock, Double> stockQty = new HashMap<>();
+  @Override
+  public void createNewPortfolioOnADate(Map<String, Double> stocks, LocalDate date) {
+    Map<IStock, Double> stockQty = getStockQuantitiesFromTickerSymbol(stocks);
 
-    for (Map.Entry<String, Double> entry : stockProportions.entrySet()) {
-      IStock stock = new Stock(entry.getKey(), this.stockService);
-      apiOptimizer.cacheSetObj(entry.getKey(), stock);
-      stockQty.put(stock, entry.getValue());
-    }
+    Map<LocalDate, Map<IStock, Double>> updatedFractionalQty = strategy.applyStrategy(stockQty);
+
+    AbstractPortfolio portfolio = createPortfolio(updatedFractionalQty.get(date), date);
+
+    portfolioMap.put(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+      portfolio);
+  }
+
+  @Override
+  public void investStrategicPortfolio(Map<String, Double> stockProportions,
+      int portfolioId, IStrategy strategy) {
+
+    Map<IStock, Double> stockQty = getStockQuantitiesFromTickerSymbol(stockProportions);
+
+    Map<LocalDate, Map<IStock, Double>> updatedFractionalQty = strategy.applyStrategy(stockQty);
 
     AbstractPortfolio portfolio = super.getPortfolioFromMap(portfolioId).getValue();
-    portfolio.investStocksIntoStrategicPortfolio(stockQty, totalAmount, strategy, transactionFee);
+
+    for(Map.Entry<LocalDate, Map<IStock, Double>> stocksOnDate: updatedFractionalQty.entrySet()) {
+      LocalDate date = stocksOnDate.getKey();
+      Map<IStock, Double> proportions = stocksOnDate.getValue();
+      portfolio.investStocksIntoStrategicPortfolio(proportions, date, transactionFee);
+    }
   }
 
   protected AbstractPortfolio createPortfolio(Map<IStock, Double> stockQty, LocalDate date) {
-    return new StrategicPortfolio(this.stockService, stockQty, this.transactionFee, date);
+    return new StrategicPortfolio(stockService, stockQty, this.transactionFee, date);
   }
 
   @Override
