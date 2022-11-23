@@ -40,10 +40,10 @@ public class DollarCostAvgStrategy implements IStrategy {
   }
 
   public static class DollarCostAvgStrategyBuilder extends StrategyBuilder<DollarCostAvgStrategyBuilder> {
-    protected int strategyTimeFrame;
-    protected LocalDate strategyEndDate;
-    protected LocalDate strategyStartDate;
-    protected Double totalAmount;
+    private int strategyTimeFrame;
+    private LocalDate strategyEndDate = LocalDate.of(2100, 12,31);
+    private LocalDate strategyStartDate;
+    private Double totalAmount;
 
     protected DollarCostAvgStrategyBuilder setStrategyTimeFrame(int timeFrame) {
       this.strategyTimeFrame = timeFrame;

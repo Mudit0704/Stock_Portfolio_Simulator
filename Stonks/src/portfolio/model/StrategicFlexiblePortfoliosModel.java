@@ -8,11 +8,18 @@ import java.util.Map;
 public class StrategicFlexiblePortfoliosModel extends FlexiblePortfoliosModel
     implements IStrategicFlexiblePortfolioModel {
 
-  private StrategyType strategy;
+  private IStrategy strategy;
 
   @Override
-  public void setStrategy(StrategyType strategy) {
-    this.strategy = strategy;
+  public void setStrategy(StrategyType strategy, LocalDate startDate,
+      LocalDate endDate, int timeFrame, double investmentAmount) {
+    this.strategy = AbstractStrategyCreator.strategyCreator(strategy,
+          startDate, endDate, timeFrame, investmentAmount);
+  }
+
+  @Override
+  public void createStrategicPortfolio(Map<String, Double> stockProportions) {
+
   }
 
   @Override

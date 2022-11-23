@@ -39,7 +39,7 @@ public class StrategicFlexiblePortfoliosModelTest {
       .setTotalAmount(totalAmount)
       .build();
 
-    portfolio.setStrategy(StrategyType.DOLLARCOSTAVERAGING);
+//    portfolio.setStrategy(StrategyType.DOLLARCOSTAVERAGING);
     Field stockService = AbstractPortfolioModel.class.getDeclaredField("stockService");
 
     stockService.set(portfolio, mockStockService);
