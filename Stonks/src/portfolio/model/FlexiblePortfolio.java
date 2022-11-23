@@ -78,7 +78,7 @@ public class FlexiblePortfolio extends AbstractPortfolio {
       LocalDate date, double transactionFee) {
     double stockQty = 0;
 
-    if (isTransactionSequenceInvalid(stock, date)) {
+    if (isTransactionSequenceInvalid(stock, date, TransactionType.BUY)) {
       throw new IllegalArgumentException("Date given is not chronological based on previous "
           + "transaction dates\n");
     }
@@ -101,7 +101,7 @@ public class FlexiblePortfolio extends AbstractPortfolio {
       throws IllegalArgumentException {
     double stockQty;
 
-    if (isTransactionSequenceInvalid(stock, date)) {
+    if (isTransactionSequenceInvalid(stock, date, TransactionType.SELL)) {
       throw new IllegalArgumentException("Date given is not chronological based on previous "
           + "transaction dates\n");
     }
@@ -362,7 +362,8 @@ public class FlexiblePortfolio extends AbstractPortfolio {
     this.stockHistoryQty.put(stock, map);
   }
 
-  protected boolean isTransactionSequenceInvalid(IStock stock, LocalDate date) {
+  protected boolean isTransactionSequenceInvalid(IStock stock, LocalDate date,
+    TransactionType transactionType) {
     if (date.isBefore(this.creationDate)) {
       throw new IllegalArgumentException("Portfolio didn't exist at this date.");
     }

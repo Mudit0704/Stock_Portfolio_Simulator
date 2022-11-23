@@ -28,7 +28,12 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
   }
 
   @Override
-  protected boolean isTransactionSequenceInvalid(IStock stock, LocalDate date) {
-    return false;
+  protected boolean isTransactionSequenceInvalid(IStock stock, LocalDate date,
+    TransactionType transactionType) {
+    if (transactionType == TransactionType.BUY) {
+      return false;
+    } else {
+      return super.isTransactionSequenceInvalid(stock, date, transactionType);
+    }
   }
 }

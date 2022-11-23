@@ -3,7 +3,6 @@ package portfolio.model;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.Map;
 
 public class StrategicFlexiblePortfoliosModel extends FlexiblePortfoliosModel
@@ -23,6 +22,12 @@ public class StrategicFlexiblePortfoliosModel extends FlexiblePortfoliosModel
     Map<LocalDate, Map<IStock, Double>> updatedFractionalQty = strategy.applyStrategy(stockQty);
 
     AbstractPortfolio portfolio = createPortfolio(updatedFractionalQty.get(date), date);
+
+    for(Map.Entry<LocalDate, Map<IStock, Double>> stocksOnDate: updatedFractionalQty.entrySet()) {
+      LocalDate dateEntry = stocksOnDate.getKey();
+      Map<IStock, Double> proportions = stocksOnDate.getValue();
+      portfolio.investStocksIntoStrategicPortfolio(proportions, dateEntry, transactionFee);
+    }
 
     portfolioMap.put(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
       portfolio);

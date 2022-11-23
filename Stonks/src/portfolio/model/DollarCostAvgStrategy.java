@@ -1,7 +1,6 @@
 package portfolio.model;
 
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -29,7 +28,8 @@ public class DollarCostAvgStrategy implements IStrategy {
 
       for(Map.Entry<IStock, Double> stockQty:stockQtyRatio.entrySet()) {
         Double proportion = totalAmount * stockQty.getValue() / 100.0;
-        Double qty = proportion / stockQty.getKey().getValue(this.startDate);
+        //TODO: Find a cleaner way to do this...
+        Double qty = Math.round(proportion / stockQty.getKey().getValue(this.startDate) * 100.0) / 100.0;
         stockQtyMap.put(stockQty.getKey(), qty);
       }
       stockQtyBasedOnStrategy.put(tempDate, stockQtyMap);

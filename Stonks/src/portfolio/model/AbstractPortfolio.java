@@ -12,6 +12,11 @@ public abstract class AbstractPortfolio implements IStrategicPortfolio {
   IStockService stockService;
   protected IStockAPIOptimizer apiOptimizer;
 
+  protected enum TransactionType {
+    SELL,
+    BUY
+  }
+
   /**
    * Constructor to initialize the class members.
    * @param stockService service object to fetch stock data from API
@@ -29,5 +34,6 @@ public abstract class AbstractPortfolio implements IStrategicPortfolio {
 
   }
 
-  protected abstract boolean isTransactionSequenceInvalid(IStock stock, LocalDate date);
+  protected abstract boolean isTransactionSequenceInvalid(IStock stock, LocalDate date,
+    TransactionType transactionType);
 }
