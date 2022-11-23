@@ -8,10 +8,10 @@ import java.util.Map;
 public class StrategicFlexiblePortfoliosModel extends FlexiblePortfoliosModel
     implements IStrategicFlexiblePortfolioModel {
 
-  private IStrategy strategy;
+  private StrategyType strategy;
 
   @Override
-  public void setStrategy(IStrategy strategy) {
+  public void setStrategy(StrategyType strategy) {
     this.strategy = strategy;
   }
 

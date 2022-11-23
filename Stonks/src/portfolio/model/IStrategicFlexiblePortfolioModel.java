@@ -8,7 +8,7 @@ import java.util.Map;
  */
 public interface IStrategicFlexiblePortfolioModel extends IFlexiblePortfoliosModel {
 
-  public void setStrategy(IStrategy strategy);
+  public void setStrategy(StrategyType strategy);
   /**
    * Creates a strategic portfolio based on the total amount and proportion of each share.
    *
