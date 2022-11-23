@@ -23,7 +23,7 @@ public class NormalStrategy implements IStrategy {
 
     for(Map.Entry<IStock, Double> stockQty:stockQtyRatio.entrySet()) {
       Double proportion = totalAmount * stockQty.getValue() / 100.0;
-      Double qty = proportion / stockQty.getKey().getValue(this.date);
+      Double qty = Math.round(proportion / stockQty.getKey().getValue(this.date) * 100.0) / 100.0;
       stockQtyMap.put(stockQty.getKey(), qty);
     }
     stockQtyBasedOnStrategy.put(tempDate, stockQtyMap);

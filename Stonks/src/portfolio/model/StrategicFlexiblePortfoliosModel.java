@@ -18,10 +18,15 @@ public class StrategicFlexiblePortfoliosModel extends FlexiblePortfoliosModel
   }
 
   @Override
-  public void createNewPortfolioOnADate(Map<String, Double> stocks, LocalDate date) {
-    Map<IStock, Double> stockQty = getStockQuantitiesFromTickerSymbol(stocks);
+  public void createStrategicPortfolio(Map<String, Double> stockProportions, LocalDate date) {
+    Map<IStock, Double> stockQty = getStockQuantitiesFromTickerSymbol(stockProportions);
 
     Map<LocalDate, Map<IStock, Double>> updatedFractionalQty = strategy.applyStrategy(stockQty);
+
+    if(!updatedFractionalQty.containsKey(date)) {
+      throw new IllegalArgumentException("Portfolio creation date doesn't match with "
+          + "strategy start date");
+    }
 
     AbstractPortfolio portfolio = createPortfolio(updatedFractionalQty.get(date), date);
 

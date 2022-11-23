@@ -37,8 +37,11 @@ public abstract class AbstractPortfolioModel implements IFlexiblePortfoliosModel
     Map<IStock, Double> stockQty = new HashMap<>();
 
     for (Map.Entry<String, Double> entry : stocks.entrySet()) {
-      IStock stock = new Stock(entry.getKey(), this.stockService);
-      apiOptimizer.cacheSetObj(entry.getKey(), stock);
+      IStock stock = apiOptimizer.cacheGetObj(entry.getKey());
+      if(stock == null) {
+        stock = new Stock(entry.getKey(), this.stockService);
+        apiOptimizer.cacheSetObj(entry.getKey(), stock);
+      }
       stockQty.put(stock, entry.getValue());
     }
     return stockQty;
