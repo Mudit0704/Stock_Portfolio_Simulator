@@ -1,9 +1,12 @@
 package portfolio.view.guiview;
 
+import static portfolio.view.guiview.AbstractCommandHandlers.getCustomButton;
+
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.Toolkit;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -11,7 +14,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -33,10 +35,11 @@ public class GUIView extends JFrame implements IGUIView {
     super(caption);
     UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
 
+    Image icon = Toolkit.getDefaultToolkit().getImage(System.getProperty("user.dir")+"/image.png");
+    setIconImage(icon);
     mainPanel = new JPanel();
     mainPanel.setLayout(new BorderLayout());
-    JScrollPane mainScrollPane = new JScrollPane(mainPanel);
-    add(mainScrollPane);
+    add(mainPanel, BorderLayout.CENTER);
 
     setMinimumSize(new Dimension(650, 400));
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -45,49 +48,46 @@ public class GUIView extends JFrame implements IGUIView {
 
     pack();
     setVisible(true);
-    setFocusable(true);
     setAlwaysOnTop(true);
     setLocationRelativeTo(null);
   }
 
   @Override
   public void displayMenu() {
-
     JPanel displayPanel = new JPanel(new GridLayout(1, 1));
     displayArea = new JTextPane();
     displayArea.setEditable(false);
     displayArea.setContentType("text/html");
-    displayArea.setText(
-        "<html><center><h1>Welcome to STONKS platform!</h1></center></html>");
+    displayArea.setText("<html><center><h1>Welcome to STONKS platform!</h1></center></html>");
     JScrollPane scrollPane = new JScrollPane(displayArea);
     scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
     displayPanel.add(scrollPane);
     displayPanel.setBorder(BorderFactory.createEmptyBorder(5, 8, 5, 8));
     mainPanel.add(displayPanel, BorderLayout.CENTER);
 
-    JPanel actionsPanel = new JPanel(new GridLayout(0, 2));
-    createDollarCostPortfolioButton = new JButton("Create Portfolio Using Dollar-Cost Strategy");
+    JPanel actionsPanel = new JPanel(new GridLayout(0, 1));
+    createDollarCostPortfolioButton = getCustomButton("Create Portfolio Using Dollar-Cost Strategy");
     actionsPanel.add(createDollarCostPortfolioButton);
-    createFlexiblePortfolioButton = new JButton("Create Flexible Portfolio");
+    createFlexiblePortfolioButton = getCustomButton("Create Flexible Portfolio");
     actionsPanel.add(createFlexiblePortfolioButton);
-    getPortfolioValueButton = new JButton("Get Portfolio Value");
+    getPortfolioValueButton = getCustomButton("Get Portfolio Value");
     actionsPanel.add(getPortfolioValueButton);
-    getCostBasisButton = new JButton("Get Cost Basis");
+    getCostBasisButton = getCustomButton("Get Cost Basis");
     actionsPanel.add(getCostBasisButton);
-    savePortfolioButton = new JButton("Save Portfolio");
+    savePortfolioButton = getCustomButton("Save Portfolio");
     actionsPanel.add(savePortfolioButton);
-    retrievePortfolioButton = new JButton("Retrieve Portfolio");
+    retrievePortfolioButton = getCustomButton("Retrieve Portfolio");
     actionsPanel.add(retrievePortfolioButton);
-    sellStocksButton = new JButton("Sell Stocks");
+    sellStocksButton = getCustomButton("Sell Stocks");
     actionsPanel.add(sellStocksButton);
-    buyStocksButton = new JButton("Buy Stocks");
+    buyStocksButton = getCustomButton("Buy Stocks");
     actionsPanel.add(buyStocksButton);
-    fractionalInvestmentButton = new JButton("Fractional Investment");
+    fractionalInvestmentButton = getCustomButton("Fractional Investment");
     actionsPanel.add(fractionalInvestmentButton);
     progressBar = new JProgressBar();
     actionsPanel.add(progressBar);
     actionsPanel.setBorder(BorderFactory.createEmptyBorder(5, 8, 5, 8));
-    mainPanel.add(actionsPanel, BorderLayout.PAGE_END);
+    mainPanel.add(actionsPanel, BorderLayout.WEST);
   }
 
   @Override
@@ -104,7 +104,8 @@ public class GUIView extends JFrame implements IGUIView {
 
   @Override
   public void addFeatures(Features features) {
-    savePortfolioButton.addActionListener(e -> displayArea.setText(features.savePortfolio()));
+    savePortfolioButton.addActionListener(e -> displayArea.setText("<html><center><h1>"
+        + features.savePortfolio() + "</h1></center></html>"));
     getPortfolioValueButton.addActionListener(e -> displayGetPortfolioValueWindow(features));
     getCostBasisButton.addActionListener(e -> displayGetPortfolioCostBasisWindow(features));
     sellStocksButton.addActionListener(e -> displaySellStocksWindow(features));
@@ -113,8 +114,8 @@ public class GUIView extends JFrame implements IGUIView {
     fractionalInvestmentButton.addActionListener(e -> displayFractionInvestmentWindow(features));
     createDollarCostPortfolioButton.addActionListener(
         e -> displayCreateDollarCostAveragingWindow(features));
-    retrievePortfolioButton.addActionListener(
-        e -> displayArea.setText(features.retrievePortfolio()));
+    retrievePortfolioButton.addActionListener(e -> displayArea.setText("<html><center><h1>"
+        + features.retrievePortfolio() + "</h1></center></html>"));
   }
 
   @Override

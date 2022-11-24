@@ -12,16 +12,14 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.SwingWorker;
 import portfolio.controller.Features;
 
-public class CreateDollarCostAveragePortfolioCommand extends AbstractCommandHandlers implements
+class CreateDollarCostAveragePortfolioCommand extends AbstractCommandHandlers implements
     CommandHandler {
 
   CreateDollarCostAveragePortfolioCommand(JTextPane resultArea,
@@ -39,114 +37,89 @@ public class CreateDollarCostAveragePortfolioCommand extends AbstractCommandHand
     userInputDialog.setLocationRelativeTo(null);
     userInputDialog.setResizable(false);
 
-    JPanel displayPanel = new JPanel(new GridLayout(1, 1));
-    JTextArea displayArea = new JTextArea(5, 20);
-    displayArea.setEditable(false);
-    displayArea.setLineWrap(true);
-    JScrollPane scrollPane = new JScrollPane(displayArea);
-    scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-    displayPanel.add(scrollPane);
+    JPanel displayPanel = getResultDisplay("", "Proportions");
 
     JPanel mainPanel = new JPanel(new BorderLayout());
     mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
     userInputDialog.add(mainPanel);
     Map<String, Double> stocks = new HashMap<>();
 
-    JPanel datePortfolioIdPanel = new JPanel(new GridLayout(0, 2));
-    datePortfolioIdPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
+    JPanel userInputPanel = new JPanel(new GridLayout(0, 2));
+    userInputPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 
-    JLabel startDateLabel = new JLabel("Enter start date (YYYY-MM-DD): ");
-    JTextField startDateValue = new JTextField();
-    startDateValue.setName("Start Date");
-    validatorMap.put(startDateValue, this::dateTextFieldValidator);
+    createDateLabelField(START_DATE);
+    createDateLabelField(END_DATE);
+    createNumericFields(TIME_FRAME);
+    createNumericFields(TOTAL_AMOUNT);
+    createTickerSymbolField();
+    createNumericFields(PERCENTAGE);
 
-    JLabel endDateLabel = new JLabel("Enter end date (YYYY-MM-DD): ");
-    JTextField endDateValue = new JTextField();
-    endDateValue.setName("End Date");
-    validatorMap.put(endDateValue, this::dateTextFieldValidator);
-
-    JLabel timeFrameLabel = new JLabel("Enter time frame: ");
-    JTextField timeFrameValue = new JTextField();
-    timeFrameValue.setName("Time Frame");
-    validatorMap.put(timeFrameValue, this::numberTextFieldValidator);
-
-    JLabel totalAmountLabel = new JLabel("Enter total amount: ");
-    JTextField totalAmountValue = new JTextField();
-    totalAmountValue.setName("Total Amount");
-    validatorMap.put(totalAmountValue, this::numberTextFieldValidator);
-
-    JLabel tickerSymbolLabel = new JLabel("Enter Ticker Symbol: ");
-    JTextField tickerSymbolValue = new JTextField();
-    tickerSymbolValue.setName("Ticker Symbol");
-    validatorMap.put(tickerSymbolValue, this::tickerSymbolTextFieldValidator);
-
-    JLabel percentageLabel = new JLabel("Enter Percentage: ");
-    JTextField percentageValue = new JTextField();
-    percentageValue.setName("Percentage");
-    validatorMap.put(percentageValue, this::numberTextFieldValidator);
-
-    JButton OKButton = new JButton("OK");
-    OKButton.addActionListener(e -> {
-      if (validator(validatorMap).isEmpty()) {
-        if (stocks.isEmpty()) {
-          displayArea.setText("");
-        }
-        stocks.put(tickerSymbolValue.getText(), Double.parseDouble(percentageValue.getText()));
-        percentageTotal.addAndGet(Integer.parseInt(percentageValue.getText()));
-        displayArea.append(tickerSymbolValue.getText() + "- >" + percentageValue.getText() + "\n");
-        tickerSymbolValue.setText("");
-        percentageValue.setText("");
-        startDateValue.setEditable(false);
-        endDateValue.setEditable(false);
-        timeFrameValue.setEditable(false);
-        totalAmountValue.setEditable(false);
-        if(percentageTotal.get() == 100) {
-          tickerSymbolValue.setEditable(false);
-          percentageValue.setEditable(false);
-          OKButton.setEnabled(false);
-        }
-      }
-    });
-    JButton DoneButton = new JButton("DONE");
+    JButton OKButton = getCustomButton("OK");
+    OKButton.addActionListener(e -> OKFunctionality(percentageTotal, stocks, OKButton));
+    JButton DoneButton = getCustomButton("DONE");
     DoneButton.addActionListener(e -> {
       userInputDialog.dispose();
       DoneClicked.set(true);
     });
 
-    datePortfolioIdPanel.add(startDateLabel);
-    datePortfolioIdPanel.add(startDateValue);
-    datePortfolioIdPanel.add(endDateLabel);
-    datePortfolioIdPanel.add(endDateValue);
-    datePortfolioIdPanel.add(timeFrameLabel);
-    datePortfolioIdPanel.add(timeFrameValue);
-    datePortfolioIdPanel.add(totalAmountLabel);
-    datePortfolioIdPanel.add(totalAmountValue);
-    datePortfolioIdPanel.add(tickerSymbolLabel);
-    datePortfolioIdPanel.add(tickerSymbolValue);
-    datePortfolioIdPanel.add(percentageLabel);
-    datePortfolioIdPanel.add(percentageValue);
-    datePortfolioIdPanel.add(OKButton);
-    datePortfolioIdPanel.add(DoneButton);
+    addAllFieldsToInputPanel(userInputPanel);
+    userInputPanel.add(OKButton);
+    userInputPanel.add(DoneButton);
 
     mainPanel.add(new JLabel("Press OK to add one stock and "
-        + "DONE when you are adding stocks"), BorderLayout.NORTH);
+        + "DONE when you are done adding stocks"), BorderLayout.NORTH);
     mainPanel.add(displayPanel, BorderLayout.CENTER);
-    mainPanel.add(datePortfolioIdPanel, BorderLayout.SOUTH);
+    mainPanel.add(userInputPanel, BorderLayout.SOUTH);
 
     userInputDialog.pack();
     userInputDialog.setVisible(true);
 
     if (DoneClicked.get()) {
       CreateDollarCostAveragePortfolioTask createDollarCostAveragePortfolioTask =
-          new CreateDollarCostAveragePortfolioTask(features, stocks, totalAmountValue.getText(),
-              startDateValue.getText(), endDateValue.getText(), timeFrameValue.getText());
+          new CreateDollarCostAveragePortfolioTask(features, stocks,
+              fieldsMap.get(TOTAL_AMOUNT).textField.getText(),
+              fieldsMap.get(START_DATE).textField.getText(),
+              fieldsMap.get(END_DATE).textField.getText(),
+              fieldsMap.get(TIME_FRAME).textField.getText());
       progressBar.setIndeterminate(true);
       createDollarCostAveragePortfolioTask.execute();
       mainFrame.setEnabled(false);
     }
   }
 
+  private void OKFunctionality(AtomicInteger percentageTotal, Map<String, Double> stocks,
+      JButton OKButton) {
+    if (validator(validatorMap).isEmpty()) {
+      if(percentageTotal.get() + Integer.parseInt(fieldsMap.get(PERCENTAGE).textField.getText()) > 100) {
+        JOptionPane.showMessageDialog(mainFrame, "Percentage total cannot be greater than 100", "Error",
+            JOptionPane.ERROR_MESSAGE);
+      } else if (Integer.parseInt(fieldsMap.get(PERCENTAGE).textField.getText()) <= 0) {
+        JOptionPane.showMessageDialog(mainFrame, "Percentage value should be greater"
+            + " than 0 less than 100", "Error", JOptionPane.ERROR_MESSAGE);
+      } else {
+        stocks.put(fieldsMap.get(TICKER_SYMBOL).textField.getText(),
+            Double.parseDouble(fieldsMap.get(PERCENTAGE).textField.getText()));
+
+        percentageTotal.addAndGet(Integer.parseInt(fieldsMap.get(PERCENTAGE).textField.getText()));
+        subWindowDisplay.append(fieldsMap.get(TICKER_SYMBOL).textField.getText() + "- >" + fieldsMap.get(
+            PERCENTAGE).textField.getText() + "\n");
+        fieldsMap.get(TICKER_SYMBOL).textField.setText("");
+        fieldsMap.get(PERCENTAGE).textField.setText("");
+        fieldsMap.get(START_DATE).textField.setEditable(false);
+        fieldsMap.get(END_DATE).textField.setEditable(false);
+        fieldsMap.get(TIME_FRAME).textField.setEditable(false);
+        fieldsMap.get(TOTAL_AMOUNT).textField.setEditable(false);
+        if (percentageTotal.get() == 100) {
+          fieldsMap.get(TICKER_SYMBOL).textField.setEditable(false);
+          fieldsMap.get(PERCENTAGE).textField.setEditable(false);
+          OKButton.setEnabled(false);
+        }
+      }
+    }
+  }
+
   class CreateDollarCostAveragePortfolioTask extends SwingWorker<String, Object> {
+
     Features features;
     String startDate;
     String endDate;
@@ -166,7 +139,7 @@ public class CreateDollarCostAveragePortfolioCommand extends AbstractCommandHand
     }
 
     @Override
-    protected String doInBackground() throws Exception {
+    protected String doInBackground() {
       try {
         return features.createDollarCostAveragePortfolio(stockProportions, totalAmount,
             startDate, endDate, timeFrame);
@@ -178,7 +151,7 @@ public class CreateDollarCostAveragePortfolioCommand extends AbstractCommandHand
     @Override
     protected void done() {
       try {
-        resultArea.setText(get());
+        resultArea.setText("<html><center><h1>" + get() + "</center></html>");
         mainFrame.setEnabled(true);
         progressBar.setIndeterminate(false);
       } catch (Exception ignore) {

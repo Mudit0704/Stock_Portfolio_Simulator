@@ -11,17 +11,13 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.SwingWorker;
 import portfolio.controller.Features;
 
-public class CreateFlexiblePortfolioCommand extends AbstractCommandHandlers implements
-    CommandHandler {
+class CreateFlexiblePortfolioCommand extends AbstractCommandHandlers implements CommandHandler {
 
   CreateFlexiblePortfolioCommand(JTextPane resultArea,
       Features features, JProgressBar progressBar,
@@ -42,59 +38,44 @@ public class CreateFlexiblePortfolioCommand extends AbstractCommandHandlers impl
     userInputDialog.add(mainPanel);
     Map<String, Double> stocks = new HashMap<>();
 
-    JPanel datePortfolioIdPanel = new JPanel(new GridLayout(0, 2));
-    datePortfolioIdPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
+    JPanel userInputPanel = new JPanel(new GridLayout(0, 2));
+    userInputPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 
-    JLabel dateLabel = new JLabel("Enter date (YYYY-MM-DD): ");
-    JTextField dateValue = new JTextField();
-    dateValue.setName("Date");
-    validatorMap.put(dateValue, this::dateTextFieldValidator);
+    createDateLabelField(DATE);
+    createTickerSymbolField();
+    createNumericFields(QUANTITY);
 
-    JLabel tickerSymbolLabel = new JLabel("Enter Ticker Symbol: ");
-    JTextField tickerSymbolValue = new JTextField();
-    tickerSymbolValue.setName("Ticker Symbol");
-    validatorMap.put(tickerSymbolValue, this::tickerSymbolTextFieldValidator);
-
-    JLabel quantityLabel = new JLabel("Enter Quantity: ");
-    JTextField quantityValue = new JTextField();
-    quantityValue.setName("Quantity");
-    validatorMap.put(quantityValue, this::numberTextFieldValidator);
-
-    JButton OKButton = new JButton("OK");
+    JButton OKButton = getCustomButton("OK");
     OKButton.addActionListener(e -> {
       if(validator(validatorMap).isEmpty()) {
-        stocks.put(tickerSymbolValue.getText(), Double.parseDouble(quantityValue.getText()));
-        tickerSymbolValue.setText("");
-        quantityValue.setText("");
-        dateValue.setEditable(false);
+        stocks.put(fieldsMap.get(TICKER_SYMBOL).textField.getText(),
+            Double.parseDouble(fieldsMap.get(QUANTITY).textField.getText()));
+        fieldsMap.get(TICKER_SYMBOL).textField.setText("");
+        fieldsMap.get(QUANTITY).textField.setText("");
+        fieldsMap.get(DATE).textField.setEditable(false);
       }
     });
 
-    JButton DoneButton = new JButton("DONE");
+    JButton DoneButton = getCustomButton("DONE");
     DoneButton.addActionListener(e -> {
       userInputDialog.dispose();
       DoneClicked.set(true);
     });
 
-    datePortfolioIdPanel.add(dateLabel);
-    datePortfolioIdPanel.add(dateValue);
-    datePortfolioIdPanel.add(tickerSymbolLabel);
-    datePortfolioIdPanel.add(tickerSymbolValue);
-    datePortfolioIdPanel.add(quantityLabel);
-    datePortfolioIdPanel.add(quantityValue);
-    datePortfolioIdPanel.add(OKButton);
-    datePortfolioIdPanel.add(DoneButton);
+    addAllFieldsToInputPanel(userInputPanel);
+    userInputPanel.add(OKButton);
+    userInputPanel.add(DoneButton);
 
     mainPanel.add(new JLabel("Press OK to add one stock and "
-        + "DONE when you are adding stocks"), BorderLayout.NORTH);
-    mainPanel.add(datePortfolioIdPanel, BorderLayout.SOUTH);
+        + "DONE when you are done adding stocks"), BorderLayout.NORTH);
+    mainPanel.add(userInputPanel, BorderLayout.SOUTH);
 
     userInputDialog.pack();
     userInputDialog.setVisible(true);
 
     if (DoneClicked.get()) {
       CreateFlexiblePortfolioTask createFlexiblePortfolioTask = new CreateFlexiblePortfolioTask(
-          features, stocks, dateValue.getText());
+          features, stocks, fieldsMap.get(DATE).textField.getText());
       progressBar.setIndeterminate(true);
       createFlexiblePortfolioTask.execute();
       mainFrame.setEnabled(false);
@@ -124,7 +105,7 @@ public class CreateFlexiblePortfolioCommand extends AbstractCommandHandlers impl
     @Override
     protected void done() {
       try {
-        resultArea.setText(get());
+        resultArea.setText("<html><center><h1>" + get() + "</center></html>");
         mainFrame.setEnabled(true);
         progressBar.setIndeterminate(false);
       } catch (Exception ignore) {

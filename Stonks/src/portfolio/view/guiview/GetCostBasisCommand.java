@@ -8,11 +8,8 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.SwingWorker;
 import portfolio.controller.Features;
@@ -34,27 +31,19 @@ class GetCostBasisCommand extends AbstractCommandHandlers implements CommandHand
     userInputDialog.setResizable(false);
 
     try {
-      availablePortfoliosDisplay = getAvailablePortfoliosDisplay(features);
+      availablePortfoliosDisplay = getResultDisplay(features.getAvailablePortfolios(), AVAILABLE_PORTFOLIOS);
       availablePortfoliosDisplay.setBorder(BorderFactory.createEmptyBorder(2, 10, 2, 10));
     } catch (Exception e) {
-      resultArea.setText(e.getLocalizedMessage());
+      resultArea.setText("<html><center><h1>" + e.getLocalizedMessage() + "</center></html>");
       progressBar.setIndeterminate(false);
       return;
     }
 
-    JPanel datePortfolioIdPanel = new JPanel(new GridLayout(0, 2));
+    JPanel userInputPanel = new JPanel(new GridLayout(0, 2));
+    createDateLabelField(DATE);
+    createNumericFields(PORTFOLIO_ID);
 
-    JLabel dateLabel = new JLabel("Enter date (YYYY-MM-DD): ");
-    JTextField dateValue = new JTextField();
-    dateValue.setName("Date");
-    validatorMap.put(dateValue, this::dateTextFieldValidator);
-
-    JLabel portfolioIdLabel = new JLabel("Enter portfolioId (Portfolio1 -> 1): ");
-    JTextField portfolioIdValue = new JTextField();
-    portfolioIdValue.setName("Portfolio Id");
-    validatorMap.put(portfolioIdValue, this::numberTextFieldValidator);
-
-    JButton OKButton = new JButton("OK");
+    JButton OKButton = getCustomButton("OK");
     OKButton.addActionListener(e -> {
       if(validator(validatorMap).isEmpty()) {
         userInputDialog.dispose();
@@ -62,28 +51,21 @@ class GetCostBasisCommand extends AbstractCommandHandlers implements CommandHand
       }
     });
 
-    datePortfolioIdPanel.add(dateLabel);
-    datePortfolioIdPanel.add(dateValue);
-    datePortfolioIdPanel.add(portfolioIdLabel);
-    datePortfolioIdPanel.add(portfolioIdValue);
+    addAllFieldsToInputPanel(userInputPanel);
 
     JPanel fieldsPanel = new JPanel(new BorderLayout());
-    fieldsPanel.add(datePortfolioIdPanel, BorderLayout.CENTER);
+    fieldsPanel.add(userInputPanel, BorderLayout.CENTER);
     fieldsPanel.add(OKButton, BorderLayout.EAST);
     fieldsPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 2, 10));
 
-    JLabel availablePortfolios = new JLabel("Available Portfolios");
-    availablePortfolios.setBorder(BorderFactory.createEmptyBorder(2, 10, 2, 10));
-
-    userInputDialog.add(availablePortfolios, BorderLayout.PAGE_START);
     userInputDialog.add(availablePortfoliosDisplay, BorderLayout.CENTER);
     userInputDialog.add(fieldsPanel, BorderLayout.PAGE_END);
 
     userInputDialog.setVisible(true);
 
     if (OKClicked.get()) {
-      GetCostBasisTask task = new GetCostBasisTask(features, dateValue.getText(),
-          portfolioIdValue.getText());
+      GetCostBasisTask task = new GetCostBasisTask(features, fieldsMap.get(DATE).textField.getText(),
+          fieldsMap.get(PORTFOLIO_ID).textField.getText());
       progressBar.setIndeterminate(true);
       task.execute();
       mainFrame.setEnabled(false);
@@ -113,7 +95,7 @@ class GetCostBasisCommand extends AbstractCommandHandlers implements CommandHand
     @Override
     protected void done() {
       try {
-        resultArea.setText("Cost basis on " + date + ": $" + get());
+        resultArea.setText("<html><center><h1>Cost basis on " + date + ": " + get() + "</center></html>");
         mainFrame.setEnabled(true);
         progressBar.setIndeterminate(false);
       } catch (Exception ignore) {
