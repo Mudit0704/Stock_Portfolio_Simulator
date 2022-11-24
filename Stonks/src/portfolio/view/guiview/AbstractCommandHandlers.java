@@ -83,8 +83,9 @@ abstract class AbstractCommandHandlers implements CommandHandler {
 
   String numberTextFieldValidator(String value) {
     try {
-      Double.parseDouble(value);
-      Long.parseLong(value);
+      if (Double.parseDouble(value) < 0 || Long.parseLong(value) < 0) {
+       throw new NumberFormatException();
+      }
     } catch (NumberFormatException e) {
       return INVALID;
     }

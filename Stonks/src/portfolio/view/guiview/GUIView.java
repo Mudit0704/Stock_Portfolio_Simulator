@@ -41,7 +41,7 @@ public class GUIView extends JFrame implements IGUIView {
     mainPanel.setLayout(new BorderLayout());
     add(mainPanel, BorderLayout.CENTER);
 
-    setMinimumSize(new Dimension(650, 400));
+    setMinimumSize(new Dimension(850, 400));
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     displayMenu();
