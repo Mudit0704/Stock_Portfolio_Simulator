@@ -6,6 +6,7 @@ import java.awt.GridLayout;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -16,13 +17,14 @@ import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
 import javax.swing.SwingWorker;
 import portfolio.controller.Features;
 
 public class PerformFractionalInvestmentCommand extends AbstractCommandHandlers implements
     CommandHandler {
 
-  PerformFractionalInvestmentCommand(JTextArea resultArea,
+  PerformFractionalInvestmentCommand(JTextPane resultArea,
       Features features, JProgressBar progressBar,
       JFrame mainFrame) {
     super(resultArea, features, progressBar, mainFrame);
@@ -30,6 +32,7 @@ public class PerformFractionalInvestmentCommand extends AbstractCommandHandlers 
 
   @Override
   public void execute() {
+    AtomicInteger percentageTotal = new AtomicInteger();
     AtomicBoolean DoneClicked = new AtomicBoolean(false);
     JDialog userInputDialog = getUserInputDialog("Fractional Investment");
     userInputDialog.setMinimumSize(new Dimension(550, 300));
@@ -52,29 +55,54 @@ public class PerformFractionalInvestmentCommand extends AbstractCommandHandlers 
 
     JPanel datePortfolioIdPanel = new JPanel(new GridLayout(0, 2));
     datePortfolioIdPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
+
     JLabel dateLabel = new JLabel("Enter date (YYYY-MM-DD): ");
     JTextField dateValue = new JTextField();
+    dateValue.setName("Date");
+    validatorMap.put(dateValue, this::dateTextFieldValidator);
+
     JLabel totalAmountLabel = new JLabel("Enter total amount: ");
     JTextField totalAmountValue = new JTextField();
+    totalAmountValue.setName("Total Amount");
+    validatorMap.put(totalAmountValue, this::numberTextFieldValidator);
+
     JLabel portfolioIdLabel = new JLabel("Enter portfolioId (Portfolio1 -> 1): ");
     JTextField portfolioIdValue = new JTextField();
+    portfolioIdValue.setName("Portfolio Id");
+    validatorMap.put(portfolioIdValue, this::numberTextFieldValidator);
+
     JLabel tickerSymbolLabel = new JLabel("Enter Ticker Symbol: ");
     JTextField tickerSymbolValue = new JTextField();
+    tickerSymbolValue.setName("Ticker Symbol");
+    validatorMap.put(tickerSymbolValue, this::tickerSymbolTextFieldValidator);
+
     JLabel percentageLabel = new JLabel("Enter Percentage: ");
     JTextField percentageValue = new JTextField();
+    percentageValue.setName("Percentage");
+    validatorMap.put(percentageValue, this::numberTextFieldValidator);
+
     JButton OKButton = new JButton("OK");
     OKButton.addActionListener(e -> {
-      if (stocks.isEmpty()) {
-        displayArea.setText("");
+      if(validator(validatorMap).isEmpty()) {
+        if (stocks.isEmpty()) {
+          displayArea.setText("");
+        }
+        stocks.put(tickerSymbolValue.getText(), Double.parseDouble(percentageValue.getText()));
+        percentageTotal.addAndGet(Integer.parseInt(percentageValue.getText()));
+        displayArea.append(tickerSymbolValue.getText() + "- >" + percentageValue.getText() + "\n");
+        tickerSymbolValue.setText("");
+        percentageValue.setText("");
+        dateValue.setEditable(false);
+        totalAmountValue.setEditable(false);
+        portfolioIdValue.setEditable(false);
+        if (percentageTotal.get() == 100) {
+          tickerSymbolValue.setEditable(false);
+          percentageValue.setEditable(false);
+          OKButton.setEnabled(false);
+        }
       }
-      stocks.put(tickerSymbolValue.getText(), Double.parseDouble(percentageValue.getText()));
-      displayArea.append(tickerSymbolValue.getText() + "- >" + percentageValue.getText() + "\n");
-      tickerSymbolValue.setText("");
-      percentageValue.setText("");
-      dateValue.setEditable(false);
-      totalAmountValue.setEditable(false);
-      portfolioIdValue.setEditable(false);
     });
+
     JButton DoneButton = new JButton("DONE");
     DoneButton.addActionListener(e -> {
       userInputDialog.dispose();

@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -11,6 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import portfolio.controller.Features;
@@ -24,7 +26,7 @@ public class GUIView extends JFrame implements IGUIView {
       sellStocksButton, buyStocksButton, fractionalInvestmentButton;
   private JProgressBar progressBar;
 
-  private JTextArea displayArea;
+  private JTextPane displayArea;
 
   public GUIView(String caption)
       throws UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException {
@@ -36,7 +38,7 @@ public class GUIView extends JFrame implements IGUIView {
     JScrollPane mainScrollPane = new JScrollPane(mainPanel);
     add(mainScrollPane);
 
-    setMinimumSize(new Dimension(750, 500));
+    setMinimumSize(new Dimension(650, 400));
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     displayMenu();
@@ -52,12 +54,15 @@ public class GUIView extends JFrame implements IGUIView {
   public void displayMenu() {
 
     JPanel displayPanel = new JPanel(new GridLayout(1, 1));
-    displayArea = new JTextArea(10, 20);
+    displayArea = new JTextPane();
     displayArea.setEditable(false);
-    displayArea.setLineWrap(true);
+    displayArea.setContentType("text/html");
+    displayArea.setText(
+        "<html><center><h1>Welcome to STONKS platform!</h1></center></html>");
     JScrollPane scrollPane = new JScrollPane(displayArea);
     scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
     displayPanel.add(scrollPane);
+    displayPanel.setBorder(BorderFactory.createEmptyBorder(5, 8, 5, 8));
     mainPanel.add(displayPanel, BorderLayout.CENTER);
 
     JPanel actionsPanel = new JPanel(new GridLayout(0, 2));
@@ -81,9 +86,8 @@ public class GUIView extends JFrame implements IGUIView {
     actionsPanel.add(fractionalInvestmentButton);
     progressBar = new JProgressBar();
     actionsPanel.add(progressBar);
+    actionsPanel.setBorder(BorderFactory.createEmptyBorder(5, 8, 5, 8));
     mainPanel.add(actionsPanel, BorderLayout.PAGE_END);
-
-    mainPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
   }
 
   @Override
@@ -94,7 +98,8 @@ public class GUIView extends JFrame implements IGUIView {
 
   @Override
   public void displayCustomText(String customText) {
-
+    JOptionPane.showMessageDialog(GUIView.this, customText, "Information",
+        JOptionPane.INFORMATION_MESSAGE);
   }
 
   @Override

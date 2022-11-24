@@ -17,13 +17,14 @@ import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
 import javax.swing.SwingWorker;
 import portfolio.controller.Features;
 
 public class CreateDollarCostAveragePortfolioCommand extends AbstractCommandHandlers implements
     CommandHandler {
 
-  CreateDollarCostAveragePortfolioCommand(JTextArea resultArea,
+  CreateDollarCostAveragePortfolioCommand(JTextPane resultArea,
       Features features, JProgressBar progressBar,
       JFrame mainFrame) {
     super(resultArea, features, progressBar, mainFrame);
@@ -31,7 +32,7 @@ public class CreateDollarCostAveragePortfolioCommand extends AbstractCommandHand
 
   @Override
   public void execute() {
-    AtomicInteger totalPercentage = new AtomicInteger();
+    AtomicInteger percentageTotal = new AtomicInteger();
     AtomicBoolean DoneClicked = new AtomicBoolean(false);
     JDialog userInputDialog = getUserInputDialog("Fractional Investment");
     userInputDialog.setMinimumSize(new Dimension(550, 300));
@@ -53,36 +54,57 @@ public class CreateDollarCostAveragePortfolioCommand extends AbstractCommandHand
 
     JPanel datePortfolioIdPanel = new JPanel(new GridLayout(0, 2));
     datePortfolioIdPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
+
     JLabel startDateLabel = new JLabel("Enter start date (YYYY-MM-DD): ");
     JTextField startDateValue = new JTextField();
+    startDateValue.setName("Start Date");
+    validatorMap.put(startDateValue, this::dateTextFieldValidator);
+
     JLabel endDateLabel = new JLabel("Enter end date (YYYY-MM-DD): ");
     JTextField endDateValue = new JTextField();
+    endDateValue.setName("End Date");
+    validatorMap.put(endDateValue, this::dateTextFieldValidator);
+
     JLabel timeFrameLabel = new JLabel("Enter time frame: ");
     JTextField timeFrameValue = new JTextField();
+    timeFrameValue.setName("Time Frame");
+    validatorMap.put(timeFrameValue, this::numberTextFieldValidator);
+
     JLabel totalAmountLabel = new JLabel("Enter total amount: ");
     JTextField totalAmountValue = new JTextField();
+    totalAmountValue.setName("Total Amount");
+    validatorMap.put(totalAmountValue, this::numberTextFieldValidator);
+
     JLabel tickerSymbolLabel = new JLabel("Enter Ticker Symbol: ");
     JTextField tickerSymbolValue = new JTextField();
+    tickerSymbolValue.setName("Ticker Symbol");
+    validatorMap.put(tickerSymbolValue, this::tickerSymbolTextFieldValidator);
+
     JLabel percentageLabel = new JLabel("Enter Percentage: ");
     JTextField percentageValue = new JTextField();
+    percentageValue.setName("Percentage");
+    validatorMap.put(percentageValue, this::numberTextFieldValidator);
+
     JButton OKButton = new JButton("OK");
     OKButton.addActionListener(e -> {
-      if (stocks.isEmpty()) {
-        displayArea.setText("");
-      }
-      stocks.put(tickerSymbolValue.getText(), Double.parseDouble(percentageValue.getText()));
-      totalPercentage.addAndGet(Integer.parseInt(percentageValue.getText()));
-      displayArea.append(tickerSymbolValue.getText() + "- >" + percentageValue.getText() + "\n");
-      tickerSymbolValue.setText("");
-      percentageValue.setText("");
-      startDateValue.setEditable(false);
-      endDateValue.setEditable(false);
-      timeFrameValue.setEditable(false);
-      totalAmountValue.setEditable(false);
-      if(totalPercentage.get() == 100) {
-        tickerSymbolValue.setEditable(false);
-        percentageValue.setEditable(false);
-        OKButton.setEnabled(false);
+      if (validator(validatorMap).isEmpty()) {
+        if (stocks.isEmpty()) {
+          displayArea.setText("");
+        }
+        stocks.put(tickerSymbolValue.getText(), Double.parseDouble(percentageValue.getText()));
+        percentageTotal.addAndGet(Integer.parseInt(percentageValue.getText()));
+        displayArea.append(tickerSymbolValue.getText() + "- >" + percentageValue.getText() + "\n");
+        tickerSymbolValue.setText("");
+        percentageValue.setText("");
+        startDateValue.setEditable(false);
+        endDateValue.setEditable(false);
+        timeFrameValue.setEditable(false);
+        totalAmountValue.setEditable(false);
+        if(percentageTotal.get() == 100) {
+          tickerSymbolValue.setEditable(false);
+          percentageValue.setEditable(false);
+          OKButton.setEnabled(false);
+        }
       }
     });
     JButton DoneButton = new JButton("DONE");

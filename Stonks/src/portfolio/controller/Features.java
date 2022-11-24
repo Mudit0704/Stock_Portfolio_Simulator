@@ -29,4 +29,6 @@ public interface Features {
   String createDollarCostAveragePortfolio(Map<String, Double> stockProportions, String totalAmount,
       String startDate, String endDate, String timeFrame);
 
+  boolean isTickerSymbolValid(String tickerSymbol);
+
 }
