@@ -11,17 +11,19 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
 import javax.swing.SwingWorker;
 import portfolio.controller.Features;
 
 public class CreateFlexiblePortfolioCommand extends AbstractCommandHandlers implements
     CommandHandler {
 
-  CreateFlexiblePortfolioCommand(JTextArea resultArea,
+  CreateFlexiblePortfolioCommand(JTextPane resultArea,
       Features features, JProgressBar progressBar,
       JFrame mainFrame) {
     super(resultArea, features, progressBar, mainFrame);
@@ -42,19 +44,32 @@ public class CreateFlexiblePortfolioCommand extends AbstractCommandHandlers impl
 
     JPanel datePortfolioIdPanel = new JPanel(new GridLayout(0, 2));
     datePortfolioIdPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
+
     JLabel dateLabel = new JLabel("Enter date (YYYY-MM-DD): ");
     JTextField dateValue = new JTextField();
+    dateValue.setName("Date");
+    validatorMap.put(dateValue, this::dateTextFieldValidator);
+
     JLabel tickerSymbolLabel = new JLabel("Enter Ticker Symbol: ");
     JTextField tickerSymbolValue = new JTextField();
+    tickerSymbolValue.setName("Ticker Symbol");
+    validatorMap.put(tickerSymbolValue, this::tickerSymbolTextFieldValidator);
+
     JLabel quantityLabel = new JLabel("Enter Quantity: ");
     JTextField quantityValue = new JTextField();
+    quantityValue.setName("Quantity");
+    validatorMap.put(quantityValue, this::numberTextFieldValidator);
+
     JButton OKButton = new JButton("OK");
     OKButton.addActionListener(e -> {
-      stocks.put(tickerSymbolValue.getText(), Double.parseDouble(quantityValue.getText()));
-      tickerSymbolValue.setText("");
-      quantityValue.setText("");
-      dateValue.setEditable(false);
+      if(validator(validatorMap).isEmpty()) {
+        stocks.put(tickerSymbolValue.getText(), Double.parseDouble(quantityValue.getText()));
+        tickerSymbolValue.setText("");
+        quantityValue.setText("");
+        dateValue.setEditable(false);
+      }
     });
+
     JButton DoneButton = new JButton("DONE");
     DoneButton.addActionListener(e -> {
       userInputDialog.dispose();

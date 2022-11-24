@@ -13,12 +13,13 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
 import javax.swing.SwingWorker;
 import portfolio.controller.Features;
 
 public class SellStocksCommand extends AbstractCommandHandlers implements CommandHandler {
 
-  SellStocksCommand(JTextArea resultArea, Features features,
+  SellStocksCommand(JTextPane resultArea, Features features,
       JProgressBar progressBar, JFrame mainFrame) {
     super(resultArea, features, progressBar, mainFrame);
   }
@@ -42,18 +43,33 @@ public class SellStocksCommand extends AbstractCommandHandlers implements Comman
     }
 
     JPanel datePortfolioIdPanel = new JPanel(new GridLayout(0, 2));
+
     JLabel dateLabel = new JLabel("Enter date (YYYY-MM-DD): ");
     JTextField dateValue = new JTextField();
+    dateValue.setName("Date");
+    validatorMap.put(dateValue, this::dateTextFieldValidator);
+
     JLabel portfolioIdLabel = new JLabel("Enter portfolioId (Portfolio1 -> 1): ");
     JTextField portfolioIdValue = new JTextField();
+    portfolioIdValue.setName("Portfolio Id");
+    validatorMap.put(portfolioIdValue, this::numberTextFieldValidator);
+
     JLabel tickerSymbolLabel = new JLabel("Enter Ticker Symbol: ");
     JTextField tickerSymbolValue = new JTextField();
+    tickerSymbolValue.setName("Ticker Symbol");
+    validatorMap.put(tickerSymbolValue, this::tickerSymbolTextFieldValidator);
+
     JLabel quantityLabel = new JLabel("Enter Quantity: ");
     JTextField quantityValue = new JTextField();
+    quantityValue.setName("Quantity");
+    validatorMap.put(quantityValue, this::numberTextFieldValidator);
+
     JButton OKButton = new JButton("OK");
     OKButton.addActionListener(e -> {
-      userInputDialog.dispose();
-      OKClicked.set(true);
+      if (validator(validatorMap).isEmpty()) {
+        userInputDialog.dispose();
+        OKClicked.set(true);
+      }
     });
 
     datePortfolioIdPanel.add(dateLabel);

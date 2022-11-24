@@ -13,12 +13,13 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
 import javax.swing.SwingWorker;
 import portfolio.controller.Features;
 
 class GetCostBasisCommand extends AbstractCommandHandlers implements CommandHandler{
 
-  GetCostBasisCommand(JTextArea resultArea, Features features,
+  GetCostBasisCommand(JTextPane resultArea, Features features,
       JProgressBar progressBar, JFrame mainFrame) {
     super(resultArea, features, progressBar, mainFrame);
   }
@@ -42,14 +43,23 @@ class GetCostBasisCommand extends AbstractCommandHandlers implements CommandHand
     }
 
     JPanel datePortfolioIdPanel = new JPanel(new GridLayout(0, 2));
+
     JLabel dateLabel = new JLabel("Enter date (YYYY-MM-DD): ");
     JTextField dateValue = new JTextField();
+    dateValue.setName("Date");
+    validatorMap.put(dateValue, this::dateTextFieldValidator);
+
     JLabel portfolioIdLabel = new JLabel("Enter portfolioId (Portfolio1 -> 1): ");
     JTextField portfolioIdValue = new JTextField();
+    portfolioIdValue.setName("Portfolio Id");
+    validatorMap.put(portfolioIdValue, this::numberTextFieldValidator);
+
     JButton OKButton = new JButton("OK");
     OKButton.addActionListener(e -> {
-      userInputDialog.dispose();
-      OKClicked.set(true);
+      if(validator(validatorMap).isEmpty()) {
+        userInputDialog.dispose();
+        OKClicked.set(true);
+      }
     });
 
     datePortfolioIdPanel.add(dateLabel);

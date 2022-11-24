@@ -149,4 +149,9 @@ public class GUIPortfolioController implements Features {
     model.createStrategicPortfolio(stockProportions, LocalDate.parse(startDate));
     return "Created";
   }
+
+  @Override
+  public boolean isTickerSymbolValid(String tickerSymbol) {
+    return model.isTickerSymbolValid(tickerSymbol);
+  }
 }

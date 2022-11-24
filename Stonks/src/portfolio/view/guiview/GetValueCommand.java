@@ -9,16 +9,18 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
 import javax.swing.SwingWorker;
 import portfolio.controller.Features;
 
 class GetValueCommand extends AbstractCommandHandlers implements CommandHandler {
 
-  GetValueCommand(JTextArea resultArea, Features features,
+  GetValueCommand(JTextPane resultArea, Features features,
       JProgressBar progressBar, JFrame mainFrame) {
     super(resultArea, features, progressBar, mainFrame);
 
@@ -29,10 +31,10 @@ class GetValueCommand extends AbstractCommandHandlers implements CommandHandler 
     JPanel availablePortfoliosDisplay;
     AtomicBoolean OKClicked = new AtomicBoolean(false);
 
-    JDialog getPortfolioValueDialog = getUserInputDialog("Get Portfolio Value");
-    getPortfolioValueDialog.setMinimumSize(new Dimension(470, 200));
-    getPortfolioValueDialog.setLocationRelativeTo(null);
-    getPortfolioValueDialog.setResizable(false);
+    JDialog userInputDialog = getUserInputDialog("Get Portfolio Value");
+    userInputDialog.setMinimumSize(new Dimension(470, 200));
+    userInputDialog.setLocationRelativeTo(null);
+    userInputDialog.setResizable(false);
 
     try {
       availablePortfoliosDisplay = getAvailablePortfoliosDisplay(features);
@@ -44,14 +46,23 @@ class GetValueCommand extends AbstractCommandHandlers implements CommandHandler 
     }
 
     JPanel datePortfolioIdPanel = new JPanel(new GridLayout(0, 2));
+
     JLabel dateLabel = new JLabel("Enter date (YYYY-MM-DD): ");
     JTextField dateValue = new JTextField();
+    dateValue.setName("Date");
+    validatorMap.put(dateValue, this::dateTextFieldValidator);
+
     JLabel portfolioIdLabel = new JLabel("Enter portfolioId (Portfolio1 -> 1): ");
     JTextField portfolioIdValue = new JTextField();
+    portfolioIdValue.setName("Portfolio Id");
+    validatorMap.put(portfolioIdValue, this::numberTextFieldValidator);
+
     JButton OKButton = new JButton("OK");
     OKButton.addActionListener(e -> {
-      getPortfolioValueDialog.dispose();
-      OKClicked.set(true);
+      if(validator(validatorMap).isEmpty()) {
+        userInputDialog.dispose();
+        OKClicked.set(true);
+      }
     });
 
     datePortfolioIdPanel.add(dateLabel);
@@ -67,11 +78,11 @@ class GetValueCommand extends AbstractCommandHandlers implements CommandHandler 
     JLabel availablePortfolios = new JLabel("Available Portfolios");
     availablePortfolios.setBorder(BorderFactory.createEmptyBorder(2, 10, 2, 10));
 
-    getPortfolioValueDialog.add(availablePortfolios, BorderLayout.PAGE_START);
-    getPortfolioValueDialog.add(availablePortfoliosDisplay, BorderLayout.CENTER);
-    getPortfolioValueDialog.add(fieldsPanel, BorderLayout.PAGE_END);
+    userInputDialog.add(availablePortfolios, BorderLayout.PAGE_START);
+    userInputDialog.add(availablePortfoliosDisplay, BorderLayout.CENTER);
+    userInputDialog.add(fieldsPanel, BorderLayout.PAGE_END);
 
-    getPortfolioValueDialog.setVisible(true);
+    userInputDialog.setVisible(true);
 
     if (OKClicked.get()) {
       GetValueTask task = new GetValueTask(features, dateValue.getText(),
@@ -83,6 +94,7 @@ class GetValueCommand extends AbstractCommandHandlers implements CommandHandler 
   }
 
   class GetValueTask extends SwingWorker<String, Object> {
+
     Features features;
     String date;
     String portfolioId;
