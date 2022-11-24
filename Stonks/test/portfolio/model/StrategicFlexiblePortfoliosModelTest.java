@@ -6,7 +6,9 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import javax.xml.parsers.ParserConfigurationException;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,12 +19,14 @@ public class StrategicFlexiblePortfoliosModelTest {
   IStrategicFlexiblePortfolioModel portfolio;
   private IStockService mockStockService;
   private IStrategicFlexiblePortfolioModel mockSaveModel;
+  private Set<LocalDate> availableDates;
 
   @Before
   public void setup() {
     portfolio = new StrategicFlexiblePortfoliosModel();
     mockStockService = new MockStockService("/test/testExtensiveData.txt");
     mockSaveModel = new MockForStrategicFlexiblePortfoliosModel();
+    availableDates = new HashSet<>(mockStockService.getStockPrices("AKL").keySet());
   }
 
   @Test
@@ -33,11 +37,18 @@ public class StrategicFlexiblePortfoliosModelTest {
   public void testCreateNewDollarCostAvgPortfolioOnADate()
       throws NoSuchFieldException, IllegalAccessException {
     Map<String, Double> map = new HashMap<>();
-    map.put("GOOG", 50d);
-    map.put("PUBM", 20d);
-    map.put("MSFT", 30d);
+    map.put("ALGT", 50d);
+    map.put("AMAM", 20d);
+    map.put("AMAO", 30d);
 
     double totalAmount = 5000d;
+    Field stockService = AbstractPortfolioModel.class.getDeclaredField("stockService");
+
+    stockService.set(portfolio, mockStockService);
+
+    Field availableDatesSet = AbstractPortfolioModel.class.getDeclaredField("availableDates");
+
+    availableDatesSet.set(portfolio, availableDates);
 
     portfolio.setStrategy(StrategyType.DOLLARCOSTAVERAGING,
         LocalDate.of(2015,10,25),
@@ -45,9 +56,6 @@ public class StrategicFlexiblePortfoliosModelTest {
        30,
         totalAmount);
 
-    Field stockService = AbstractPortfolioModel.class.getDeclaredField("stockService");
-
-    stockService.set(portfolio, mockStockService);
     portfolio.createStrategicPortfolio(map, LocalDate.of(2015,10,25));
     System.out.println(portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2015, 11, 30)));
   }
@@ -55,15 +63,19 @@ public class StrategicFlexiblePortfoliosModelTest {
   @Test
   public void testInvestNormallyStrategicPortfolio() throws IllegalAccessException, NoSuchFieldException {
     Map<String, Double> map = new HashMap<>();
-    map.put("GOOG", 5d);
-    map.put("PUBM", 2d);
-    map.put("MSFT", 3d);
+    map.put("ALGT", 5d);
+    map.put("AMAM", 2d);
+    map.put("AMAO", 3d);
 
     double totalAmount = 5000d;
 
     Field stockService = AbstractPortfolioModel.class.getDeclaredField("stockService");
 
     stockService.set(portfolio, mockStockService);
+
+    Field availableDatesSet = AbstractPortfolioModel.class.getDeclaredField("availableDates");
+
+    availableDatesSet.set(portfolio, availableDates);
     portfolio.setStrategy(StrategyType.NORMAL,
       LocalDate.of(2017,10,25),
       null,
@@ -74,9 +86,9 @@ public class StrategicFlexiblePortfoliosModelTest {
     System.out.println(portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2015, 11, 30)));
 
     map = new HashMap<>();
-    map.put("GOOG", 50d);
-    map.put("PUBM", 20d);
-    map.put("MSFT", 30d);
+    map.put("ALGT", 50d);
+    map.put("AMAM", 20d);
+    map.put("AMAO", 30d);
 
     portfolio.investStrategicPortfolio(map, 1);
 //    assertEquals();
@@ -87,15 +99,19 @@ public class StrategicFlexiblePortfoliosModelTest {
   public void testInvestNormallyWithBuyStrategicPortfolio()
       throws IllegalAccessException, NoSuchFieldException {
     Map<String, Double> map = new HashMap<>();
-    map.put("GOOG", 5d);
-    map.put("PUBM", 2d);
-    map.put("MSFT", 3d);
+    map.put("ALGT", 5d);
+    map.put("AMAM", 2d);
+    map.put("AMAO", 3d);
 
     double totalAmount = 5000d;
 
     Field stockService = AbstractPortfolioModel.class.getDeclaredField("stockService");
 
     stockService.set(portfolio, mockStockService);
+
+    Field availableDatesSet = AbstractPortfolioModel.class.getDeclaredField("availableDates");
+
+    availableDatesSet.set(portfolio, availableDates);
     portfolio.setStrategy(StrategyType.NORMAL,
       LocalDate.of(2017,10,25),
       null,
@@ -105,9 +121,9 @@ public class StrategicFlexiblePortfoliosModelTest {
     portfolio.createNewPortfolioOnADate(map, LocalDate.of(2015, 10, 25));
 
     map = new HashMap<>();
-    map.put("GOOG", 50d);
-    map.put("PUBM", 20d);
-    map.put("MSFT", 30d);
+    map.put("ALGT", 50d);
+    map.put("AMAM", 20d);
+    map.put("AMAO", 30d);
 
     portfolio.investStrategicPortfolio(map, 1);
     System.out.println(portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2017, 10, 30)));
@@ -125,15 +141,19 @@ public class StrategicFlexiblePortfoliosModelTest {
   public void testInvestNormallyWithSellStrategicPortfolio()
       throws IllegalAccessException, NoSuchFieldException {
     Map<String, Double> map = new HashMap<>();
-    map.put("GOOG", 5d);
-    map.put("PUBM", 2d);
-    map.put("MSFT", 3d);
+    map.put("ALGT", 5d);
+    map.put("AMAM", 2d);
+    map.put("AMAO", 3d);
 
     double totalAmount = 5000d;
 
     Field stockService = AbstractPortfolioModel.class.getDeclaredField("stockService");
 
     stockService.set(portfolio, mockStockService);
+
+    Field availableDatesSet = AbstractPortfolioModel.class.getDeclaredField("availableDates");
+
+    availableDatesSet.set(portfolio, availableDates);
     portfolio.setStrategy(StrategyType.NORMAL,
       LocalDate.of(2017,10,25),
       null,
@@ -143,9 +163,9 @@ public class StrategicFlexiblePortfoliosModelTest {
     portfolio.createNewPortfolioOnADate(map, LocalDate.of(2015, 10, 25));
 
     map = new HashMap<>();
-    map.put("GOOG", 50d);
-    map.put("PUBM", 20d);
-    map.put("MSFT", 30d);
+    map.put("ALGT", 50d);
+    map.put("AMAM", 20d);
+    map.put("AMAO", 30d);
 
     portfolio.investStrategicPortfolio(map, 1);
     portfolio.sellStockFromPortfolio("GOOG", 2d, 1, LocalDate.of(2016,10,30));
@@ -160,15 +180,19 @@ public class StrategicFlexiblePortfoliosModelTest {
   public void testInvestNormallyBeforeSellStrategicPortfolio()
       throws IllegalAccessException, NoSuchFieldException {
     Map<String, Double> map = new HashMap<>();
-    map.put("GOOG", 5d);
-    map.put("PUBM", 2d);
-    map.put("MSFT", 3d);
+    map.put("ALGT", 5d);
+    map.put("AMAM", 2d);
+    map.put("AMAO", 3d);
 
     double totalAmount = 5000d;
 
     Field stockService = AbstractPortfolioModel.class.getDeclaredField("stockService");
 
     stockService.set(portfolio, mockStockService);
+
+    Field availableDatesSet = AbstractPortfolioModel.class.getDeclaredField("availableDates");
+
+    availableDatesSet.set(portfolio, availableDates);
     portfolio.setStrategy(StrategyType.NORMAL,
       LocalDate.of(2017,10,25),
       null,
@@ -177,12 +201,12 @@ public class StrategicFlexiblePortfoliosModelTest {
 
     portfolio.createNewPortfolioOnADate(map, LocalDate.of(2015, 10, 25));
 
-    portfolio.sellStockFromPortfolio("GOOG", 2d, 1, LocalDate.of(2016,10,30));
+    portfolio.sellStockFromPortfolio("ALGT", 2d, 1, LocalDate.of(2016,10,30));
 
     map = new HashMap<>();
-    map.put("GOOG", 50d);
-    map.put("PUBM", 20d);
-    map.put("MSFT", 30d);
+    map.put("ALGT", 50d);
+    map.put("AMAM", 20d);
+    map.put("AMAO", 30d);
 
     portfolio.investStrategicPortfolio(map, 1);
     System.out.println(portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2016, 10, 30)));
@@ -194,15 +218,19 @@ public class StrategicFlexiblePortfoliosModelTest {
   public void testInvestNormallyAfterSellStrategicPortfolio()
     throws IllegalAccessException, NoSuchFieldException {
     Map<String, Double> map = new HashMap<>();
-    map.put("GOOG", 5d);
-    map.put("PUBM", 2d);
-    map.put("MSFT", 3d);
+    map.put("ALGT", 5d);
+    map.put("AMAM", 2d);
+    map.put("AMAO", 3d);
 
     double totalAmount = 5000d;
 
     Field stockService = AbstractPortfolioModel.class.getDeclaredField("stockService");
 
     stockService.set(portfolio, mockStockService);
+
+    Field availableDatesSet = AbstractPortfolioModel.class.getDeclaredField("availableDates");
+
+    availableDatesSet.set(portfolio, availableDates);
     portfolio.setStrategy(StrategyType.NORMAL,
       LocalDate.of(2017,10,25),
       null,
@@ -211,12 +239,12 @@ public class StrategicFlexiblePortfoliosModelTest {
 
     portfolio.createNewPortfolioOnADate(map, LocalDate.of(2015, 10, 25));
 
-    portfolio.sellStockFromPortfolio("GOOG", 2d, 1, LocalDate.of(2017,10,30));
+    portfolio.sellStockFromPortfolio("ALGT", 2d, 1, LocalDate.of(2017,10,30));
 
     map = new HashMap<>();
-    map.put("GOOG", 50d);
-    map.put("PUBM", 20d);
-    map.put("MSFT", 30d);
+    map.put("ALGT", 50d);
+    map.put("AMAM", 20d);
+    map.put("AMAO", 30d);
 
     portfolio.investStrategicPortfolio(map, 1);
     System.out.println(portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2016, 10, 30)));
@@ -228,11 +256,18 @@ public class StrategicFlexiblePortfoliosModelTest {
   public void testPurchaseOnDollarCostAvgPortfolio()
       throws NoSuchFieldException, IllegalAccessException {
     Map<String, Double> map = new HashMap<>();
-    map.put("GOOG", 50d);
-    map.put("PUBM", 20d);
-    map.put("MSFT", 30d);
+    map.put("ALGT", 50d);
+    map.put("AMAM", 20d);
+    map.put("AMAO", 30d);
 
     double totalAmount = 5000d;
+    Field stockService = AbstractPortfolioModel.class.getDeclaredField("stockService");
+
+    stockService.set(portfolio, mockStockService);
+
+    Field availableDatesSet = AbstractPortfolioModel.class.getDeclaredField("availableDates");
+
+    availableDatesSet.set(portfolio, availableDates);
 
     portfolio.setStrategy(StrategyType.DOLLARCOSTAVERAGING,
       LocalDate.of(2015,10,25),
@@ -240,9 +275,6 @@ public class StrategicFlexiblePortfoliosModelTest {
       30,
       totalAmount);
 
-    Field stockService = AbstractPortfolioModel.class.getDeclaredField("stockService");
-
-    stockService.set(portfolio, mockStockService);
     portfolio.createStrategicPortfolio(map, LocalDate.of(2015,10,25));
     System.out.println("THEN: " + portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2015, 11, 30)));
     System.out.println("NOW: " + portfolio.getPortfolioCompositionOnADate(1, LocalDate.now()));
@@ -255,15 +287,20 @@ public class StrategicFlexiblePortfoliosModelTest {
   public void testInvestBetweenMultipleSellsStrategicPortfolio()
     throws IllegalAccessException, NoSuchFieldException {
     Map<String, Double> map = new HashMap<>();
-    map.put("GOOG", 5d);
-    map.put("PUBM", 2d);
-    map.put("MSFT", 3d);
+    map.put("ALGT", 5d);
+    map.put("AMAM", 2d);
+    map.put("AMAO", 3d);
 
     double totalAmount = 5000d;
 
     Field stockService = AbstractPortfolioModel.class.getDeclaredField("stockService");
 
     stockService.set(portfolio, mockStockService);
+
+    Field availableDatesSet = AbstractPortfolioModel.class.getDeclaredField("availableDates");
+
+    availableDatesSet.set(portfolio, availableDates);
+
     portfolio.setStrategy(StrategyType.NORMAL,
       LocalDate.of(2017,10,25),
       null,
@@ -272,14 +309,14 @@ public class StrategicFlexiblePortfoliosModelTest {
 
     portfolio.createNewPortfolioOnADate(map, LocalDate.of(2015, 10, 25));
 
-    portfolio.sellStockFromPortfolio("GOOG", 2d, 1, LocalDate.of(2017,10,20));
+    portfolio.sellStockFromPortfolio("ALGT", 2d, 1, LocalDate.of(2017,10,20));
 
-    portfolio.sellStockFromPortfolio("GOOG", 2d, 1, LocalDate.of(2017,10,30));
+    portfolio.sellStockFromPortfolio("ALGT", 2d, 1, LocalDate.of(2017,10,30));
 
     map = new HashMap<>();
-    map.put("GOOG", 50d);
-    map.put("PUBM", 20d);
-    map.put("MSFT", 30d);
+    map.put("ALGT", 50d);
+    map.put("AMAM", 20d);
+    map.put("AMAO", 30d);
 
     portfolio.investStrategicPortfolio(map, 1);
     System.out.println(portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2016, 10, 30)));
@@ -291,11 +328,19 @@ public class StrategicFlexiblePortfoliosModelTest {
   public void testSellOnDollarCostAvgPortfolio()
     throws NoSuchFieldException, IllegalAccessException {
     Map<String, Double> map = new HashMap<>();
-    map.put("GOOG", 50d);
-    map.put("PUBM", 20d);
-    map.put("MSFT", 30d);
+    map.put("ALGT", 50d);
+    map.put("AMAM", 20d);
+    map.put("AMAO", 30d);
 
     double totalAmount = 5000d;
+
+    Field stockService = AbstractPortfolioModel.class.getDeclaredField("stockService");
+
+    stockService.set(portfolio, mockStockService);
+
+    Field availableDatesSet = AbstractPortfolioModel.class.getDeclaredField("availableDates");
+
+    availableDatesSet.set(portfolio, availableDates);
 
     portfolio.setStrategy(StrategyType.DOLLARCOSTAVERAGING,
       LocalDate.of(2015,10,25),
@@ -303,9 +348,6 @@ public class StrategicFlexiblePortfoliosModelTest {
       30,
       totalAmount);
 
-    Field stockService = AbstractPortfolioModel.class.getDeclaredField("stockService");
-
-    stockService.set(portfolio, mockStockService);
     portfolio.createStrategicPortfolio(map, LocalDate.of(2015,10,25));
     System.out.println("THEN: " + portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2015, 11, 30)));
     System.out.println("NOW: " + portfolio.getPortfolioCompositionOnADate(1, LocalDate.now()));
@@ -319,11 +361,20 @@ public class StrategicFlexiblePortfoliosModelTest {
       throws NoSuchFieldException, IllegalAccessException,
       ParserConfigurationException, IOException, SAXException {
     Map<String, Double> map = new HashMap<>();
-    map.put("GOOG", 50d);
-    map.put("PUBM", 20d);
-    map.put("MSFT", 30d);
+    map.put("ALGT", 50d);
+    map.put("AMAM", 20d);
+    map.put("AMAO", 30d);
 
     double totalAmount = 5000d;
+
+    Field stockService = AbstractPortfolioModel.class.getDeclaredField("stockService");
+
+    stockService.set(mockSaveModel, mockStockService);
+
+    Field availableDatesSet = AbstractPortfolioModel.class.getDeclaredField("availableDates");
+
+    availableDatesSet.set(mockSaveModel, availableDates);
+
 
     mockSaveModel.setStrategy(StrategyType.DOLLARCOSTAVERAGING,
       LocalDate.of(2015,10,25),
@@ -331,9 +382,6 @@ public class StrategicFlexiblePortfoliosModelTest {
       30,
       totalAmount);
 
-    Field stockService = AbstractPortfolioModel.class.getDeclaredField("stockService");
-
-    stockService.set(mockSaveModel, mockStockService);
     mockSaveModel.createStrategicPortfolio(map, LocalDate.of(2015,10,25));
     System.out.println("THEN: " + mockSaveModel.getPortfolioCompositionOnADate(1, LocalDate.of(2015, 11, 30)));
     System.out.println("NOW: " + mockSaveModel.getPortfolioCompositionOnADate(1, LocalDate.now()));
@@ -356,11 +404,20 @@ public class StrategicFlexiblePortfoliosModelTest {
   public void testCreateMultipleNewDollarCostAvgPortfolioOnADate()
     throws NoSuchFieldException, IllegalAccessException, ParserConfigurationException {
     Map<String, Double> map = new HashMap<>();
-    map.put("GOOG", 50d);
-    map.put("PUBM", 20d);
-    map.put("MSFT", 30d);
+    map.put("ALGT", 50d);
+    map.put("AMAM", 20d);
+    map.put("AMAO", 30d);
 
     double totalAmount = 5000d;
+
+    Field stockService = AbstractPortfolioModel.class.getDeclaredField("stockService");
+
+    stockService.set(mockSaveModel, mockStockService);
+
+    Field availableDatesSet = AbstractPortfolioModel.class.getDeclaredField("availableDates");
+
+    availableDatesSet.set(mockSaveModel, availableDates);
+
 
     mockSaveModel.setStrategy(StrategyType.DOLLARCOSTAVERAGING,
       LocalDate.of(2015,10,25),
@@ -368,9 +425,6 @@ public class StrategicFlexiblePortfoliosModelTest {
       30,
       totalAmount);
 
-    Field stockService = AbstractPortfolioModel.class.getDeclaredField("stockService");
-
-    stockService.set(mockSaveModel, mockStockService);
     mockSaveModel.createStrategicPortfolio(map, LocalDate.of(2015,10,25));
     System.out.println(mockSaveModel.getPortfolioCompositionOnADate(1, LocalDate.of(2015, 11, 30)));
 
@@ -381,9 +435,9 @@ public class StrategicFlexiblePortfoliosModelTest {
       totalAmount);
 
     map = new HashMap<>();
-    map.put("GOOG", 50d);
-    map.put("PUBM", 20d);
-    map.put("MSFT", 30d);
+    map.put("ALGT", 50d);
+    map.put("AMAM", 20d);
+    map.put("AMAO", 30d);
     mockSaveModel.investStrategicPortfolio(map, 1);
     System.out.println(mockSaveModel.getPortfolioCompositionOnADate(1, LocalDate.of(2015, 11, 30)));
 

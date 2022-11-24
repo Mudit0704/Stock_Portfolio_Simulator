@@ -19,6 +19,7 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
   protected StrategicPortfolio(IStockService stockService, Map<IStock, Double> stocks,
     double transactionFee, LocalDate date) {
     super(stockService, stocks, transactionFee, date);
+    this.creationDate = date;
   }
 
   private void performCascadingUpdateForRetrospectiveBuy(Map<LocalDate, Double> historicQty, double quantity,
@@ -56,7 +57,7 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
     double updatedQty = stockQty + quantity;
     updateHistoricHoldings(stock, date, updatedQty);
 
-    stockQuantityMap.put(stock, stockQuantityMap.get(stock) + quantity);
+    stockQuantityMap.put(stock, stockQuantityMap.getOrDefault(stock, 0d) + quantity);
 
     double prevCostBasis = this.getPortfolioCostBasisByDate(date);
     double updateCostBasisBy = stock.getValue(date) * quantity + transactionFee;
