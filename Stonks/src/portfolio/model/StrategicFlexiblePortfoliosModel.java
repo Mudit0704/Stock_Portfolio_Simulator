@@ -3,7 +3,9 @@ package portfolio.model;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class StrategicFlexiblePortfoliosModel extends FlexiblePortfoliosModel
     implements IStrategicFlexiblePortfolioModel {
@@ -13,6 +15,7 @@ public class StrategicFlexiblePortfoliosModel extends FlexiblePortfoliosModel
   @Override
   public void setStrategy(StrategyType strategy, LocalDate startDate,
       LocalDate endDate, int timeFrame, double investmentAmount) {
+    startDate = super.getNextTransactionDate(startDate);
     this.strategy = AbstractStrategyCreator.strategyCreator(strategy,
           startDate, endDate, timeFrame, investmentAmount);
   }
@@ -23,15 +26,18 @@ public class StrategicFlexiblePortfoliosModel extends FlexiblePortfoliosModel
 
     Map<LocalDate, Map<IStock, Double>> updatedFractionalQty = strategy.applyStrategy(stockQty);
 
-    if(!updatedFractionalQty.containsKey(date)) {
-      throw new IllegalArgumentException("Portfolio creation date doesn't match with "
-          + "strategy start date");
+    Map<IStock, Double> stocks = updatedFractionalQty.get(date);
+    if(stocks == null) {
+        stocks = new HashMap<>();
     }
-
-    AbstractPortfolio portfolio = createPortfolio(updatedFractionalQty.get(date), date);
+    AbstractPortfolio portfolio = createPortfolio(stocks, date);
 
     for(Map.Entry<LocalDate, Map<IStock, Double>> stocksOnDate: updatedFractionalQty.entrySet()) {
       LocalDate dateEntry = stocksOnDate.getKey();
+      if(dateEntry.isEqual(date)) {
+        continue;
+      }
+      dateEntry = super.getNextTransactionDate(dateEntry);
       Map<IStock, Double> proportions = stocksOnDate.getValue();
       portfolio.investStocksIntoStrategicPortfolio(proportions, dateEntry, transactionFee);
     }

@@ -7,10 +7,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
@@ -23,11 +25,13 @@ public abstract class AbstractPortfolioModel implements IFlexiblePortfoliosModel
   IStockService stockService;
   IStockAPIOptimizer apiOptimizer;
   protected double transactionFee;
+  Set<LocalDate> availableDates;
 
   AbstractPortfolioModel() {
     apiOptimizer = StockCache.getInstance();
     portfolioMap = new LinkedHashMap<>();
   }
+
   @Override
   public void setServiceType(ServiceType serviceType) {
     stockService = AbstractServiceCreator.serviceCreator(serviceType);
@@ -45,6 +49,14 @@ public abstract class AbstractPortfolioModel implements IFlexiblePortfoliosModel
       stockQty.put(stock, entry.getValue());
     }
     return stockQty;
+  }
+
+  protected LocalDate getNextTransactionDate(LocalDate date) {
+    LocalDate tempDate = date;
+    while(!this.availableDates.contains(tempDate)) {
+      tempDate = tempDate.plusDays(1);
+    }
+    return tempDate;
   }
 
   @Override
