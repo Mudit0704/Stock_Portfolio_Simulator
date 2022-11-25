@@ -1,13 +1,45 @@
 package portfolio.model;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicPortfolio {
 
+  static class Pair<S,T> {
+    S s;
+    T t;
+    Pair(S s, T t) {
+      this.s = s;
+      this.t = t;
+    }
+  }
+
+  Map<LocalDate, Map<IStock, Pair<Double, Double>>> listOfScheduledStocks;
   /**
    * Constructs an object of Portfolio and initializes its members.
    *
@@ -19,6 +51,8 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
   protected StrategicPortfolio(IStockService stockService, Map<IStock, Double> stocks,
     double transactionFee, LocalDate date) {
     super(stockService, stocks, transactionFee, date);
+    listOfScheduledStocks = new HashMap<>();
+//    futureInvestmentSchedule = new HashMap<>();
     this.creationDate = date;
   }
 
@@ -84,4 +118,172 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
       return super.isTransactionSequenceInvalid(stock, date, transactionType);
     }
   }
+
+  @Override
+  protected void scheduleInvestment(LocalDate date, double amount, Map<IStock, Double> stocks) {
+    Map<IStock, Pair<Double, Double>> stockQty = new HashMap<>();
+
+    for(Map.Entry<IStock, Double> mapEntry:stocks.entrySet()) {
+        stockQty.put(mapEntry.getKey(), new Pair<>(amount, mapEntry.getValue()));
+    }
+    listOfScheduledStocks.put(date, stockQty);
+  }
+
+  private void saveStrategy(String path) throws ParserConfigurationException {
+    try {
+      listOfScheduledStocks = listOfScheduledStocks.entrySet().stream()
+        .sorted(Map.Entry.comparingByKey(Comparator.reverseOrder()))
+        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+          (e1, e2) -> e2, LinkedHashMap::new));
+      DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+      DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+      Document doc = dBuilder.newDocument();
+
+      Element rootElement = doc.createElement("strategy");
+      doc.appendChild(rootElement);
+
+      for(Map.Entry<LocalDate, Map<IStock, Pair<Double, Double>>> mapEntry:listOfScheduledStocks.entrySet()) {
+        Element investmentElement = doc.createElement("investment");
+        investmentElement.setAttribute("date", String.valueOf(mapEntry.getKey()));
+        Map<IStock, Pair<Double, Double>> stockProportions = mapEntry.getValue();
+        Double amount = 0d;
+        for(Map.Entry<IStock, Pair<Double, Double>> stockProportion:stockProportions.entrySet()) {
+          amount = stockProportion.getValue().s;
+
+          Element stock = doc.createElement("stock");
+          stock.appendChild(doc.createTextNode(stockProportion.getKey().getStockTicker()));
+          stock.setAttribute("percentage", String.valueOf(stockProportion.getValue().t));
+          investmentElement.appendChild(stock);
+        }
+
+        Element totalAmount = doc.createElement("amount");
+        totalAmount.appendChild(doc.createTextNode(amount.toString()));
+        investmentElement.appendChild(totalAmount);
+        rootElement.appendChild(investmentElement);
+      }
+
+      TransformerFactory transformerFactory = TransformerFactory.newInstance();
+      transformerFactory.setAttribute("indent-number", 3);
+      Transformer transformer = transformerFactory.newTransformer();
+      transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+      DOMSource source = new DOMSource(doc);
+      StreamResult result = new StreamResult(new File(path));
+      transformer.transform(source, result);
+    } catch (DateTimeParseException e) {
+      throw new RuntimeException("API Failure...\n");
+    } catch (TransformerException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Override
+  public void savePortfolio(String path) throws ParserConfigurationException {
+    super.savePortfolio(path);
+    String[] name = path.split("\\.");
+    String strategyPath = name[0] + "_strategy." + name[1];
+    this.saveStrategy(strategyPath);
+  }
+
+  @Override
+  public void retrievePortfolio(String path)
+    throws IOException, ParserConfigurationException, SAXException {
+    super.retrievePortfolio(path);
+    String[] name = path.split("\\.");
+    String strategyPath = name[0] + "_strategy." + name[1];
+    this.retrieveStrategy(strategyPath);
+    this.executeEligibleTransactions();
+  }
+
+  private void executeEligibleTransactions() {
+
+    for(Map.Entry<LocalDate, Map<IStock, Pair<Double, Double>>> mapEntry:
+        this.listOfScheduledStocks.entrySet()) {
+      LocalDate date = mapEntry.getKey();
+      Map<IStock, Pair<Double, Double>> stockQty = mapEntry.getValue();
+      Double amount = 0d;
+      Map<IStock, Double> stockRatios = new HashMap<>();
+      for(Map.Entry<IStock, Pair<Double, Double>> stocks:stockQty.entrySet()) {
+        amount = stocks.getValue().s;
+        stockRatios.put(stocks.getKey(), stocks.getValue().t);
+      }
+
+      IStrategy strategy = new NormalStrategy.NormalStrategyBuilder()
+          .setTotalAmount(amount)
+          .setDate(date)
+          .build();
+
+      Map<LocalDate, Map<IStock, Double>> result = strategy.applyStrategy(stockRatios);
+      if(result == null) {
+        return;
+      }
+      result = result.entrySet().stream()
+          .sorted(Map.Entry.comparingByKey(Comparator.reverseOrder()))
+          .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+            (e1, e2) -> e2, LinkedHashMap::new));
+
+      for(Map.Entry<LocalDate, Map<IStock, Double>> resultEntry:result.entrySet()) {
+        if (resultEntry.getKey().isAfter(LocalDate.now())) {
+          break;
+        }
+        this.listOfScheduledStocks.remove(resultEntry.getKey());
+        this.investStocksIntoStrategicPortfolio(resultEntry.getValue(), resultEntry.getKey(), 0.0);
+      }
+    }
+  }
+
+  private void retrieveStrategy(String strategyPath)
+    throws IOException, ParserConfigurationException, SAXException {
+    if (this.listOfScheduledStocks.size() > 0) {
+      throw new RuntimeException("Portfolios already populated\n");
+    }
+
+    File inputFile = new File(strategyPath);
+    if (!inputFile.isFile()) {
+      throw new FileNotFoundException("Cannot find file: " + strategyPath);
+    }
+    DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+    DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+    Document doc = dBuilder.parse(inputFile);
+    doc.getDocumentElement().normalize();
+
+    NodeList nList = doc.getDocumentElement().getElementsByTagName("investment");
+
+    for (int temp = 0; temp < nList.getLength(); temp++) {
+      Node nNode = nList.item(temp);
+
+      if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+        Element eElement = (Element) nNode;
+
+        LocalDate txnDate = LocalDate.parse(eElement.getAttributes().getNamedItem("date").getNodeValue());
+
+        Double amount = Double.valueOf(eElement.getElementsByTagName("amount")
+            .item(0).getTextContent());
+
+        int numStocks = eElement.getElementsByTagName("stock").getLength();
+        int idx = 0;
+        IStock newStock = null;
+        Map<IStock, Pair<Double, Double>> map = new HashMap<>();
+        while(idx < numStocks) {
+          String tickerSymbol = eElement.getElementsByTagName("stock")
+            .item(idx).getTextContent();
+
+          Double percentage = Double.valueOf(eElement.getElementsByTagName("stock")
+              .item(idx).getAttributes().getNamedItem("percentage").getNodeValue());
+
+          idx++;
+
+          newStock = apiOptimizer.cacheGetObj(tickerSymbol);
+
+          if (newStock == null) {
+            newStock = new Stock(tickerSymbol, this.stockService);
+            apiOptimizer.cacheSetObj(tickerSymbol, newStock);
+          }
+          map.put(newStock, new Pair<>(amount, percentage));
+        }
+
+        this.listOfScheduledStocks.put(txnDate, map);
+      }
+    }
+  }
+
 }

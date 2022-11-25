@@ -385,7 +385,7 @@ public class StrategicFlexiblePortfoliosModelTest {
     mockSaveModel.createStrategicPortfolio(map, LocalDate.of(2015,10,25));
     System.out.println("THEN: " + mockSaveModel.getPortfolioCompositionOnADate(1, LocalDate.of(2015, 11, 30)));
     System.out.println("NOW: " + mockSaveModel.getPortfolioCompositionOnADate(1, LocalDate.now()));
-    mockSaveModel.addStocksToPortfolio("GOOG", 2d, 1, LocalDate.of(2015,11,30));
+    mockSaveModel.addStocksToPortfolio("ALGT", 2d, 1, LocalDate.of(2015,11,30));
     System.out.println("THEN: " + mockSaveModel.getPortfolioCompositionOnADate(1, LocalDate.of(2015, 11, 30)));
     System.out.println("NOW: " + mockSaveModel.getPortfolioCompositionOnADate(1, LocalDate.now()));
 
@@ -395,9 +395,51 @@ public class StrategicFlexiblePortfoliosModelTest {
     model.retrievePortfolios();
 
     System.out.println(model.getPortfolioCompositionOnADate(1,LocalDate.of(2015,12,29)));
-    model.addStocksToPortfolio("GOOG", 2d, 1, LocalDate.of(2015,12,30));
+    model.addStocksToPortfolio("ALGT", 2d, 1, LocalDate.of(2015,12,30));
     System.out.println(model.getPortfolioCompositionOnADate(1,LocalDate.of(2015,12,30)));
     System.out.println("NOW: " + model.getPortfolioCompositionOnADate(1, LocalDate.now()));
+    model.savePortfolios();
+  }
+
+  @Test
+  public void testOnlyRetrieve()
+    throws NoSuchFieldException, IllegalAccessException,
+    ParserConfigurationException, IOException, SAXException {
+//    Map<String, Double> map = new HashMap<>();
+//    map.put("ALGT", 50d);
+//    map.put("AMAM", 20d);
+//    map.put("AMAO", 30d);
+//
+//    double totalAmount = 5000d;
+//
+//    Field stockService = AbstractPortfolioModel.class.getDeclaredField("stockService");
+//
+//    stockService.set(mockSaveModel, mockStockService);
+//
+//    Field availableDatesSet = AbstractPortfolioModel.class.getDeclaredField("availableDates");
+//
+//    availableDatesSet.set(mockSaveModel, availableDates);
+//
+//
+//    mockSaveModel.setStrategy(StrategyType.DOLLARCOSTAVERAGING,
+//      LocalDate.of(2015,10,25),
+//      LocalDate.of(2016,10,25),
+//      30,
+//      totalAmount);
+//
+//    mockSaveModel.createStrategicPortfolio(map, LocalDate.of(2015,10,25));
+//    System.out.println("THEN: " + mockSaveModel.getPortfolioCompositionOnADate(1, LocalDate.of(2015, 11, 30)));
+//    System.out.println("NOW: " + mockSaveModel.getPortfolioCompositionOnADate(1, LocalDate.now()));
+//    mockSaveModel.addStocksToPortfolio("ALGT", 2d, 1, LocalDate.of(2015,11,30));
+//    System.out.println("THEN: " + mockSaveModel.getPortfolioCompositionOnADate(1, LocalDate.of(2015, 11, 30)));
+//    System.out.println("NOW: " + mockSaveModel.getPortfolioCompositionOnADate(1, LocalDate.now()));
+//
+//    mockSaveModel.savePortfolios();
+
+    IStrategicFlexiblePortfolioModel model = new MockForStrategicFlexiblePortfoliosModel();
+    model.retrievePortfolios();
+    System.out.println(model.getPortfolioComposition(1));
+
   }
 
   @Test
@@ -440,6 +482,49 @@ public class StrategicFlexiblePortfoliosModelTest {
     map.put("AMAO", 30d);
     mockSaveModel.investStrategicPortfolio(map, 1);
     System.out.println(mockSaveModel.getPortfolioCompositionOnADate(1, LocalDate.of(2015, 11, 30)));
+
+//    mockSaveModel.savePortfolios();
+  }
+
+  @Test
+  public void testDollarCostAvgPortfolioOnAFutureDate()
+      throws NoSuchFieldException, IllegalAccessException, ParserConfigurationException,
+      IOException, SAXException {
+    Map<String, Double> map = new HashMap<>();
+    map.put("ALGT", 50d);
+    map.put("AMAM", 20d);
+    map.put("AMAO", 30d);
+
+    double totalAmount = 5000d;
+
+    Field stockService = AbstractPortfolioModel.class.getDeclaredField("stockService");
+
+    stockService.set(mockSaveModel, mockStockService);
+
+    Field availableDatesSet = AbstractPortfolioModel.class.getDeclaredField("availableDates");
+
+    availableDatesSet.set(mockSaveModel, availableDates);
+
+
+    mockSaveModel.setStrategy(StrategyType.DOLLARCOSTAVERAGING,
+      LocalDate.of(2022,10,25),
+      LocalDate.of(2023,10,25),
+      30,
+      totalAmount);
+
+    mockSaveModel.createStrategicPortfolio(map, LocalDate.of(2022,10,25));
+    System.out.println(mockSaveModel.getPortfolioCompositionOnADate(1, LocalDate.now()));
+    mockSaveModel.savePortfolios();
+
+    IStrategicFlexiblePortfolioModel model = new MockForStrategicFlexiblePortfoliosModel();
+    model.retrievePortfolios();
+
+//    map = new HashMap<>();
+//    map.put("ALGT", 50d);
+//    map.put("AMAM", 20d);
+//    map.put("AMAO", 30d);
+//    mockSaveModel.investStrategicPortfolio(map, 1);
+//    System.out.println(mockSaveModel.getPortfolioCompositionOnADate(1, LocalDate.of(2015, 11, 30)));
 
 //    mockSaveModel.savePortfolios();
   }

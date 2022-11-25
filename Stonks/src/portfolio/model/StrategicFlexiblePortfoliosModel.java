@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 public class StrategicFlexiblePortfoliosModel extends FlexiblePortfoliosModel
     implements IStrategicFlexiblePortfolioModel {
@@ -26,18 +25,21 @@ public class StrategicFlexiblePortfoliosModel extends FlexiblePortfoliosModel
 
     Map<LocalDate, Map<IStock, Double>> updatedFractionalQty = strategy.applyStrategy(stockQty);
 
-    Map<IStock, Double> stocks = updatedFractionalQty.get(date);
-    if(stocks == null) {
-        stocks = new HashMap<>();
-    }
+    Map<IStock, Double> stocks = updatedFractionalQty.getOrDefault(date, new HashMap<>());
+
     AbstractPortfolio portfolio = createPortfolio(stocks, date);
 
-    for(Map.Entry<LocalDate, Map<IStock, Double>> stocksOnDate: updatedFractionalQty.entrySet()) {
+    for(Map.Entry<LocalDate, Map<IStock, Double>> stocksOnDate:updatedFractionalQty.entrySet()) {
       LocalDate dateEntry = stocksOnDate.getKey();
+
       if(dateEntry.isEqual(date)) {
         continue;
       }
       dateEntry = super.getNextTransactionDate(dateEntry);
+      if (stocksOnDate.getValue() == null) {
+        portfolio.scheduleInvestment(stocksOnDate.getKey(), strategy.getStrategyInvestment(), stockQty);
+        continue;
+      }
       Map<IStock, Double> proportions = stocksOnDate.getValue();
       portfolio.investStocksIntoStrategicPortfolio(proportions, dateEntry, transactionFee);
     }

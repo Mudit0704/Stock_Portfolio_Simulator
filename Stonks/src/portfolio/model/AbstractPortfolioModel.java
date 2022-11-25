@@ -35,6 +35,7 @@ public abstract class AbstractPortfolioModel implements IFlexiblePortfoliosModel
   @Override
   public void setServiceType(ServiceType serviceType) {
     stockService = AbstractServiceCreator.serviceCreator(serviceType);
+    this.availableDates = new HashSet<>(stockService.getStockPrices("ALK").keySet());
   }
 
   protected Map<IStock, Double> getStockQuantitiesFromTickerSymbol(Map<String, Double> stocks) {
@@ -53,7 +54,7 @@ public abstract class AbstractPortfolioModel implements IFlexiblePortfoliosModel
 
   protected LocalDate getNextTransactionDate(LocalDate date) {
     LocalDate tempDate = date;
-    while(!this.availableDates.contains(tempDate)) {
+    while(!this.availableDates.contains(tempDate) && !tempDate.isAfter(LocalDate.now())) {
       tempDate = tempDate.plusDays(1);
     }
     return tempDate;
@@ -137,7 +138,8 @@ public abstract class AbstractPortfolioModel implements IFlexiblePortfoliosModel
 
     String userDirectory = System.getProperty("user.dir") + "/" + getPath();
     File dir = new File(userDirectory);
-    File[] files = dir.listFiles((dir1, name) -> name.toLowerCase().endsWith(".xml"));
+    File[] files = dir.listFiles((dir1, name) -> name.toLowerCase().endsWith(".xml")
+        && !name.toLowerCase().contains("strategy"));
 
     if (files != null && files.length != 0) {
       for (File file : files) {

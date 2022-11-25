@@ -6,8 +6,8 @@ import java.util.Map;
 
 public class NormalStrategy implements IStrategy {
 
-  protected double totalAmount;
-  protected LocalDate date;
+  protected final double totalAmount;
+  protected final LocalDate date;
 
   protected NormalStrategy(Double totalAmount, LocalDate date) {
     this.totalAmount = totalAmount;
@@ -21,6 +21,10 @@ public class NormalStrategy implements IStrategy {
 
     Map<IStock, Double> stockQtyMap = new HashMap<>();
 
+    if(date.isAfter(LocalDate.now())) {
+      return null;
+    }
+
     for(Map.Entry<IStock, Double> stockQty:stockQtyRatio.entrySet()) {
       Double proportion = totalAmount * stockQty.getValue() / 100.0;
       Double qty = proportion / stockQty.getKey().getValue(this.date);
@@ -29,6 +33,11 @@ public class NormalStrategy implements IStrategy {
     stockQtyBasedOnStrategy.put(tempDate, stockQtyMap);
 
     return stockQtyBasedOnStrategy;
+  }
+
+  @Override
+  public double getStrategyInvestment() {
+    return this.totalAmount;
   }
 
   public static class NormalStrategyBuilder extends StrategyBuilder<NormalStrategyBuilder> {

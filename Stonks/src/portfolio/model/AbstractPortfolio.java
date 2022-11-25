@@ -55,4 +55,8 @@ public abstract class AbstractPortfolio implements IStrategicPortfolio {
     }
     return result;
   }
+
+  protected void scheduleInvestment(LocalDate date, double amount, Map<IStock, Double> stocks) {
+
+  }
 }

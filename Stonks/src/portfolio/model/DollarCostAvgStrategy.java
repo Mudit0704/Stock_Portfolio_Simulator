@@ -8,7 +8,7 @@ public class DollarCostAvgStrategy implements IStrategy {
 
   private final LocalDate startDate;
   private final LocalDate endDate;
-  protected Double totalAmount;
+  protected final Double totalAmount;
   protected int timeFrame;
   protected DollarCostAvgStrategy(LocalDate startDate, LocalDate endDate, Double totalAmount,
       int timeFrame) {
@@ -36,7 +36,17 @@ public class DollarCostAvgStrategy implements IStrategy {
       tempDate = tempDate.plusDays(this.timeFrame);
     }
 
+    while(tempDate.isBefore(endDate)) {
+      stockQtyBasedOnStrategy.put(tempDate, null);
+      tempDate = tempDate.plusDays(this.timeFrame);
+    }
+
     return stockQtyBasedOnStrategy;
+  }
+
+  @Override
+  public double getStrategyInvestment() {
+    return this.totalAmount;
   }
 
   public static class DollarCostAvgStrategyBuilder extends StrategyBuilder<DollarCostAvgStrategyBuilder> {
