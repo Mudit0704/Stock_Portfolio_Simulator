@@ -1,7 +1,6 @@
 package portfolio.model;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
@@ -11,7 +10,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -30,7 +28,7 @@ import org.xml.sax.SAXException;
 
 public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicPortfolio {
 
-  static class Pair<S,T> {
+  private static class Pair<S,T> {
     S s;
     T t;
     Pair(S s, T t) {
@@ -38,6 +36,8 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
       this.t = t;
     }
   }
+
+  private double transactionFee;
 
   Map<LocalDate, Map<IStock, Pair<Double, Double>>> listOfScheduledStocks;
   /**
@@ -52,12 +52,11 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
     double transactionFee, LocalDate date) {
     super(stockService, stocks, transactionFee, date);
     listOfScheduledStocks = new HashMap<>();
-//    futureInvestmentSchedule = new HashMap<>();
     this.creationDate = date;
   }
 
-  private void performCascadingUpdateForRetrospectiveBuy(Map<LocalDate, Double> historicQty, double quantity,
-      LocalDate dateAfterPurchaseToUpdate, double costBasisUpdateFactor) {
+  private void performCascadingUpdateForRetrospectiveBuy(Map<LocalDate, Double> historicQty,
+      double quantity, LocalDate dateAfterPurchaseToUpdate, double costBasisUpdateFactor) {
     for(Map.Entry<LocalDate, Double> qtyOnDate:historicQty.entrySet()) {
       if (qtyOnDate.getKey().isAfter(dateAfterPurchaseToUpdate)) {
         Double qtyToUpdate = qtyOnDate.getValue();
@@ -72,7 +71,7 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
 
   @Override
   public void addStocksToPortfolio(IStock stock, Double quantity,
-    LocalDate date, double transactionFee) {
+      LocalDate date, double transactionFee) {
     double stockQty = 0;
 
     if (isTransactionSequenceInvalid(stock, date, TransactionType.BUY)) {
@@ -111,7 +110,7 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
 
   @Override
   protected boolean isTransactionSequenceInvalid(IStock stock, LocalDate date,
-    TransactionType transactionType) {
+      TransactionType transactionType) {
     if (transactionType == TransactionType.BUY) {
       return false;
     } else {
@@ -120,7 +119,8 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
   }
 
   @Override
-  protected void scheduleInvestment(LocalDate date, double amount, Map<IStock, Double> stocks) {
+  protected void scheduleInvestment(LocalDate date, double amount, double transactionFee,
+      Map<IStock, Double> stocks) {
     Map<IStock, Pair<Double, Double>> stockQty = new HashMap<>();
 
     for(Map.Entry<IStock, Double> mapEntry:stocks.entrySet()) {
@@ -130,6 +130,9 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
   }
 
   private void saveStrategy(String path) throws ParserConfigurationException {
+    if (listOfScheduledStocks.size() == 0) {
+      return;
+    }
     try {
       listOfScheduledStocks = listOfScheduledStocks.entrySet().stream()
         .sorted(Map.Entry.comparingByKey(Comparator.reverseOrder()))
@@ -141,6 +144,11 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
 
       Element rootElement = doc.createElement("strategy");
       doc.appendChild(rootElement);
+
+      Element transactionFee = doc.createElement("transaction-fee");
+      transactionFee.appendChild(doc.createTextNode(String.valueOf(this.transactionFee)));
+
+      rootElement.appendChild(transactionFee);
 
       for(Map.Entry<LocalDate, Map<IStock, Pair<Double, Double>>> mapEntry:listOfScheduledStocks.entrySet()) {
         Element investmentElement = doc.createElement("investment");
@@ -213,20 +221,14 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
           .build();
 
       Map<LocalDate, Map<IStock, Double>> result = strategy.applyStrategy(stockRatios);
-      if(result == null) {
-        return;
-      }
-      result = result.entrySet().stream()
-          .sorted(Map.Entry.comparingByKey(Comparator.reverseOrder()))
-          .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
-            (e1, e2) -> e2, LinkedHashMap::new));
 
       for(Map.Entry<LocalDate, Map<IStock, Double>> resultEntry:result.entrySet()) {
         if (resultEntry.getKey().isAfter(LocalDate.now())) {
           break;
         }
         this.listOfScheduledStocks.remove(resultEntry.getKey());
-        this.investStocksIntoStrategicPortfolio(resultEntry.getValue(), resultEntry.getKey(), 0.0);
+        this.investStocksIntoStrategicPortfolio(resultEntry.getValue(),
+            resultEntry.getKey(), this.transactionFee);
       }
     }
   }
@@ -239,12 +241,13 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
 
     File inputFile = new File(strategyPath);
     if (!inputFile.isFile()) {
-      throw new FileNotFoundException("Cannot find file: " + strategyPath);
+      return;
     }
     DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
     DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
     Document doc = dBuilder.parse(inputFile);
     doc.getDocumentElement().normalize();
+    this.transactionFee = Double.parseDouble(doc.getDocumentElement().getElementsByTagName("transaction-fee").item(0).getTextContent());
 
     NodeList nList = doc.getDocumentElement().getElementsByTagName("investment");
 

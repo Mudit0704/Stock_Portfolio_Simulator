@@ -37,7 +37,8 @@ public class StrategicFlexiblePortfoliosModel extends FlexiblePortfoliosModel
       }
       dateEntry = super.getNextTransactionDate(dateEntry);
       if (stocksOnDate.getValue() == null) {
-        portfolio.scheduleInvestment(stocksOnDate.getKey(), strategy.getStrategyInvestment(), stockQty);
+        portfolio.scheduleInvestment(stocksOnDate.getKey(), strategy.getStrategyInvestment(),
+            this.transactionFee, stockQty);
         continue;
       }
       Map<IStock, Double> proportions = stocksOnDate.getValue();
@@ -58,6 +59,11 @@ public class StrategicFlexiblePortfoliosModel extends FlexiblePortfoliosModel
     AbstractPortfolio portfolio = super.getPortfolioFromMap(portfolioId).getValue();
 
     for(Map.Entry<LocalDate, Map<IStock, Double>> stocksOnDate: updatedFractionalQty.entrySet()) {
+      if (stocksOnDate.getValue() == null) {
+        portfolio.scheduleInvestment(stocksOnDate.getKey(), strategy.getStrategyInvestment(),
+            this.transactionFee, stockQty);
+        continue;
+      }
       LocalDate date = stocksOnDate.getKey();
       Map<IStock, Double> proportions = stocksOnDate.getValue();
       portfolio.investStocksIntoStrategicPortfolio(proportions, date, transactionFee);

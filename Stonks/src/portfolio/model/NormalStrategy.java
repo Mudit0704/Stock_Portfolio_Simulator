@@ -22,7 +22,8 @@ public class NormalStrategy implements IStrategy {
     Map<IStock, Double> stockQtyMap = new HashMap<>();
 
     if(date.isAfter(LocalDate.now())) {
-      return null;
+      stockQtyBasedOnStrategy.put(date, null);
+      return stockQtyBasedOnStrategy;
     }
 
     for(Map.Entry<IStock, Double> stockQty:stockQtyRatio.entrySet()) {
