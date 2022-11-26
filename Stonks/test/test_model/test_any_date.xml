@@ -5,22 +5,22 @@
    <cost-basis date="2019-10-30">746.26</cost-basis>
    <cost-basis date="2019-10-24">472.26</cost-basis>
    <stock>
+      <stockQuantity date="2019-10-30">2.0</stockQuantity>
+      <tickerSymbol>A</tickerSymbol>
+      <stockPrice>98.82</stockPrice>
+      <currentHolding date="2022-11-26">2.0</currentHolding>
+   </stock>
+   <stock>
       <stockQuantity date="2019-11-15">4.0</stockQuantity>
       <stockQuantity date="2019-10-24">2.0</stockQuantity>
       <tickerSymbol>GOOG</tickerSymbol>
-      <stockPrice>94.17</stockPrice>
-      <currentHolding date="2022-11-24">4.0</currentHolding>
-   </stock>
-   <stock>
-      <stockQuantity date="2019-10-30">2.0</stockQuantity>
-      <tickerSymbol>A</tickerSymbol>
-      <stockPrice>94.17</stockPrice>
-      <currentHolding date="2022-11-24">2.0</currentHolding>
+      <stockPrice>98.82</stockPrice>
+      <currentHolding date="2022-11-26">4.0</currentHolding>
    </stock>
    <stock>
       <stockQuantity date="2019-10-24">2.0</stockQuantity>
       <tickerSymbol>AAPL</tickerSymbol>
-      <stockPrice>94.17</stockPrice>
-      <currentHolding date="2022-11-24">2.0</currentHolding>
+      <stockPrice>98.82</stockPrice>
+      <currentHolding date="2022-11-26">2.0</currentHolding>
    </stock>
 </portfolio>
