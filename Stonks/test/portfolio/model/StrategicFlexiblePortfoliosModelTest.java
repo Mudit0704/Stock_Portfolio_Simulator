@@ -7,16 +7,12 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Set;
 import javax.xml.parsers.ParserConfigurationException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.xml.sax.SAXException;
-import portfolio.model.DollarCostAvgStrategy.DollarCostAvgStrategyBuilder;
 
 public class StrategicFlexiblePortfoliosModelTest {
   IStrategicFlexiblePortfolioModel portfolio;
