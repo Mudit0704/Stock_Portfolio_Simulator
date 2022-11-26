@@ -1,6 +1,7 @@
 package portfolio.model;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -78,12 +79,31 @@ public class StrategicFlexiblePortfoliosModelTest {
       totalAmount);
 
     portfolio.createStrategicPortfolio(map, LocalDate.of(2015,10,25));
-    LocalDate endDate = LocalDate.of(2016,10,25);
-    LocalDate tempDate = LocalDate.of(2015,10,30);
-    while(tempDate.isBefore(endDate)) {
-      System.out.println(portfolio.getCostBasis(tempDate, 1));
-      tempDate = tempDate.plusDays(30);
-    }
+    assertEquals(20000.0, portfolio.getCostBasis(LocalDate.of(2016,1,30), 1), 0.0);
+  }
+
+  @Test
+  public void testDollarCostAvgCreationOnHoliday()
+    throws NoSuchFieldException, IllegalAccessException {
+    Map<String, Double> map = new HashMap<>();
+    map.put("ALGT", 50d);
+    map.put("AMAM", 20d);
+    map.put("AMAO", 30d);
+
+    double totalAmount = 5000d;
+    Field stockService = AbstractPortfolioModel.class.getDeclaredField("stockService");
+
+    stockService.set(portfolio, mockStockService);
+
+    portfolio.setStrategy(StrategyType.DOLLARCOSTAVERAGING,
+      LocalDate.of(2015,10,25),
+      LocalDate.of(2016,10,25),
+      30,
+      totalAmount);
+
+    portfolio.createStrategicPortfolio(map, LocalDate.of(2015,10,25));
+    assertEquals(0.0, portfolio.getPortfolioValue(LocalDate.of(2015,10,25), 1), 0.0);
+    assertEquals(0.0, portfolio.getCostBasis(LocalDate.of(2015,10,25), 1), 0.0);
   }
 
   @Test
@@ -204,10 +224,9 @@ public class StrategicFlexiblePortfoliosModelTest {
     map.put("AMAO", 30d);
 
     portfolio.investStrategicPortfolio(map, 1);
-    portfolio.sellStockFromPortfolio("GOOG", 2d, 1, LocalDate.of(2016,10,30));
+    portfolio.sellStockFromPortfolio("ALGT", 2d, 1, LocalDate.of(2016,10,30));
   }
 
-  //invest between buy and sell
   @Test
   public void testInvestNormallyBeforeSellStrategicPortfolio()
       throws IllegalAccessException, NoSuchFieldException {
@@ -419,7 +438,7 @@ public class StrategicFlexiblePortfoliosModelTest {
       totalAmount);
 
     portfolio.createStrategicPortfolio(map, LocalDate.of(2015,10,25));
-    portfolio.sellStockFromPortfolio("GOOG", 2d, 1, LocalDate.of(2015,11,30));
+    portfolio.sellStockFromPortfolio("ALGT", 2d, 1, LocalDate.of(2015,11,30));
   }
 
   @Test
@@ -488,17 +507,6 @@ public class StrategicFlexiblePortfoliosModelTest {
     assertTrue(result.contains("ALGT -> 45.19"));
 
     model.savePortfolios();
-  }
-
-  @Test
-  public void testOnlyRetrieve()
-    throws ParserConfigurationException, IOException, SAXException {
-    IStrategicFlexiblePortfolioModel model = new MockForStrategicFlexiblePortfoliosModel();
-    model.retrievePortfolios();
-    String result = model.getPortfolioComposition(1);
-    assertTrue(result.contains("AMAM -> 17.68"));
-    assertTrue(result.contains("AMAO -> 26.52"));
-    assertTrue(result.contains("ALGT -> 48.20"));
   }
 
   @Test
@@ -660,6 +668,12 @@ public class StrategicFlexiblePortfoliosModelTest {
       dateValue.keySet().stream().min(LocalDate::compareTo).orElseThrow());
     assertEquals(LocalDate.parse("2020-05-31"),
       dateValue.keySet().stream().max(LocalDate::compareTo).orElseThrow());
+  }
+
+  @Test
+  public void testGetPath() {
+    MockForStrategicFlexiblePortfoliosModel model = new MockForStrategicFlexiblePortfoliosModel();
+    assertEquals("test/test_strategic_model/", model.getPath());
   }
 
   @After
