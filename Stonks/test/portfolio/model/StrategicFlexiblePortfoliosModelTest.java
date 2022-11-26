@@ -672,8 +672,42 @@ public class StrategicFlexiblePortfoliosModelTest {
 
   @Test
   public void testGetPath() {
-    MockForStrategicFlexiblePortfoliosModel model = new MockForStrategicFlexiblePortfoliosModel();
-    assertEquals("test/test_strategic_model/", model.getPath());
+    AbstractPortfolioModel model = new StrategicFlexiblePortfoliosModel();
+    assertEquals("flexiblePortfolio/", model.getPath());
+  }
+
+  @Test
+  public void testInvestmentScheduling() throws IllegalAccessException, NoSuchFieldException {
+    Map<String, Double> map = new HashMap<>();
+    map.put("ALGT", 5d);
+    map.put("AMAM", 2d);
+    map.put("AMAO", 3d);
+
+    double totalAmount = 5000d;
+
+    Field stockService = AbstractPortfolioModel.class.getDeclaredField("stockService");
+
+    stockService.set(portfolio, mockStockService);
+
+    portfolio.setStrategy(StrategyType.NORMAL,
+      LocalDate.of(2023,10,25),
+      null,
+      0,
+      totalAmount);
+
+    portfolio.createNewPortfolioOnADate(map, LocalDate.of(2022, 10, 25));
+
+    map = new HashMap<>();
+    map.put("ALGT", 50d);
+    map.put("AMAM", 20d);
+    map.put("AMAO", 30d);
+
+    portfolio.investStrategicPortfolio(map, 1);
+    String result = portfolio.getPortfolioComposition(1);
+
+    assertTrue(result.contains("ALGT -> 5.0"));
+    assertTrue(result.contains("AMAM -> 2.0"));
+    assertTrue(result.contains("AMAO -> 3.0"));
   }
 
   @After
