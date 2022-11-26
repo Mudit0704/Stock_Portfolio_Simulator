@@ -35,7 +35,7 @@ public class StrategicFlexiblePortfoliosModel extends FlexiblePortfoliosModel
       if(dateEntry.isEqual(date)) {
         continue;
       }
-      dateEntry = dateNavigator.getNextAvailableDate(dateEntry);
+//      dateEntry = dateNavigator.getNextAvailableDate(dateEntry);
       if (stocksOnDate.getValue() == null) {
         portfolio.scheduleInvestment(stocksOnDate.getKey(), strategy.getStrategyInvestment(),
             this.transactionFee, stockQty);

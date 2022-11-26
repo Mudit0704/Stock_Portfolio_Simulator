@@ -2,6 +2,7 @@ package portfolio.model;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.time.LocalDate;
@@ -47,10 +48,6 @@ public class StrategicFlexiblePortfoliosModelTest {
 
     stockService.set(portfolio, mockStockService);
 
-    Field availableDatesSet = AbstractPortfolioModel.class.getDeclaredField("availableDates");
-
-    availableDatesSet.set(portfolio, availableDates);
-
     portfolio.setStrategy(StrategyType.DOLLARCOSTAVERAGING,
         LocalDate.of(2015,10,25),
         LocalDate.of(2016,10,25),
@@ -76,10 +73,6 @@ public class StrategicFlexiblePortfoliosModelTest {
     Field stockService = AbstractPortfolioModel.class.getDeclaredField("stockService");
 
     stockService.set(portfolio, mockStockService);
-
-    Field availableDatesSet = AbstractPortfolioModel.class.getDeclaredField("availableDates");
-
-    availableDatesSet.set(portfolio, availableDates);
 
     portfolio.setStrategy(StrategyType.DOLLARCOSTAVERAGING,
       LocalDate.of(2015,10,25),
@@ -110,9 +103,6 @@ public class StrategicFlexiblePortfoliosModelTest {
 
     stockService.set(portfolio, mockStockService);
 
-    Field availableDatesSet = AbstractPortfolioModel.class.getDeclaredField("availableDates");
-
-    availableDatesSet.set(portfolio, availableDates);
     portfolio.setStrategy(StrategyType.NORMAL,
       LocalDate.of(2017,10,25),
       null,
@@ -151,9 +141,6 @@ public class StrategicFlexiblePortfoliosModelTest {
 
     stockService.set(portfolio, mockStockService);
 
-    Field availableDatesSet = AbstractPortfolioModel.class.getDeclaredField("availableDates");
-
-    availableDatesSet.set(portfolio, availableDates);
     portfolio.setStrategy(StrategyType.NORMAL,
       LocalDate.of(2017,10,25),
       null,
@@ -210,9 +197,6 @@ public class StrategicFlexiblePortfoliosModelTest {
 
     stockService.set(portfolio, mockStockService);
 
-    Field availableDatesSet = AbstractPortfolioModel.class.getDeclaredField("availableDates");
-
-    availableDatesSet.set(portfolio, availableDates);
     portfolio.setStrategy(StrategyType.NORMAL,
       LocalDate.of(2017,10,25),
       null,
@@ -245,9 +229,6 @@ public class StrategicFlexiblePortfoliosModelTest {
 
     stockService.set(portfolio, mockStockService);
 
-    Field availableDatesSet = AbstractPortfolioModel.class.getDeclaredField("availableDates");
-
-    availableDatesSet.set(portfolio, availableDates);
     portfolio.setStrategy(StrategyType.NORMAL,
       LocalDate.of(2017,10,25),
       null,
@@ -294,9 +275,6 @@ public class StrategicFlexiblePortfoliosModelTest {
 
     stockService.set(portfolio, mockStockService);
 
-    Field availableDatesSet = AbstractPortfolioModel.class.getDeclaredField("availableDates");
-
-    availableDatesSet.set(portfolio, availableDates);
     portfolio.setStrategy(StrategyType.NORMAL,
       LocalDate.of(2017,10,25),
       null,
@@ -342,10 +320,6 @@ public class StrategicFlexiblePortfoliosModelTest {
 
     stockService.set(portfolio, mockStockService);
 
-    Field availableDatesSet = AbstractPortfolioModel.class.getDeclaredField("availableDates");
-
-    availableDatesSet.set(portfolio, availableDates);
-
     portfolio.setStrategy(StrategyType.DOLLARCOSTAVERAGING,
       LocalDate.of(2015,10,25),
       LocalDate.of(2016,10,25),
@@ -367,9 +341,9 @@ public class StrategicFlexiblePortfoliosModelTest {
     assertTrue(result.contains("ALGT -> 6.84"));
 
     result = portfolio.getPortfolioCompositionOnADate(1, LocalDate.now());
-    assertTrue(result.contains("AMAM -> 17.68"));
-    assertTrue(result.contains("AMAO -> 26.52"));
-    assertTrue(result.contains("ALGT -> 44.20"));
+    assertTrue(result.contains("AMAM -> 16.47"));
+    assertTrue(result.contains("AMAO -> 24.71"));
+    assertTrue(result.contains("ALGT -> 41.19"));
 
     portfolio.addStocksToPortfolio("ALGT", 2d, 1, LocalDate.of(2015,11,30));
     result = portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2015,11,30));
@@ -378,9 +352,9 @@ public class StrategicFlexiblePortfoliosModelTest {
     assertTrue(result.contains("ALGT -> 8.84"));
 
     result = portfolio.getPortfolioCompositionOnADate(1, LocalDate.now());
-    assertTrue(result.contains("AMAM -> 17.68"));
-    assertTrue(result.contains("AMAO -> 26.52"));
-    assertTrue(result.contains("ALGT -> 46.20"));
+    assertTrue(result.contains("AMAM -> 16.47"));
+    assertTrue(result.contains("AMAO -> 24.71"));
+    assertTrue(result.contains("ALGT -> 43.19"));
   }
 
   @Test
@@ -396,10 +370,6 @@ public class StrategicFlexiblePortfoliosModelTest {
     Field stockService = AbstractPortfolioModel.class.getDeclaredField("stockService");
 
     stockService.set(portfolio, mockStockService);
-
-    Field availableDatesSet = AbstractPortfolioModel.class.getDeclaredField("availableDates");
-
-    availableDatesSet.set(portfolio, availableDates);
 
     portfolio.setStrategy(StrategyType.NORMAL,
       LocalDate.of(2017,10,25),
@@ -449,10 +419,6 @@ public class StrategicFlexiblePortfoliosModelTest {
 
     stockService.set(portfolio, mockStockService);
 
-    Field availableDatesSet = AbstractPortfolioModel.class.getDeclaredField("availableDates");
-
-    availableDatesSet.set(portfolio, availableDates);
-
     portfolio.setStrategy(StrategyType.DOLLARCOSTAVERAGING,
       LocalDate.of(2015,10,25),
       LocalDate.of(2016,10,25),
@@ -478,11 +444,6 @@ public class StrategicFlexiblePortfoliosModelTest {
 
     stockService.set(mockSaveModel, mockStockService);
 
-    Field availableDatesSet = AbstractPortfolioModel.class.getDeclaredField("availableDates");
-
-    availableDatesSet.set(mockSaveModel, availableDates);
-
-
     mockSaveModel.setStrategy(StrategyType.DOLLARCOSTAVERAGING,
       LocalDate.of(2015,10,25),
       LocalDate.of(2016,10,25),
@@ -496,9 +457,9 @@ public class StrategicFlexiblePortfoliosModelTest {
     assertTrue(result.contains("ALGT -> 6.84"));
 
     result = mockSaveModel.getPortfolioCompositionOnADate(1, LocalDate.now());
-    assertTrue(result.contains("AMAM -> 17.68"));
-    assertTrue(result.contains("AMAO -> 26.52"));
-    assertTrue(result.contains("ALGT -> 44.20"));
+    assertTrue(result.contains("AMAM -> 16.47"));
+    assertTrue(result.contains("AMAO -> 24.71"));
+    assertTrue(result.contains("ALGT -> 41.19"));
 
     mockSaveModel.addStocksToPortfolio("ALGT", 2d, 1, LocalDate.of(2015,11,30));
     result = mockSaveModel.getPortfolioCompositionOnADate(1, LocalDate.of(2015, 11, 30));
@@ -507,9 +468,9 @@ public class StrategicFlexiblePortfoliosModelTest {
     assertTrue(result.contains("ALGT -> 8.84"));
 
     result = mockSaveModel.getPortfolioCompositionOnADate(1, LocalDate.now());
-    assertTrue(result.contains("AMAM -> 17.68"));
-    assertTrue(result.contains("AMAO -> 26.52"));
-    assertTrue(result.contains("ALGT -> 46.20"));
+    assertTrue(result.contains("AMAM -> 16.47"));
+    assertTrue(result.contains("AMAO -> 24.71"));
+    assertTrue(result.contains("ALGT -> 43.19"));
 
     mockSaveModel.savePortfolios();
 
@@ -517,23 +478,26 @@ public class StrategicFlexiblePortfoliosModelTest {
     model.retrievePortfolios();
 
     result = model.getPortfolioCompositionOnADate(1,LocalDate.of(2015,12,29));
-    assertTrue(result.contains("AMAM -> 4.07"));
-    assertTrue(result.contains("AMAO -> 6.11"));
-    assertTrue(result.contains("ALGT -> 12.18"));
+
+    assertTrue(result.contains("AMAM -> 4.05"));
+    assertTrue(result.contains("AMAO -> 6.07"));
+    assertTrue(result.contains("ALGT -> 12.12"));
 
     model.addStocksToPortfolio("ALGT", 2d, 1, LocalDate.of(2015,12,30));
     result = model.getPortfolioCompositionOnADate(1,LocalDate.of(2015,12,30));
-    assertTrue(result.contains("AMAM -> 4.07"));
-    assertTrue(result.contains("AMAO -> 6.11"));
-    assertTrue(result.contains("ALGT -> 14.18"));
+    assertTrue(result.contains("AMAM -> 4.05"));
+    assertTrue(result.contains("AMAO -> 6.07"));
+    assertTrue(result.contains("ALGT -> 14.12"));
 
     result = model.getPortfolioCompositionOnADate(1,LocalDate.now());
-    assertTrue(result.contains("AMAM -> 17.68"));
-    assertTrue(result.contains("AMAO -> 26.52"));
-    assertTrue(result.contains("ALGT -> 48.20"));
+    assertTrue(result.contains("AMAM -> 16.47"));
+    assertTrue(result.contains("AMAO -> 24.71"));
+    assertTrue(result.contains("ALGT -> 45.19"));
 
     model.savePortfolios();
+
     //TODO Handle the deletion of the file.
+
   }
 
   @Test
@@ -560,11 +524,6 @@ public class StrategicFlexiblePortfoliosModelTest {
     Field stockService = AbstractPortfolioModel.class.getDeclaredField("stockService");
 
     stockService.set(mockSaveModel, mockStockService);
-
-    Field availableDatesSet = AbstractPortfolioModel.class.getDeclaredField("availableDates");
-
-    availableDatesSet.set(mockSaveModel, availableDates);
-
 
     mockSaveModel.setStrategy(StrategyType.DOLLARCOSTAVERAGING,
       LocalDate.of(2015,10,25),
@@ -610,11 +569,6 @@ public class StrategicFlexiblePortfoliosModelTest {
 
     stockService.set(mockSaveFutureTransaction, mockStockService);
 
-    Field availableDatesSet = AbstractPortfolioModel.class.getDeclaredField("availableDates");
-
-    availableDatesSet.set(mockSaveFutureTransaction, availableDates);
-
-
     mockSaveFutureTransaction.setStrategy(StrategyType.DOLLARCOSTAVERAGING,
       LocalDate.of(2022,10,25),
       LocalDate.of(2023,10,25),
@@ -644,9 +598,6 @@ public class StrategicFlexiblePortfoliosModelTest {
 
     stockService.set(mockFutureRetrieve, mockStockService);
 
-    Field availableDatesSet = AbstractPortfolioModel.class.getDeclaredField("availableDates");
-
-    availableDatesSet.set(mockFutureRetrieve, availableDates);
     mockFutureRetrieve.retrievePortfolios();
     String result = mockFutureRetrieve.getPortfolioComposition(1);
     assertTrue(result.contains("ALGT -> 74.42"));
@@ -673,11 +624,6 @@ public class StrategicFlexiblePortfoliosModelTest {
 
     stockService.set(mockSaveModel, mockStockService);
 
-    Field availableDatesSet = AbstractPortfolioModel.class.getDeclaredField("availableDates");
-
-    availableDatesSet.set(mockSaveModel, availableDates);
-
-
     mockSaveModel.setStrategy(StrategyType.DOLLARCOSTAVERAGING,
       LocalDate.of(2016,10,25),
       LocalDate.of(2016,10,25),
@@ -699,11 +645,6 @@ public class StrategicFlexiblePortfoliosModelTest {
 
     stockService.set(mockSaveModel, mockStockService);
 
-    Field availableDatesSet = AbstractPortfolioModel.class.getDeclaredField("availableDates");
-
-    availableDatesSet.set(mockSaveModel, availableDates);
-
-
     mockSaveModel.setStrategy(StrategyType.DOLLARCOSTAVERAGING,
       LocalDate.of(2016,10,25),
       LocalDate.of(2016,11,25),
@@ -713,6 +654,13 @@ public class StrategicFlexiblePortfoliosModelTest {
 
   @After
   public void tearDown() {
-
+    MockForStrategicFlexiblePortfoliosModel model = new MockForStrategicFlexiblePortfoliosModel();
+    String userDirectory = System.getProperty("user.dir") + "/" + model.getPath();
+    File dir = new File(userDirectory);
+    File[] files = dir.listFiles((dir1, name) -> name.toLowerCase().endsWith(".xml")
+      && !name.toLowerCase().contains("strategy"));
+    for(File file:files) {
+      file.delete();
+    }
   }
 }
