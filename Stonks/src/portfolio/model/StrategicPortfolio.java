@@ -221,7 +221,7 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
         if (resultEntry.getKey().isAfter(LocalDate.now())) {
           break;
         }
-        this.listOfScheduledStocks.remove(resultEntry.getKey());
+        this.listOfScheduledStocks.remove(date);
         this.investStocksIntoStrategicPortfolio(resultEntry.getValue(),
             resultEntry.getKey(), this.transactionFee);
       }
@@ -297,7 +297,6 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
     LocalDate tempDate = start;
     Map<LocalDate, Double> dateValue = new LinkedHashMap<>();
     long timespan = ChronoUnit.DAYS.between(start, end);
-    IPerformanceVisualizer visualizer;
     int timeSpanJump;
 
     if (timespan <= 30) {

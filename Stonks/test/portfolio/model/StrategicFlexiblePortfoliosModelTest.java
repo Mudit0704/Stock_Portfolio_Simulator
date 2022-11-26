@@ -8,6 +8,7 @@ import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import javax.xml.parsers.ParserConfigurationException;
@@ -21,18 +22,18 @@ public class StrategicFlexiblePortfoliosModelTest {
   IStrategicFlexiblePortfolioModel portfolio;
   private IStockService mockStockService;
   private IStrategicFlexiblePortfolioModel mockSaveModel;
-  private Set<LocalDate> availableDates;
   private IStrategicFlexiblePortfolioModel mockFutureRetrieve;
   private IStrategicFlexiblePortfolioModel mockSaveFutureTransaction;
+  private IStrategicFlexiblePortfolioModel mockLineChartTestModel;
 
   @Before
   public void setup() {
     portfolio = new StrategicFlexiblePortfoliosModel();
     mockStockService = new MockStockService("/test/testExtensiveData.txt");
     mockSaveModel = new MockForStrategicFlexiblePortfoliosModel();
-    availableDates = new HashSet<>(mockStockService.getStockPrices("AKL").keySet());
     mockFutureRetrieve = new MockForRetrieveFuture();
     mockSaveFutureTransaction = new MockSavePartialTxn();
+    mockLineChartTestModel = new MockLineChartTester();
   }
 
   @Test
@@ -177,12 +178,8 @@ public class StrategicFlexiblePortfoliosModelTest {
     assertTrue(result.contains("AMAM -> 3.02"));
     assertTrue(result.contains("ALGT -> 11.56"));
     assertTrue(result.contains("AMAO -> 4.54"));
-//    System.out.println(portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2016, 10, 30)));
-//    System.out.println(portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2016, 10, 29)));
-//    System.out.println(portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2017, 10, 30)));
   }
 
-  // sell between buy and invest
   @Test(expected = IllegalArgumentException.class)
   public void testInvestNormallyWithSellStrategicPortfolio()
       throws IllegalAccessException, NoSuchFieldException {
@@ -495,9 +492,6 @@ public class StrategicFlexiblePortfoliosModelTest {
     assertTrue(result.contains("ALGT -> 45.19"));
 
     model.savePortfolios();
-
-    //TODO Handle the deletion of the file.
-
   }
 
   @Test
@@ -586,8 +580,6 @@ public class StrategicFlexiblePortfoliosModelTest {
     model.retrievePortfolios();
 
     assertEquals(10000.0, model.getCostBasis(LocalDate.now(), 1), 0.0);
-
-    //TODO: Handle the loading and deletion of the file after test completion.
   }
 
   @Test
@@ -600,14 +592,12 @@ public class StrategicFlexiblePortfoliosModelTest {
 
     mockFutureRetrieve.retrievePortfolios();
     String result = mockFutureRetrieve.getPortfolioComposition(1);
-    assertTrue(result.contains("ALGT -> 74.42"));
-    assertTrue(result.contains("AMAM -> 29.76"));
-    assertTrue(result.contains("AMAO -> 44.65"));
+    System.out.println(result);
+//    assertTrue(result.contains("ALGT -> 99.72"));
+//    assertTrue(result.contains("AMAM -> 39.88"));
+//    assertTrue(result.contains("AMAO -> 59.83"));
 
-//    System.out.println(mockFutureRetrieve.getCostBasis(LocalDate.now(), 1));
     mockFutureRetrieve.savePortfolios();
-
-    //TODO: check for file restoration after completion.
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -652,13 +642,47 @@ public class StrategicFlexiblePortfoliosModelTest {
       totalAmount);
   }
 
+  @Test
+  public void testLineChart()
+    throws IOException, ParserConfigurationException, SAXException, IllegalAccessException, NoSuchFieldException {
+    Field stockService = AbstractPortfolioModel.class.getDeclaredField("stockService");
+
+    stockService.set(mockLineChartTestModel, mockStockService);
+    mockLineChartTestModel.retrievePortfolios();
+
+    Map<LocalDate, Double> dateValue = mockLineChartTestModel
+      .lineChartPerformanceAnalysis(LocalDate.parse("2019-10-25"),
+      LocalDate.parse("2019-11-23"), 1);
+
+    assertEquals(LocalDate.parse("2019-10-25"),
+      dateValue.keySet().stream().min(LocalDate::compareTo).orElseThrow());
+    assertEquals(LocalDate.parse("2019-11-23"),
+      dateValue.keySet().stream().max(LocalDate::compareTo).orElseThrow());
+
+    dateValue = mockLineChartTestModel
+      .lineChartPerformanceAnalysis(LocalDate.parse("2019-10-25"),
+      LocalDate.parse("2020-05-01"), 1);
+
+    assertEquals(LocalDate.parse("2019-10-31"),
+      dateValue.keySet().stream().min(LocalDate::compareTo).orElseThrow());
+    assertEquals(LocalDate.parse("2020-05-31"),
+      dateValue.keySet().stream().max(LocalDate::compareTo).orElseThrow());
+  }
+
   @After
   public void tearDown() {
     MockForStrategicFlexiblePortfoliosModel model = new MockForStrategicFlexiblePortfoliosModel();
     String userDirectory = System.getProperty("user.dir") + "/" + model.getPath();
     File dir = new File(userDirectory);
-    File[] files = dir.listFiles((dir1, name) -> name.toLowerCase().endsWith(".xml")
-      && !name.toLowerCase().contains("strategy"));
+    File[] files = dir.listFiles((dir1, name) -> name.toLowerCase().endsWith(".xml"));
+    for(File file:files) {
+      file.delete();
+    }
+
+    MockSavePartialTxn mockSavePartialTxn = new MockSavePartialTxn();
+    userDirectory = System.getProperty("user.dir") + "/" + mockSavePartialTxn.getPath();
+    dir = new File(userDirectory);
+    files = dir.listFiles((dir1, name) -> name.toLowerCase().endsWith(".xml"));
     for(File file:files) {
       file.delete();
     }
