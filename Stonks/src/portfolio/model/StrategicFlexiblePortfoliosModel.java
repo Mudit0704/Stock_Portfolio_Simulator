@@ -70,6 +70,12 @@ public class StrategicFlexiblePortfoliosModel extends FlexiblePortfoliosModel
     }
   }
 
+  @Override
+  public Map<LocalDate, Double> lineChartPerformanceAnalysis(LocalDate start, LocalDate end, int portfolioId) {
+    AbstractPortfolio portfolio = super.getPortfolioFromMap(portfolioId).getValue();
+    return portfolio.lineChartPerformanceAnalysis(start, end);
+  }
+
   protected AbstractPortfolio createPortfolio(Map<IStock, Double> stockQty, LocalDate date) {
     return new StrategicPortfolio(stockService, stockQty, this.transactionFee, date);
   }

@@ -38,6 +38,11 @@ public abstract class AbstractPortfolio implements IStrategicPortfolio {
 
   }
 
+  @Override
+  public Map<LocalDate, Double> lineChartPerformanceAnalysis(LocalDate start, LocalDate end) {
+    return null;
+  }
+
   protected abstract boolean isTransactionSequenceInvalid(IStock stock, LocalDate date,
     TransactionType transactionType);
 

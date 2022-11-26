@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -287,6 +288,43 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
         this.listOfScheduledStocks.put(txnDate, map);
       }
     }
+  }
+
+  public Map<LocalDate, Double> lineChartPerformanceAnalysis(LocalDate start, LocalDate end) {
+    if (start.isAfter(end) || start.isEqual(end) || end.isBefore(start)) {
+      throw new IllegalArgumentException("Invalid dates\n");
+    } else if (start.isBefore(this.creationDate)) {
+      throw new IllegalArgumentException(
+          "Invalid start date. It is before the portfolio creation date.");
+    } else if (end.isAfter(LocalDate.now())) {
+      throw new IllegalArgumentException("Invalid end date. It is after today's date.");
+    }
+
+    LocalDate tempDate = start;
+    Map<LocalDate, Double> dateValue = new LinkedHashMap<>();
+    long timespan = ChronoUnit.DAYS.between(start, end);
+    IPerformanceVisualizer visualizer;
+    int timeSpanJump;
+
+    if (timespan <= 30) {
+      timeSpanJump = 1;
+      new DaysPerformanceVisualizer(this).populatePortfolioValues(tempDate, end, timeSpanJump,
+          dateValue);
+    } else if (timespan <= 150) {
+      timeSpanJump = (int) (timespan / 5);
+      tempDate = tempDate.plusDays(timeSpanJump - 1);
+      new DaysPerformanceVisualizer(this).populatePortfolioValues(tempDate, end, timeSpanJump, dateValue);
+    } else if (timespan <= 912) {
+      timeSpanJump = 1;
+      new MonthsPerformanceVisualizer(this).populatePortfolioValues(tempDate, end, timeSpanJump, dateValue);
+    } else if (timespan <= 1826) {
+      timeSpanJump = 2;
+      new MonthsPerformanceVisualizer(this).populatePortfolioValues(tempDate, end, timeSpanJump, dateValue);
+    } else {
+      timeSpanJump = 1;
+      new YearsPerformanceVisualizer(this).populatePortfolioValues(tempDate, end, timeSpanJump, dateValue);
+    }
+    return dateValue;
   }
 
 }

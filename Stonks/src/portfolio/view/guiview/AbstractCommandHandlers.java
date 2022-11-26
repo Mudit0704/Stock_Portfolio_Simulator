@@ -38,10 +38,13 @@ abstract class AbstractCommandHandlers implements CommandHandler {
   public static final String TIME_FRAME = "Time Frame";
   public static final String TOTAL_AMOUNT = "Total Amount";
   public static final String PERCENTAGE = "Percentage";
-  public static final String START_DATE = "start date";
-  public static final String END_DATE = "end date";
-  public static final String DATE = "date";
+  public static final String START_DATE = "Start Date";
+  public static final String END_DATE = "End Date";
+  public static final String PERFORMANCE_START_DATE = "Performance Start Date";
+  public static final String PERFORMANCE_END_DATE = "Performance End Date";
+  public static final String DATE = "Date";
   public static final String AVAILABLE_PORTFOLIOS = "Available Portfolios";
+  public static final String TRANSACTION_FEE = "Transaction Fee";
   JTextPane resultArea;
   Features features;
   JProgressBar progressBar;
@@ -111,10 +114,30 @@ abstract class AbstractCommandHandlers implements CommandHandler {
     String errorMessage = "";
 
     for (Entry<JTextField, Function<String, String>> entry : validatorMap.entrySet()) {
-      String result = entry.getValue().apply(entry.getKey().getText());
-      if(!VALID.equals(result)) {
-        errorMessage = result + " " + entry.getKey().getName();
-        break;
+      if (END_DATE.equals(entry.getKey().getName())) {
+        if (!"".equals(entry.getKey().getText())) {
+          String result = entry.getValue().apply(entry.getKey().getText());
+          if(!VALID.equals(result)) {
+            errorMessage = result + " " + entry.getKey().getName();
+            break;
+          }
+        }
+      } else if (TRANSACTION_FEE.equals(entry.getKey().getName())) {
+        if (!"".equals(entry.getKey().getText())) {
+          String result = entry.getValue().apply(entry.getKey().getText());
+          if(!VALID.equals(result)) {
+            errorMessage = result + " " + entry.getKey().getName();
+            break;
+          }
+        } else {
+          entry.getKey().setText("0");
+        }
+      } else {
+        String result = entry.getValue().apply(entry.getKey().getText());
+        if(!VALID.equals(result)) {
+          errorMessage = result + " " + entry.getKey().getName();
+          break;
+        }
       }
     }
 
@@ -176,7 +199,7 @@ abstract class AbstractCommandHandlers implements CommandHandler {
   boolean CreateTransactionWindow(AtomicBoolean OKClicked) {
     JPanel availablePortfoliosDisplay;
     JDialog userInputDialog = getUserInputDialog("Transaction");
-    userInputDialog.setMinimumSize(new Dimension(470, 200));
+    userInputDialog.setMinimumSize(new Dimension(470, 250));
     userInputDialog.setLocationRelativeTo(null);
     userInputDialog.setResizable(false);
 
@@ -193,6 +216,7 @@ abstract class AbstractCommandHandlers implements CommandHandler {
     createNumericFields(PORTFOLIO_ID);
     createTickerSymbolField();
     createNumericFields(QUANTITY);
+    createNumericFields(TRANSACTION_FEE);
 
     JButton OKButton = getCustomButton("OK");
     OKButton.addActionListener(e -> {

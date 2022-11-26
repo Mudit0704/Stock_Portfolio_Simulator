@@ -1,15 +1,16 @@
 package portfolio.controller;
 
+import java.time.LocalDate;
 import java.util.Map;
 
 public interface Features {
   String createFlexiblePortfolio(Map<String, Double> stocks, String date);
 
   String sellPortfolioStocks(String tickerSymbol, String quantity, String portfolioId,
-      String date);
+      String date, String transactionFee);
 
   String buyPortfolioStocks(String tickerSymbol, String quantity, String portfolioId,
-      String date);
+      String date, String transactionFee);
 
   double getCostBasis(String date, String portfolioId);
 
@@ -31,4 +32,5 @@ public interface Features {
 
   boolean isTickerSymbolValid(String tickerSymbol);
 
+  Map<LocalDate, Double> getPortfolioPerformance(String startDate, String endDate, String portfolioId);
 }

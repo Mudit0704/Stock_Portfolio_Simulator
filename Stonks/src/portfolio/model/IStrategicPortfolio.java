@@ -10,4 +10,6 @@ public interface IStrategicPortfolio extends IFlexiblePortfolio {
    */
   void investStocksIntoStrategicPortfolio(Map<IStock, Double> stockProportions,
       LocalDate date, double transactionFee);
+
+  Map<LocalDate, Double> lineChartPerformanceAnalysis(LocalDate start, LocalDate end);
 }
