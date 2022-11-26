@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import javax.xml.parsers.ParserConfigurationException;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.xml.sax.SAXException;
@@ -656,5 +657,62 @@ public class StrategicFlexiblePortfoliosModelTest {
     mockFutureRetrieve.savePortfolios();
 
     //TODO: check for file restoration after completion.
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testInvalidDateRangesForDollarCostAvg()
+    throws IllegalAccessException, NoSuchFieldException {
+    Map<String, Double> map = new HashMap<>();
+    map.put("ALGT", 50d);
+    map.put("AMAM", 20d);
+    map.put("AMAO", 30d);
+
+    double totalAmount = 5000d;
+
+    Field stockService = AbstractPortfolioModel.class.getDeclaredField("stockService");
+
+    stockService.set(mockSaveModel, mockStockService);
+
+    Field availableDatesSet = AbstractPortfolioModel.class.getDeclaredField("availableDates");
+
+    availableDatesSet.set(mockSaveModel, availableDates);
+
+
+    mockSaveModel.setStrategy(StrategyType.DOLLARCOSTAVERAGING,
+      LocalDate.of(2016,10,25),
+      LocalDate.of(2016,10,25),
+      30,
+      totalAmount);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testInvalidTimeFrameForDollarCostAvg()
+    throws IllegalAccessException, NoSuchFieldException {
+    Map<String, Double> map = new HashMap<>();
+    map.put("ALGT", 50d);
+    map.put("AMAM", 20d);
+    map.put("AMAO", 30d);
+
+    double totalAmount = 5000d;
+
+    Field stockService = AbstractPortfolioModel.class.getDeclaredField("stockService");
+
+    stockService.set(mockSaveModel, mockStockService);
+
+    Field availableDatesSet = AbstractPortfolioModel.class.getDeclaredField("availableDates");
+
+    availableDatesSet.set(mockSaveModel, availableDates);
+
+
+    mockSaveModel.setStrategy(StrategyType.DOLLARCOSTAVERAGING,
+      LocalDate.of(2016,10,25),
+      LocalDate.of(2016,11,25),
+      40,
+      totalAmount);
+  }
+
+  @After
+  public void tearDown() {
+
   }
 }

@@ -1,6 +1,7 @@
 package portfolio.model;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -10,8 +11,15 @@ public class DollarCostAvgStrategy implements IStrategy {
   private final LocalDate endDate;
   protected final Double totalAmount;
   protected int timeFrame;
+  protected IDateNavigator dateNavigator;
   protected DollarCostAvgStrategy(LocalDate startDate, LocalDate endDate, Double totalAmount,
       int timeFrame) {
+    if(startDate.isAfter(endDate)
+        || startDate.isEqual(endDate)
+        || ChronoUnit.DAYS.between(startDate, endDate) < timeFrame) {
+      throw new IllegalArgumentException("Invalid date ranges");
+    }
+    dateNavigator = DateNavigator.getInstance();
     this.startDate = startDate;
     this.endDate = endDate;
     this.totalAmount = totalAmount;
@@ -28,6 +36,7 @@ public class DollarCostAvgStrategy implements IStrategy {
 
       for(Map.Entry<IStock, Double> stockQty:stockQtyRatio.entrySet()) {
         Double proportion = totalAmount * stockQty.getValue() / 100.0;
+        tempDate = dateNavigator.getNextAvailableDate(tempDate);
         //TODO: Find a cleaner way to do this...
         Double qty = proportion / stockQty.getKey().getValue(tempDate);
         stockQtyMap.put(stockQty.getKey(), qty);

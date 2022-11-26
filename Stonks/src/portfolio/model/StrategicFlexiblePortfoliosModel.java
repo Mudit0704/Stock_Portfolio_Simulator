@@ -14,7 +14,7 @@ public class StrategicFlexiblePortfoliosModel extends FlexiblePortfoliosModel
   @Override
   public void setStrategy(StrategyType strategy, LocalDate startDate,
       LocalDate endDate, int timeFrame, double investmentAmount) {
-    startDate = super.getNextTransactionDate(startDate);
+    startDate = dateNavigator.getNextAvailableDate(startDate);
     this.strategy = AbstractStrategyCreator.strategyCreator(strategy,
           startDate, endDate, timeFrame, investmentAmount);
   }
@@ -35,7 +35,7 @@ public class StrategicFlexiblePortfoliosModel extends FlexiblePortfoliosModel
       if(dateEntry.isEqual(date)) {
         continue;
       }
-      dateEntry = super.getNextTransactionDate(dateEntry);
+      dateEntry = dateNavigator.getNextAvailableDate(dateEntry);
       if (stocksOnDate.getValue() == null) {
         portfolio.scheduleInvestment(stocksOnDate.getKey(), strategy.getStrategyInvestment(),
             this.transactionFee, stockQty);

@@ -8,21 +8,24 @@ public class NormalStrategy implements IStrategy {
 
   protected final double totalAmount;
   protected final LocalDate date;
+  protected IDateNavigator dateNavigator;
 
   protected NormalStrategy(Double totalAmount, LocalDate date) {
     this.totalAmount = totalAmount;
     this.date = date;
+    dateNavigator = DateNavigator.getInstance();
   }
 
   @Override
   public Map<LocalDate, Map<IStock, Double>> applyStrategy(Map<IStock, Double> stockQtyRatio) {
     Map<LocalDate, Map<IStock, Double>> stockQtyBasedOnStrategy = new HashMap<>();
     LocalDate tempDate = date;
+    tempDate = dateNavigator.getNextAvailableDate(tempDate);
 
     Map<IStock, Double> stockQtyMap = new HashMap<>();
 
-    if(date.isAfter(LocalDate.now())) {
-      stockQtyBasedOnStrategy.put(date, null);
+    if(tempDate.isAfter(LocalDate.now())) {
+      stockQtyBasedOnStrategy.put(tempDate, null);
       return stockQtyBasedOnStrategy;
     }
 

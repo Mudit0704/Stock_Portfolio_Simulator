@@ -25,17 +25,17 @@ public abstract class AbstractPortfolioModel implements IFlexiblePortfoliosModel
   IStockService stockService;
   IStockAPIOptimizer apiOptimizer;
   protected double transactionFee;
-  Set<LocalDate> availableDates;
+  IDateNavigator dateNavigator;
 
   AbstractPortfolioModel() {
     apiOptimizer = StockCache.getInstance();
+    dateNavigator = DateNavigator.getInstance();
     portfolioMap = new LinkedHashMap<>();
   }
 
   @Override
   public void setServiceType(ServiceType serviceType) {
     stockService = AbstractServiceCreator.serviceCreator(serviceType);
-    this.availableDates = new HashSet<>(stockService.getStockPrices("ALK").keySet());
   }
 
   protected Map<IStock, Double> getStockQuantitiesFromTickerSymbol(Map<String, Double> stocks) {
@@ -50,14 +50,6 @@ public abstract class AbstractPortfolioModel implements IFlexiblePortfoliosModel
       stockQty.put(stock, entry.getValue());
     }
     return stockQty;
-  }
-
-  protected LocalDate getNextTransactionDate(LocalDate date) {
-    LocalDate tempDate = date;
-    while(!this.availableDates.contains(tempDate) && !tempDate.isAfter(LocalDate.now())) {
-      tempDate = tempDate.plusDays(1);
-    }
-    return tempDate;
   }
 
   @Override
