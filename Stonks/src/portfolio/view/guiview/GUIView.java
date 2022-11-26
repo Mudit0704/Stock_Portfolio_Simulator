@@ -7,6 +7,7 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.time.LocalDate;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -17,6 +18,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.WindowConstants;
 import portfolio.controller.Features;
 import portfolio.view.IGUIView;
 
@@ -25,7 +27,7 @@ public class GUIView extends JFrame implements IGUIView {
   private final JPanel mainPanel;
   private JButton createDollarCostPortfolioButton, createFlexiblePortfolioButton,
       getPortfolioValueButton, getCostBasisButton, savePortfolioButton, retrievePortfolioButton,
-      sellStocksButton, buyStocksButton, fractionalInvestmentButton;
+      sellStocksButton, buyStocksButton, fractionalInvestmentButton, portfolioPerformanceButton;
   private JProgressBar progressBar;
 
   private JTextPane displayArea;
@@ -35,7 +37,8 @@ public class GUIView extends JFrame implements IGUIView {
     super(caption);
     UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
 
-    Image icon = Toolkit.getDefaultToolkit().getImage(System.getProperty("user.dir")+"/image.png");
+    Image icon = Toolkit.getDefaultToolkit()
+        .getImage(System.getProperty("user.dir") + "/image.png");
     setIconImage(icon);
     mainPanel = new JPanel();
     mainPanel.setLayout(new BorderLayout());
@@ -66,7 +69,8 @@ public class GUIView extends JFrame implements IGUIView {
     mainPanel.add(displayPanel, BorderLayout.CENTER);
 
     JPanel actionsPanel = new JPanel(new GridLayout(0, 1));
-    createDollarCostPortfolioButton = getCustomButton("Create Portfolio Using Dollar-Cost Strategy");
+    createDollarCostPortfolioButton = getCustomButton(
+        "Create Portfolio Using Dollar-Cost Strategy");
     actionsPanel.add(createDollarCostPortfolioButton);
     createFlexiblePortfolioButton = getCustomButton("Create Flexible Portfolio");
     actionsPanel.add(createFlexiblePortfolioButton);
@@ -84,6 +88,8 @@ public class GUIView extends JFrame implements IGUIView {
     actionsPanel.add(buyStocksButton);
     fractionalInvestmentButton = getCustomButton("Fractional Investment");
     actionsPanel.add(fractionalInvestmentButton);
+    portfolioPerformanceButton = getCustomButton("Portfolio Performance");
+    actionsPanel.add(portfolioPerformanceButton);
     progressBar = new JProgressBar();
     actionsPanel.add(progressBar);
     actionsPanel.setBorder(BorderFactory.createEmptyBorder(5, 8, 5, 8));
@@ -116,6 +122,8 @@ public class GUIView extends JFrame implements IGUIView {
         e -> displayCreateDollarCostAveragingWindow(features));
     retrievePortfolioButton.addActionListener(e -> displayArea.setText("<html><center><h1>"
         + features.retrievePortfolio() + "</h1></center></html>"));
+    portfolioPerformanceButton.addActionListener(
+        e -> displayPortfolioPerformanceLineChart(features));
   }
 
   @Override
@@ -145,13 +153,17 @@ public class GUIView extends JFrame implements IGUIView {
 
   @Override
   public void displayFractionInvestmentWindow(Features features) {
-    new PerformFractionalInvestmentCommand(displayArea, features, progressBar,
-        GUIView.this).execute();
+    new PerformFractionalInvestmentCommand(displayArea, features, progressBar, this).execute();
   }
 
   @Override
   public void displayCreateDollarCostAveragingWindow(Features features) {
     new CreateDollarCostAveragePortfolioCommand(displayArea, features, progressBar,
-        GUIView.this).execute();
+        this).execute();
+  }
+
+  @Override
+  public void displayPortfolioPerformanceLineChart(Features features) {
+    new DisplayPortfolioPerformance(displayArea, features, progressBar, this).execute();
   }
 }

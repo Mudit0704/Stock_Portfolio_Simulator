@@ -71,7 +71,8 @@ public class GUIPortfolioController implements Features {
 
   @Override
   public String sellPortfolioStocks(String tickerSymbol, String quantity, String portfolioId,
-      String date) {
+      String date, String transactionFee) {
+    model.setCommissionFee(Double.parseDouble(transactionFee));
     model.sellStockFromPortfolio(tickerSymbol, Double.parseDouble(quantity),
         Integer.parseInt(portfolioId), LocalDate.parse(date));
     return "Sold";
@@ -79,7 +80,8 @@ public class GUIPortfolioController implements Features {
 
   @Override
   public String buyPortfolioStocks(String tickerSymbol, String quantity, String portfolioId,
-      String date) {
+      String date, String transactionFee) {
+    model.setCommissionFee(Double.parseDouble(transactionFee));
     model.addStocksToPortfolio(tickerSymbol, Double.parseDouble(quantity),
         Integer.parseInt(portfolioId), LocalDate.parse(date));
     return "Bought";
@@ -153,5 +155,12 @@ public class GUIPortfolioController implements Features {
   @Override
   public boolean isTickerSymbolValid(String tickerSymbol) {
     return model.isTickerSymbolValid(tickerSymbol);
+  }
+
+  @Override
+  public Map<LocalDate, Double> getPortfolioPerformance(String startDate, String endDate,
+      String portfolioId) {
+    return model.lineChartPerformanceAnalysis(LocalDate.parse(startDate), LocalDate.parse(endDate),
+        Integer.parseInt(portfolioId));
   }
 }

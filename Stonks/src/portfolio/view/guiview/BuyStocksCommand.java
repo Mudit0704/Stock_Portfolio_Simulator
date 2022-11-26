@@ -25,7 +25,8 @@ class BuyStocksCommand extends AbstractCommandHandlers implements CommandHandler
       BuyStocksTask buyStocksTask = new BuyStocksTask(features,
           fieldsMap.get(QUANTITY).textField.getText(), fieldsMap.get(DATE).textField.getText(),
           fieldsMap.get(PORTFOLIO_ID).textField.getText(),
-          fieldsMap.get(TICKER_SYMBOL).textField.getText());
+          fieldsMap.get(TICKER_SYMBOL).textField.getText(),
+          fieldsMap.get(TRANSACTION_FEE).textField.getText());
       progressBar.setIndeterminate(true);
       buyStocksTask.execute();
       mainFrame.setEnabled(false);
@@ -39,20 +40,23 @@ class BuyStocksCommand extends AbstractCommandHandlers implements CommandHandler
     String portfolioId;
     String quantity;
     String tickerSymbol;
+    String transactionFee;
 
     BuyStocksTask(Features features, String quantity, String date, String portfolioId
-        , String tickerSymbol) {
+        , String tickerSymbol, String transactionFee) {
       this.features = features;
       this.date = date;
       this.portfolioId = portfolioId;
       this.tickerSymbol = tickerSymbol;
       this.quantity = quantity;
+      this.transactionFee = transactionFee;
     }
 
     @Override
     protected String doInBackground() {
       try {
-        return features.buyPortfolioStocks(tickerSymbol, quantity, portfolioId, date);
+        return features.buyPortfolioStocks(tickerSymbol, quantity, portfolioId, date,
+            transactionFee);
       } catch (Exception e) {
         return e.getLocalizedMessage();
       }

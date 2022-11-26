@@ -18,4 +18,6 @@ public interface IStrategicFlexiblePortfolioModel extends IFlexiblePortfoliosMod
    * @param stockProportions
    */
   void investStrategicPortfolio(Map<String, Double> stockProportions, int portfolioId);
+
+  Map<LocalDate, Double> lineChartPerformanceAnalysis(LocalDate start, LocalDate end, int portfolioId);
 }
