@@ -25,7 +25,8 @@ public class GUIPortfolioController implements Features {
   IStrategicFlexiblePortfolioModel model;
   IGUIView view;
 
-  public GUIPortfolioController(IStrategicFlexiblePortfolioModel model, Readable in, IView view)
+  public GUIPortfolioController(IStrategicFlexiblePortfolioModel model, Readable in, IView view,
+      IGUIView guiView)
       throws IOException {
     boolean done = false;
     FlexiblePortfolioController flexiblePortfolioController = new FlexiblePortfolioController(in,
@@ -43,7 +44,7 @@ public class GUIPortfolioController implements Features {
           case "2":
             this.model = model;
             this.model.setServiceType(ServiceType.ALPHAVANTAGE);
-            this.view = new GUIView("Stonks");
+            this.view = guiView;
             this.view.addFeatures(this);
             done = true;
             break;
@@ -57,9 +58,6 @@ public class GUIPortfolioController implements Features {
       }
     } catch (NoSuchElementException e) {
       view.displayCustomText("\n----Exiting----\n");
-    } catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException |
-             IllegalAccessException e) {
-      view.displayCustomText("Unable to display GUI\n");
     }
   }
 
@@ -130,11 +128,6 @@ public class GUIPortfolioController implements Features {
   }
 
   @Override
-  public String getPortfolioComposition(String portfolioId) {
-    return model.getPortfolioComposition(Integer.parseInt(portfolioId));
-  }
-
-  @Override
   public String fractionalInvestmentOnAGivenDate(Map<String, Double> stockProportions,
       String totalAmount, String portfolioId, String date) {
     model.setStrategy(StrategyType.NORMAL, LocalDate.parse(date), LocalDate.parse(date),
@@ -144,9 +137,11 @@ public class GUIPortfolioController implements Features {
   }
 
   @Override
-  public String createDollarCostAveragePortfolio(Map<String, Double> stockProportions, String totalAmount,
+  public String createDollarCostAveragePortfolio(Map<String, Double> stockProportions,
+      String totalAmount,
       String startDate, String endDate, String timeFrame) {
-    model.setStrategy(StrategyType.DOLLARCOSTAVERAGING, LocalDate.parse(startDate), LocalDate.parse(endDate),
+    model.setStrategy(StrategyType.DOLLARCOSTAVERAGING, LocalDate.parse(startDate),
+        LocalDate.parse(endDate),
         Integer.parseInt(timeFrame), Double.parseDouble(totalAmount));
     model.createStrategicPortfolio(stockProportions, LocalDate.parse(startDate));
     return "Created";

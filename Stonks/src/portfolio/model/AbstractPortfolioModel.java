@@ -57,7 +57,7 @@ public abstract class AbstractPortfolioModel implements IFlexiblePortfoliosModel
     Map<IStock, Double> stockQty = getStockQuantitiesFromTickerSymbol(stocks);
 
     AbstractPortfolio portfolio = createPortfolio(stockQty, date);
-    portfolioMap.put(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+    portfolioMap.put(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss")),
         portfolio);
   }
 

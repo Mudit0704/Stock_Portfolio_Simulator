@@ -22,8 +22,6 @@ public interface Features {
 
   String getAvailablePortfolios();
 
-  String getPortfolioComposition(String portfolioId);
-
   String fractionalInvestmentOnAGivenDate(Map<String, Double> stockProportions, String totalAmount,
       String portfolioId, String date);
 

@@ -45,7 +45,7 @@ public class StrategicFlexiblePortfoliosModel extends FlexiblePortfoliosModel
       portfolio.investStocksIntoStrategicPortfolio(proportions, dateEntry, transactionFee);
     }
 
-    portfolioMap.put(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+    portfolioMap.put(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss")),
       portfolio);
   }
 
