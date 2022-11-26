@@ -588,12 +588,9 @@ public class StrategicFlexiblePortfoliosModelTest {
 
     mockFutureRetrieve.retrievePortfolios();
     String result = mockFutureRetrieve.getPortfolioComposition(1);
-    System.out.println(result);
-//    assertTrue(result.contains("ALGT -> 99.72"));
-//    assertTrue(result.contains("AMAM -> 39.88"));
-//    assertTrue(result.contains("AMAO -> 59.83"));
-
-    mockFutureRetrieve.savePortfolios();
+    assertTrue(result.contains("AMAM -> 19.64"));
+    assertTrue(result.contains("ALGT -> 49.12"));
+    assertTrue(result.contains("AMAO -> 29.47"));
   }
 
   @Test(expected = IllegalArgumentException.class)
