@@ -19,6 +19,10 @@ import javax.swing.JTextPane;
 import javax.swing.SwingWorker;
 import portfolio.controller.Features;
 
+/**
+ * Command class containing the logic for creating a portfolio using the dollar cost average
+ * strategy. Implements {@link CommandHandler}.
+ */
 class CreateDollarCostAveragePortfolioCommand extends AbstractCommandHandlers implements
     CommandHandler {
 
@@ -58,7 +62,7 @@ class CreateDollarCostAveragePortfolioCommand extends AbstractCommandHandlers im
     OKButton.addActionListener(e -> OKFunctionality(percentageTotal, stocks, OKButton));
     JButton DoneButton = getCustomButton("DONE");
     DoneButton.addActionListener(e -> {
-      if(percentageTotal.get() != 100) {
+      if (percentageTotal.get() != 100) {
         JOptionPane.showMessageDialog(mainFrame, "Percentage total is not 100", "Error",
             JOptionPane.ERROR_MESSAGE);
       } else {
@@ -95,8 +99,10 @@ class CreateDollarCostAveragePortfolioCommand extends AbstractCommandHandlers im
   private void OKFunctionality(AtomicInteger percentageTotal, Map<String, Double> stocks,
       JButton OKButton) {
     if (validator(validatorMap).isEmpty()) {
-      if(percentageTotal.get() + Integer.parseInt(fieldsMap.get(PERCENTAGE).textField.getText()) > 100) {
-        JOptionPane.showMessageDialog(mainFrame, "Percentage total cannot be greater than 100", "Error",
+      if (percentageTotal.get() + Integer.parseInt(fieldsMap.get(PERCENTAGE).textField.getText())
+          > 100) {
+        JOptionPane.showMessageDialog(mainFrame, "Percentage total cannot be greater than 100",
+            "Error",
             JOptionPane.ERROR_MESSAGE);
       } else if (Integer.parseInt(fieldsMap.get(PERCENTAGE).textField.getText()) <= 0) {
         JOptionPane.showMessageDialog(mainFrame, "Percentage value should be greater"
@@ -106,8 +112,9 @@ class CreateDollarCostAveragePortfolioCommand extends AbstractCommandHandlers im
             Double.parseDouble(fieldsMap.get(PERCENTAGE).textField.getText()));
 
         percentageTotal.addAndGet(Integer.parseInt(fieldsMap.get(PERCENTAGE).textField.getText()));
-        subWindowDisplay.append(fieldsMap.get(TICKER_SYMBOL).textField.getText() + "- >" + fieldsMap.get(
-            PERCENTAGE).textField.getText() + "\n");
+        subWindowDisplay.append(
+            fieldsMap.get(TICKER_SYMBOL).textField.getText() + "- >" + fieldsMap.get(
+                PERCENTAGE).textField.getText() + "\n");
         fieldsMap.get(TICKER_SYMBOL).textField.setText("");
         fieldsMap.get(PERCENTAGE).textField.setText("");
         fieldsMap.get(START_DATE).textField.setEditable(false);

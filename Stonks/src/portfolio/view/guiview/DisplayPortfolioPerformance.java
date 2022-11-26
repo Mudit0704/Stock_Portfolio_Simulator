@@ -16,6 +16,10 @@ import javax.swing.SwingWorker;
 import javax.swing.WindowConstants;
 import portfolio.controller.Features;
 
+/**
+ * Command class containing the logic for displaying a portfolio's performance. Implements
+ * {@link CommandHandler}.
+ */
 public class DisplayPortfolioPerformance extends AbstractCommandHandlers implements CommandHandler {
 
   DisplayPortfolioPerformance(JTextPane resultArea,
@@ -98,7 +102,7 @@ public class DisplayPortfolioPerformance extends AbstractCommandHandlers impleme
     @Override
     protected Object doInBackground() {
       try {
-        PerformanceLineChart performanceLineChartWindow = new PerformanceLineChart(
+        PerformanceLineChartDialog performanceLineChartWindow = new PerformanceLineChartDialog(
             "Portfolio Performance",
             features.getPortfolioPerformance(startDate, endDate, portfolioId));
         performanceLineChartWindow.setModalityType(ModalityType.APPLICATION_MODAL);

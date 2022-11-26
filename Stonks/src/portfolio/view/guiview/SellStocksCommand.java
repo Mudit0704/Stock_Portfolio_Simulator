@@ -7,6 +7,10 @@ import javax.swing.JTextPane;
 import javax.swing.SwingWorker;
 import portfolio.controller.Features;
 
+/**
+ * Command class containing the logic for selling stocks of a portfolio. Implements
+ * {@link CommandHandler}.
+ */
 class SellStocksCommand extends AbstractCommandHandlers implements CommandHandler {
 
   SellStocksCommand(JTextPane resultArea, Features features,
@@ -25,7 +29,8 @@ class SellStocksCommand extends AbstractCommandHandlers implements CommandHandle
       SellStocksTask sellStocksTask = new SellStocksTask(features,
           fieldsMap.get(QUANTITY).textField.getText(),
           fieldsMap.get(DATE).textField.getText(), fieldsMap.get(PORTFOLIO_ID).textField.getText(),
-          fieldsMap.get(TICKER_SYMBOL).textField.getText(), fieldsMap.get(TRANSACTION_FEE).textField.getText());
+          fieldsMap.get(TICKER_SYMBOL).textField.getText(),
+          fieldsMap.get(TRANSACTION_FEE).textField.getText());
       progressBar.setIndeterminate(true);
       sellStocksTask.execute();
       mainFrame.setEnabled(false);
@@ -54,7 +59,8 @@ class SellStocksCommand extends AbstractCommandHandlers implements CommandHandle
     @Override
     protected String doInBackground() {
       try {
-        return features.sellPortfolioStocks(tickerSymbol, quantity, portfolioId, date, transactionFee);
+        return features.sellPortfolioStocks(tickerSymbol, quantity, portfolioId, date,
+            transactionFee);
       } catch (Exception e) {
         return e.getLocalizedMessage();
       }

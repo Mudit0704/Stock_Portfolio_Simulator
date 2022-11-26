@@ -5,16 +5,19 @@ import java.time.LocalDate;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 import portfolio.model.IStrategicFlexiblePortfolioModel;
 import portfolio.model.ServiceType;
 import portfolio.model.StrategyType;
-import portfolio.view.guiview.GUIView;
 import portfolio.view.IGUIView;
 import portfolio.view.IView;
 
+/**
+ * This class represents the implementation of the GUI controller of this application. It calls the
+ * model's methods using the inputs passed by the view. Also takes model's response for every
+ * operation and outputs them using the view.
+ */
 public class GUIPortfolioController implements Features {
 
   protected static final String MAIN_MENU =
@@ -25,6 +28,16 @@ public class GUIPortfolioController implements Features {
   IStrategicFlexiblePortfolioModel model;
   IGUIView view;
 
+  /**
+   * Creates an object of GUIPortfolioController and initializes its members.
+   *
+   * @param model   model to be used by the controller
+   * @param in      the input stream to be used by the controller for taking user input in text
+   *                based view
+   * @param view    the text based view to be used if the user decides to use the text based view
+   * @param guiView the GUI view to be used if the user decides to use the GUI based view
+   * @throws IOException if an I/O error occurs
+   */
   public GUIPortfolioController(IStrategicFlexiblePortfolioModel model, Readable in, IView view,
       IGUIView guiView)
       throws IOException {
@@ -128,7 +141,7 @@ public class GUIPortfolioController implements Features {
   }
 
   @Override
-  public String fractionalInvestmentOnAGivenDate(Map<String, Double> stockProportions,
+  public String performFractionalInvestmentOnAGivenDate(Map<String, Double> stockProportions,
       String totalAmount, String portfolioId, String date) {
     model.setStrategy(StrategyType.NORMAL, LocalDate.parse(date), LocalDate.parse(date),
         0, Double.parseDouble(totalAmount));

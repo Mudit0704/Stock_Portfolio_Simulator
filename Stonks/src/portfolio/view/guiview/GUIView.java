@@ -7,7 +7,6 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.time.LocalDate;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -18,23 +17,34 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.WindowConstants;
 import portfolio.controller.Features;
 import portfolio.view.IGUIView;
 
+/**
+ * JFrame representing the main user interface of the application. Implements {@link IGUIView} and
+ * contains all the logic required to implement the GUI of the application.
+ */
 public class GUIView extends JFrame implements IGUIView {
 
-  private final JPanel mainPanel;
-  private JButton createDollarCostPortfolioButton, createFlexiblePortfolioButton,
+  final JPanel mainPanel;
+  JButton createDollarCostAveragePortfolioButton, createFlexiblePortfolioButton,
       getPortfolioValueButton, getCostBasisButton, savePortfolioButton, retrievePortfolioButton,
       sellStocksButton, buyStocksButton, fractionalInvestmentButton, portfolioPerformanceButton;
-  private JProgressBar progressBar;
+  JProgressBar progressBar;
+  JTextPane displayArea;
 
-  private JTextPane displayArea;
-
-  public GUIView(String caption)
-      throws UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException {
-    super(caption);
+  /**
+   * Constructs an object of {@link GUIView} and initializes its members.
+   *
+   * @param title the title to be used by GUI view window
+   * @throws UnsupportedLookAndFeelException if lnf.isSupportedLookAndFeel() is false
+   * @throws ClassNotFoundException          if the LookAndFeel class could not be found
+   * @throws InstantiationException          if a new instance of the class couldn't be created
+   * @throws IllegalAccessException          if the class or initializer isn't accessible
+   */
+  public GUIView(String title) throws UnsupportedLookAndFeelException, ClassNotFoundException,
+      InstantiationException, IllegalAccessException {
+    super(title);
     UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
 
     Image icon = Toolkit.getDefaultToolkit()
@@ -66,9 +76,9 @@ public class GUIView extends JFrame implements IGUIView {
     mainPanel.add(displayPanel, BorderLayout.CENTER);
 
     JPanel actionsPanel = new JPanel(new GridLayout(0, 1));
-    createDollarCostPortfolioButton = getCustomButton(
-        "Create Portfolio Using Dollar-Cost Strategy");
-    actionsPanel.add(createDollarCostPortfolioButton);
+    createDollarCostAveragePortfolioButton = getCustomButton(
+        "Create Portfolio Using Dollar-Cost Average Strategy");
+    actionsPanel.add(createDollarCostAveragePortfolioButton);
     createFlexiblePortfolioButton = getCustomButton("Create Flexible Portfolio");
     actionsPanel.add(createFlexiblePortfolioButton);
     getPortfolioValueButton = getCustomButton("Get Portfolio Value");
@@ -115,7 +125,7 @@ public class GUIView extends JFrame implements IGUIView {
     buyStocksButton.addActionListener(e -> displayBuyStocksWindow(features));
     createFlexiblePortfolioButton.addActionListener(e -> displayCreateNewFlexibleWindow(features));
     fractionalInvestmentButton.addActionListener(e -> displayFractionInvestmentWindow(features));
-    createDollarCostPortfolioButton.addActionListener(
+    createDollarCostAveragePortfolioButton.addActionListener(
         e -> displayCreateDollarCostAveragingWindow(features));
     retrievePortfolioButton.addActionListener(e -> displayArea.setText("<html><center><h1>"
         + features.retrievePortfolio() + "</h1></center></html>"));

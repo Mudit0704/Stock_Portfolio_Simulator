@@ -18,13 +18,15 @@ import portfolio.view.IView;
 import portfolio.view.MockGUIView;
 import portfolio.view.MockView;
 
+/**
+ * A JUnit test class for {@link GUIPortfolioController} class.
+ */
 public class GUIPortfolioControllerTest {
 
   private StringBuffer out;
   private IView mockView;
   private StringBuilder log;
   private Features controller;
-
   private Reader in;
 
   @Before
@@ -149,7 +151,7 @@ public class GUIPortfolioControllerTest {
     stockProportions.put("GOOG", 10D);
     stockProportions.put("MSFT", 90D);
 
-    assertEquals("Invested", controller.fractionalInvestmentOnAGivenDate
+    assertEquals("Invested", controller.performFractionalInvestmentOnAGivenDate
         (stockProportions, "1000", "1", "2019-10-25"));
     assertEquals("ALPHAVANTAGENORMAL2019-10-252019-10-2501000.0{MSFT=90.0, GOOG=10.0}1",
         log.toString());

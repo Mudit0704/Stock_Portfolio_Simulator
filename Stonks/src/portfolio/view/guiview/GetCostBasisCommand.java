@@ -14,7 +14,11 @@ import javax.swing.JTextPane;
 import javax.swing.SwingWorker;
 import portfolio.controller.Features;
 
-class GetCostBasisCommand extends AbstractCommandHandlers implements CommandHandler{
+/**
+ * Command class containing the logic for getting a portfolio's cost basis. Implements
+ * {@link CommandHandler}.
+ */
+class GetCostBasisCommand extends AbstractCommandHandlers implements CommandHandler {
 
   GetCostBasisCommand(JTextPane resultArea, Features features,
       JProgressBar progressBar, JFrame mainFrame) {
@@ -31,7 +35,8 @@ class GetCostBasisCommand extends AbstractCommandHandlers implements CommandHand
     userInputDialog.setResizable(false);
 
     try {
-      availablePortfoliosDisplay = getResultDisplay(features.getAvailablePortfolios(), AVAILABLE_PORTFOLIOS);
+      availablePortfoliosDisplay = getResultDisplay(features.getAvailablePortfolios(),
+          AVAILABLE_PORTFOLIOS);
       availablePortfoliosDisplay.setBorder(BorderFactory.createEmptyBorder(2, 10, 2, 10));
     } catch (Exception e) {
       resultArea.setText("<html><center><h1>" + e.getLocalizedMessage() + "</center></html>");
@@ -45,7 +50,7 @@ class GetCostBasisCommand extends AbstractCommandHandlers implements CommandHand
 
     JButton OKButton = getCustomButton("OK");
     OKButton.addActionListener(e -> {
-      if(validator(validatorMap).isEmpty()) {
+      if (validator(validatorMap).isEmpty()) {
         userInputDialog.dispose();
         OKClicked.set(true);
       }
@@ -64,7 +69,8 @@ class GetCostBasisCommand extends AbstractCommandHandlers implements CommandHand
     userInputDialog.setVisible(true);
 
     if (OKClicked.get()) {
-      GetCostBasisTask task = new GetCostBasisTask(features, fieldsMap.get(DATE).textField.getText(),
+      GetCostBasisTask task = new GetCostBasisTask(features,
+          fieldsMap.get(DATE).textField.getText(),
           fieldsMap.get(PORTFOLIO_ID).textField.getText());
       progressBar.setIndeterminate(true);
       task.execute();
@@ -73,6 +79,7 @@ class GetCostBasisCommand extends AbstractCommandHandlers implements CommandHand
   }
 
   class GetCostBasisTask extends SwingWorker<String, Object> {
+
     Features features;
     String date;
     String portfolioId;
@@ -95,7 +102,8 @@ class GetCostBasisCommand extends AbstractCommandHandlers implements CommandHand
     @Override
     protected void done() {
       try {
-        resultArea.setText("<html><center><h1>Cost basis on " + date + ": " + get() + "</center></html>");
+        resultArea.setText(
+            "<html><center><h1>Cost basis on " + date + ": " + get() + "</center></html>");
         mainFrame.setEnabled(true);
         progressBar.setIndeterminate(false);
       } catch (Exception ignore) {

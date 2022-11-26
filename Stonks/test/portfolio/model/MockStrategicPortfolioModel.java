@@ -4,6 +4,9 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This class represents a dummy model to be used for testing GUI controller.
+ */
 public class MockStrategicPortfolioModel extends MockFlexiblePortfolioModel implements
     IStrategicFlexiblePortfolioModel {
 

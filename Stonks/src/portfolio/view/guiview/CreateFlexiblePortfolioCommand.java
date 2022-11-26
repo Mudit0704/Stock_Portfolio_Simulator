@@ -17,6 +17,10 @@ import javax.swing.JTextPane;
 import javax.swing.SwingWorker;
 import portfolio.controller.Features;
 
+/**
+ * Command class containing the logic for creating a flexible portfolio. Implements
+ * {@link CommandHandler}.
+ */
 class CreateFlexiblePortfolioCommand extends AbstractCommandHandlers implements CommandHandler {
 
   CreateFlexiblePortfolioCommand(JTextPane resultArea,
@@ -47,7 +51,7 @@ class CreateFlexiblePortfolioCommand extends AbstractCommandHandlers implements 
 
     JButton OKButton = getCustomButton("OK");
     OKButton.addActionListener(e -> {
-      if(validator(validatorMap).isEmpty()) {
+      if (validator(validatorMap).isEmpty()) {
         stocks.put(fieldsMap.get(TICKER_SYMBOL).textField.getText(),
             Double.parseDouble(fieldsMap.get(QUANTITY).textField.getText()));
         fieldsMap.get(TICKER_SYMBOL).textField.setText("");
@@ -83,6 +87,7 @@ class CreateFlexiblePortfolioCommand extends AbstractCommandHandlers implements 
   }
 
   class CreateFlexiblePortfolioTask extends SwingWorker<String, Object> {
+
     Features features;
     String date;
     Map<String, Double> stocks;

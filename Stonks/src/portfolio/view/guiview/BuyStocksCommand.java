@@ -7,6 +7,9 @@ import javax.swing.JTextPane;
 import javax.swing.SwingWorker;
 import portfolio.controller.Features;
 
+/**
+ * Command class containing the logic for buying stocks. Implements {@link CommandHandler}.
+ */
 class BuyStocksCommand extends AbstractCommandHandlers implements CommandHandler {
 
   BuyStocksCommand(JTextPane resultArea, Features features,

@@ -19,6 +19,10 @@ import javax.swing.JTextPane;
 import javax.swing.SwingWorker;
 import portfolio.controller.Features;
 
+/**
+ * Command class containing the logic for performing a fractional investment on an existing
+ * portfolio. Implements {@link CommandHandler}.
+ */
 class PerformFractionalInvestmentCommand extends AbstractCommandHandlers implements
     CommandHandler {
 
@@ -65,7 +69,7 @@ class PerformFractionalInvestmentCommand extends AbstractCommandHandlers impleme
 
     JButton DoneButton = getCustomButton("DONE");
     DoneButton.addActionListener(e -> {
-      if(percentageTotal.get() != 100) {
+      if (percentageTotal.get() != 100) {
         JOptionPane.showMessageDialog(mainFrame, "Percentage total is not 100", "Error",
             JOptionPane.ERROR_MESSAGE);
       } else {
@@ -99,12 +103,14 @@ class PerformFractionalInvestmentCommand extends AbstractCommandHandlers impleme
   private void OKFunctionality(AtomicInteger percentageTotal, Map<String, Double> stocks,
       JButton OKButton) {
     if (validator(validatorMap).isEmpty()) {
-      if(percentageTotal.get() + Integer.parseInt(fieldsMap.get(PERCENTAGE).textField.getText()) > 100) {
-        JOptionPane.showMessageDialog(mainFrame, "Percentage total cannot be greater than 100", "Error",
+      if (percentageTotal.get() + Integer.parseInt(fieldsMap.get(PERCENTAGE).textField.getText())
+          > 100) {
+        JOptionPane.showMessageDialog(mainFrame, "Percentage total cannot be greater than 100",
+            "Error",
             JOptionPane.ERROR_MESSAGE);
       } else if (Integer.parseInt(fieldsMap.get(PERCENTAGE).textField.getText()) <= 0) {
         JOptionPane.showMessageDialog(mainFrame, "Percentage value should be greater"
-                + " than 0 less than 100", "Error", JOptionPane.ERROR_MESSAGE);
+            + " than 0 less than 100", "Error", JOptionPane.ERROR_MESSAGE);
       } else {
         stocks.put(fieldsMap.get(TICKER_SYMBOL).textField.getText(),
             Double.parseDouble(fieldsMap.get(PERCENTAGE).textField.getText()));
@@ -147,7 +153,8 @@ class PerformFractionalInvestmentCommand extends AbstractCommandHandlers impleme
     @Override
     protected String doInBackground() {
       try {
-        return features.fractionalInvestmentOnAGivenDate(stockProportions, totalAmount, portfolioId,
+        return features.performFractionalInvestmentOnAGivenDate(stockProportions, totalAmount,
+            portfolioId,
             date);
       } catch (Exception e) {
         return e.getLocalizedMessage();

@@ -12,14 +12,17 @@ import org.jfree.chart.axis.CategoryLabelPositions;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 
-public class PerformanceLineChart extends JDialog {
+/**
+ * Dialog to display a portfolio's performance and its necessary operations.
+ */
+class PerformanceLineChartDialog extends JDialog {
 
   private static final long serialVersionUID = 1L;
 
-  public PerformanceLineChart(String title, Map<LocalDate, Double> data) {
+  PerformanceLineChartDialog(String title, Map<LocalDate, Double> data) {
     DefaultCategoryDataset dataset = createDataset(data);
     JFreeChart chart = ChartFactory.createLineChart(
-        "Portfolio Performance",
+        title,
         "Date",
         "Portfolio Value",
         dataset,
@@ -40,7 +43,7 @@ public class PerformanceLineChart extends JDialog {
     String series1 = "Performance";
     DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
-    for(Entry<LocalDate, Double> entry : data.entrySet()) {
+    for (Entry<LocalDate, Double> entry : data.entrySet()) {
       dataset.addValue(entry.getValue(), series1, entry.getKey().toString());
     }
 

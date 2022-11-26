@@ -14,6 +14,10 @@ import javax.swing.JTextPane;
 import javax.swing.SwingWorker;
 import portfolio.controller.Features;
 
+/**
+ * Command class containing the logic for getting a portfolio's value. Implements
+ * {@link CommandHandler}.
+ */
 class GetValueCommand extends AbstractCommandHandlers implements CommandHandler {
 
   GetValueCommand(JTextPane resultArea, Features features,

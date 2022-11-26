@@ -19,6 +19,7 @@ public class Main {
    * it.
    *
    * @param args command line arguments for main method.
+   * @throws IOException if an I/O error occurs.
    */
   public static void main(String[] args) throws IOException {
     IView view = null;

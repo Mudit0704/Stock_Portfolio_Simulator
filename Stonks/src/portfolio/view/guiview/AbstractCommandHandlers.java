@@ -28,6 +28,9 @@ import javax.swing.JTextPane;
 import javax.swing.WindowConstants;
 import portfolio.controller.Features;
 
+/**
+ * Stores the common logic for different types of command handlers of the graphical user interface.
+ */
 abstract class AbstractCommandHandlers implements CommandHandler {
 
   public static final String INVALID = "Please Enter A Valid";
@@ -53,6 +56,15 @@ abstract class AbstractCommandHandlers implements CommandHandler {
   Map<JTextField, Function<String, String>> validatorMap;
   JTextArea subWindowDisplay;
 
+  /**
+   * Initializes the members required by each button handler.
+   *
+   * @param resultArea  the text area where result of each command has to be displayed
+   * @param features    an object of {@link portfolio.controller.GUIPortfolioController} to perform
+   *                    the callback functionality between the view and controller
+   * @param progressBar a progress bar representing the status of each command
+   * @param mainFrame   the main window of the application
+   */
   AbstractCommandHandlers(JTextPane resultArea, Features features,
       JProgressBar progressBar, JFrame mainFrame) {
     this.resultArea = resultArea;
@@ -87,7 +99,7 @@ abstract class AbstractCommandHandlers implements CommandHandler {
   String numberTextFieldValidator(String value) {
     try {
       if (Double.parseDouble(value) < 0 || Long.parseLong(value) < 0) {
-       throw new NumberFormatException();
+        throw new NumberFormatException();
       }
     } catch (NumberFormatException e) {
       return INVALID;
@@ -117,7 +129,7 @@ abstract class AbstractCommandHandlers implements CommandHandler {
       if (END_DATE.equals(entry.getKey().getName())) {
         if (!"".equals(entry.getKey().getText())) {
           String result = entry.getValue().apply(entry.getKey().getText());
-          if(!VALID.equals(result)) {
+          if (!VALID.equals(result)) {
             errorMessage = result + " " + entry.getKey().getName();
             break;
           }
@@ -125,7 +137,7 @@ abstract class AbstractCommandHandlers implements CommandHandler {
       } else if (TRANSACTION_FEE.equals(entry.getKey().getName())) {
         if (!"".equals(entry.getKey().getText())) {
           String result = entry.getValue().apply(entry.getKey().getText());
-          if(!VALID.equals(result)) {
+          if (!VALID.equals(result)) {
             errorMessage = result + " " + entry.getKey().getName();
             break;
           }
@@ -134,14 +146,14 @@ abstract class AbstractCommandHandlers implements CommandHandler {
         }
       } else {
         String result = entry.getValue().apply(entry.getKey().getText());
-        if(!VALID.equals(result)) {
+        if (!VALID.equals(result)) {
           errorMessage = result + " " + entry.getKey().getName();
           break;
         }
       }
     }
 
-    if(!errorMessage.isEmpty()) {
+    if (!errorMessage.isEmpty()) {
       JOptionPane.showMessageDialog(mainFrame, errorMessage, "Error",
           JOptionPane.ERROR_MESSAGE);
     }
@@ -159,12 +171,12 @@ abstract class AbstractCommandHandlers implements CommandHandler {
   }
 
   void createDateLabelField(String fieldName) {
-    JLabel dateLabel = new JLabel("Enter " + fieldName +" (YYYY-MM-DD): ");
+    JLabel dateLabel = new JLabel("Enter " + fieldName + " (YYYY-MM-DD): ");
     JTextField dateValue = new JTextField();
     dateValue.setName(fieldName);
 
     validatorMap.put(dateValue, this::dateTextFieldValidator);
-    populateMaps(dateLabel, dateValue);
+    fieldsMap.put(dateValue.getName(), new LabelFieldPair(dateLabel, dateValue));
   }
 
   void createTickerSymbolField() {
@@ -173,20 +185,17 @@ abstract class AbstractCommandHandlers implements CommandHandler {
     tickerSymbolValue.setName(TICKER_SYMBOL);
 
     validatorMap.put(tickerSymbolValue, this::tickerSymbolTextFieldValidator);
-    populateMaps(tickerSymbolLabel, tickerSymbolValue);
+    fieldsMap.put(tickerSymbolValue.getName(),
+        new LabelFieldPair(tickerSymbolLabel, tickerSymbolValue));
   }
 
   void createNumericFields(String fieldName) {
-    JLabel quantityLabel = new JLabel("Enter " + fieldName +": ");
+    JLabel quantityLabel = new JLabel("Enter " + fieldName + ": ");
     JTextField quantityValue = new JTextField();
     quantityValue.setName(fieldName);
 
     validatorMap.put(quantityValue, this::numberTextFieldValidator);
-    populateMaps(quantityLabel, quantityValue);
-  }
-
-  private void populateMaps(JLabel jLabel, JTextField jTextField) {
-    fieldsMap.put(jTextField.getName(), new LabelFieldPair(jLabel, jTextField));
+    fieldsMap.put(quantityValue.getName(), new LabelFieldPair(quantityLabel, quantityValue));
   }
 
   void addAllFieldsToInputPanel(JPanel inputPanel) {
@@ -204,7 +213,8 @@ abstract class AbstractCommandHandlers implements CommandHandler {
     userInputDialog.setResizable(false);
 
     try {
-      availablePortfoliosDisplay = getResultDisplay(features.getAvailablePortfolios(), AVAILABLE_PORTFOLIOS);
+      availablePortfoliosDisplay = getResultDisplay(features.getAvailablePortfolios(),
+          AVAILABLE_PORTFOLIOS);
       availablePortfoliosDisplay.setBorder(BorderFactory.createEmptyBorder(2, 10, 2, 10));
     } catch (Exception e) {
       resultArea.setText("<html><center><h1>" + e.getLocalizedMessage() + "</center></html>");
@@ -241,6 +251,7 @@ abstract class AbstractCommandHandlers implements CommandHandler {
   }
 
   static class LabelFieldPair {
+
     JLabel label;
     JTextField textField;
 
