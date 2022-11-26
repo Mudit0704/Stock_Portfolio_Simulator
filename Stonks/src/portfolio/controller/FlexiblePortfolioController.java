@@ -149,6 +149,9 @@ public class FlexiblePortfolioController extends PortfolioController implements
         view.displayCustomText("Please enter the fee value: \n");
         view.askForInput();
         double commissionFee = scan.nextDouble();
+        if (commissionFee < 0) {
+          throw new InputMismatchException();
+        }
         portfolios.setCommissionFee(commissionFee);
         view.displayCustomText("Fee updated.\n");
         controllerHelper.performExitOperationSequence(scan);

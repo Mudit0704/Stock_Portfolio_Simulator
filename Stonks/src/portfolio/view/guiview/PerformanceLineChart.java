@@ -31,6 +31,7 @@ public class PerformanceLineChart extends JDialog {
 
     CategoryAxis axis = chart.getCategoryPlot().getDomainAxis();
     axis.setCategoryLabelPositions(CategoryLabelPositions.UP_45);
+    chart.getCategoryPlot().setDomainGridlinesVisible(true);
     ChartPanel panel = new ChartPanel(chart);
     setContentPane(panel);
   }

@@ -48,9 +48,6 @@ public class GUIView extends JFrame implements IGUIView {
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     displayMenu();
-
-    pack();
-    setVisible(true);
     setAlwaysOnTop(true);
     setLocationRelativeTo(null);
   }
@@ -124,6 +121,9 @@ public class GUIView extends JFrame implements IGUIView {
         + features.retrievePortfolio() + "</h1></center></html>"));
     portfolioPerformanceButton.addActionListener(
         e -> displayPortfolioPerformanceLineChart(features));
+
+    pack();
+    setVisible(true);
   }
 
   @Override

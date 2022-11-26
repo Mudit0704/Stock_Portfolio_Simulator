@@ -58,8 +58,13 @@ class CreateDollarCostAveragePortfolioCommand extends AbstractCommandHandlers im
     OKButton.addActionListener(e -> OKFunctionality(percentageTotal, stocks, OKButton));
     JButton DoneButton = getCustomButton("DONE");
     DoneButton.addActionListener(e -> {
-      userInputDialog.dispose();
-      DoneClicked.set(true);
+      if(percentageTotal.get() != 100) {
+        JOptionPane.showMessageDialog(mainFrame, "Percentage total is not 100", "Error",
+            JOptionPane.ERROR_MESSAGE);
+      } else {
+        userInputDialog.dispose();
+        DoneClicked.set(true);
+      }
     });
 
     addAllFieldsToInputPanel(userInputPanel);

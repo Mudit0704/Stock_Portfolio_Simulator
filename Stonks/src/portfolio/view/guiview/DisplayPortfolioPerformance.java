@@ -1,6 +1,7 @@
 package portfolio.view.guiview;
 
 import java.awt.BorderLayout;
+import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -12,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTextPane;
 import javax.swing.SwingWorker;
+import javax.swing.WindowConstants;
 import portfolio.controller.Features;
 
 public class DisplayPortfolioPerformance extends AbstractCommandHandlers implements CommandHandler {
@@ -99,6 +101,8 @@ public class DisplayPortfolioPerformance extends AbstractCommandHandlers impleme
         PerformanceLineChart performanceLineChartWindow = new PerformanceLineChart(
             "Portfolio Performance",
             features.getPortfolioPerformance(startDate, endDate, portfolioId));
+        performanceLineChartWindow.setModalityType(ModalityType.APPLICATION_MODAL);
+        performanceLineChartWindow.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         performanceLineChartWindow.setAlwaysOnTop(true);
         performanceLineChartWindow.pack();
         performanceLineChartWindow.setSize(600, 400);
