@@ -20,6 +20,8 @@ public class StrategicFlexiblePortfoliosModelTest {
   private IStockService mockStockService;
   private IStrategicFlexiblePortfolioModel mockSaveModel;
   private Set<LocalDate> availableDates;
+  private IStrategicFlexiblePortfolioModel mockFutureRetrieve;
+  private IStrategicFlexiblePortfolioModel mockSaveFutureTransaction;
 
   @Before
   public void setup() {
@@ -27,10 +29,8 @@ public class StrategicFlexiblePortfoliosModelTest {
     mockStockService = new MockStockService("/test/testExtensiveData.txt");
     mockSaveModel = new MockForStrategicFlexiblePortfoliosModel();
     availableDates = new HashSet<>(mockStockService.getStockPrices("AKL").keySet());
-  }
-
-  @Test
-  public void setStrategy() {
+    mockFutureRetrieve = new MockForRetrieveFuture();
+    mockSaveFutureTransaction = new MockSavePartialTxn();
   }
 
   @Test
@@ -57,11 +57,47 @@ public class StrategicFlexiblePortfoliosModelTest {
         totalAmount);
 
     portfolio.createStrategicPortfolio(map, LocalDate.of(2015,10,25));
-    System.out.println(portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2015, 11, 30)));
+    String result = portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2015, 11, 30));
+    assertTrue(result.contains("AMAM -> 2.73"));
+    assertTrue(result.contains("AMAO -> 4.10"));
+    assertTrue(result.contains("ALGT -> 6.84"));
   }
 
   @Test
-  public void testInvestNormallyStrategicPortfolio() throws IllegalAccessException, NoSuchFieldException {
+  public void testCostBasisForDollarCostAvg()
+    throws NoSuchFieldException, IllegalAccessException {
+    Map<String, Double> map = new HashMap<>();
+    map.put("ALGT", 50d);
+    map.put("AMAM", 20d);
+    map.put("AMAO", 30d);
+
+    double totalAmount = 5000d;
+    Field stockService = AbstractPortfolioModel.class.getDeclaredField("stockService");
+
+    stockService.set(portfolio, mockStockService);
+
+    Field availableDatesSet = AbstractPortfolioModel.class.getDeclaredField("availableDates");
+
+    availableDatesSet.set(portfolio, availableDates);
+
+    portfolio.setStrategy(StrategyType.DOLLARCOSTAVERAGING,
+      LocalDate.of(2015,10,25),
+      LocalDate.of(2016,10,25),
+      30,
+      totalAmount);
+
+    portfolio.createStrategicPortfolio(map, LocalDate.of(2015,10,25));
+    LocalDate endDate = LocalDate.of(2016,10,25);
+    LocalDate tempDate = LocalDate.of(2015,10,30);
+    while(tempDate.isBefore(endDate)) {
+      System.out.println(portfolio.getCostBasis(tempDate, 1));
+      tempDate = tempDate.plusDays(30);
+    }
+  }
+
+  @Test
+  public void testInvestNormallyStrategicPortfolio()
+      throws IllegalAccessException, NoSuchFieldException {
     Map<String, Double> map = new HashMap<>();
     map.put("ALGT", 5d);
     map.put("AMAM", 2d);
@@ -83,7 +119,10 @@ public class StrategicFlexiblePortfoliosModelTest {
       totalAmount);
 
     portfolio.createNewPortfolioOnADate(map, LocalDate.of(2015, 10, 25));
-    System.out.println(portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2015, 11, 30)));
+    String result = portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2015, 11, 30));
+    assertTrue(result.contains("AMAM -> 2.0\n"));
+    assertTrue(result.contains("ALGT -> 5.0\n"));
+    assertTrue(result.contains("AMAO -> 3.0\n"));
 
     map = new HashMap<>();
     map.put("ALGT", 50d);
@@ -91,8 +130,10 @@ public class StrategicFlexiblePortfoliosModelTest {
     map.put("AMAO", 30d);
 
     portfolio.investStrategicPortfolio(map, 1);
-//    assertEquals();
-    System.out.println(portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2017, 10, 30)));
+    result = portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2017, 10, 30));
+    assertTrue(result.contains("AMAM -> 3.02"));
+    assertTrue(result.contains("ALGT -> 7.56"));
+    assertTrue(result.contains("AMAO -> 4.54"));
   }
 
   @Test
@@ -126,14 +167,31 @@ public class StrategicFlexiblePortfoliosModelTest {
     map.put("AMAO", 30d);
 
     portfolio.investStrategicPortfolio(map, 1);
-    System.out.println(portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2017, 10, 30)));
-    portfolio.addStocksToPortfolio("GOOG", 2d, 1, LocalDate.of(2016,10,30));
-    portfolio.addStocksToPortfolio("GOOG", 2d, 1, LocalDate.of(2016,9,30));
+    String result = portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2017, 10, 30));
+    assertTrue(result.contains("AMAM -> 3.02"));
+    assertTrue(result.contains("ALGT -> 7.56"));
+    assertTrue(result.contains("AMAO -> 4.54"));
 
+    portfolio.addStocksToPortfolio("ALGT", 2d, 1, LocalDate.of(2016,10,30));
+    portfolio.addStocksToPortfolio("ALGT", 2d, 1, LocalDate.of(2016,9,30));
 
-    System.out.println(portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2016, 10, 30)));
-    System.out.println(portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2016, 10, 29)));
-    System.out.println(portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2017, 10, 30)));
+    result = portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2016, 10, 30));
+    assertTrue(result.contains("AMAM -> 2.0"));
+    assertTrue(result.contains("ALGT -> 9.0"));
+    assertTrue(result.contains("AMAO -> 3.0"));
+
+    result = portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2016, 10, 29));
+    assertTrue(result.contains("AMAM -> 2.0"));
+    assertTrue(result.contains("ALGT -> 7.0"));
+    assertTrue(result.contains("AMAO -> 3.0"));
+
+    result = portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2017, 10, 30));
+    assertTrue(result.contains("AMAM -> 3.02"));
+    assertTrue(result.contains("ALGT -> 11.56"));
+    assertTrue(result.contains("AMAO -> 4.54"));
+//    System.out.println(portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2016, 10, 30)));
+//    System.out.println(portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2016, 10, 29)));
+//    System.out.println(portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2017, 10, 30)));
   }
 
   // sell between buy and invest
@@ -169,10 +227,6 @@ public class StrategicFlexiblePortfoliosModelTest {
 
     portfolio.investStrategicPortfolio(map, 1);
     portfolio.sellStockFromPortfolio("GOOG", 2d, 1, LocalDate.of(2016,10,30));
-
-    System.out.println(portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2016, 10, 30)));
-    System.out.println(portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2016, 10, 29)));
-    System.out.println(portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2017, 10, 30)));
   }
 
   //invest between buy and sell
@@ -209,9 +263,20 @@ public class StrategicFlexiblePortfoliosModelTest {
     map.put("AMAO", 30d);
 
     portfolio.investStrategicPortfolio(map, 1);
-    System.out.println(portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2016, 10, 30)));
-    System.out.println(portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2016, 10, 29)));
-    System.out.println(portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2017, 10, 30)));
+    String result = portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2016, 10, 30));
+    assertTrue(result.contains("AMAM -> 2.0"));
+    assertTrue(result.contains("ALGT -> 3.0"));
+    assertTrue(result.contains("AMAO -> 3.0"));
+
+    result = portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2016, 10, 29));
+    assertTrue(result.contains("AMAM -> 2.0"));
+    assertTrue(result.contains("ALGT -> 5.0"));
+    assertTrue(result.contains("AMAO -> 3.0"));
+
+    result = portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2017, 10, 30));
+    assertTrue(result.contains("AMAM -> 3.02"));
+    assertTrue(result.contains("ALGT -> 5.56"));
+    assertTrue(result.contains("AMAO -> 4.54"));
   }
 
   @Test
@@ -247,9 +312,20 @@ public class StrategicFlexiblePortfoliosModelTest {
     map.put("AMAO", 30d);
 
     portfolio.investStrategicPortfolio(map, 1);
-    System.out.println(portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2016, 10, 30)));
-    System.out.println(portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2016, 10, 29)));
-    System.out.println(portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2017, 10, 30)));
+    String result = portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2016, 10, 30));
+    assertTrue(result.contains("AMAM -> 2.0"));
+    assertTrue(result.contains("ALGT -> 5.0"));
+    assertTrue(result.contains("AMAO -> 3.0"));
+
+    result = portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2016, 10, 29));
+    assertTrue(result.contains("AMAM -> 2.0"));
+    assertTrue(result.contains("ALGT -> 5.0"));
+    assertTrue(result.contains("AMAO -> 3.0"));
+
+    result = portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2017, 10, 30));
+    assertTrue(result.contains("AMAM -> 3.02"));
+    assertTrue(result.contains("ALGT -> 5.56"));
+    assertTrue(result.contains("AMAO -> 4.54"));
   }
 
   @Test
@@ -276,11 +352,34 @@ public class StrategicFlexiblePortfoliosModelTest {
       totalAmount);
 
     portfolio.createStrategicPortfolio(map, LocalDate.of(2015,10,25));
-    System.out.println("THEN: " + portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2015, 11, 30)));
-    System.out.println("NOW: " + portfolio.getPortfolioCompositionOnADate(1, LocalDate.now()));
-    portfolio.addStocksToPortfolio("GOOG", 2d, 1, LocalDate.of(2015,11,30));
-    System.out.println("THEN: " + portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2015, 11, 30)));
-    System.out.println("NOW: " + portfolio.getPortfolioCompositionOnADate(1, LocalDate.now()));
+    String result = portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2015, 11, 30));
+    assertTrue(result.contains("AMAM -> 2.73"));
+    assertTrue(result.contains("AMAO -> 4.10"));
+    assertTrue(result.contains("ALGT -> 6.84"));
+
+    result = portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2015, 10, 25));
+    assertEquals("Portfolio1\n\n", result);
+
+    result = portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2015, 11, 30));
+    assertTrue(result.contains("AMAM -> 2.73"));
+    assertTrue(result.contains("AMAO -> 4.10"));
+    assertTrue(result.contains("ALGT -> 6.84"));
+
+    result = portfolio.getPortfolioCompositionOnADate(1, LocalDate.now());
+    assertTrue(result.contains("AMAM -> 17.68"));
+    assertTrue(result.contains("AMAO -> 26.52"));
+    assertTrue(result.contains("ALGT -> 44.20"));
+
+    portfolio.addStocksToPortfolio("ALGT", 2d, 1, LocalDate.of(2015,11,30));
+    result = portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2015,11,30));
+    assertTrue(result.contains("AMAM -> 2.73"));
+    assertTrue(result.contains("AMAO -> 4.10"));
+    assertTrue(result.contains("ALGT -> 8.84"));
+
+    result = portfolio.getPortfolioCompositionOnADate(1, LocalDate.now());
+    assertTrue(result.contains("AMAM -> 17.68"));
+    assertTrue(result.contains("AMAO -> 26.52"));
+    assertTrue(result.contains("ALGT -> 46.20"));
   }
 
   @Test
@@ -319,9 +418,20 @@ public class StrategicFlexiblePortfoliosModelTest {
     map.put("AMAO", 30d);
 
     portfolio.investStrategicPortfolio(map, 1);
-    System.out.println(portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2016, 10, 30)));
-    System.out.println(portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2017, 10, 20)));
-    System.out.println(portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2017, 10, 30)));
+    String result = portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2016, 10, 30));
+    assertTrue(result.contains("AMAM -> 2.0"));
+    assertTrue(result.contains("ALGT -> 5.0"));
+    assertTrue(result.contains("AMAO -> 3.0"));
+
+    result = portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2017, 10, 20));
+    assertTrue(result.contains("AMAM -> 2.0"));
+    assertTrue(result.contains("ALGT -> 3.0"));
+    assertTrue(result.contains("AMAO -> 3.0"));
+
+    result = portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2017, 10, 30));
+    assertTrue(result.contains("AMAM -> 3.02"));
+    assertTrue(result.contains("ALGT -> 3.56"));
+    assertTrue(result.contains("AMAO -> 4.54"));
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -349,11 +459,7 @@ public class StrategicFlexiblePortfoliosModelTest {
       totalAmount);
 
     portfolio.createStrategicPortfolio(map, LocalDate.of(2015,10,25));
-    System.out.println("THEN: " + portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2015, 11, 30)));
-    System.out.println("NOW: " + portfolio.getPortfolioCompositionOnADate(1, LocalDate.now()));
     portfolio.sellStockFromPortfolio("GOOG", 2d, 1, LocalDate.of(2015,11,30));
-    System.out.println("THEN: " + portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2015, 11, 30)));
-    System.out.println("NOW: " + portfolio.getPortfolioCompositionOnADate(1, LocalDate.now()));
   }
 
   @Test
@@ -383,63 +489,61 @@ public class StrategicFlexiblePortfoliosModelTest {
       totalAmount);
 
     mockSaveModel.createStrategicPortfolio(map, LocalDate.of(2015,10,25));
-    System.out.println("THEN: " + mockSaveModel.getPortfolioCompositionOnADate(1, LocalDate.of(2015, 11, 30)));
-    System.out.println("NOW: " + mockSaveModel.getPortfolioCompositionOnADate(1, LocalDate.now()));
+    String result = mockSaveModel.getPortfolioCompositionOnADate(1, LocalDate.of(2015, 11, 30));
+    assertTrue(result.contains("AMAM -> 2.73"));
+    assertTrue(result.contains("AMAO -> 4.10"));
+    assertTrue(result.contains("ALGT -> 6.84"));
+
+    result = mockSaveModel.getPortfolioCompositionOnADate(1, LocalDate.now());
+    assertTrue(result.contains("AMAM -> 17.68"));
+    assertTrue(result.contains("AMAO -> 26.52"));
+    assertTrue(result.contains("ALGT -> 44.20"));
+
     mockSaveModel.addStocksToPortfolio("ALGT", 2d, 1, LocalDate.of(2015,11,30));
-    System.out.println("THEN: " + mockSaveModel.getPortfolioCompositionOnADate(1, LocalDate.of(2015, 11, 30)));
-    System.out.println("NOW: " + mockSaveModel.getPortfolioCompositionOnADate(1, LocalDate.now()));
+    result = mockSaveModel.getPortfolioCompositionOnADate(1, LocalDate.of(2015, 11, 30));
+    assertTrue(result.contains("AMAM -> 2.73"));
+    assertTrue(result.contains("AMAO -> 4.10"));
+    assertTrue(result.contains("ALGT -> 8.84"));
+
+    result = mockSaveModel.getPortfolioCompositionOnADate(1, LocalDate.now());
+    assertTrue(result.contains("AMAM -> 17.68"));
+    assertTrue(result.contains("AMAO -> 26.52"));
+    assertTrue(result.contains("ALGT -> 46.20"));
 
     mockSaveModel.savePortfolios();
 
     IStrategicFlexiblePortfolioModel model = new MockForStrategicFlexiblePortfoliosModel();
     model.retrievePortfolios();
 
-    System.out.println(model.getPortfolioCompositionOnADate(1,LocalDate.of(2015,12,29)));
+    result = model.getPortfolioCompositionOnADate(1,LocalDate.of(2015,12,29));
+    assertTrue(result.contains("AMAM -> 4.07"));
+    assertTrue(result.contains("AMAO -> 6.11"));
+    assertTrue(result.contains("ALGT -> 12.18"));
+
     model.addStocksToPortfolio("ALGT", 2d, 1, LocalDate.of(2015,12,30));
-    System.out.println(model.getPortfolioCompositionOnADate(1,LocalDate.of(2015,12,30)));
-    System.out.println("NOW: " + model.getPortfolioCompositionOnADate(1, LocalDate.now()));
+    result = model.getPortfolioCompositionOnADate(1,LocalDate.of(2015,12,30));
+    assertTrue(result.contains("AMAM -> 4.07"));
+    assertTrue(result.contains("AMAO -> 6.11"));
+    assertTrue(result.contains("ALGT -> 14.18"));
+
+    result = model.getPortfolioCompositionOnADate(1,LocalDate.now());
+    assertTrue(result.contains("AMAM -> 17.68"));
+    assertTrue(result.contains("AMAO -> 26.52"));
+    assertTrue(result.contains("ALGT -> 48.20"));
+
     model.savePortfolios();
+    //TODO Handle the deletion of the file.
   }
 
   @Test
   public void testOnlyRetrieve()
-    throws NoSuchFieldException, IllegalAccessException,
-    ParserConfigurationException, IOException, SAXException {
-//    Map<String, Double> map = new HashMap<>();
-//    map.put("ALGT", 50d);
-//    map.put("AMAM", 20d);
-//    map.put("AMAO", 30d);
-//
-//    double totalAmount = 5000d;
-//
-//    Field stockService = AbstractPortfolioModel.class.getDeclaredField("stockService");
-//
-//    stockService.set(mockSaveModel, mockStockService);
-//
-//    Field availableDatesSet = AbstractPortfolioModel.class.getDeclaredField("availableDates");
-//
-//    availableDatesSet.set(mockSaveModel, availableDates);
-//
-//
-//    mockSaveModel.setStrategy(StrategyType.DOLLARCOSTAVERAGING,
-//      LocalDate.of(2015,10,25),
-//      LocalDate.of(2016,10,25),
-//      30,
-//      totalAmount);
-//
-//    mockSaveModel.createStrategicPortfolio(map, LocalDate.of(2015,10,25));
-//    System.out.println("THEN: " + mockSaveModel.getPortfolioCompositionOnADate(1, LocalDate.of(2015, 11, 30)));
-//    System.out.println("NOW: " + mockSaveModel.getPortfolioCompositionOnADate(1, LocalDate.now()));
-//    mockSaveModel.addStocksToPortfolio("ALGT", 2d, 1, LocalDate.of(2015,11,30));
-//    System.out.println("THEN: " + mockSaveModel.getPortfolioCompositionOnADate(1, LocalDate.of(2015, 11, 30)));
-//    System.out.println("NOW: " + mockSaveModel.getPortfolioCompositionOnADate(1, LocalDate.now()));
-//
-//    mockSaveModel.savePortfolios();
-
+    throws ParserConfigurationException, IOException, SAXException {
     IStrategicFlexiblePortfolioModel model = new MockForStrategicFlexiblePortfoliosModel();
     model.retrievePortfolios();
-    System.out.println(model.getPortfolioComposition(1));
-
+    String result = model.getPortfolioComposition(1);
+    assertTrue(result.contains("AMAM -> 17.68"));
+    assertTrue(result.contains("AMAO -> 26.52"));
+    assertTrue(result.contains("ALGT -> 48.20"));
   }
 
   @Test
@@ -468,7 +572,10 @@ public class StrategicFlexiblePortfoliosModelTest {
       totalAmount);
 
     mockSaveModel.createStrategicPortfolio(map, LocalDate.of(2015,10,25));
-    System.out.println(mockSaveModel.getPortfolioCompositionOnADate(1, LocalDate.of(2015, 11, 30)));
+    String result = mockSaveModel.getPortfolioCompositionOnADate(1, LocalDate.of(2015, 11, 30));
+    assertTrue(result.contains("AMAM -> 2.73"));
+    assertTrue(result.contains("AMAO -> 4.10"));
+    assertTrue(result.contains("ALGT -> 6.84"));
 
     mockSaveModel.setStrategy(StrategyType.DOLLARCOSTAVERAGING,
       LocalDate.of(2015,10,25),
@@ -481,9 +588,10 @@ public class StrategicFlexiblePortfoliosModelTest {
     map.put("AMAM", 20d);
     map.put("AMAO", 30d);
     mockSaveModel.investStrategicPortfolio(map, 1);
-    System.out.println(mockSaveModel.getPortfolioCompositionOnADate(1, LocalDate.of(2015, 11, 30)));
-
-//    mockSaveModel.savePortfolios();
+    result = mockSaveModel.getPortfolioCompositionOnADate(1, LocalDate.of(2015, 11, 30));
+    assertTrue(result.contains("AMAM -> 4.11"));
+    assertTrue(result.contains("AMAO -> 6.16"));
+    assertTrue(result.contains("ALGT -> 10.28"));
   }
 
   @Test
@@ -499,40 +607,54 @@ public class StrategicFlexiblePortfoliosModelTest {
 
     Field stockService = AbstractPortfolioModel.class.getDeclaredField("stockService");
 
-    stockService.set(mockSaveModel, mockStockService);
+    stockService.set(mockSaveFutureTransaction, mockStockService);
 
     Field availableDatesSet = AbstractPortfolioModel.class.getDeclaredField("availableDates");
 
-    availableDatesSet.set(mockSaveModel, availableDates);
+    availableDatesSet.set(mockSaveFutureTransaction, availableDates);
 
 
-    mockSaveModel.setStrategy(StrategyType.DOLLARCOSTAVERAGING,
+    mockSaveFutureTransaction.setStrategy(StrategyType.DOLLARCOSTAVERAGING,
       LocalDate.of(2022,10,25),
       LocalDate.of(2023,10,25),
       30,
       totalAmount);
 
-    mockSaveModel.createStrategicPortfolio(map, LocalDate.of(2022,10,25));
-    System.out.println(mockSaveModel.getPortfolioCompositionOnADate(1, LocalDate.now()));
-    mockSaveModel.savePortfolios();
+    mockSaveFutureTransaction.createStrategicPortfolio(map, LocalDate.of(2022,10,25));
+    String result = mockSaveFutureTransaction.getPortfolioCompositionOnADate(1, LocalDate.now());
+    assertTrue(result.contains("ALGT -> 49.12"));
+    assertTrue(result.contains("AMAO -> 29.47"));
+    assertTrue(result.contains("AMAM -> 19.64"));
+    mockSaveFutureTransaction.savePortfolios();
 
-    IStrategicFlexiblePortfolioModel model = new MockForStrategicFlexiblePortfoliosModel();
+    IStrategicFlexiblePortfolioModel model = new MockSavePartialTxn();
     model.retrievePortfolios();
 
-//    map = new HashMap<>();
-//    map.put("ALGT", 50d);
-//    map.put("AMAM", 20d);
-//    map.put("AMAO", 30d);
-//    mockSaveModel.investStrategicPortfolio(map, 1);
-//    System.out.println(mockSaveModel.getPortfolioCompositionOnADate(1, LocalDate.of(2015, 11, 30)));
+    assertEquals(10000.0, model.getCostBasis(LocalDate.now(), 1), 0.0);
 
-//    mockSaveModel.savePortfolios();
+    //TODO: Handle the loading and deletion of the file after test completion.
   }
 
   @Test
-  public void getPath() {
+  public void testFutureTransactions()
+      throws IOException, ParserConfigurationException, SAXException,
+      NoSuchFieldException, IllegalAccessException {
+    Field stockService = AbstractPortfolioModel.class.getDeclaredField("stockService");
 
+    stockService.set(mockFutureRetrieve, mockStockService);
+
+    Field availableDatesSet = AbstractPortfolioModel.class.getDeclaredField("availableDates");
+
+    availableDatesSet.set(mockFutureRetrieve, availableDates);
+    mockFutureRetrieve.retrievePortfolios();
+    String result = mockFutureRetrieve.getPortfolioComposition(1);
+    assertTrue(result.contains("ALGT -> 74.42"));
+    assertTrue(result.contains("AMAM -> 29.76"));
+    assertTrue(result.contains("AMAO -> 44.65"));
+
+//    System.out.println(mockFutureRetrieve.getCostBasis(LocalDate.now(), 1));
+    mockFutureRetrieve.savePortfolios();
+
+    //TODO: check for file restoration after completion.
   }
 }
-
-//get next available date logic working

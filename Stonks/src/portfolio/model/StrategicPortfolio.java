@@ -170,13 +170,7 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
         rootElement.appendChild(investmentElement);
       }
 
-      TransformerFactory transformerFactory = TransformerFactory.newInstance();
-      transformerFactory.setAttribute("indent-number", 3);
-      Transformer transformer = transformerFactory.newTransformer();
-      transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-      DOMSource source = new DOMSource(doc);
-      StreamResult result = new StreamResult(new File(path));
-      transformer.transform(source, result);
+      super.writeXMLFile(doc, path);
     } catch (DateTimeParseException e) {
       throw new RuntimeException("API Failure...\n");
     } catch (TransformerException e) {
