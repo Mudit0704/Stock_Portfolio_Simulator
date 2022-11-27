@@ -23,10 +23,10 @@ import portfolio.controller.Features;
  * Command class containing the logic for performing a fractional investment on an existing
  * portfolio. Implements {@link CommandHandler}.
  */
-class PerformFractionalInvestmentCommand extends AbstractCommandHandlers implements
+class ApplyFractionalInvestmentCommand extends AbstractCommandHandlers implements
     CommandHandler {
 
-  PerformFractionalInvestmentCommand(JTextPane resultArea,
+  ApplyFractionalInvestmentCommand(JTextPane resultArea,
       Features features, JProgressBar progressBar,
       JFrame mainFrame) {
     super(resultArea, features, progressBar, mainFrame);
@@ -37,7 +37,7 @@ class PerformFractionalInvestmentCommand extends AbstractCommandHandlers impleme
     JPanel displayPanel;
     AtomicInteger percentageTotal = new AtomicInteger();
     AtomicBoolean DoneClicked = new AtomicBoolean(false);
-    JDialog userInputDialog = getUserInputDialog("Fractional Investment");
+    JDialog userInputDialog = getUserInputDialog("Apply Fractional Investment");
     userInputDialog.setMinimumSize(new Dimension(550, 300));
     userInputDialog.setLocationRelativeTo(null);
     userInputDialog.setResizable(false);
@@ -110,11 +110,16 @@ class PerformFractionalInvestmentCommand extends AbstractCommandHandlers impleme
             JOptionPane.ERROR_MESSAGE);
       } else if (Integer.parseInt(fieldsMap.get(PERCENTAGE).textField.getText()) <= 0) {
         JOptionPane.showMessageDialog(mainFrame, "Percentage value should be greater"
-            + " than 0 less than 100", "Error", JOptionPane.ERROR_MESSAGE);
+            + " than 0 and less than 100", "Error", JOptionPane.ERROR_MESSAGE);
       } else {
         stocks.put(fieldsMap.get(TICKER_SYMBOL).textField.getText(),
             Double.parseDouble(fieldsMap.get(PERCENTAGE).textField.getText()));
+        if(percentageTotal.get() == 0) {
+          subWindowDisplay.setText("");
+        }
         percentageTotal.addAndGet(Integer.parseInt(fieldsMap.get(PERCENTAGE).textField.getText()));
+
+        subWindowDisplay.setBorder(BorderFactory.createTitledBorder("Proportions"));
         subWindowDisplay.append(
             fieldsMap.get(TICKER_SYMBOL).textField.getText() + "- >" + fieldsMap.get(
                 PERCENTAGE).textField.getText() + "\n");

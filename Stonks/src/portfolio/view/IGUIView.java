@@ -79,4 +79,12 @@ public interface IGUIView extends ICommonView {
    *                 callback functionality between the view and controller
    */
   void displayPortfolioPerformanceLineChart(Features features);
+
+  /**
+   * Displays the window responsible for applying DCA on an existing portfolio.
+   *
+   * @param features an object of {@link portfolio.controller.GUIPortfolioController} to perform the
+   *                 callback functionality between the view and controller
+   */
+  void displayApplyDCAOnExistingPortfolioWindow(Features features);
 }

@@ -37,6 +37,9 @@ public class DollarCostAvgStrategy implements IStrategy {
       for(Map.Entry<IStock, Double> stockQty:stockQtyRatio.entrySet()) {
         Double proportion = totalAmount * stockQty.getValue() / 100.0;
         tempDate = dateNavigator.getNextAvailableDate(tempDate);
+        if(tempDate.isAfter(LocalDate.now())) {
+          break;
+        }
         //TODO: Find a cleaner way to do this...
         Double qty = proportion / stockQty.getKey().getValue(tempDate);
         stockQtyMap.put(stockQty.getKey(), qty);

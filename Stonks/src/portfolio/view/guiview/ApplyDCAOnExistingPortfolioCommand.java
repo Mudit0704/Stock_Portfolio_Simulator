@@ -18,15 +18,21 @@ import javax.swing.JProgressBar;
 import javax.swing.JTextPane;
 import javax.swing.SwingWorker;
 import portfolio.controller.Features;
+import portfolio.controller.GUIPortfolioController;
 
-/**
- * Command class containing the logic for creating a portfolio using the dollar cost average
- * strategy. Implements {@link CommandHandler}.
- */
-class CreateDollarCostAveragePortfolioCommand extends AbstractCommandHandlers implements
+public class ApplyDCAOnExistingPortfolioCommand extends AbstractCommandHandlers implements
     CommandHandler {
 
-  CreateDollarCostAveragePortfolioCommand(JTextPane resultArea,
+  /**
+   * Initializes the members required by each button handler.
+   *
+   * @param resultArea  the text area where result of each command has to be displayed
+   * @param features    an object of {@link GUIPortfolioController} to perform the callback
+   *                    functionality between the view and controller
+   * @param progressBar a progress bar representing the status of each command
+   * @param mainFrame   the main window of the application
+   */
+  ApplyDCAOnExistingPortfolioCommand(JTextPane resultArea,
       Features features, JProgressBar progressBar,
       JFrame mainFrame) {
     super(resultArea, features, progressBar, mainFrame);
@@ -34,14 +40,21 @@ class CreateDollarCostAveragePortfolioCommand extends AbstractCommandHandlers im
 
   @Override
   public void execute() {
+    JPanel displayPanel;
     AtomicInteger percentageTotal = new AtomicInteger();
     AtomicBoolean DoneClicked = new AtomicBoolean(false);
-    JDialog userInputDialog = getUserInputDialog("Create a Portfolio Using Dollar Cost Averaging");
+    JDialog userInputDialog = getUserInputDialog("Apply Dollar Cost Averaging");
     userInputDialog.setMinimumSize(new Dimension(550, 300));
     userInputDialog.setLocationRelativeTo(null);
     userInputDialog.setResizable(false);
 
-    JPanel displayPanel = getResultDisplay("", "Proportions");
+    try {
+      displayPanel = getResultDisplay(features.getAvailablePortfolios(), AVAILABLE_PORTFOLIOS);
+    } catch (Exception e) {
+      resultArea.setText("<html><center><h1>" + e.getLocalizedMessage() + "</center></html>");
+      progressBar.setIndeterminate(false);
+      return;
+    }
 
     JPanel mainPanel = new JPanel(new BorderLayout());
     mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -55,6 +68,7 @@ class CreateDollarCostAveragePortfolioCommand extends AbstractCommandHandlers im
     createDateLabelField(END_DATE);
     createNumericFields(TIME_FRAME);
     createNumericFields(TOTAL_AMOUNT);
+    createNumericFields(PORTFOLIO_ID);
     createTickerSymbolField();
     createNumericFields(PERCENTAGE);
 
@@ -84,14 +98,15 @@ class CreateDollarCostAveragePortfolioCommand extends AbstractCommandHandlers im
     userInputDialog.setVisible(true);
 
     if (DoneClicked.get()) {
-      CreateDollarCostAveragePortfolioTask createDollarCostAveragePortfolioTask =
-          new CreateDollarCostAveragePortfolioTask(features, stocks,
+      ApplyDollarCostAveragePortfolioTask applyDollarCostAveragePortfolioTask =
+          new ApplyDollarCostAveragePortfolioTask(features, stocks,
               fieldsMap.get(TOTAL_AMOUNT).textField.getText(),
               fieldsMap.get(START_DATE).textField.getText(),
               fieldsMap.get(END_DATE).textField.getText(),
-              fieldsMap.get(TIME_FRAME).textField.getText());
+              fieldsMap.get(TIME_FRAME).textField.getText(),
+              fieldsMap.get(PORTFOLIO_ID).textField.getText());
       progressBar.setIndeterminate(true);
-      createDollarCostAveragePortfolioTask.execute();
+      applyDollarCostAveragePortfolioTask.execute();
       mainFrame.setEnabled(false);
     }
   }
@@ -110,8 +125,11 @@ class CreateDollarCostAveragePortfolioCommand extends AbstractCommandHandlers im
       } else {
         stocks.put(fieldsMap.get(TICKER_SYMBOL).textField.getText(),
             Double.parseDouble(fieldsMap.get(PERCENTAGE).textField.getText()));
-
+        if(percentageTotal.get() == 0) {
+          subWindowDisplay.setText("");
+        }
         percentageTotal.addAndGet(Integer.parseInt(fieldsMap.get(PERCENTAGE).textField.getText()));
+        subWindowDisplay.setBorder(BorderFactory.createTitledBorder("Proportions"));
         subWindowDisplay.append(
             fieldsMap.get(TICKER_SYMBOL).textField.getText() + "- >" + fieldsMap.get(
                 PERCENTAGE).textField.getText() + "\n");
@@ -121,6 +139,7 @@ class CreateDollarCostAveragePortfolioCommand extends AbstractCommandHandlers im
         fieldsMap.get(END_DATE).textField.setEditable(false);
         fieldsMap.get(TIME_FRAME).textField.setEditable(false);
         fieldsMap.get(TOTAL_AMOUNT).textField.setEditable(false);
+        fieldsMap.get(PORTFOLIO_ID).textField.setEditable(false);
         if (percentageTotal.get() == 100) {
           fieldsMap.get(TICKER_SYMBOL).textField.setEditable(false);
           fieldsMap.get(PERCENTAGE).textField.setEditable(false);
@@ -130,7 +149,7 @@ class CreateDollarCostAveragePortfolioCommand extends AbstractCommandHandlers im
     }
   }
 
-  class CreateDollarCostAveragePortfolioTask extends SwingWorker<String, Object> {
+  class ApplyDollarCostAveragePortfolioTask extends SwingWorker<String, Object> {
 
     Features features;
     String startDate;
@@ -138,23 +157,25 @@ class CreateDollarCostAveragePortfolioCommand extends AbstractCommandHandlers im
     Map<String, Double> stockProportions;
     String totalAmount;
     String timeFrame;
+    String portfolioId;
 
-    CreateDollarCostAveragePortfolioTask(Features features, Map<String, Double> stockProportions,
-        String totalAmount,
-        String startDate, String endDate, String timeFrame) {
+    ApplyDollarCostAveragePortfolioTask(Features features, Map<String, Double> stockProportions,
+        String totalAmount, String startDate, String endDate, String timeFrame,
+        String portfolioId) {
       this.features = features;
       this.startDate = startDate;
       this.endDate = endDate;
       this.timeFrame = timeFrame;
       this.stockProportions = stockProportions;
       this.totalAmount = totalAmount;
+      this.portfolioId = portfolioId;
     }
 
     @Override
     protected String doInBackground() {
       try {
-        return features.createDollarCostAveragePortfolio(stockProportions, totalAmount,
-            startDate, endDate, timeFrame);
+        return features.applyDollarCostAveragePortfolio(stockProportions, totalAmount,
+            startDate, endDate, timeFrame, portfolioId);
       } catch (Exception e) {
         return e.getLocalizedMessage();
       }

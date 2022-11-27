@@ -108,6 +108,20 @@ public interface Features {
       String startDate, String endDate, String timeFrame);
 
   /**
+   * Apply dollar cost average strategy on an existing portfolio.
+   *
+   * @param stockProportions proportions for different stocks to be invested
+   * @param totalAmount      total amount to be invested
+   * @param startDate        start date at which the investment strategy has to start
+   * @param endDate          end date at which the investment strategy has to end
+   * @param timeFrame        time spans between each investment
+   * @param portfolioId      portfolio for which the investment has to be done
+   * @return the status of portfolio creation represented by a string
+   */
+  String applyDollarCostAveragePortfolio(Map<String, Double> stockProportions, String totalAmount,
+      String startDate, String endDate, String timeFrame, String portfolioId);
+
+  /**
    * Checks whether the given ticker symbol is a valid one.
    *
    * @param tickerSymbol stock ticker symbol to validated

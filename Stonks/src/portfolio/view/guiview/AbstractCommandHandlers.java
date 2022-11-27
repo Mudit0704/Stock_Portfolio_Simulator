@@ -38,7 +38,7 @@ abstract class AbstractCommandHandlers implements CommandHandler {
   public static final String TICKER_SYMBOL = "Ticker Symbol";
   public static final String PORTFOLIO_ID = "Portfolio Id";
   public static final String QUANTITY = "Quantity";
-  public static final String TIME_FRAME = "Time Frame";
+  public static final String TIME_FRAME = "Time Frame (Days)";
   public static final String TOTAL_AMOUNT = "Total Amount";
   public static final String PERCENTAGE = "Percentage";
   public static final String START_DATE = "Start Date";
@@ -133,6 +133,8 @@ abstract class AbstractCommandHandlers implements CommandHandler {
             errorMessage = result + " " + entry.getKey().getName();
             break;
           }
+        } else {
+          entry.getKey().setText("2100-12-31");
         }
       } else if (TRANSACTION_FEE.equals(entry.getKey().getName())) {
         if (!"".equals(entry.getKey().getText())) {

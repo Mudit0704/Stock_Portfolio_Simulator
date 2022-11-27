@@ -151,13 +151,20 @@ public class GUIPortfolioController implements Features {
 
   @Override
   public String createDollarCostAveragePortfolio(Map<String, Double> stockProportions,
-      String totalAmount,
-      String startDate, String endDate, String timeFrame) {
+      String totalAmount, String startDate, String endDate, String timeFrame) {
     model.setStrategy(StrategyType.DOLLARCOSTAVERAGING, LocalDate.parse(startDate),
-        LocalDate.parse(endDate),
-        Integer.parseInt(timeFrame), Double.parseDouble(totalAmount));
+        LocalDate.parse(endDate), Integer.parseInt(timeFrame), Double.parseDouble(totalAmount));
     model.createStrategicPortfolio(stockProportions, LocalDate.parse(startDate));
     return "Created";
+  }
+
+  @Override
+  public String applyDollarCostAveragePortfolio(Map<String, Double> stockProportions,
+      String totalAmount, String startDate, String endDate, String timeFrame, String portfolioId) {
+    model.setStrategy(StrategyType.DOLLARCOSTAVERAGING, LocalDate.parse(startDate),
+        LocalDate.parse(endDate),Integer.parseInt(timeFrame), Double.parseDouble(totalAmount));
+    model.investStrategicPortfolio(stockProportions, Integer.parseInt(portfolioId));
+    return "Applied";
   }
 
   @Override

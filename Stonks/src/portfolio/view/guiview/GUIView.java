@@ -29,7 +29,8 @@ public class GUIView extends JFrame implements IGUIView {
   final JPanel mainPanel;
   JButton createDollarCostAveragePortfolioButton, createFlexiblePortfolioButton,
       getPortfolioValueButton, getCostBasisButton, savePortfolioButton, retrievePortfolioButton,
-      sellStocksButton, buyStocksButton, fractionalInvestmentButton, portfolioPerformanceButton;
+      sellStocksButton, buyStocksButton, fractionalInvestmentButton, portfolioPerformanceButton,
+      applyDCAOnExistingPortfolio;
   JProgressBar progressBar;
   JTextPane displayArea;
 
@@ -93,7 +94,9 @@ public class GUIView extends JFrame implements IGUIView {
     actionsPanel.add(sellStocksButton);
     buyStocksButton = getCustomButton("Buy Stocks");
     actionsPanel.add(buyStocksButton);
-    fractionalInvestmentButton = getCustomButton("Fractional Investment");
+    applyDCAOnExistingPortfolio = getCustomButton("Apply DCA on existing portfolio");
+    actionsPanel.add(applyDCAOnExistingPortfolio);
+    fractionalInvestmentButton = getCustomButton("Apply Fractional Investment");
     actionsPanel.add(fractionalInvestmentButton);
     portfolioPerformanceButton = getCustomButton("Portfolio Performance");
     actionsPanel.add(portfolioPerformanceButton);
@@ -105,13 +108,13 @@ public class GUIView extends JFrame implements IGUIView {
 
   @Override
   public void displayInvalidInput() {
-    JOptionPane.showMessageDialog(GUIView.this, "Invalid Input", "Error",
+    JOptionPane.showMessageDialog(this, "Invalid Input", "Error",
         JOptionPane.ERROR_MESSAGE);
   }
 
   @Override
   public void displayCustomText(String customText) {
-    JOptionPane.showMessageDialog(GUIView.this, customText, "Information",
+    JOptionPane.showMessageDialog(this, customText, "Information",
         JOptionPane.INFORMATION_MESSAGE);
   }
 
@@ -124,6 +127,8 @@ public class GUIView extends JFrame implements IGUIView {
     sellStocksButton.addActionListener(e -> displaySellStocksWindow(features));
     buyStocksButton.addActionListener(e -> displayBuyStocksWindow(features));
     createFlexiblePortfolioButton.addActionListener(e -> displayCreateNewFlexibleWindow(features));
+    applyDCAOnExistingPortfolio.addActionListener(
+        e -> displayApplyDCAOnExistingPortfolioWindow(features));
     fractionalInvestmentButton.addActionListener(e -> displayFractionInvestmentWindow(features));
     createDollarCostAveragePortfolioButton.addActionListener(
         e -> displayCreateDollarCostAveragingWindow(features));
@@ -138,32 +143,32 @@ public class GUIView extends JFrame implements IGUIView {
 
   @Override
   public void displayGetPortfolioValueWindow(Features features) {
-    new GetValueCommand(displayArea, features, progressBar, GUIView.this).execute();
+    new GetValueCommand(displayArea, features, progressBar, this).execute();
   }
 
   @Override
   public void displayGetPortfolioCostBasisWindow(Features features) {
-    new GetCostBasisCommand(displayArea, features, progressBar, GUIView.this).execute();
+    new GetCostBasisCommand(displayArea, features, progressBar, this).execute();
   }
 
   @Override
   public void displaySellStocksWindow(Features features) {
-    new SellStocksCommand(displayArea, features, progressBar, GUIView.this).execute();
+    new SellStocksCommand(displayArea, features, progressBar, this).execute();
   }
 
   @Override
   public void displayBuyStocksWindow(Features features) {
-    new BuyStocksCommand(displayArea, features, progressBar, GUIView.this).execute();
+    new BuyStocksCommand(displayArea, features, progressBar, this).execute();
   }
 
   @Override
   public void displayCreateNewFlexibleWindow(Features features) {
-    new CreateFlexiblePortfolioCommand(displayArea, features, progressBar, GUIView.this).execute();
+    new CreateFlexiblePortfolioCommand(displayArea, features, progressBar, this).execute();
   }
 
   @Override
   public void displayFractionInvestmentWindow(Features features) {
-    new PerformFractionalInvestmentCommand(displayArea, features, progressBar, this).execute();
+    new ApplyFractionalInvestmentCommand(displayArea, features, progressBar, this).execute();
   }
 
   @Override
@@ -175,5 +180,10 @@ public class GUIView extends JFrame implements IGUIView {
   @Override
   public void displayPortfolioPerformanceLineChart(Features features) {
     new DisplayPortfolioPerformance(displayArea, features, progressBar, this).execute();
+  }
+
+  @Override
+  public void displayApplyDCAOnExistingPortfolioWindow(Features features) {
+    new ApplyDCAOnExistingPortfolioCommand(displayArea, features, progressBar, this).execute();
   }
 }
