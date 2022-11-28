@@ -69,7 +69,7 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
         historicQty.put(qtyOnDate.getKey(), qtyToUpdate);
 
         costBasisHistory.put(qtyOnDate.getKey(), costBasisHistory.get(qtyOnDate.getKey())
-          + costBasisUpdateFactor);
+            + costBasisUpdateFactor);
       }
     }
   }

@@ -19,7 +19,7 @@ public class StrategicFlexiblePortfoliosModel extends FlexiblePortfoliosModel
   @Override
   public void setStrategy(StrategyType strategy, LocalDate startDate,
       LocalDate endDate, int timeFrame, double investmentAmount) {
-    if(investmentAmount <= 0) {
+    if (investmentAmount <= 0) {
       throw new IllegalArgumentException("Invalid amount to invest.");
     }
     startDate = dateNavigator.getNextAvailableDate(startDate);
@@ -37,10 +37,10 @@ public class StrategicFlexiblePortfoliosModel extends FlexiblePortfoliosModel
 
     AbstractPortfolio portfolio = createPortfolio(stocks, date);
 
-    for(Map.Entry<LocalDate, Map<IStock, Double>> stocksOnDate:updatedFractionalQty.entrySet()) {
+    for (Map.Entry<LocalDate, Map<IStock, Double>> stocksOnDate:updatedFractionalQty.entrySet()) {
       LocalDate dateEntry = stocksOnDate.getKey();
 
-      if(dateEntry.isEqual(date)) {
+      if (dateEntry.isEqual(date)) {
         continue;
       }
       if (stocksOnDate.getValue() == null) {
@@ -53,7 +53,7 @@ public class StrategicFlexiblePortfoliosModel extends FlexiblePortfoliosModel
     }
 
     portfolioMap.put(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss")),
-      portfolio);
+        portfolio);
   }
 
   @Override
@@ -65,7 +65,7 @@ public class StrategicFlexiblePortfoliosModel extends FlexiblePortfoliosModel
 
     AbstractPortfolio portfolio = super.getPortfolioFromMap(portfolioId).getValue();
 
-    for(Map.Entry<LocalDate, Map<IStock, Double>> stocksOnDate: updatedFractionalQty.entrySet()) {
+    for (Map.Entry<LocalDate, Map<IStock, Double>> stocksOnDate: updatedFractionalQty.entrySet()) {
       if (stocksOnDate.getValue() == null) {
         portfolio.scheduleInvestment(stocksOnDate.getKey(), strategy.getStrategyInvestment(),
             this.transactionFee, stockQty);
@@ -80,7 +80,7 @@ public class StrategicFlexiblePortfoliosModel extends FlexiblePortfoliosModel
   @Override
   public Map<LocalDate, Double> lineChartPerformanceAnalysis(LocalDate start, LocalDate end,
       int portfolioId) {
-    if(portfolioId > super.portfolioMap.size()) {
+    if (portfolioId > super.portfolioMap.size()) {
       throw new IllegalArgumentException("Invalid portfolio id.");
     }
     AbstractPortfolio portfolio = super.getPortfolioFromMap(portfolioId).getValue();
