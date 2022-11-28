@@ -19,6 +19,9 @@ public class StrategicFlexiblePortfoliosModel extends FlexiblePortfoliosModel
   @Override
   public void setStrategy(StrategyType strategy, LocalDate startDate,
       LocalDate endDate, int timeFrame, double investmentAmount) {
+    if(investmentAmount <= 0) {
+      throw new IllegalArgumentException("Invalid amount to invest.");
+    }
     startDate = dateNavigator.getNextAvailableDate(startDate);
     this.strategy = AbstractStrategyCreator.strategyCreator(strategy,
           startDate, endDate, timeFrame, investmentAmount);

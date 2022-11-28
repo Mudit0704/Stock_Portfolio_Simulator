@@ -113,7 +113,7 @@ public class FlexiblePortfolioTest {
     assertTrue(result.contains("AAPL -> 2.0\n"));
     assertTrue(result.contains("PUBM -> 1.0\n"));
     assertTrue(result.contains("A -> 2.0\n"));
-    assertEquals(848.18, retrievedPortfolio.getPortfolioValue(LocalDate.now()), 0.1);
+    assertEquals(885.38, retrievedPortfolio.getPortfolioValue(LocalDate.now()), 0.1);
 
     try {
       Files.delete(Path.of(path));
@@ -253,7 +253,7 @@ public class FlexiblePortfolioTest {
     assertTrue(result.contains("AAPL -> 2.0\n"));
     assertTrue(result.contains("MSFT -> 3.0\n"));
     assertTrue(result.contains("A -> 2.0\n"));
-    assertEquals(1035.87, retrievedPortfolio.getPortfolioValue(LocalDate.now()), 0.1);
+    assertEquals(1087.02, retrievedPortfolio.getPortfolioValue(LocalDate.now()), 0.1);
 
     try {
       Files.delete(Path.of(path));
@@ -363,7 +363,7 @@ public class FlexiblePortfolioTest {
     assertTrue(result.contains("AAPL -> 2.0\n"));
     assertTrue(result.contains("PUBM -> 1.0\n"));
     assertTrue(result.contains("A -> 2.0\n"));
-    assertEquals(847.53, testModifyPortfolioAnyDate.getPortfolioValue(LocalDate.now()), 0.1);
+    assertEquals(889.37, testModifyPortfolioAnyDate.getPortfolioValue(LocalDate.now()), 0.1);
 
     try {
       Files.delete(Path.of(path));
@@ -447,7 +447,7 @@ public class FlexiblePortfolioTest {
     assertTrue(result.contains("AAPL -> 2.0\n"));
     assertTrue(result.contains("MSFT -> 3.0\n"));
     assertTrue(result.contains("A -> 2.0\n"));
-    assertEquals(1035.87, retrievedPortfolio.getPortfolioValue(LocalDate.now()), 0.1);
+    assertEquals(1087.02, retrievedPortfolio.getPortfolioValue(LocalDate.now()), 0.1);
 
     try {
       Files.delete(Path.of(path));

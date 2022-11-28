@@ -174,7 +174,7 @@ public class PortfolioTest {
     assertTrue(result.contains("GOOG -> 3.0\n"));
     assertTrue(result.contains("MSFT -> 2.0\n"));
     assertTrue(result.contains("PUBM -> 1.0\n"));
-    assertEquals(579.48, retrievedPortfolio.getPortfolioValue(LocalDate.of(2022, 10, 28)), 0.0);
+    assertEquals(577.72, retrievedPortfolio.getPortfolioValue(LocalDate.of(2022, 10, 28)), 0.0);
 
     try {
       Files.delete(Path.of(path));

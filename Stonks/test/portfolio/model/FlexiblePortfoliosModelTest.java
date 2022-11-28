@@ -292,7 +292,7 @@ public class FlexiblePortfoliosModelTest {
     portfolios.setCommissionFee(10);
     portfolios.createNewPortfolio(map);
 
-    assertEquals(1735.06, portfolios.getCostBasis(LocalDate.now(), 1), 0.0);
+    assertEquals(1810.76, portfolios.getCostBasis(LocalDate.now(), 1), 0.1);
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -350,8 +350,8 @@ public class FlexiblePortfoliosModelTest {
 
     portfolios.addStocksToPortfolio("GOOG", 1d, 1, LocalDate.now());
     portfolios.getPortfolioComposition(1);
-    assertEquals(1789.23, portfolios.getPortfolioValue(LocalDate.now(), 1), 0.1);
-    assertEquals(1839.23, portfolios.getCostBasis(LocalDate.now(), 1), 0.0);
+    assertEquals(1869.58, portfolios.getPortfolioValue(LocalDate.now(), 1), 0.1);
+    assertEquals(1919.58, portfolios.getCostBasis(LocalDate.now(), 1), 0.1);
 
     String result = portfolios.getPortfolioComposition(1);
     assertTrue(result.contains("GOOG -> 4.0\n"));
@@ -415,9 +415,9 @@ public class FlexiblePortfoliosModelTest {
     portfolios.setCommissionFee(10);
     portfolios.createNewPortfolio(map);
 
-    assertEquals(292.51, portfolios.getCostBasis(LocalDate.now(), 1), 0.0);
+    assertEquals(306.46, portfolios.getCostBasis(LocalDate.now(), 1), 0.0);
     portfolios.sellStockFromPortfolio("GOOG", 1D, 1, LocalDate.now());
-    assertEquals(302.51, portfolios.getCostBasis(LocalDate.now(), 1), 0.0);
+    assertEquals(316.46, portfolios.getCostBasis(LocalDate.now(), 1), 0.0);
   }
 
   @Test
@@ -519,6 +519,12 @@ public class FlexiblePortfoliosModelTest {
     portfolioMockModel.getPortfolioComposition(1);
 
     portfolioMockModel.savePortfolios();
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testInvalidCommissionFee() {
+    AbstractPortfolioModel portfolioModel = new FlexiblePortfoliosModel();
+    portfolioModel.setCommissionFee(-10);
   }
 
   @Test(expected = None.class)

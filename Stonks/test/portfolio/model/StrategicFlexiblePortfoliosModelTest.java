@@ -758,6 +758,52 @@ public class StrategicFlexiblePortfoliosModelTest {
 //    assertTrue(result.contains("ALGT -> 10.28"));
   }
 
+  @Test(expected = IllegalArgumentException.class)
+  public void testInvalidInvestmentAmount()
+    throws NoSuchFieldException, IllegalAccessException {
+    Map<String, Double> map = new HashMap<>();
+    map.put("ALGT", 50d);
+    map.put("AMAM", 20d);
+    map.put("AMAO", 30d);
+
+    double totalAmount = 5000d;
+
+    Field stockService = AbstractPortfolioModel.class.getDeclaredField("stockService");
+
+    stockService.set(mockSaveModel, mockStockService);
+
+    mockSaveModel.setStrategy(StrategyType.DOLLARCOSTAVERAGING,
+      LocalDate.of(2018,10,25),
+      LocalDate.of(2023,10,25),
+      30,
+      0.0);
+
+    mockSaveModel.createStrategicPortfolio(map, LocalDate.of(2018,10,25));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testInvalidInvestmentQty()
+    throws NoSuchFieldException, IllegalAccessException {
+    Map<String, Double> map = new HashMap<>();
+    map.put("ALGT", 50d);
+    map.put("AMAM", -20d);
+    map.put("AMAO", 30d);
+
+    double totalAmount = 5000d;
+
+    Field stockService = AbstractPortfolioModel.class.getDeclaredField("stockService");
+
+    stockService.set(mockSaveModel, mockStockService);
+
+    mockSaveModel.setStrategy(StrategyType.DOLLARCOSTAVERAGING,
+      LocalDate.of(2018,10,25),
+      LocalDate.of(2023,10,25),
+      30,
+      0.0);
+
+    mockSaveModel.createStrategicPortfolio(map, LocalDate.of(2018,10,25));
+  }
+
   @After
   public void tearDown() {
     MockForStrategicFlexiblePortfoliosModel model = new MockForStrategicFlexiblePortfoliosModel();

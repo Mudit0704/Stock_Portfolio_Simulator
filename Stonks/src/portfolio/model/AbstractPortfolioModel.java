@@ -42,6 +42,9 @@ public abstract class AbstractPortfolioModel implements IFlexiblePortfoliosModel
     Map<IStock, Double> stockQty = new HashMap<>();
 
     for (Map.Entry<String, Double> entry : stocks.entrySet()) {
+      if(entry.getValue() <= 0) {
+        throw new IllegalArgumentException("Invalid stock quantities.");
+      }
       IStock stock = apiOptimizer.cacheGetObj(entry.getKey());
       if(stock == null) {
         stock = new Stock(entry.getKey(), this.stockService);

@@ -95,6 +95,9 @@ public class FlexiblePortfoliosModel extends AbstractPortfolioModel {
 
   @Override
   public void setCommissionFee(double commissionFee) {
+    if (commissionFee < 0.0) {
+      throw new IllegalArgumentException("Invalid commission fee.");
+    }
     this.transactionFee = commissionFee;
   }
 
