@@ -23,9 +23,7 @@ public class StrategicFlexiblePortfoliosModelTest {
   private IStockService mockStockService;
   private IStrategicFlexiblePortfolioModel mockSaveModel;
   private IStrategicFlexiblePortfolioModel mockFutureRetrieve;
-  private IStrategicFlexiblePortfolioModel mockMultiFuture;
   private IStrategicFlexiblePortfolioModel mockSaveFutureTransaction;
-  private IStrategicFlexiblePortfolioModel mockLineChartTestModel;
 
   @Before
   public void setup() {
@@ -33,9 +31,7 @@ public class StrategicFlexiblePortfoliosModelTest {
     mockStockService = new MockStockService("/test/testExtensiveData.txt");
     mockSaveModel = new MockForStrategicFlexiblePortfoliosModel();
     mockFutureRetrieve = new MockForRetrieveFuture();
-    mockMultiFuture = new MockForMultipleRetrieveFuture();
     mockSaveFutureTransaction = new MockSavePartialTxn();
-    mockLineChartTestModel = new MockLineChartTester();
   }
 
   @Test
@@ -607,21 +603,6 @@ public class StrategicFlexiblePortfoliosModelTest {
     String result = mockFutureRetrieve.getPortfolioCompositionOnADate(1, LocalDate.of(2022,11,27));
     assertTrue(result.contains("AMAM -> 19.64"));
     assertTrue(result.contains("ALGT -> 49.12"));
-    assertTrue(result.contains("AMAO -> 29.47"));
-  }
-
-  @Test
-  public void testMultipleFutureTransactions()
-    throws IOException, ParserConfigurationException, SAXException,
-    NoSuchFieldException, IllegalAccessException {
-    Field stockService = AbstractPortfolioModel.class.getDeclaredField("stockService");
-
-    stockService.set(mockMultiFuture, mockStockService);
-
-    mockMultiFuture.retrievePortfolios();
-    String result = mockMultiFuture.getPortfolioCompositionOnADate(1, LocalDate.of(2022,11,27));
-    assertTrue(result.contains("AMAM -> 19.64"));
-    assertTrue(result.contains("ALGT -> 49.12"));
     assertTrue(result.contains("AMAO -> 24.41"));
     assertTrue(result.contains("TSIBW -> 25.29"));
     assertTrue(result.contains("TSLA -> 15.17"));
@@ -688,33 +669,6 @@ public class StrategicFlexiblePortfoliosModelTest {
         LocalDate.of(2016,11,25),
         40,
         totalAmount);
-  }
-
-  @Test
-  public void testLineChart()
-    throws IOException, ParserConfigurationException, SAXException, IllegalAccessException, NoSuchFieldException {
-    Field stockService = AbstractPortfolioModel.class.getDeclaredField("stockService");
-
-    stockService.set(mockLineChartTestModel, mockStockService);
-    mockLineChartTestModel.retrievePortfolios();
-
-    Map<LocalDate, Double> dateValue = mockLineChartTestModel
-        .lineChartPerformanceAnalysis(LocalDate.parse("2019-10-25"),
-        LocalDate.parse("2019-11-23"), 1);
-
-    assertEquals(LocalDate.parse("2019-10-25"),
-        dateValue.keySet().stream().min(LocalDate::compareTo).orElseThrow());
-    assertEquals(LocalDate.parse("2019-11-23"),
-        dateValue.keySet().stream().max(LocalDate::compareTo).orElseThrow());
-
-    dateValue = mockLineChartTestModel
-        .lineChartPerformanceAnalysis(LocalDate.parse("2019-10-25"),
-        LocalDate.parse("2020-05-01"), 1);
-
-    assertEquals(LocalDate.parse("2019-10-31"),
-        dateValue.keySet().stream().min(LocalDate::compareTo).orElseThrow());
-    assertEquals(LocalDate.parse("2020-05-31"),
-        dateValue.keySet().stream().max(LocalDate::compareTo).orElseThrow());
   }
 
   @Test
@@ -844,20 +798,6 @@ public class StrategicFlexiblePortfoliosModelTest {
         0.0);
 
     mockSaveModel.createStrategicPortfolio(map, LocalDate.of(2018,10,25));
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void testPerformanceInvalidId()
-      throws IOException, ParserConfigurationException, SAXException,
-      NoSuchFieldException, IllegalAccessException {
-    Field stockService = AbstractPortfolioModel.class.getDeclaredField("stockService");
-
-    stockService.set(mockLineChartTestModel, mockStockService);
-    mockLineChartTestModel.retrievePortfolios();
-
-    Map<LocalDate, Double> dateValue = mockLineChartTestModel
-      .lineChartPerformanceAnalysis(LocalDate.parse("2019-10-25"),
-        LocalDate.parse("2019-11-23"), 2);
   }
 
   @After
