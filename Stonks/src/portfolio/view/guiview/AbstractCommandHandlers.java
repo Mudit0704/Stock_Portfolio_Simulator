@@ -246,7 +246,7 @@ abstract class AbstractCommandHandlers implements CommandHandler {
 
   boolean CreateTransactionWindow(AtomicBoolean OKClicked) {
     JPanel availablePortfoliosDisplay;
-    JDialog userInputDialog = getUserInputDialog("Transaction", 500, 250);
+    JDialog userInputDialog = getUserInputDialog("Transaction", 520, 250);
 
     try {
       availablePortfoliosDisplay = getResultDisplay(features.getAvailablePortfolios(),

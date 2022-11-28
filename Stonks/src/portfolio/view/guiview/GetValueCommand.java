@@ -30,7 +30,7 @@ class GetValueCommand extends AbstractCommandHandlers implements CommandHandler 
     JPanel availablePortfoliosDisplay;
     AtomicBoolean OKClicked = new AtomicBoolean(false);
 
-    JDialog userInputDialog = getUserInputDialog("Get Portfolio Value", 500, 200);
+    JDialog userInputDialog = getUserInputDialog("Get Portfolio Value", 520, 200);
 
     try {
       availablePortfoliosDisplay = getResultDisplay(features.getAvailablePortfolios(),

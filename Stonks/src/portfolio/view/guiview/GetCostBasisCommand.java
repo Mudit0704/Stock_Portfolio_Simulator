@@ -28,7 +28,7 @@ class GetCostBasisCommand extends AbstractCommandHandlers implements CommandHand
   public void execute() {
     JPanel availablePortfoliosDisplay;
     AtomicBoolean OKClicked = new AtomicBoolean(false);
-    JDialog userInputDialog = getUserInputDialog("Get Portfolio Cost Basis", 500, 200);
+    JDialog userInputDialog = getUserInputDialog("Get Portfolio Cost Basis", 520, 200);
 
     try {
       availablePortfoliosDisplay = getResultDisplay(features.getAvailablePortfolios(),
@@ -89,7 +89,7 @@ class GetCostBasisCommand extends AbstractCommandHandlers implements CommandHand
     @Override
     protected String doInBackground() throws Exception {
       try {
-        return "<html><center><h1>Portfolio Value on " + date + ": " + String.format("%.2f",
+        return "<html><center><h1>Cost Basis on " + date + ": " + String.format("%.2f",
             features.getCostBasis(date, portfolioId)) + "</center></html>";
       } catch (Exception e) {
         return "<html><center><h1>" + e.getLocalizedMessage() + "</center></html>";
