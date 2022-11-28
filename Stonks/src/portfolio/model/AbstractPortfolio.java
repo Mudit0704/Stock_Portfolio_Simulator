@@ -35,7 +35,7 @@ public abstract class AbstractPortfolio implements IStrategicPortfolio {
   @Override
   public void investStocksIntoStrategicPortfolio(Map<IStock, Double> stockProportions,
       LocalDate date, double transactionFee) {
-
+    return;
   }
 
   @Override
@@ -44,7 +44,7 @@ public abstract class AbstractPortfolio implements IStrategicPortfolio {
   }
 
   protected abstract boolean isTransactionSequenceInvalid(IStock stock, LocalDate date,
-    TransactionType transactionType);
+      TransactionType transactionType);
 
   protected LocalDate getClosestDate(LocalDate date, List<LocalDate> qtyHistory) {
     long minDiff = Long.MAX_VALUE;
@@ -63,6 +63,6 @@ public abstract class AbstractPortfolio implements IStrategicPortfolio {
 
   protected void scheduleInvestment(LocalDate date, double amount, double transactionFee,
       Map<IStock, Double> stocks) {
-
+    return;
   }
 }

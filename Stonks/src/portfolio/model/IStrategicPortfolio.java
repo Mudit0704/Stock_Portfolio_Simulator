@@ -15,7 +15,7 @@ public interface IStrategicPortfolio extends IFlexiblePortfolio {
    * @param transactionFee   the transaction fee to be applied if any.
    */
   void investStocksIntoStrategicPortfolio(Map<IStock, Double> stockProportions,
-    LocalDate date, double transactionFee);
+      LocalDate date, double transactionFee);
 
   /**
    * Returns the data points for visualizing the performance of this portfolio within the specified

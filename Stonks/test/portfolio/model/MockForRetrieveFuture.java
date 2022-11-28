@@ -5,7 +5,7 @@ package portfolio.model;
  * transactions.
  */
 public class MockForRetrieveFuture extends
-  MockForStrategicFlexiblePortfoliosModel {
+    MockForStrategicFlexiblePortfoliosModel {
 
   @Override
   protected String getPath() {

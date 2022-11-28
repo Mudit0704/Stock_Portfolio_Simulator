@@ -18,7 +18,7 @@ public abstract class AbstractStrategyCreator {
    * @return the requested strategy type object.
    */
   public static IStrategy strategyCreator(StrategyType strategyType, LocalDate startDate,
-    LocalDate endDate, int timeFrame, double investmentAmount) {
+      LocalDate endDate, int timeFrame, double investmentAmount) {
 
     if (strategyType == StrategyType.DOLLARCOSTAVERAGING) {
       return new DollarCostAvgStrategy.DollarCostAvgStrategyBuilder()

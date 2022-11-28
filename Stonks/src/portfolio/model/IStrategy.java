@@ -1,7 +1,6 @@
 package portfolio.model;
 
 import java.time.LocalDate;
-import java.util.Locale;
 import java.util.Map;
 
 /**

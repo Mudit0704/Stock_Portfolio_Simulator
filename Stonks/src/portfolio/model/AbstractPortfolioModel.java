@@ -40,11 +40,11 @@ public abstract class AbstractPortfolioModel implements IFlexiblePortfoliosModel
     Map<IStock, Double> stockQty = new HashMap<>();
 
     for (Map.Entry<String, Double> entry : stocks.entrySet()) {
-      if(entry.getValue() <= 0) {
+      if (entry.getValue() <= 0) {
         throw new IllegalArgumentException("Invalid stock quantities.");
       }
       IStock stock = apiOptimizer.cacheGetObj(entry.getKey());
-      if(stock == null) {
+      if (stock == null) {
         stock = new Stock(entry.getKey(), this.stockService);
         apiOptimizer.cacheSetObj(entry.getKey(), stock);
       }
@@ -161,7 +161,8 @@ public abstract class AbstractPortfolioModel implements IFlexiblePortfoliosModel
     return valueToCheck;
   }
 
-  protected abstract AbstractPortfolio createPortfolio(Map<IStock, Double> stockQty, LocalDate date);
+  protected abstract AbstractPortfolio createPortfolio(Map<IStock, Double> stockQty,
+      LocalDate date);
 
   protected abstract String getPath();
 

@@ -24,14 +24,16 @@ import org.xml.sax.SAXException;
 
 /**
  * This class represents a StrategicPortfolio. This class implements the IStrategicPortfolio
- * interface and uses a class adapter over FlexiblePortfolio. This class offers methods to
- * invest in this portfolio using stocks after applying strategies.
+ * interface and uses a class adapter over FlexiblePortfolio. This class offers methods to invest in
+ * this portfolio using stocks after applying strategies.
  */
 public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicPortfolio {
 
-  private static class Pair<S,T> {
+  private static class Pair<S, T> {
+
     S s;
     T t;
+
     Pair(S s, T t) {
       this.s = s;
       this.t = t;
@@ -41,6 +43,7 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
   private double transactionFee;
 
   protected List<Map<LocalDate, Map<IStock, Pair<Double, Double>>>> listOfScheduledStocks;
+
   /**
    * Constructs an object of Portfolio and initializes its members.
    *
@@ -58,22 +61,22 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
   }
 
   protected void performCascadingUpdateForRetrospectiveBuy(Map<LocalDate, Double> historicQty,
-      double quantity, LocalDate dateAfterPurchaseToUpdate, double costBasisUpdateFactor) {
-    for(Map.Entry<LocalDate, Double> qtyOnDate:historicQty.entrySet()) {
+    double quantity, LocalDate dateAfterPurchaseToUpdate, double costBasisUpdateFactor) {
+    for (Map.Entry<LocalDate, Double> qtyOnDate : historicQty.entrySet()) {
       if (qtyOnDate.getKey().isAfter(dateAfterPurchaseToUpdate)) {
         Double qtyToUpdate = qtyOnDate.getValue();
         qtyToUpdate += quantity;
         historicQty.put(qtyOnDate.getKey(), qtyToUpdate);
 
         costBasisHistory.put(qtyOnDate.getKey(), costBasisHistory.get(qtyOnDate.getKey())
-            + costBasisUpdateFactor);
+          + costBasisUpdateFactor);
       }
     }
   }
 
   @Override
   public void addStocksToPortfolio(IStock stock, Double quantity,
-      LocalDate date, double transactionFee) {
+    LocalDate date, double transactionFee) {
     double stockQty = 0;
 
     if (isTransactionSequenceInvalid(stock, date, TransactionType.BUY)) {
@@ -103,16 +106,16 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
 
   @Override
   public void investStocksIntoStrategicPortfolio(Map<IStock, Double> stockProportions,
-      LocalDate date, double transactionFee) {
+    LocalDate date, double transactionFee) {
 
-    for(Map.Entry<IStock, Double> proportion:stockProportions.entrySet()) {
+    for (Map.Entry<IStock, Double> proportion : stockProportions.entrySet()) {
       addStocksToPortfolio(proportion.getKey(), proportion.getValue(), date, transactionFee);
     }
   }
 
   @Override
   protected boolean isTransactionSequenceInvalid(IStock stock, LocalDate date,
-      TransactionType transactionType) {
+    TransactionType transactionType) {
     if (transactionType == TransactionType.BUY) {
       return false;
     } else {
@@ -122,12 +125,12 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
 
   @Override
   protected void scheduleInvestment(LocalDate date, double amount, double transactionFee,
-      Map<IStock, Double> stocks) {
+    Map<IStock, Double> stocks) {
     Map<LocalDate, Map<IStock, Pair<Double, Double>>> dateMap = new HashMap<>();
     Map<IStock, Pair<Double, Double>> stockQty = new HashMap<>();
 
-    for(Map.Entry<IStock, Double> mapEntry:stocks.entrySet()) {
-        stockQty.put(mapEntry.getKey(), new Pair<>(amount, mapEntry.getValue()));
+    for (Map.Entry<IStock, Double> mapEntry : stocks.entrySet()) {
+      stockQty.put(mapEntry.getKey(), new Pair<>(amount, mapEntry.getValue()));
     }
     dateMap.put(date, stockQty);
     listOfScheduledStocks.add(dateMap);
@@ -147,18 +150,20 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
       doc.appendChild(rootElement);
       rootElement.appendChild(transactionFee);
 
-      for(Map<LocalDate, Map<IStock, Pair<Double, Double>>> dateMap:this.listOfScheduledStocks) {
+      for (Map<LocalDate, Map<IStock, Pair<Double, Double>>> dateMap : this.listOfScheduledStocks) {
         dateMap = dateMap.entrySet().stream()
           .sorted(Map.Entry.comparingByKey(Comparator.reverseOrder()))
           .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
             (e1, e2) -> e2, LinkedHashMap::new));
 
-        for(Map.Entry<LocalDate, Map<IStock, Pair<Double, Double>>> mapEntry:dateMap.entrySet()) {
+        for (Map.Entry<LocalDate, Map<IStock, Pair<Double, Double>>> mapEntry
+            : dateMap.entrySet()) {
           Element investmentElement = doc.createElement("investment");
           investmentElement.setAttribute("date", String.valueOf(mapEntry.getKey()));
           Map<IStock, Pair<Double, Double>> stockProportions = mapEntry.getValue();
           Double amount = 0d;
-          for(Map.Entry<IStock, Pair<Double, Double>> stockProportion:stockProportions.entrySet()) {
+          for (Map.Entry<IStock, Pair<Double, Double>> stockProportion
+              : stockProportions.entrySet()) {
             amount = stockProportion.getValue().s;
 
             Element stock = doc.createElement("stock");
@@ -200,14 +205,14 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
   }
 
   protected void executeEligibleTransactions() {
-    for(Map<LocalDate, Map<IStock, Pair<Double, Double>>> dateMap:this.listOfScheduledStocks) {
-      for(Map.Entry<LocalDate, Map<IStock, Pair<Double, Double>>> mapEntry:
+    for (Map<LocalDate, Map<IStock, Pair<Double, Double>>> dateMap : this.listOfScheduledStocks) {
+      for (Map.Entry<LocalDate, Map<IStock, Pair<Double, Double>>> mapEntry :
         dateMap.entrySet()) {
         LocalDate date = mapEntry.getKey();
         Map<IStock, Pair<Double, Double>> stockQty = mapEntry.getValue();
         Double amount = 0d;
         Map<IStock, Double> stockRatios = new HashMap<>();
-        for(Map.Entry<IStock, Pair<Double, Double>> stocks:stockQty.entrySet()) {
+        for (Map.Entry<IStock, Pair<Double, Double>> stocks : stockQty.entrySet()) {
           amount = stocks.getValue().s;
           stockRatios.put(stocks.getKey(), stocks.getValue().t);
         }
@@ -219,7 +224,7 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
 
         Map<LocalDate, Map<IStock, Double>> result = strategy.applyStrategy(stockRatios);
 
-        for(Map.Entry<LocalDate, Map<IStock, Double>> resultEntry:result.entrySet()) {
+        for (Map.Entry<LocalDate, Map<IStock, Double>> resultEntry : result.entrySet()) {
           if (resultEntry.getKey().isAfter(LocalDate.now())) {
             break;
           }
@@ -245,7 +250,9 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
     DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
     Document doc = dBuilder.parse(inputFile);
     doc.getDocumentElement().normalize();
-    this.transactionFee = Double.parseDouble(doc.getDocumentElement().getElementsByTagName("transaction-fee").item(0).getTextContent());
+    this.transactionFee = Double.parseDouble(
+        doc.getDocumentElement().getElementsByTagName("transaction-fee")
+        .item(0).getTextContent());
 
     NodeList nList = doc.getDocumentElement().getElementsByTagName("investment");
 
@@ -256,21 +263,22 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
       if (nNode.getNodeType() == Node.ELEMENT_NODE) {
         Element eElement = (Element) nNode;
 
-        LocalDate txnDate = LocalDate.parse(eElement.getAttributes().getNamedItem("date").getNodeValue());
+        LocalDate txnDate = LocalDate.parse(
+          eElement.getAttributes().getNamedItem("date").getNodeValue());
 
         Double amount = Double.valueOf(eElement.getElementsByTagName("amount")
-            .item(0).getTextContent());
+          .item(0).getTextContent());
 
         int numStocks = eElement.getElementsByTagName("stock").getLength();
         int idx = 0;
         IStock newStock = null;
         Map<IStock, Pair<Double, Double>> map = new HashMap<>();
-        while(idx < numStocks) {
+        while (idx < numStocks) {
           String tickerSymbol = eElement.getElementsByTagName("stock")
             .item(idx).getTextContent();
 
           Double percentage = Double.valueOf(eElement.getElementsByTagName("stock")
-              .item(idx).getAttributes().getNamedItem("percentage").getNodeValue());
+            .item(idx).getAttributes().getNamedItem("percentage").getNodeValue());
 
           idx++;
 
@@ -293,7 +301,7 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
       throw new IllegalArgumentException("Invalid dates\n");
     } else if (start.isBefore(this.creationDate)) {
       throw new IllegalArgumentException(
-          "Invalid start date. It is before the portfolio creation date.");
+        "Invalid start date. It is before the portfolio creation date.");
     } else if (end.isAfter(LocalDate.now())) {
       throw new IllegalArgumentException("Invalid end date. It is after today's date.");
     }
@@ -306,20 +314,24 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
     if (timespan <= 30) {
       timeSpanJump = 1;
       new DaysPerformanceVisualizer(this).populatePortfolioValues(tempDate, end, timeSpanJump,
-          dateValue);
+        dateValue);
     } else if (timespan <= 150) {
       timeSpanJump = (int) (timespan / 5);
       tempDate = tempDate.plusDays(timeSpanJump - 1);
-      new DaysPerformanceVisualizer(this).populatePortfolioValues(tempDate, end, timeSpanJump, dateValue);
+      new DaysPerformanceVisualizer(this).populatePortfolioValues(tempDate, end, timeSpanJump,
+        dateValue);
     } else if (timespan <= 912) {
       timeSpanJump = 1;
-      new MonthsPerformanceVisualizer(this).populatePortfolioValues(tempDate, end, timeSpanJump, dateValue);
+      new MonthsPerformanceVisualizer(this).populatePortfolioValues(tempDate, end, timeSpanJump,
+        dateValue);
     } else if (timespan <= 1826) {
       timeSpanJump = 2;
-      new MonthsPerformanceVisualizer(this).populatePortfolioValues(tempDate, end, timeSpanJump, dateValue);
+      new MonthsPerformanceVisualizer(this).populatePortfolioValues(tempDate, end, timeSpanJump,
+        dateValue);
     } else {
       timeSpanJump = 1;
-      new YearsPerformanceVisualizer(this).populatePortfolioValues(tempDate, end, timeSpanJump, dateValue);
+      new YearsPerformanceVisualizer(this).populatePortfolioValues(tempDate, end, timeSpanJump,
+        dateValue);
     }
     return dateValue;
   }

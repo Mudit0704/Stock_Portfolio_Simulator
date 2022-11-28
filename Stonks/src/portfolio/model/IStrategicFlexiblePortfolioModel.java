@@ -19,7 +19,7 @@ public interface IStrategicFlexiblePortfolioModel extends IFlexiblePortfoliosMod
    * @param investmentAmount the amount to be invested in the strategy.
    */
   void setStrategy(StrategyType strategy, LocalDate startDate,
-    LocalDate endDate, int timeFrame, double investmentAmount);
+      LocalDate endDate, int timeFrame, double investmentAmount);
 
   /**
    * Creates a strategic portfolio based on the total amount and proportion of each share on the
@@ -50,5 +50,5 @@ public interface IStrategicFlexiblePortfolioModel extends IFlexiblePortfoliosMod
    * @return the data points to be used to visualize the portfolio performance.
    */
   Map<LocalDate, Double> lineChartPerformanceAnalysis(LocalDate start, LocalDate end,
-    int portfolioId);
+      int portfolioId);
 }

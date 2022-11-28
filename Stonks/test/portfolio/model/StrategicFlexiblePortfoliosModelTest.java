@@ -49,9 +49,7 @@ public class StrategicFlexiblePortfoliosModelTest {
 
     portfolio.setStrategy(StrategyType.DOLLARCOSTAVERAGING,
         LocalDate.of(2015,10,25),
-        LocalDate.of(2016,10,25),
-       30,
-        totalAmount);
+        LocalDate.of(2016,10,25), 30, totalAmount);
 
     portfolio.createStrategicPortfolio(map, LocalDate.of(2015,10,25));
     String result = portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2015, 11, 30));
@@ -64,7 +62,7 @@ public class StrategicFlexiblePortfoliosModelTest {
 
   @Test
   public void testCostBasisForDollarCostAvg()
-    throws NoSuchFieldException, IllegalAccessException {
+      throws NoSuchFieldException, IllegalAccessException {
     Map<String, Double> map = new HashMap<>();
     map.put("ALGT", 50d);
     map.put("AMAM", 20d);
@@ -84,12 +82,12 @@ public class StrategicFlexiblePortfoliosModelTest {
     portfolio.createStrategicPortfolio(map, LocalDate.of(2015,10,25));
     assertEquals(20000.0, portfolio.getCostBasis(LocalDate.of(2016,1,30), 1), 0.0);
     assertEquals(20355.48,
-      portfolio.getPortfolioValue(LocalDate.of(2016, 1, 30), 1), 0.1);
+        portfolio.getPortfolioValue(LocalDate.of(2016, 1, 30), 1), 0.1);
   }
 
   @Test
   public void testDollarCostAvgCreationOnHoliday()
-    throws NoSuchFieldException, IllegalAccessException {
+      throws NoSuchFieldException, IllegalAccessException {
     Map<String, Double> map = new HashMap<>();
     map.put("ALGT", 50d);
     map.put("AMAM", 20d);
@@ -280,7 +278,7 @@ public class StrategicFlexiblePortfoliosModelTest {
 
   @Test
   public void testInvestNormallyAfterSellStrategicPortfolio()
-    throws IllegalAccessException, NoSuchFieldException {
+      throws IllegalAccessException, NoSuchFieldException {
     Map<String, Double> map = new HashMap<>();
     map.put("ALGT", 5d);
     map.put("AMAM", 2d);
@@ -376,7 +374,7 @@ public class StrategicFlexiblePortfoliosModelTest {
 
   @Test
   public void testInvestBetweenMultipleSellsStrategicPortfolio()
-    throws IllegalAccessException, NoSuchFieldException {
+      throws IllegalAccessException, NoSuchFieldException {
     Map<String, Double> map = new HashMap<>();
     map.put("ALGT", 5d);
     map.put("AMAM", 2d);
@@ -424,7 +422,7 @@ public class StrategicFlexiblePortfoliosModelTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void testSellOnDollarCostAvgPortfolio()
-    throws NoSuchFieldException, IllegalAccessException {
+      throws NoSuchFieldException, IllegalAccessException {
     Map<String, Double> map = new HashMap<>();
     map.put("ALGT", 50d);
     map.put("AMAM", 20d);
@@ -516,7 +514,7 @@ public class StrategicFlexiblePortfoliosModelTest {
 
   @Test
   public void testCreateMultipleNewDollarCostAvgPortfolioOnADate()
-    throws NoSuchFieldException, IllegalAccessException, ParserConfigurationException {
+      throws NoSuchFieldException, IllegalAccessException {
     Map<String, Double> map = new HashMap<>();
     map.put("ALGT", 50d);
     map.put("AMAM", 20d);
@@ -610,7 +608,7 @@ public class StrategicFlexiblePortfoliosModelTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void testInvalidDateRangesForDollarCostAvg()
-    throws IllegalAccessException, NoSuchFieldException {
+      throws IllegalAccessException, NoSuchFieldException {
     Map<String, Double> map = new HashMap<>();
     map.put("ALGT", 50d);
     map.put("AMAM", 20d);
@@ -631,7 +629,7 @@ public class StrategicFlexiblePortfoliosModelTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void testZeroTimeFrameForDollarCostAvg()
-    throws IllegalAccessException, NoSuchFieldException {
+      throws IllegalAccessException, NoSuchFieldException {
     Map<String, Double> map = new HashMap<>();
     map.put("ALGT", 50d);
     map.put("AMAM", 20d);
@@ -652,7 +650,7 @@ public class StrategicFlexiblePortfoliosModelTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void testInvalidTimeFrameForDollarCostAvg()
-    throws IllegalAccessException, NoSuchFieldException {
+      throws IllegalAccessException, NoSuchFieldException {
     Map<String, Double> map = new HashMap<>();
     map.put("ALGT", 50d);
     map.put("AMAM", 20d);
@@ -713,7 +711,7 @@ public class StrategicFlexiblePortfoliosModelTest {
 
   @Test
   public void testCreateMultipleNewDollarCostAvgPortfolioFutureDates()
-    throws NoSuchFieldException, IllegalAccessException {
+      throws NoSuchFieldException, IllegalAccessException {
     Map<String, Double> map = new HashMap<>();
     map.put("ALGT", 50d);
     map.put("AMAM", 20d);
@@ -756,7 +754,7 @@ public class StrategicFlexiblePortfoliosModelTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void testInvalidInvestmentAmount()
-    throws NoSuchFieldException, IllegalAccessException {
+      throws NoSuchFieldException, IllegalAccessException {
     Map<String, Double> map = new HashMap<>();
     map.put("ALGT", 50d);
     map.put("AMAM", 20d);
@@ -779,7 +777,7 @@ public class StrategicFlexiblePortfoliosModelTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void testInvalidInvestmentQty()
-    throws NoSuchFieldException, IllegalAccessException {
+      throws NoSuchFieldException, IllegalAccessException {
     Map<String, Double> map = new HashMap<>();
     map.put("ALGT", 50d);
     map.put("AMAM", -20d);
@@ -806,7 +804,7 @@ public class StrategicFlexiblePortfoliosModelTest {
     String userDirectory = System.getProperty("user.dir") + "/" + model.getPath();
     File dir = new File(userDirectory);
     File[] files = dir.listFiles((dir1, name) -> name.toLowerCase().endsWith(".xml"));
-    for(File file:files) {
+    for (File file:files) {
       file.delete();
     }
 
@@ -814,7 +812,7 @@ public class StrategicFlexiblePortfoliosModelTest {
     userDirectory = System.getProperty("user.dir") + "/" + mockSavePartialTxn.getPath();
     dir = new File(userDirectory);
     files = dir.listFiles((dir1, name) -> name.toLowerCase().endsWith(".xml"));
-    for(File file:files) {
+    for (File file:files) {
       file.delete();
     }
   }

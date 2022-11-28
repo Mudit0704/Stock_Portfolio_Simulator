@@ -16,9 +16,10 @@ public class DollarCostAvgStrategy implements IStrategy {
   protected final Double totalAmount;
   protected int timeFrame;
   protected IDateNavigator dateNavigator;
+
   protected DollarCostAvgStrategy(LocalDate startDate, LocalDate endDate, Double totalAmount,
       int timeFrame) {
-    if(startDate.isAfter(endDate)
+    if (startDate.isAfter(endDate)
         || startDate.isEqual(endDate)
         || ChronoUnit.DAYS.between(startDate, endDate) < timeFrame
         || timeFrame == 0) {
@@ -36,13 +37,13 @@ public class DollarCostAvgStrategy implements IStrategy {
     Map<LocalDate, Map<IStock, Double>> stockQtyBasedOnStrategy = new LinkedHashMap<>();
     LocalDate tempDate = startDate;
 
-    while(tempDate.isBefore(endDate) && !tempDate.isAfter(LocalDate.now())) {
+    while (tempDate.isBefore(endDate) && !tempDate.isAfter(LocalDate.now())) {
       Map<IStock, Double> stockQtyMap = new LinkedHashMap<>();
 
-      for(Map.Entry<IStock, Double> stockQty:stockQtyRatio.entrySet()) {
+      for (Map.Entry<IStock, Double> stockQty:stockQtyRatio.entrySet()) {
         Double proportion = totalAmount * stockQty.getValue() / 100.0;
         tempDate = dateNavigator.getNextAvailableDate(tempDate);
-        if(tempDate.isAfter(LocalDate.now())) {
+        if (tempDate.isAfter(LocalDate.now())) {
           break;
         }
         Double qty = proportion / stockQty.getKey().getValue(tempDate);
@@ -52,7 +53,7 @@ public class DollarCostAvgStrategy implements IStrategy {
       tempDate = tempDate.plusDays(this.timeFrame);
     }
 
-    while(tempDate.isBefore(endDate)) {
+    while (tempDate.isBefore(endDate)) {
       stockQtyBasedOnStrategy.put(tempDate, null);
       tempDate = tempDate.plusDays(this.timeFrame);
     }
@@ -71,7 +72,8 @@ public class DollarCostAvgStrategy implements IStrategy {
    * points of this DollarCostAvgStrategy, the total amount, and build the DollarCostAvgStrategy
    * type instances.
    */
-  public static class DollarCostAvgStrategyBuilder extends StrategyBuilder<DollarCostAvgStrategyBuilder> {
+  public static class DollarCostAvgStrategyBuilder
+      extends StrategyBuilder<DollarCostAvgStrategyBuilder> {
     private int strategyTimeFrame;
     private LocalDate strategyEndDate = LocalDate.of(2100, 12,31);
     private LocalDate strategyStartDate;

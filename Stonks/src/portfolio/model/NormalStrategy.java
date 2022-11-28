@@ -4,6 +4,10 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This class represents a normal strategy to invest specific stocks on a given specific date. This
+ * class implements the IStrategy interface.
+ */
 public class NormalStrategy implements IStrategy {
 
   protected final double totalAmount;
@@ -24,12 +28,12 @@ public class NormalStrategy implements IStrategy {
 
     Map<IStock, Double> stockQtyMap = new HashMap<>();
 
-    if(tempDate.isAfter(LocalDate.now())) {
+    if (tempDate.isAfter(LocalDate.now())) {
       stockQtyBasedOnStrategy.put(tempDate, null);
       return stockQtyBasedOnStrategy;
     }
 
-    for(Map.Entry<IStock, Double> stockQty:stockQtyRatio.entrySet()) {
+    for (Map.Entry<IStock, Double> stockQty : stockQtyRatio.entrySet()) {
       Double proportion = totalAmount * stockQty.getValue() / 100.0;
       Double qty = proportion / stockQty.getKey().getValue(this.date);
       stockQtyMap.put(stockQty.getKey(), qty);
@@ -44,7 +48,13 @@ public class NormalStrategy implements IStrategy {
     return this.totalAmount;
   }
 
+  /**
+   * This class is a builder class for the NormalStrategy type instances. It extends the
+   * StrategyBuilder abstract class. This class offers methods to collect the date for normal,
+   * transaction execution, the total amount, and build the NormalStrategy type instances.
+   */
   public static class NormalStrategyBuilder extends StrategyBuilder<NormalStrategyBuilder> {
+
     protected LocalDate date;
     protected Double totalAmount;
 

@@ -347,7 +347,7 @@ public class FlexiblePortfolio extends AbstractPortfolio {
   }
 
   protected boolean isTransactionSequenceInvalid(IStock stock, LocalDate date,
-    TransactionType transactionType) {
+      TransactionType transactionType) {
     if (date.isBefore(this.creationDate)) {
       throw new IllegalArgumentException("Portfolio didn't exist at this date.");
     }
