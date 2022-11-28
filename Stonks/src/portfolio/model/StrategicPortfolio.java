@@ -54,14 +54,14 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
    * @param date           date on which this portfolio is created.
    */
   protected StrategicPortfolio(IStockService stockService, Map<IStock, Double> stocks,
-    double transactionFee, LocalDate date) {
+      double transactionFee, LocalDate date) {
     super(stockService, stocks, transactionFee, date);
     listOfScheduledStocks = new ArrayList<>();
     this.creationDate = date;
   }
 
   protected void performCascadingUpdateForRetrospectiveBuy(Map<LocalDate, Double> historicQty,
-    double quantity, LocalDate dateAfterPurchaseToUpdate, double costBasisUpdateFactor) {
+      double quantity, LocalDate dateAfterPurchaseToUpdate, double costBasisUpdateFactor) {
     for (Map.Entry<LocalDate, Double> qtyOnDate : historicQty.entrySet()) {
       if (qtyOnDate.getKey().isAfter(dateAfterPurchaseToUpdate)) {
         Double qtyToUpdate = qtyOnDate.getValue();
@@ -76,7 +76,7 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
 
   @Override
   public void addStocksToPortfolio(IStock stock, Double quantity,
-    LocalDate date, double transactionFee) {
+      LocalDate date, double transactionFee) {
     double stockQty = 0;
 
     if (isTransactionSequenceInvalid(stock, date, TransactionType.BUY)) {
@@ -106,7 +106,7 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
 
   @Override
   public void investStocksIntoStrategicPortfolio(Map<IStock, Double> stockProportions,
-    LocalDate date, double transactionFee) {
+      LocalDate date, double transactionFee) {
 
     for (Map.Entry<IStock, Double> proportion : stockProportions.entrySet()) {
       addStocksToPortfolio(proportion.getKey(), proportion.getValue(), date, transactionFee);
@@ -115,7 +115,7 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
 
   @Override
   protected boolean isTransactionSequenceInvalid(IStock stock, LocalDate date,
-    TransactionType transactionType) {
+      TransactionType transactionType) {
     if (transactionType == TransactionType.BUY) {
       return false;
     } else {
@@ -125,7 +125,7 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
 
   @Override
   protected void scheduleInvestment(LocalDate date, double amount, double transactionFee,
-    Map<IStock, Double> stocks) {
+      Map<IStock, Double> stocks) {
     Map<LocalDate, Map<IStock, Pair<Double, Double>>> dateMap = new HashMap<>();
     Map<IStock, Pair<Double, Double>> stockQty = new HashMap<>();
 
@@ -196,7 +196,7 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
 
   @Override
   public void retrievePortfolio(String path)
-    throws IOException, ParserConfigurationException, SAXException {
+      throws IOException, ParserConfigurationException, SAXException {
     super.retrievePortfolio(path);
     String[] name = path.split("\\.");
     String strategyPath = name[0] + "_strategy." + name[1];
@@ -207,7 +207,7 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
   protected void executeEligibleTransactions() {
     for (Map<LocalDate, Map<IStock, Pair<Double, Double>>> dateMap : this.listOfScheduledStocks) {
       for (Map.Entry<LocalDate, Map<IStock, Pair<Double, Double>>> mapEntry :
-        dateMap.entrySet()) {
+          dateMap.entrySet()) {
         LocalDate date = mapEntry.getKey();
         Map<IStock, Pair<Double, Double>> stockQty = mapEntry.getValue();
         Double amount = 0d;
@@ -218,9 +218,9 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
         }
 
         IStrategy strategy = new NormalStrategy.NormalStrategyBuilder()
-          .setTotalAmount(amount)
-          .setDate(date)
-          .build();
+            .setTotalAmount(amount)
+            .setDate(date)
+            .build();
 
         Map<LocalDate, Map<IStock, Double>> result = strategy.applyStrategy(stockRatios);
 
@@ -230,14 +230,14 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
           }
           dateMap.remove(date);
           this.investStocksIntoStrategicPortfolio(resultEntry.getValue(),
-            resultEntry.getKey(), this.transactionFee);
+              resultEntry.getKey(), this.transactionFee);
         }
       }
     }
   }
 
   protected void retrieveStrategy(String strategyPath)
-    throws IOException, ParserConfigurationException, SAXException {
+      throws IOException, ParserConfigurationException, SAXException {
     if (this.listOfScheduledStocks.size() > 0) {
       throw new RuntimeException("Portfolios already populated\n");
     }
@@ -264,10 +264,10 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
         Element eElement = (Element) nNode;
 
         LocalDate txnDate = LocalDate.parse(
-          eElement.getAttributes().getNamedItem("date").getNodeValue());
+            eElement.getAttributes().getNamedItem("date").getNodeValue());
 
         Double amount = Double.valueOf(eElement.getElementsByTagName("amount")
-          .item(0).getTextContent());
+            .item(0).getTextContent());
 
         int numStocks = eElement.getElementsByTagName("stock").getLength();
         int idx = 0;
@@ -275,10 +275,10 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
         Map<IStock, Pair<Double, Double>> map = new HashMap<>();
         while (idx < numStocks) {
           String tickerSymbol = eElement.getElementsByTagName("stock")
-            .item(idx).getTextContent();
+              .item(idx).getTextContent();
 
           Double percentage = Double.valueOf(eElement.getElementsByTagName("stock")
-            .item(idx).getAttributes().getNamedItem("percentage").getNodeValue());
+              .item(idx).getAttributes().getNamedItem("percentage").getNodeValue());
 
           idx++;
 
@@ -296,6 +296,7 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
     }
   }
 
+  @Override
   public Map<LocalDate, Double> lineChartPerformanceAnalysis(LocalDate start, LocalDate end) {
     if (start.isAfter(end) || start.isEqual(end) || end.isBefore(start)) {
       throw new IllegalArgumentException("Invalid dates\n");
@@ -314,24 +315,24 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
     if (timespan <= 30) {
       timeSpanJump = 1;
       new DaysPerformanceVisualizer(this).populatePortfolioValues(tempDate, end, timeSpanJump,
-        dateValue);
+          dateValue);
     } else if (timespan <= 150) {
       timeSpanJump = (int) (timespan / 5);
       tempDate = tempDate.plusDays(timeSpanJump - 1);
       new DaysPerformanceVisualizer(this).populatePortfolioValues(tempDate, end, timeSpanJump,
-        dateValue);
+          dateValue);
     } else if (timespan <= 912) {
       timeSpanJump = 1;
       new MonthsPerformanceVisualizer(this).populatePortfolioValues(tempDate, end, timeSpanJump,
-        dateValue);
+          dateValue);
     } else if (timespan <= 1826) {
       timeSpanJump = 2;
       new MonthsPerformanceVisualizer(this).populatePortfolioValues(tempDate, end, timeSpanJump,
-        dateValue);
+          dateValue);
     } else {
       timeSpanJump = 1;
       new YearsPerformanceVisualizer(this).populatePortfolioValues(tempDate, end, timeSpanJump,
-        dateValue);
+          dateValue);
     }
     return dateValue;
   }
