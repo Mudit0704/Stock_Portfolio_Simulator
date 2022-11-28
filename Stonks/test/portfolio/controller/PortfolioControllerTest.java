@@ -110,8 +110,8 @@ public class PortfolioControllerTest {
 
     controller.run(new MockModel(log, true));
 
-    assertEquals("TICKER_SYMBOL  TICKER_SYMBOL2 { TICKER_SYMBOL2=5.0, TICKER_SYMBOL=12.0} "
-        , log.toString());
+    assertEquals("TICKER_SYMBOL  TICKER_SYMBOL2 { TICKER_SYMBOL2=5.0, TICKER_SYMBOL=12.0} ",
+        log.toString());
     assertEquals("Menu Ask_For_Input Choose from the below menu: \n"
         + " 1 -> Add a new stock \n"
         + " E -> Exit from the operation \n"
