@@ -2,6 +2,9 @@ package portfolio.view;
 
 import java.io.IOException;
 
+/**
+ * Represents common set of operations between text based and GUI type of views.
+ */
 public interface ICommonView {
 
   /**

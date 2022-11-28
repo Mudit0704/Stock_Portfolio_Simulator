@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.DoubleAdder;
 import javax.swing.BorderFactory;
@@ -35,7 +36,7 @@ class ApplyFractionalInvestmentCommand extends AbstractCommandHandlers implement
     JPanel displayPanel;
     Map<String, Double> stocks = new HashMap<>();
     DoubleAdder percentageTotal = new DoubleAdder();
-    AtomicBoolean DoneClicked = new AtomicBoolean(false);
+    AtomicBoolean doneClicked = new AtomicBoolean(false);
     JDialog userInputDialog = getUserInputDialog("Apply Fractional Investment", 550, 300);
 
     try {
@@ -50,10 +51,10 @@ class ApplyFractionalInvestmentCommand extends AbstractCommandHandlers implement
     mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
     userInputDialog.add(mainPanel);
 
-    addAllElementsToUserInputDialog(displayPanel, stocks, percentageTotal, DoneClicked,
+    addAllElementsToUserInputDialog(displayPanel, stocks, percentageTotal, doneClicked,
         userInputDialog, mainPanel);
 
-    if (DoneClicked.get()) {
+    if (doneClicked.get()) {
       InvestFractionalTask investFractionalTask = new InvestFractionalTask(features, stocks,
           fieldsMap.get(TOTAL_AMOUNT).textField.getText(),
           fieldsMap.get(PORTFOLIO_ID).textField.getText(), fieldsMap.get(DATE).textField.getText());
@@ -64,7 +65,7 @@ class ApplyFractionalInvestmentCommand extends AbstractCommandHandlers implement
   }
 
   private void addAllElementsToUserInputDialog(JPanel displayPanel, Map<String, Double> stocks,
-      DoubleAdder percentageTotal, AtomicBoolean DoneClicked, JDialog userInputDialog,
+      DoubleAdder percentageTotal, AtomicBoolean doneClicked, JDialog userInputDialog,
       JPanel mainPanel) {
     JPanel userInputPanel = new JPanel(new GridLayout(0, 2));
     userInputPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
@@ -75,16 +76,16 @@ class ApplyFractionalInvestmentCommand extends AbstractCommandHandlers implement
     createDoubleFields(PERCENTAGE);
     createTickerSymbolField();
 
-    JButton OKButton = getCustomButton("OK");
-    OKButton.addActionListener(e -> OKFunctionality(percentageTotal, stocks, OKButton));
+    JButton okButton = getCustomButton("OK");
+    okButton.addActionListener(e -> okFunctionality(percentageTotal, stocks, okButton));
 
-    JButton DoneButton = getCustomButton("DONE");
-    DoneButton.addActionListener(
-        e -> strategyDONEFunctionality(percentageTotal, DoneClicked, userInputDialog));
+    JButton doneButton = getCustomButton("DONE");
+    doneButton.addActionListener(
+        e -> strategyDONEFunctionality(percentageTotal, doneClicked, userInputDialog));
 
     addAllFieldsToInputPanel(userInputPanel);
-    userInputPanel.add(OKButton);
-    userInputPanel.add(DoneButton);
+    userInputPanel.add(okButton);
+    userInputPanel.add(doneButton);
 
     mainPanel.add(new JLabel(STRATEGY_MESSAGE), BorderLayout.NORTH);
     mainPanel.add(displayPanel, BorderLayout.CENTER);
@@ -94,8 +95,8 @@ class ApplyFractionalInvestmentCommand extends AbstractCommandHandlers implement
     userInputDialog.setVisible(true);
   }
 
-  private void OKFunctionality(DoubleAdder percentageTotal, Map<String, Double> stocks,
-      JButton OKButton) {
+  private void okFunctionality(DoubleAdder percentageTotal, Map<String, Double> stocks,
+      JButton okButton) {
     if (validator(validatorMap).isEmpty() && isPercentageTotalValid(percentageTotal)) {
       stocks.put(fieldsMap.get(TICKER_SYMBOL).textField.getText(),
           Double.parseDouble(fieldsMap.get(PERCENTAGE).textField.getText()));
@@ -116,7 +117,7 @@ class ApplyFractionalInvestmentCommand extends AbstractCommandHandlers implement
       if (percentageTotal.doubleValue() == 100) {
         fieldsMap.get(TICKER_SYMBOL).textField.setEditable(false);
         fieldsMap.get(PERCENTAGE).textField.setEditable(false);
-        OKButton.setEnabled(false);
+        okButton.setEnabled(false);
       }
     }
   }
@@ -154,10 +155,11 @@ class ApplyFractionalInvestmentCommand extends AbstractCommandHandlers implement
     protected void done() {
       try {
         resultArea.setText("<html><center><h1>" + get() + "</center></html>");
-        mainFrame.setEnabled(true);
-        progressBar.setIndeterminate(false);
-      } catch (Exception ignore) {
+      } catch (InterruptedException | ExecutionException e) {
+        throw new RuntimeException(e);
       }
+      mainFrame.setEnabled(true);
+      progressBar.setIndeterminate(false);
     }
   }
 }

@@ -2,6 +2,7 @@ package portfolio.view.guiview;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -27,7 +28,7 @@ class GetCostBasisCommand extends AbstractCommandHandlers implements CommandHand
   @Override
   public void execute() {
     JPanel availablePortfoliosDisplay;
-    AtomicBoolean OKClicked = new AtomicBoolean(false);
+    AtomicBoolean okClicked = new AtomicBoolean(false);
     JDialog userInputDialog = getUserInputDialog("Get Portfolio Cost Basis", 520, 200);
 
     try {
@@ -44,11 +45,11 @@ class GetCostBasisCommand extends AbstractCommandHandlers implements CommandHand
     createDateLabelField(DATE);
     createIntegerFields(PORTFOLIO_ID);
 
-    JButton OKButton = getCustomButton("OK");
-    OKButton.addActionListener(e -> {
+    JButton okButton = getCustomButton("OK");
+    okButton.addActionListener(e -> {
       if (validator(validatorMap).isEmpty()) {
         userInputDialog.dispose();
-        OKClicked.set(true);
+        okClicked.set(true);
       }
     });
 
@@ -56,7 +57,7 @@ class GetCostBasisCommand extends AbstractCommandHandlers implements CommandHand
 
     JPanel fieldsPanel = new JPanel(new BorderLayout());
     fieldsPanel.add(userInputPanel, BorderLayout.CENTER);
-    fieldsPanel.add(OKButton, BorderLayout.EAST);
+    fieldsPanel.add(okButton, BorderLayout.EAST);
     fieldsPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 2, 10));
 
     userInputDialog.add(availablePortfoliosDisplay, BorderLayout.CENTER);
@@ -64,7 +65,7 @@ class GetCostBasisCommand extends AbstractCommandHandlers implements CommandHand
 
     userInputDialog.setVisible(true);
 
-    if (OKClicked.get()) {
+    if (okClicked.get()) {
       GetCostBasisTask task = new GetCostBasisTask(features,
           fieldsMap.get(DATE).textField.getText(),
           fieldsMap.get(PORTFOLIO_ID).textField.getText());
@@ -100,10 +101,11 @@ class GetCostBasisCommand extends AbstractCommandHandlers implements CommandHand
     protected void done() {
       try {
         resultArea.setText(get());
-        mainFrame.setEnabled(true);
-        progressBar.setIndeterminate(false);
-      } catch (Exception ignore) {
+      } catch (InterruptedException | ExecutionException e) {
+        throw new RuntimeException(e);
       }
+      mainFrame.setEnabled(true);
+      progressBar.setIndeterminate(false);
     }
   }
 }

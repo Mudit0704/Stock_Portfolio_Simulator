@@ -230,8 +230,8 @@ abstract class AbstractCommandHandlers implements CommandHandler {
   }
 
   boolean isPercentageTotalValid(DoubleAdder percentageTotal) {
-    if (percentageTotal.doubleValue() + Double.parseDouble(fieldsMap.get(PERCENTAGE).textField.getText())
-        > 100d) {
+    if (percentageTotal.doubleValue() + Double.parseDouble(fieldsMap.get(PERCENTAGE).textField
+        .getText())  > 100d) {
       JOptionPane.showMessageDialog(mainFrame, "Percentage total cannot be greater than 100",
           "Error",
           JOptionPane.ERROR_MESSAGE);
@@ -244,7 +244,7 @@ abstract class AbstractCommandHandlers implements CommandHandler {
     return true;
   }
 
-  boolean CreateTransactionWindow(AtomicBoolean OKClicked) {
+  boolean createTransactionWindow(AtomicBoolean okClicked) {
     JPanel availablePortfoliosDisplay;
     JDialog userInputDialog = getUserInputDialog("Transaction", 520, 250);
 
@@ -264,11 +264,11 @@ abstract class AbstractCommandHandlers implements CommandHandler {
     createDoubleFields(QUANTITY);
     createDoubleFields(TRANSACTION_FEE);
 
-    JButton OKButton = getCustomButton("OK");
-    OKButton.addActionListener(e -> {
+    JButton okButton = getCustomButton("OK");
+    okButton.addActionListener(e -> {
       if (validator(validatorMap).isEmpty()) {
         userInputDialog.dispose();
-        OKClicked.set(true);
+        okClicked.set(true);
       }
     });
 
@@ -276,7 +276,7 @@ abstract class AbstractCommandHandlers implements CommandHandler {
 
     JPanel fieldsPanel = new JPanel(new BorderLayout());
     fieldsPanel.add(userInputPanel, BorderLayout.CENTER);
-    fieldsPanel.add(OKButton, BorderLayout.EAST);
+    fieldsPanel.add(okButton, BorderLayout.EAST);
     fieldsPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 2, 10));
 
     userInputDialog.add(availablePortfoliosDisplay, BorderLayout.CENTER);
@@ -286,14 +286,14 @@ abstract class AbstractCommandHandlers implements CommandHandler {
     return false;
   }
 
-  void strategyDONEFunctionality(DoubleAdder percentageTotal, AtomicBoolean DoneClicked,
+  void strategyDONEFunctionality(DoubleAdder percentageTotal, AtomicBoolean doneClicked,
       JDialog userInputDialog) {
     if (percentageTotal.doubleValue() != 100) {
       JOptionPane.showMessageDialog(mainFrame, "Percentage total is not 100", "Error",
           JOptionPane.ERROR_MESSAGE);
     } else {
       userInputDialog.dispose();
-      DoneClicked.set(true);
+      doneClicked.set(true);
     }
   }
 

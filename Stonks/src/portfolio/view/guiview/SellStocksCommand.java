@@ -1,5 +1,6 @@
 package portfolio.view.guiview;
 
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.JFrame;
 import javax.swing.JProgressBar;
@@ -20,12 +21,12 @@ class SellStocksCommand extends AbstractCommandHandlers implements CommandHandle
 
   @Override
   public void execute() {
-    AtomicBoolean OKClicked = new AtomicBoolean(false);
-    if (CreateTransactionWindow(OKClicked)) {
+    AtomicBoolean okClicked = new AtomicBoolean(false);
+    if (createTransactionWindow(okClicked)) {
       return;
     }
 
-    if (OKClicked.get()) {
+    if (okClicked.get()) {
       SellStocksTask sellStocksTask = new SellStocksTask(features,
           fieldsMap.get(QUANTITY).textField.getText(),
           fieldsMap.get(DATE).textField.getText(), fieldsMap.get(PORTFOLIO_ID).textField.getText(),
@@ -46,8 +47,8 @@ class SellStocksCommand extends AbstractCommandHandlers implements CommandHandle
     String tickerSymbol;
     String transactionFee;
 
-    SellStocksTask(Features features, String quantity, String date, String portfolioId
-        , String tickerSymbol, String transactionFee) {
+    SellStocksTask(Features features, String quantity, String date, String portfolioId,
+        String tickerSymbol, String transactionFee) {
       this.features = features;
       this.date = date;
       this.portfolioId = portfolioId;
@@ -70,10 +71,11 @@ class SellStocksCommand extends AbstractCommandHandlers implements CommandHandle
     protected void done() {
       try {
         resultArea.setText("<html><center><h1>" + get() + "</center></html>");
-        mainFrame.setEnabled(true);
-        progressBar.setIndeterminate(false);
-      } catch (Exception ignore) {
+      } catch (InterruptedException | ExecutionException e) {
+        throw new RuntimeException(e);
       }
+      mainFrame.setEnabled(true);
+      progressBar.setIndeterminate(false);
     }
   }
 }

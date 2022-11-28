@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.DoubleAdder;
 import javax.swing.BorderFactory;
@@ -18,7 +19,11 @@ import javax.swing.SwingWorker;
 import portfolio.controller.Features;
 import portfolio.controller.GUIPortfolioController;
 
-public class ApplyDCAOnExistingPortfolioCommand extends AbstractCommandHandlers implements
+/**
+ * Command class containing the logic for applying daily cost averaging strategy on an existing
+ * portfolio. Implements {@link CommandHandler}.
+ */
+class ApplyDCAOnExistingPortfolioCommand extends AbstractCommandHandlers implements
     CommandHandler {
 
   /**
@@ -40,7 +45,7 @@ public class ApplyDCAOnExistingPortfolioCommand extends AbstractCommandHandlers 
   public void execute() {
     JPanel displayPanel;
     DoubleAdder percentageTotal = new DoubleAdder();
-    AtomicBoolean DoneClicked = new AtomicBoolean(false);
+    AtomicBoolean doneClicked = new AtomicBoolean(false);
     JDialog userInputDialog = getUserInputDialog("Apply Dollar Cost Averaging", 550, 300);
 
     try {
@@ -55,15 +60,15 @@ public class ApplyDCAOnExistingPortfolioCommand extends AbstractCommandHandlers 
     mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
     userInputDialog.add(mainPanel);
     Map<String, Double> stocks = addAllElementsToUserInputDialog(displayPanel, percentageTotal,
-        DoneClicked, userInputDialog, mainPanel);
+        doneClicked, userInputDialog, mainPanel);
 
-    if (DoneClicked.get()) {
+    if (doneClicked.get()) {
       performDoneOperation(stocks);
     }
   }
 
   private Map<String, Double> addAllElementsToUserInputDialog(JPanel displayPanel,
-      DoubleAdder percentageTotal, AtomicBoolean DoneClicked, JDialog userInputDialog,
+      DoubleAdder percentageTotal, AtomicBoolean doneClicked, JDialog userInputDialog,
       JPanel mainPanel) {
     Map<String, Double> stocks = new HashMap<>();
 
@@ -78,15 +83,15 @@ public class ApplyDCAOnExistingPortfolioCommand extends AbstractCommandHandlers 
     createTickerSymbolField();
     createDoubleFields(PERCENTAGE);
 
-    JButton OKButton = getCustomButton("OK");
-    OKButton.addActionListener(e -> OKFunctionality(percentageTotal, stocks, OKButton));
-    JButton DoneButton = getCustomButton("DONE");
-    DoneButton.addActionListener(
-        e -> strategyDONEFunctionality(percentageTotal, DoneClicked, userInputDialog));
+    JButton okButton = getCustomButton("OK");
+    okButton.addActionListener(e -> okFunctionality(percentageTotal, stocks, okButton));
+    JButton doneButton = getCustomButton("DONE");
+    doneButton.addActionListener(
+        e -> strategyDONEFunctionality(percentageTotal, doneClicked, userInputDialog));
 
     addAllFieldsToInputPanel(userInputPanel);
-    userInputPanel.add(OKButton);
-    userInputPanel.add(DoneButton);
+    userInputPanel.add(okButton);
+    userInputPanel.add(doneButton);
 
     mainPanel.add(new JLabel(STRATEGY_MESSAGE), BorderLayout.NORTH);
     mainPanel.add(displayPanel, BorderLayout.CENTER);
@@ -110,8 +115,8 @@ public class ApplyDCAOnExistingPortfolioCommand extends AbstractCommandHandlers 
     mainFrame.setEnabled(false);
   }
 
-  private void OKFunctionality(DoubleAdder percentageTotal, Map<String, Double> stocks,
-      JButton OKButton) {
+  private void okFunctionality(DoubleAdder percentageTotal, Map<String, Double> stocks,
+      JButton okButton) {
     if (validator(validatorMap).isEmpty() && isPercentageTotalValid(percentageTotal)) {
       stocks.put(fieldsMap.get(TICKER_SYMBOL).textField.getText(),
           Double.parseDouble(fieldsMap.get(PERCENTAGE).textField.getText()));
@@ -133,7 +138,7 @@ public class ApplyDCAOnExistingPortfolioCommand extends AbstractCommandHandlers 
       if (percentageTotal.doubleValue() == 100) {
         fieldsMap.get(TICKER_SYMBOL).textField.setEditable(false);
         fieldsMap.get(PERCENTAGE).textField.setEditable(false);
-        OKButton.setEnabled(false);
+        okButton.setEnabled(false);
       }
     }
   }
@@ -174,10 +179,11 @@ public class ApplyDCAOnExistingPortfolioCommand extends AbstractCommandHandlers 
     protected void done() {
       try {
         resultArea.setText("<html><center><h1>" + get() + "</center></html>");
-        mainFrame.setEnabled(true);
-        progressBar.setIndeterminate(false);
-      } catch (Exception ignore) {
+      } catch (InterruptedException | ExecutionException e) {
+        throw new RuntimeException(e);
       }
+      mainFrame.setEnabled(true);
+      progressBar.setIndeterminate(false);
     }
   }
 }

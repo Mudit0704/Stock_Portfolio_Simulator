@@ -30,7 +30,7 @@ public class DisplayPortfolioPerformance extends AbstractCommandHandlers impleme
   @Override
   public void execute() {
     JPanel availablePortfoliosDisplay;
-    AtomicBoolean OKClicked = new AtomicBoolean(false);
+    AtomicBoolean okClicked = new AtomicBoolean(false);
 
     JDialog userInputDialog = getUserInputDialog("Portfolio performance", 660, 200);
 
@@ -49,11 +49,11 @@ public class DisplayPortfolioPerformance extends AbstractCommandHandlers impleme
     createDateLabelField(PERFORMANCE_END_DATE);
     createIntegerFields(PORTFOLIO_ID);
 
-    JButton OKButton = getCustomButton("OK");
-    OKButton.addActionListener(e -> {
+    JButton okButton = getCustomButton("OK");
+    okButton.addActionListener(e -> {
       if (validator(validatorMap).isEmpty()) {
         userInputDialog.dispose();
-        OKClicked.set(true);
+        okClicked.set(true);
       }
     });
 
@@ -61,7 +61,7 @@ public class DisplayPortfolioPerformance extends AbstractCommandHandlers impleme
 
     JPanel fieldsPanel = new JPanel(new BorderLayout());
     fieldsPanel.add(userInputPanel, BorderLayout.CENTER);
-    fieldsPanel.add(OKButton, BorderLayout.EAST);
+    fieldsPanel.add(okButton, BorderLayout.EAST);
     fieldsPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 2, 10));
 
     userInputDialog.add(availablePortfoliosDisplay, BorderLayout.CENTER);
@@ -69,7 +69,7 @@ public class DisplayPortfolioPerformance extends AbstractCommandHandlers impleme
 
     userInputDialog.setVisible(true);
 
-    if (OKClicked.get()) {
+    if (okClicked.get()) {
       GetPortfolioPerformanceTask task = new GetPortfolioPerformanceTask(features,
           fieldsMap.get(PERFORMANCE_START_DATE).textField.getText(),
           fieldsMap.get(PERFORMANCE_END_DATE).textField.getText(),

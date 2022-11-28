@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.DoubleAdder;
 import javax.swing.BorderFactory;
@@ -33,7 +34,7 @@ class CreateDollarCostAveragePortfolioCommand extends AbstractCommandHandlers im
   @Override
   public void execute() {
     DoubleAdder percentageTotal = new DoubleAdder();
-    AtomicBoolean DoneClicked = new AtomicBoolean(false);
+    AtomicBoolean doneClicked = new AtomicBoolean(false);
     JDialog userInputDialog = getUserInputDialog("Create a Portfolio Using Dollar Cost Averaging",
         550, 300);
 
@@ -42,10 +43,10 @@ class CreateDollarCostAveragePortfolioCommand extends AbstractCommandHandlers im
     JPanel mainPanel = new JPanel(new BorderLayout());
     mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
     userInputDialog.add(mainPanel);
-    Map<String, Double> stocks = addAllElementsToUserInputDialog(percentageTotal, DoneClicked,
+    Map<String, Double> stocks = addAllElementsToUserInputDialog(percentageTotal, doneClicked,
         userInputDialog, displayPanel, mainPanel);
 
-    if (DoneClicked.get()) {
+    if (doneClicked.get()) {
       performDoneOperation(stocks);
     }
   }
@@ -63,7 +64,7 @@ class CreateDollarCostAveragePortfolioCommand extends AbstractCommandHandlers im
   }
 
   private Map<String, Double> addAllElementsToUserInputDialog(DoubleAdder percentageTotal,
-      AtomicBoolean DoneClicked, JDialog userInputDialog, JPanel displayPanel, JPanel mainPanel) {
+      AtomicBoolean doneClicked, JDialog userInputDialog, JPanel displayPanel, JPanel mainPanel) {
     Map<String, Double> stocks = new HashMap<>();
 
     JPanel userInputPanel = new JPanel(new GridLayout(0, 2));
@@ -76,15 +77,15 @@ class CreateDollarCostAveragePortfolioCommand extends AbstractCommandHandlers im
     createTickerSymbolField();
     createDoubleFields(PERCENTAGE);
 
-    JButton OKButton = getCustomButton("OK");
-    OKButton.addActionListener(e -> OKFunctionality(percentageTotal, stocks, OKButton));
-    JButton DoneButton = getCustomButton("DONE");
-    DoneButton.addActionListener(
-        e -> strategyDONEFunctionality(percentageTotal, DoneClicked, userInputDialog));
+    JButton okButton = getCustomButton("OK");
+    okButton.addActionListener(e -> okFunctionality(percentageTotal, stocks, okButton));
+    JButton doneButton = getCustomButton("DONE");
+    doneButton.addActionListener(
+        e -> strategyDONEFunctionality(percentageTotal, doneClicked, userInputDialog));
 
     addAllFieldsToInputPanel(userInputPanel);
-    userInputPanel.add(OKButton);
-    userInputPanel.add(DoneButton);
+    userInputPanel.add(okButton);
+    userInputPanel.add(doneButton);
 
     mainPanel.add(new JLabel(STRATEGY_MESSAGE), BorderLayout.NORTH);
     mainPanel.add(displayPanel, BorderLayout.CENTER);
@@ -95,8 +96,8 @@ class CreateDollarCostAveragePortfolioCommand extends AbstractCommandHandlers im
     return stocks;
   }
 
-  private void OKFunctionality(DoubleAdder percentageTotal, Map<String, Double> stocks,
-      JButton OKButton) {
+  private void okFunctionality(DoubleAdder percentageTotal, Map<String, Double> stocks,
+      JButton okButton) {
     if (validator(validatorMap).isEmpty() && isPercentageTotalValid(percentageTotal)) {
       stocks.put(fieldsMap.get(TICKER_SYMBOL).textField.getText(),
           Double.parseDouble(fieldsMap.get(PERCENTAGE).textField.getText()));
@@ -113,7 +114,7 @@ class CreateDollarCostAveragePortfolioCommand extends AbstractCommandHandlers im
       if (percentageTotal.doubleValue() == 100) {
         fieldsMap.get(TICKER_SYMBOL).textField.setEditable(false);
         fieldsMap.get(PERCENTAGE).textField.setEditable(false);
-        OKButton.setEnabled(false);
+        okButton.setEnabled(false);
       }
     }
   }
@@ -152,10 +153,11 @@ class CreateDollarCostAveragePortfolioCommand extends AbstractCommandHandlers im
     protected void done() {
       try {
         resultArea.setText("<html><center><h1>" + get() + "</center></html>");
-        mainFrame.setEnabled(true);
-        progressBar.setIndeterminate(false);
-      } catch (Exception ignore) {
+      } catch (InterruptedException | ExecutionException e) {
+        throw new RuntimeException(e);
       }
+      mainFrame.setEnabled(true);
+      progressBar.setIndeterminate(false);
     }
   }
 }

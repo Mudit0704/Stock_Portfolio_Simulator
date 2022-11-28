@@ -5,8 +5,6 @@ import static portfolio.view.guiview.AbstractCommandHandlers.getCustomButton;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.Image;
-import java.awt.Toolkit;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -27,10 +25,17 @@ import portfolio.view.IGUIView;
 public class GUIView extends JFrame implements IGUIView {
 
   final JPanel mainPanel;
-  JButton createDollarCostAveragePortfolioButton, createFlexiblePortfolioButton,
-      getPortfolioValueButton, getCostBasisButton, savePortfolioButton, retrievePortfolioButton,
-      sellStocksButton, buyStocksButton, fractionalInvestmentButton, portfolioPerformanceButton,
-      applyDCAOnExistingPortfolio;
+  JButton createDollarCostAveragePortfolioButton;
+  JButton createFlexiblePortfolioButton;
+  JButton getPortfolioValueButton;
+  JButton getCostBasisButton;
+  JButton savePortfolioButton;
+  JButton retrievePortfolioButton;
+  JButton sellStocksButton;
+  JButton buyStocksButton;
+  JButton fractionalInvestmentButton;
+  JButton portfolioPerformanceButton;
+  JButton applyDCAOnExistingPortfolio;
   JProgressBar progressBar;
   JTextPane displayArea;
 
@@ -48,9 +53,6 @@ public class GUIView extends JFrame implements IGUIView {
     super(title);
     UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
 
-    Image icon = Toolkit.getDefaultToolkit()
-        .getImage(System.getProperty("user.dir") + "/image.png");
-    setIconImage(icon);
     mainPanel = new JPanel();
     mainPanel.setLayout(new BorderLayout());
     add(mainPanel, BorderLayout.CENTER);

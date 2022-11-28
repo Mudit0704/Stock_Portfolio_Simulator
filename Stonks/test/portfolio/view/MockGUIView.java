@@ -25,6 +25,6 @@ public class MockGUIView extends GUIView {
 
   @Override
   public void addFeatures(Features features) {
-
+    //Overriden addFeatures method to avoid launching of UI while testing.
   }
 }

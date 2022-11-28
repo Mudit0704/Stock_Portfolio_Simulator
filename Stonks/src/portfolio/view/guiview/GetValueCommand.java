@@ -2,6 +2,7 @@ package portfolio.view.guiview;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -28,7 +29,7 @@ class GetValueCommand extends AbstractCommandHandlers implements CommandHandler 
   @Override
   public void execute() {
     JPanel availablePortfoliosDisplay;
-    AtomicBoolean OKClicked = new AtomicBoolean(false);
+    AtomicBoolean okClicked = new AtomicBoolean(false);
 
     JDialog userInputDialog = getUserInputDialog("Get Portfolio Value", 520, 200);
 
@@ -46,11 +47,11 @@ class GetValueCommand extends AbstractCommandHandlers implements CommandHandler 
     createDateLabelField(DATE);
     createIntegerFields(PORTFOLIO_ID);
 
-    JButton OKButton = getCustomButton("OK");
-    OKButton.addActionListener(e -> {
+    JButton okButton = getCustomButton("OK");
+    okButton.addActionListener(e -> {
       if (validator(validatorMap).isEmpty()) {
         userInputDialog.dispose();
-        OKClicked.set(true);
+        okClicked.set(true);
       }
     });
 
@@ -58,7 +59,7 @@ class GetValueCommand extends AbstractCommandHandlers implements CommandHandler 
 
     JPanel fieldsPanel = new JPanel(new BorderLayout());
     fieldsPanel.add(userInputPanel, BorderLayout.CENTER);
-    fieldsPanel.add(OKButton, BorderLayout.EAST);
+    fieldsPanel.add(okButton, BorderLayout.EAST);
     fieldsPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 2, 10));
 
     userInputDialog.add(availablePortfoliosDisplay, BorderLayout.CENTER);
@@ -66,7 +67,7 @@ class GetValueCommand extends AbstractCommandHandlers implements CommandHandler 
 
     userInputDialog.setVisible(true);
 
-    if (OKClicked.get()) {
+    if (okClicked.get()) {
       GetValueTask task = new GetValueTask(features, fieldsMap.get(DATE).textField.getText(),
           fieldsMap.get(PORTFOLIO_ID).textField.getText());
       mainFrame.setEnabled(false);
@@ -101,10 +102,11 @@ class GetValueCommand extends AbstractCommandHandlers implements CommandHandler 
     protected void done() {
       try {
         resultArea.setText(get());
-        mainFrame.setEnabled(true);
-        progressBar.setIndeterminate(false);
-      } catch (Exception ignore) {
+      } catch (InterruptedException | ExecutionException e) {
+        throw new RuntimeException(e);
       }
+      mainFrame.setEnabled(true);
+      progressBar.setIndeterminate(false);
     }
   }
 }

@@ -78,7 +78,7 @@ public class GUIPortfolioControllerTest {
 
     assertEquals("Created",
         controller.createFlexiblePortfolio(stocks, String.valueOf(LocalDate.now())));
-    assertEquals("ALPHAVANTAGE{GOOG=10.0} "+LocalDate.now(), log.toString());
+    assertEquals("ALPHAVANTAGE{GOOG=10.0} " + LocalDate.now(), log.toString());
   }
 
   @Test
@@ -151,8 +151,8 @@ public class GUIPortfolioControllerTest {
     stockProportions.put("GOOG", 10D);
     stockProportions.put("MSFT", 90D);
 
-    assertEquals("Invested", controller.performFractionalInvestmentOnAGivenDate
-        (stockProportions, "1000", "1", "2019-10-25"));
+    assertEquals("Invested", controller.performFractionalInvestmentOnAGivenDate(
+        stockProportions, "1000", "1", "2019-10-25"));
     assertEquals("ALPHAVANTAGENORMAL2019-10-252019-10-2501000.0{MSFT=90.0, GOOG=10.0}1",
         log.toString());
   }
@@ -163,8 +163,8 @@ public class GUIPortfolioControllerTest {
     stockProportions.put("GOOG", 10D);
     stockProportions.put("MSFT", 90D);
 
-    assertEquals("Created", controller.createDollarCostAveragePortfolio
-        (stockProportions, "1000", "2016-10-25", "2019-10-25", "1"));
+    assertEquals("Created", controller.createDollarCostAveragePortfolio(
+        stockProportions, "1000", "2016-10-25", "2019-10-25", "1"));
     assertEquals("ALPHAVANTAGEDOLLARCOSTAVERAGING2016-10-252019-10-2511000.0"
         + "{MSFT=90.0, GOOG=10.0}2016-10-25", log.toString());
   }
