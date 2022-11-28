@@ -112,7 +112,7 @@ public class FlexiblePortfolio extends AbstractPortfolio {
     stockQty = stockQuantityMap.get(stock);
 
     if (stockQty - quantity < 0) {
-      throw new IllegalArgumentException("Do not have more than " + quantity + " shares presently");
+      throw new IllegalArgumentException("Do not have more than " + stockQty + " shares presently");
     }
 
     Double updatedQty = stockQty - quantity;

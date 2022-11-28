@@ -78,7 +78,11 @@ public class StrategicFlexiblePortfoliosModel extends FlexiblePortfoliosModel
   }
 
   @Override
-  public Map<LocalDate, Double> lineChartPerformanceAnalysis(LocalDate start, LocalDate end, int portfolioId) {
+  public Map<LocalDate, Double> lineChartPerformanceAnalysis(LocalDate start, LocalDate end,
+      int portfolioId) {
+    if(portfolioId > super.portfolioMap.size()) {
+      throw new IllegalArgumentException("Invalid portfolio id.");
+    }
     AbstractPortfolio portfolio = super.getPortfolioFromMap(portfolioId).getValue();
     return portfolio.lineChartPerformanceAnalysis(start, end);
   }
