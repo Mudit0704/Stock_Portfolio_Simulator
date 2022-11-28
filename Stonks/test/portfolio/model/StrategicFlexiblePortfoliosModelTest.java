@@ -76,10 +76,10 @@ public class StrategicFlexiblePortfoliosModelTest {
     stockService.set(portfolio, mockStockService);
 
     portfolio.setStrategy(StrategyType.DOLLARCOSTAVERAGING,
-      LocalDate.of(2015,10,25),
-      LocalDate.of(2016,10,25),
-      30,
-      totalAmount);
+        LocalDate.of(2015,10,25),
+        LocalDate.of(2016,10,25),
+        30,
+        totalAmount);
 
     portfolio.createStrategicPortfolio(map, LocalDate.of(2015,10,25));
     assertEquals(20000.0, portfolio.getCostBasis(LocalDate.of(2016,1,30), 1), 0.0);
@@ -99,10 +99,10 @@ public class StrategicFlexiblePortfoliosModelTest {
     stockService.set(portfolio, mockStockService);
 
     portfolio.setStrategy(StrategyType.DOLLARCOSTAVERAGING,
-      LocalDate.of(2015,10,25),
-      LocalDate.of(2016,10,25),
-      30,
-      totalAmount);
+        LocalDate.of(2015,10,25),
+        LocalDate.of(2016,10,25),
+        30,
+        totalAmount);
 
     portfolio.createStrategicPortfolio(map, LocalDate.of(2015,10,25));
     assertEquals(0.0, portfolio.getPortfolioValue(LocalDate.of(2015,10,25), 1), 0.0);
@@ -124,10 +124,10 @@ public class StrategicFlexiblePortfoliosModelTest {
     stockService.set(portfolio, mockStockService);
 
     portfolio.setStrategy(StrategyType.NORMAL,
-      LocalDate.of(2017,10,25),
-      null,
-      0,
-      totalAmount);
+        LocalDate.of(2017,10,25),
+        null,
+        0,
+        totalAmount);
 
     portfolio.createNewPortfolioOnADate(map, LocalDate.of(2015, 10, 25));
     String result = portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2015, 11, 30));
@@ -162,10 +162,10 @@ public class StrategicFlexiblePortfoliosModelTest {
     stockService.set(portfolio, mockStockService);
 
     portfolio.setStrategy(StrategyType.NORMAL,
-      LocalDate.of(2017,10,25),
-      null,
-      0,
-      totalAmount);
+        LocalDate.of(2017,10,25),
+        null,
+        0,
+        totalAmount);
 
     portfolio.createNewPortfolioOnADate(map, LocalDate.of(2015, 10, 25));
 
@@ -214,10 +214,10 @@ public class StrategicFlexiblePortfoliosModelTest {
     stockService.set(portfolio, mockStockService);
 
     portfolio.setStrategy(StrategyType.NORMAL,
-      LocalDate.of(2017,10,25),
-      null,
-      0,
-      totalAmount);
+        LocalDate.of(2017,10,25),
+        null,
+        0,
+        totalAmount);
 
     portfolio.createNewPortfolioOnADate(map, LocalDate.of(2015, 10, 25));
 
@@ -245,10 +245,10 @@ public class StrategicFlexiblePortfoliosModelTest {
     stockService.set(portfolio, mockStockService);
 
     portfolio.setStrategy(StrategyType.NORMAL,
-      LocalDate.of(2017,10,25),
-      null,
-      0,
-      totalAmount);
+        LocalDate.of(2017,10,25),
+        null,
+        0,
+        totalAmount);
 
     portfolio.createNewPortfolioOnADate(map, LocalDate.of(2015, 10, 25));
 
@@ -291,10 +291,10 @@ public class StrategicFlexiblePortfoliosModelTest {
     stockService.set(portfolio, mockStockService);
 
     portfolio.setStrategy(StrategyType.NORMAL,
-      LocalDate.of(2017,10,25),
-      null,
-      0,
-      totalAmount);
+        LocalDate.of(2017,10,25),
+        null,
+        0,
+        totalAmount);
 
     portfolio.createNewPortfolioOnADate(map, LocalDate.of(2015, 10, 25));
 
@@ -336,10 +336,10 @@ public class StrategicFlexiblePortfoliosModelTest {
     stockService.set(portfolio, mockStockService);
 
     portfolio.setStrategy(StrategyType.DOLLARCOSTAVERAGING,
-      LocalDate.of(2015,10,25),
-      LocalDate.of(2016,10,25),
-      30,
-      totalAmount);
+        LocalDate.of(2015,10,25),
+        LocalDate.of(2016,10,25),
+        30,
+        totalAmount);
 
     portfolio.createStrategicPortfolio(map, LocalDate.of(2015,10,25));
     String result = portfolio.getPortfolioCompositionOnADate(1, LocalDate.of(2015, 11, 30));
@@ -387,10 +387,10 @@ public class StrategicFlexiblePortfoliosModelTest {
     stockService.set(portfolio, mockStockService);
 
     portfolio.setStrategy(StrategyType.NORMAL,
-      LocalDate.of(2017,10,25),
-      null,
-      0,
-      totalAmount);
+        LocalDate.of(2017,10,25),
+        null,
+        0,
+        totalAmount);
 
     portfolio.createNewPortfolioOnADate(map, LocalDate.of(2015, 10, 25));
 
@@ -435,10 +435,10 @@ public class StrategicFlexiblePortfoliosModelTest {
     stockService.set(portfolio, mockStockService);
 
     portfolio.setStrategy(StrategyType.DOLLARCOSTAVERAGING,
-      LocalDate.of(2015,10,25),
-      LocalDate.of(2016,10,25),
-      30,
-      totalAmount);
+        LocalDate.of(2015,10,25),
+        LocalDate.of(2016,10,25),
+        30,
+        totalAmount);
 
     portfolio.createStrategicPortfolio(map, LocalDate.of(2015,10,25));
     portfolio.sellStockFromPortfolio("ALGT", 2d, 1, LocalDate.of(2015,11,30));
@@ -460,10 +460,10 @@ public class StrategicFlexiblePortfoliosModelTest {
     stockService.set(mockSaveModel, mockStockService);
 
     mockSaveModel.setStrategy(StrategyType.DOLLARCOSTAVERAGING,
-      LocalDate.of(2015,10,25),
-      LocalDate.of(2016,10,25),
-      30,
-      totalAmount);
+        LocalDate.of(2015,10,25),
+        LocalDate.of(2016,10,25),
+        30,
+        totalAmount);
 
     mockSaveModel.createStrategicPortfolio(map, LocalDate.of(2015,10,25));
     String result = mockSaveModel.getPortfolioCompositionOnADate(1, LocalDate.of(2015, 11, 30));
@@ -527,10 +527,10 @@ public class StrategicFlexiblePortfoliosModelTest {
     stockService.set(mockSaveModel, mockStockService);
 
     mockSaveModel.setStrategy(StrategyType.DOLLARCOSTAVERAGING,
-      LocalDate.of(2015,10,25),
-      LocalDate.of(2016,10,25),
-      30,
-      totalAmount);
+        LocalDate.of(2015,10,25),
+        LocalDate.of(2016,10,25),
+        30,
+        totalAmount);
 
     mockSaveModel.createStrategicPortfolio(map, LocalDate.of(2015,10,25));
     String result = mockSaveModel.getPortfolioCompositionOnADate(1, LocalDate.of(2015, 11, 30));
@@ -539,10 +539,10 @@ public class StrategicFlexiblePortfoliosModelTest {
     assertTrue(result.contains("ALGT -> 6.84"));
 
     mockSaveModel.setStrategy(StrategyType.DOLLARCOSTAVERAGING,
-      LocalDate.of(2015,10,25),
-      LocalDate.of(2016,10,25),
-      15,
-      totalAmount);
+        LocalDate.of(2015,10,25),
+        LocalDate.of(2016,10,25),
+        15,
+        totalAmount);
 
     map = new HashMap<>();
     map.put("ALGT", 50d);
@@ -571,10 +571,10 @@ public class StrategicFlexiblePortfoliosModelTest {
     stockService.set(mockSaveFutureTransaction, mockStockService);
 
     mockSaveFutureTransaction.setStrategy(StrategyType.DOLLARCOSTAVERAGING,
-      LocalDate.of(2022,10,25),
-      LocalDate.of(2023,10,25),
-      30,
-      totalAmount);
+        LocalDate.of(2022,10,25),
+        LocalDate.of(2023,10,25),
+        30,
+        totalAmount);
 
     mockSaveFutureTransaction.createStrategicPortfolio(map, LocalDate.of(2022,10,25));
     String result = mockSaveFutureTransaction.getPortfolioCompositionOnADate(1, LocalDate.now());
@@ -619,10 +619,31 @@ public class StrategicFlexiblePortfoliosModelTest {
     stockService.set(mockSaveModel, mockStockService);
 
     mockSaveModel.setStrategy(StrategyType.DOLLARCOSTAVERAGING,
-      LocalDate.of(2016,10,25),
-      LocalDate.of(2016,10,25),
-      30,
-      totalAmount);
+        LocalDate.of(2016,10,25),
+        LocalDate.of(2016,10,25),
+        30,
+        totalAmount);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testZeroTimeFrameForDollarCostAvg()
+    throws IllegalAccessException, NoSuchFieldException {
+    Map<String, Double> map = new HashMap<>();
+    map.put("ALGT", 50d);
+    map.put("AMAM", 20d);
+    map.put("AMAO", 30d);
+
+    double totalAmount = 5000d;
+
+    Field stockService = AbstractPortfolioModel.class.getDeclaredField("stockService");
+
+    stockService.set(mockSaveModel, mockStockService);
+
+    mockSaveModel.setStrategy(StrategyType.DOLLARCOSTAVERAGING,
+        LocalDate.of(2016,10,25),
+        LocalDate.of(2016,10,25),
+        0,
+        totalAmount);
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -640,10 +661,10 @@ public class StrategicFlexiblePortfoliosModelTest {
     stockService.set(mockSaveModel, mockStockService);
 
     mockSaveModel.setStrategy(StrategyType.DOLLARCOSTAVERAGING,
-      LocalDate.of(2016,10,25),
-      LocalDate.of(2016,11,25),
-      40,
-      totalAmount);
+        LocalDate.of(2016,10,25),
+        LocalDate.of(2016,11,25),
+        40,
+        totalAmount);
   }
 
   @Test
@@ -655,22 +676,22 @@ public class StrategicFlexiblePortfoliosModelTest {
     mockLineChartTestModel.retrievePortfolios();
 
     Map<LocalDate, Double> dateValue = mockLineChartTestModel
-      .lineChartPerformanceAnalysis(LocalDate.parse("2019-10-25"),
-      LocalDate.parse("2019-11-23"), 1);
+        .lineChartPerformanceAnalysis(LocalDate.parse("2019-10-25"),
+        LocalDate.parse("2019-11-23"), 1);
 
     assertEquals(LocalDate.parse("2019-10-25"),
-      dateValue.keySet().stream().min(LocalDate::compareTo).orElseThrow());
+        dateValue.keySet().stream().min(LocalDate::compareTo).orElseThrow());
     assertEquals(LocalDate.parse("2019-11-23"),
-      dateValue.keySet().stream().max(LocalDate::compareTo).orElseThrow());
+        dateValue.keySet().stream().max(LocalDate::compareTo).orElseThrow());
 
     dateValue = mockLineChartTestModel
-      .lineChartPerformanceAnalysis(LocalDate.parse("2019-10-25"),
-      LocalDate.parse("2020-05-01"), 1);
+        .lineChartPerformanceAnalysis(LocalDate.parse("2019-10-25"),
+        LocalDate.parse("2020-05-01"), 1);
 
     assertEquals(LocalDate.parse("2019-10-31"),
-      dateValue.keySet().stream().min(LocalDate::compareTo).orElseThrow());
+        dateValue.keySet().stream().min(LocalDate::compareTo).orElseThrow());
     assertEquals(LocalDate.parse("2020-05-31"),
-      dateValue.keySet().stream().max(LocalDate::compareTo).orElseThrow());
+        dateValue.keySet().stream().max(LocalDate::compareTo).orElseThrow());
   }
 
   @Test
@@ -693,10 +714,10 @@ public class StrategicFlexiblePortfoliosModelTest {
     stockService.set(portfolio, mockStockService);
 
     portfolio.setStrategy(StrategyType.NORMAL,
-      LocalDate.of(2023,10,25),
-      null,
-      0,
-      totalAmount);
+        LocalDate.of(2023,10,25),
+        null,
+        0,
+        totalAmount);
 
     portfolio.createNewPortfolioOnADate(map, LocalDate.of(2022, 10, 25));
 
@@ -728,10 +749,10 @@ public class StrategicFlexiblePortfoliosModelTest {
     stockService.set(mockSaveModel, mockStockService);
 
     mockSaveModel.setStrategy(StrategyType.DOLLARCOSTAVERAGING,
-      LocalDate.of(2018,10,25),
-      LocalDate.of(2023,10,25),
-      30,
-      totalAmount);
+        LocalDate.of(2018,10,25),
+        LocalDate.of(2023,10,25),
+        30,
+        totalAmount);
 
     mockSaveModel.createStrategicPortfolio(map, LocalDate.of(2018,10,25));
     String result = mockSaveModel.getPortfolioCompositionOnADate(1, LocalDate.of(2018, 11, 30));
@@ -741,10 +762,10 @@ public class StrategicFlexiblePortfoliosModelTest {
 //    assertTrue(result.contains("ALGT -> 6.84"));
 
     mockSaveModel.setStrategy(StrategyType.DOLLARCOSTAVERAGING,
-      LocalDate.of(2018,10,25),
-      LocalDate.of(2023,10,25),
-      15,
-      totalAmount);
+        LocalDate.of(2018,10,25),
+        LocalDate.of(2023,10,25),
+        15,
+        totalAmount);
 
     map = new HashMap<>();
     map.put("ALGT", 50d);
@@ -773,10 +794,10 @@ public class StrategicFlexiblePortfoliosModelTest {
     stockService.set(mockSaveModel, mockStockService);
 
     mockSaveModel.setStrategy(StrategyType.DOLLARCOSTAVERAGING,
-      LocalDate.of(2018,10,25),
-      LocalDate.of(2023,10,25),
-      30,
-      0.0);
+        LocalDate.of(2018,10,25),
+        LocalDate.of(2023,10,25),
+        30,
+        0.0);
 
     mockSaveModel.createStrategicPortfolio(map, LocalDate.of(2018,10,25));
   }
@@ -796,10 +817,10 @@ public class StrategicFlexiblePortfoliosModelTest {
     stockService.set(mockSaveModel, mockStockService);
 
     mockSaveModel.setStrategy(StrategyType.DOLLARCOSTAVERAGING,
-      LocalDate.of(2018,10,25),
-      LocalDate.of(2023,10,25),
-      30,
-      0.0);
+        LocalDate.of(2018,10,25),
+        LocalDate.of(2023,10,25),
+        30,
+        0.0);
 
     mockSaveModel.createStrategicPortfolio(map, LocalDate.of(2018,10,25));
   }

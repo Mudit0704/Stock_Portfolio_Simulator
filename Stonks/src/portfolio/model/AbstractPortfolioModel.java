@@ -72,7 +72,7 @@ public abstract class AbstractPortfolioModel implements IFlexiblePortfoliosModel
   @Override
   public Double getPortfolioValue(LocalDate date, int portfolioId) throws IllegalArgumentException {
     if (date.isAfter(LocalDate.now()) || portfolioId > portfolioMap.size() || portfolioId <= 0) {
-      throw new IllegalArgumentException();
+      throw new IllegalArgumentException("Invalid portfolio Id.");
     }
 
     return getPortfolioFromMap(portfolioId).getValue().getPortfolioValue(date);

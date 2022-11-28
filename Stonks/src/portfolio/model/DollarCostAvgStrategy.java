@@ -20,7 +20,8 @@ public class DollarCostAvgStrategy implements IStrategy {
       int timeFrame) {
     if(startDate.isAfter(endDate)
         || startDate.isEqual(endDate)
-        || ChronoUnit.DAYS.between(startDate, endDate) < timeFrame) {
+        || ChronoUnit.DAYS.between(startDate, endDate) < timeFrame
+        || timeFrame == 0) {
       throw new IllegalArgumentException("Invalid date ranges");
     }
     dateNavigator = DateNavigator.getInstance();
