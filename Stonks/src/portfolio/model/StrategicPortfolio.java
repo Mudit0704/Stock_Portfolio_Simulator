@@ -40,7 +40,7 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
 
   private double transactionFee;
 
-  protected Map<LocalDate, Map<IStock, Pair<Double, Double>>> listOfScheduledStocks;
+  protected List<Map<LocalDate, Map<IStock, Pair<Double, Double>>>> listOfScheduledStocks;
   /**
    * Constructs an object of Portfolio and initializes its members.
    *
@@ -53,7 +53,7 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
   protected StrategicPortfolio(IStockService stockService, Map<IStock, Double> stocks,
     double transactionFee, LocalDate date) {
     super(stockService, stocks, transactionFee, date);
-    listOfScheduledStocks = new HashMap<>();
+    listOfScheduledStocks = new ArrayList<>();
     this.creationDate = date;
   }
 
@@ -123,12 +123,14 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
   @Override
   protected void scheduleInvestment(LocalDate date, double amount, double transactionFee,
       Map<IStock, Double> stocks) {
+    Map<LocalDate, Map<IStock, Pair<Double, Double>>> dateMap = new HashMap<>();
     Map<IStock, Pair<Double, Double>> stockQty = new HashMap<>();
 
     for(Map.Entry<IStock, Double> mapEntry:stocks.entrySet()) {
         stockQty.put(mapEntry.getKey(), new Pair<>(amount, mapEntry.getValue()));
     }
-    listOfScheduledStocks.put(date, stockQty);
+    dateMap.put(date, stockQty);
+    listOfScheduledStocks.add(dateMap);
   }
 
   protected void saveStrategy(String path) throws ParserConfigurationException {
@@ -136,43 +138,42 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
       return;
     }
     try {
-      listOfScheduledStocks = listOfScheduledStocks.entrySet().stream()
-        .sorted(Map.Entry.comparingByKey(Comparator.reverseOrder()))
-        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
-          (e1, e2) -> e2, LinkedHashMap::new));
       DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
       DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
       Document doc = dBuilder.newDocument();
-
-      Element rootElement = doc.createElement("strategy");
-      doc.appendChild(rootElement);
-
       Element transactionFee = doc.createElement("transaction-fee");
       transactionFee.appendChild(doc.createTextNode(String.valueOf(this.transactionFee)));
-
+      Element rootElement = doc.createElement("strategy");
+      doc.appendChild(rootElement);
       rootElement.appendChild(transactionFee);
 
-      for(Map.Entry<LocalDate, Map<IStock, Pair<Double, Double>>> mapEntry:listOfScheduledStocks.entrySet()) {
-        Element investmentElement = doc.createElement("investment");
-        investmentElement.setAttribute("date", String.valueOf(mapEntry.getKey()));
-        Map<IStock, Pair<Double, Double>> stockProportions = mapEntry.getValue();
-        Double amount = 0d;
-        for(Map.Entry<IStock, Pair<Double, Double>> stockProportion:stockProportions.entrySet()) {
-          amount = stockProportion.getValue().s;
+      for(Map<LocalDate, Map<IStock, Pair<Double, Double>>> dateMap:this.listOfScheduledStocks) {
+        dateMap = dateMap.entrySet().stream()
+          .sorted(Map.Entry.comparingByKey(Comparator.reverseOrder()))
+          .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+            (e1, e2) -> e2, LinkedHashMap::new));
 
-          Element stock = doc.createElement("stock");
-          stock.appendChild(doc.createTextNode(stockProportion.getKey().getStockTicker()));
-          stock.setAttribute("percentage", String.valueOf(stockProportion.getValue().t));
-          investmentElement.appendChild(stock);
+        for(Map.Entry<LocalDate, Map<IStock, Pair<Double, Double>>> mapEntry:dateMap.entrySet()) {
+          Element investmentElement = doc.createElement("investment");
+          investmentElement.setAttribute("date", String.valueOf(mapEntry.getKey()));
+          Map<IStock, Pair<Double, Double>> stockProportions = mapEntry.getValue();
+          Double amount = 0d;
+          for(Map.Entry<IStock, Pair<Double, Double>> stockProportion:stockProportions.entrySet()) {
+            amount = stockProportion.getValue().s;
+
+            Element stock = doc.createElement("stock");
+            stock.appendChild(doc.createTextNode(stockProportion.getKey().getStockTicker()));
+            stock.setAttribute("percentage", String.valueOf(stockProportion.getValue().t));
+            investmentElement.appendChild(stock);
+          }
+
+          Element totalAmount = doc.createElement("amount");
+          totalAmount.appendChild(doc.createTextNode(amount.toString()));
+          investmentElement.appendChild(totalAmount);
+          rootElement.appendChild(investmentElement);
         }
-
-        Element totalAmount = doc.createElement("amount");
-        totalAmount.appendChild(doc.createTextNode(amount.toString()));
-        investmentElement.appendChild(totalAmount);
-        rootElement.appendChild(investmentElement);
+        super.writeXMLFile(doc, path);
       }
-
-      super.writeXMLFile(doc, path);
     } catch (DateTimeParseException e) {
       throw new RuntimeException("API Failure...\n");
     } catch (TransformerException e) {
@@ -199,32 +200,33 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
   }
 
   protected void executeEligibleTransactions() {
+    for(Map<LocalDate, Map<IStock, Pair<Double, Double>>> dateMap:this.listOfScheduledStocks) {
+      for(Map.Entry<LocalDate, Map<IStock, Pair<Double, Double>>> mapEntry:
+        dateMap.entrySet()) {
+        LocalDate date = mapEntry.getKey();
+        Map<IStock, Pair<Double, Double>> stockQty = mapEntry.getValue();
+        Double amount = 0d;
+        Map<IStock, Double> stockRatios = new HashMap<>();
+        for(Map.Entry<IStock, Pair<Double, Double>> stocks:stockQty.entrySet()) {
+          amount = stocks.getValue().s;
+          stockRatios.put(stocks.getKey(), stocks.getValue().t);
+        }
 
-    for(Map.Entry<LocalDate, Map<IStock, Pair<Double, Double>>> mapEntry:
-        this.listOfScheduledStocks.entrySet()) {
-      LocalDate date = mapEntry.getKey();
-      Map<IStock, Pair<Double, Double>> stockQty = mapEntry.getValue();
-      Double amount = 0d;
-      Map<IStock, Double> stockRatios = new HashMap<>();
-      for(Map.Entry<IStock, Pair<Double, Double>> stocks:stockQty.entrySet()) {
-        amount = stocks.getValue().s;
-        stockRatios.put(stocks.getKey(), stocks.getValue().t);
-      }
-
-      IStrategy strategy = new NormalStrategy.NormalStrategyBuilder()
+        IStrategy strategy = new NormalStrategy.NormalStrategyBuilder()
           .setTotalAmount(amount)
           .setDate(date)
           .build();
 
-      Map<LocalDate, Map<IStock, Double>> result = strategy.applyStrategy(stockRatios);
+        Map<LocalDate, Map<IStock, Double>> result = strategy.applyStrategy(stockRatios);
 
-      for(Map.Entry<LocalDate, Map<IStock, Double>> resultEntry:result.entrySet()) {
-        if (resultEntry.getKey().isAfter(LocalDate.now())) {
-          break;
-        }
-        this.listOfScheduledStocks.remove(date);
-        this.investStocksIntoStrategicPortfolio(resultEntry.getValue(),
+        for(Map.Entry<LocalDate, Map<IStock, Double>> resultEntry:result.entrySet()) {
+          if (resultEntry.getKey().isAfter(LocalDate.now())) {
+            break;
+          }
+          dateMap.remove(date);
+          this.investStocksIntoStrategicPortfolio(resultEntry.getValue(),
             resultEntry.getKey(), this.transactionFee);
+        }
       }
     }
   }
@@ -248,6 +250,7 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
     NodeList nList = doc.getDocumentElement().getElementsByTagName("investment");
 
     for (int temp = 0; temp < nList.getLength(); temp++) {
+      Map<LocalDate, Map<IStock, Pair<Double, Double>>> dateMap = new HashMap<>();
       Node nNode = nList.item(temp);
 
       if (nNode.getNodeType() == Node.ELEMENT_NODE) {
@@ -279,8 +282,8 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
           }
           map.put(newStock, new Pair<>(amount, percentage));
         }
-
-        this.listOfScheduledStocks.put(txnDate, map);
+        dateMap.put(txnDate, map);
+        this.listOfScheduledStocks.add(dateMap);
       }
     }
   }
