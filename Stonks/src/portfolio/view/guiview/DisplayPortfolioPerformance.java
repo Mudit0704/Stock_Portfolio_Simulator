@@ -32,7 +32,7 @@ public class DisplayPortfolioPerformance extends AbstractCommandHandlers impleme
     JPanel availablePortfoliosDisplay;
     AtomicBoolean OKClicked = new AtomicBoolean(false);
 
-    JDialog userInputDialog = getUserInputDialog("Portfolio performance", 620, 200);
+    JDialog userInputDialog = getUserInputDialog("Portfolio performance", 640, 200);
 
     try {
       availablePortfoliosDisplay = getResultDisplay(features.getAvailablePortfolios(),
