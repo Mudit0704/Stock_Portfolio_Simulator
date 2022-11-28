@@ -78,7 +78,7 @@ public class GUIPortfolioControllerTest {
 
     assertEquals("Created",
         controller.createFlexiblePortfolio(stocks, String.valueOf(LocalDate.now())));
-    assertEquals("ALPHAVANTAGE{GOOG=10.0} 2022-11-26", log.toString());
+    assertEquals("ALPHAVANTAGE{GOOG=10.0} "+LocalDate.now(), log.toString());
   }
 
   @Test
@@ -179,5 +179,20 @@ public class GUIPortfolioControllerTest {
   public void getPortfolioPerformance() {
     controller.getPortfolioPerformance("2019-10-25", "2022-10-25", "1");
     assertEquals("ALPHAVANTAGE2019-10-252022-10-251", log.toString());
+  }
+
+  @Test
+  public void applyDollarCostAveragePortfolio() {
+    Map<String, Double> stockProportions = new HashMap<>();
+    stockProportions.put("GOOG", 10D);
+    stockProportions.put("MSFT", 90D);
+
+    assertEquals("Created", controller.createDollarCostAveragePortfolio(stockProportions,
+        "1000", "2016-10-25", "2019-10-25", "1"));
+    assertEquals("Applied", controller.applyDollarCostAveragePortfolio(stockProportions,
+        "1000", "2016-10-25", "2019-10-25", "1", "1"));
+    assertEquals("ALPHAVANTAGEDOLLARCOSTAVERAGING2016-10-252019-10-2511000.0{MSFT=90.0, "
+        + "GOOG=10.0}2016-10-25DOLLARCOSTAVERAGING2016-10-252019-10-2511000.0{MSFT=90.0, GOOG=10.0}"
+        + "1", log.toString());
   }
 }

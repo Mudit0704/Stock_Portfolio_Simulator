@@ -1,18 +1,16 @@
 package portfolio.view.guiview;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.DoubleAdder;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTextPane;
@@ -35,12 +33,10 @@ class ApplyFractionalInvestmentCommand extends AbstractCommandHandlers implement
   @Override
   public void execute() {
     JPanel displayPanel;
-    AtomicInteger percentageTotal = new AtomicInteger();
+    Map<String, Double> stocks = new HashMap<>();
+    DoubleAdder percentageTotal = new DoubleAdder();
     AtomicBoolean DoneClicked = new AtomicBoolean(false);
-    JDialog userInputDialog = getUserInputDialog("Apply Fractional Investment");
-    userInputDialog.setMinimumSize(new Dimension(550, 300));
-    userInputDialog.setLocationRelativeTo(null);
-    userInputDialog.setResizable(false);
+    JDialog userInputDialog = getUserInputDialog("Apply Fractional Investment", 550, 300);
 
     try {
       displayPanel = getResultDisplay(features.getAvailablePortfolios(), AVAILABLE_PORTFOLIOS);
@@ -53,42 +49,9 @@ class ApplyFractionalInvestmentCommand extends AbstractCommandHandlers implement
     JPanel mainPanel = new JPanel(new BorderLayout());
     mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
     userInputDialog.add(mainPanel);
-    Map<String, Double> stocks = new HashMap<>();
 
-    JPanel userInputPanel = new JPanel(new GridLayout(0, 2));
-    userInputPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
-
-    createDateLabelField(DATE);
-    createNumericFields(TOTAL_AMOUNT);
-    createNumericFields(PORTFOLIO_ID);
-    createTickerSymbolField();
-    createNumericFields(PERCENTAGE);
-
-    JButton OKButton = getCustomButton("OK");
-    OKButton.addActionListener(e -> OKFunctionality(percentageTotal, stocks, OKButton));
-
-    JButton DoneButton = getCustomButton("DONE");
-    DoneButton.addActionListener(e -> {
-      if (percentageTotal.get() != 100) {
-        JOptionPane.showMessageDialog(mainFrame, "Percentage total is not 100", "Error",
-            JOptionPane.ERROR_MESSAGE);
-      } else {
-        userInputDialog.dispose();
-        DoneClicked.set(true);
-      }
-    });
-
-    addAllFieldsToInputPanel(userInputPanel);
-    userInputPanel.add(OKButton);
-    userInputPanel.add(DoneButton);
-
-    mainPanel.add(new JLabel("Press OK to add one stock and "
-        + "DONE when you are done adding stocks"), BorderLayout.NORTH);
-    mainPanel.add(displayPanel, BorderLayout.CENTER);
-    mainPanel.add(userInputPanel, BorderLayout.SOUTH);
-
-    userInputDialog.pack();
-    userInputDialog.setVisible(true);
+    addAllElementsToUserInputDialog(displayPanel, stocks, percentageTotal, DoneClicked,
+        userInputDialog, mainPanel);
 
     if (DoneClicked.get()) {
       InvestFractionalTask investFractionalTask = new InvestFractionalTask(features, stocks,
@@ -100,39 +63,60 @@ class ApplyFractionalInvestmentCommand extends AbstractCommandHandlers implement
     }
   }
 
-  private void OKFunctionality(AtomicInteger percentageTotal, Map<String, Double> stocks,
-      JButton OKButton) {
-    if (validator(validatorMap).isEmpty()) {
-      if (percentageTotal.get() + Integer.parseInt(fieldsMap.get(PERCENTAGE).textField.getText())
-          > 100) {
-        JOptionPane.showMessageDialog(mainFrame, "Percentage total cannot be greater than 100",
-            "Error",
-            JOptionPane.ERROR_MESSAGE);
-      } else if (Integer.parseInt(fieldsMap.get(PERCENTAGE).textField.getText()) <= 0) {
-        JOptionPane.showMessageDialog(mainFrame, "Percentage value should be greater"
-            + " than 0 and less than 100", "Error", JOptionPane.ERROR_MESSAGE);
-      } else {
-        stocks.put(fieldsMap.get(TICKER_SYMBOL).textField.getText(),
-            Double.parseDouble(fieldsMap.get(PERCENTAGE).textField.getText()));
-        if(percentageTotal.get() == 0) {
-          subWindowDisplay.setText("");
-        }
-        percentageTotal.addAndGet(Integer.parseInt(fieldsMap.get(PERCENTAGE).textField.getText()));
+  private void addAllElementsToUserInputDialog(JPanel displayPanel, Map<String, Double> stocks,
+      DoubleAdder percentageTotal, AtomicBoolean DoneClicked, JDialog userInputDialog,
+      JPanel mainPanel) {
+    JPanel userInputPanel = new JPanel(new GridLayout(0, 2));
+    userInputPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 
-        subWindowDisplay.setBorder(BorderFactory.createTitledBorder("Proportions"));
-        subWindowDisplay.append(
-            fieldsMap.get(TICKER_SYMBOL).textField.getText() + "- >" + fieldsMap.get(
-                PERCENTAGE).textField.getText() + "\n");
-        fieldsMap.get(TICKER_SYMBOL).textField.setText("");
-        fieldsMap.get(PERCENTAGE).textField.setText("");
-        fieldsMap.get(DATE).textField.setEditable(false);
-        fieldsMap.get(TOTAL_AMOUNT).textField.setEditable(false);
-        fieldsMap.get(PORTFOLIO_ID).textField.setEditable(false);
-        if (percentageTotal.get() == 100) {
-          fieldsMap.get(TICKER_SYMBOL).textField.setEditable(false);
-          fieldsMap.get(PERCENTAGE).textField.setEditable(false);
-          OKButton.setEnabled(false);
-        }
+    createDateLabelField(DATE);
+    createDoubleFields(TOTAL_AMOUNT);
+    createIntegerFields(PORTFOLIO_ID);
+    createDoubleFields(PERCENTAGE);
+    createTickerSymbolField();
+
+    JButton OKButton = getCustomButton("OK");
+    OKButton.addActionListener(e -> OKFunctionality(percentageTotal, stocks, OKButton));
+
+    JButton DoneButton = getCustomButton("DONE");
+    DoneButton.addActionListener(
+        e -> strategyDONEFunctionality(percentageTotal, DoneClicked, userInputDialog));
+
+    addAllFieldsToInputPanel(userInputPanel);
+    userInputPanel.add(OKButton);
+    userInputPanel.add(DoneButton);
+
+    mainPanel.add(new JLabel(STRATEGY_MESSAGE), BorderLayout.NORTH);
+    mainPanel.add(displayPanel, BorderLayout.CENTER);
+    mainPanel.add(userInputPanel, BorderLayout.SOUTH);
+
+    userInputDialog.pack();
+    userInputDialog.setVisible(true);
+  }
+
+  private void OKFunctionality(DoubleAdder percentageTotal, Map<String, Double> stocks,
+      JButton OKButton) {
+    if (validator(validatorMap).isEmpty() && isPercentageTotalValid(percentageTotal)) {
+      stocks.put(fieldsMap.get(TICKER_SYMBOL).textField.getText(),
+          Double.parseDouble(fieldsMap.get(PERCENTAGE).textField.getText()));
+      if (percentageTotal.doubleValue() == 0) {
+        subWindowDisplay.setText("");
+      }
+      percentageTotal.add(Double.parseDouble(fieldsMap.get(PERCENTAGE).textField.getText()));
+
+      subWindowDisplay.setBorder(BorderFactory.createTitledBorder("Proportions"));
+      subWindowDisplay.append(
+          fieldsMap.get(TICKER_SYMBOL).textField.getText() + "- >" + fieldsMap.get(
+              PERCENTAGE).textField.getText() + "\n");
+      fieldsMap.get(TICKER_SYMBOL).textField.setText("");
+      fieldsMap.get(PERCENTAGE).textField.setText("");
+      fieldsMap.get(DATE).textField.setEditable(false);
+      fieldsMap.get(TOTAL_AMOUNT).textField.setEditable(false);
+      fieldsMap.get(PORTFOLIO_ID).textField.setEditable(false);
+      if (percentageTotal.doubleValue() == 100) {
+        fieldsMap.get(TICKER_SYMBOL).textField.setEditable(false);
+        fieldsMap.get(PERCENTAGE).textField.setEditable(false);
+        OKButton.setEnabled(false);
       }
     }
   }

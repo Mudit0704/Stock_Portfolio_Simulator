@@ -12,6 +12,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.DoubleAdder;
 import java.util.function.Function;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -36,7 +37,7 @@ abstract class AbstractCommandHandlers implements CommandHandler {
   public static final String INVALID = "Please Enter A Valid";
   public static final String VALID = "Valid";
   public static final String TICKER_SYMBOL = "Ticker Symbol";
-  public static final String PORTFOLIO_ID = "Portfolio Id";
+  public static final String PORTFOLIO_ID = "Portfolio Id (Portfolio1 -> 1)";
   public static final String QUANTITY = "Quantity";
   public static final String TIME_FRAME = "Time Frame (Days)";
   public static final String TOTAL_AMOUNT = "Total Amount";
@@ -48,6 +49,8 @@ abstract class AbstractCommandHandlers implements CommandHandler {
   public static final String DATE = "Date";
   public static final String AVAILABLE_PORTFOLIOS = "Available Portfolios";
   public static final String TRANSACTION_FEE = "Transaction Fee";
+  public static final String STRATEGY_MESSAGE = "Press OK to add one stock and "
+      + "DONE when you are done adding stocks";
   JTextPane resultArea;
   Features features;
   JProgressBar progressBar;
@@ -75,10 +78,13 @@ abstract class AbstractCommandHandlers implements CommandHandler {
     fieldsMap = new LinkedHashMap<>();
   }
 
-  JDialog getUserInputDialog(String title) {
+  JDialog getUserInputDialog(String title, int width, int height) {
     JDialog userInputDialog = new JDialog(mainFrame, title);
     userInputDialog.setModalityType(ModalityType.APPLICATION_MODAL);
     userInputDialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+    userInputDialog.setMinimumSize(new Dimension(width, height));
+    userInputDialog.setLocationRelativeTo(null);
+    userInputDialog.setResizable(false);
     return userInputDialog;
   }
 
@@ -96,9 +102,21 @@ abstract class AbstractCommandHandlers implements CommandHandler {
     return displayPanel;
   }
 
-  String numberTextFieldValidator(String value) {
+  String integerTextFieldValidator(String value) {
     try {
-      if (Double.parseDouble(value) < 0 || Long.parseLong(value) < 0) {
+      if ("".equals(value.trim()) || Long.parseLong(value) < 0) {
+        throw new NumberFormatException();
+      }
+    } catch (NumberFormatException e) {
+      return INVALID;
+    }
+
+    return VALID;
+  }
+
+  String doubleTextFieldValidator(String value) {
+    try {
+      if ("".equals(value.trim()) || Double.parseDouble(value) < 0) {
         throw new NumberFormatException();
       }
     } catch (NumberFormatException e) {
@@ -126,25 +144,20 @@ abstract class AbstractCommandHandlers implements CommandHandler {
     String errorMessage = "";
 
     for (Entry<JTextField, Function<String, String>> entry : validatorMap.entrySet()) {
-      if (END_DATE.equals(entry.getKey().getName())) {
-        if (!"".equals(entry.getKey().getText())) {
+      if (END_DATE.equals(entry.getKey().getName()) || TRANSACTION_FEE.equals(
+          entry.getKey().getName())) {
+        if (!"".equals(entry.getKey().getText().trim())) {
           String result = entry.getValue().apply(entry.getKey().getText());
           if (!VALID.equals(result)) {
             errorMessage = result + " " + entry.getKey().getName();
             break;
           }
         } else {
-          entry.getKey().setText("2100-12-31");
-        }
-      } else if (TRANSACTION_FEE.equals(entry.getKey().getName())) {
-        if (!"".equals(entry.getKey().getText())) {
-          String result = entry.getValue().apply(entry.getKey().getText());
-          if (!VALID.equals(result)) {
-            errorMessage = result + " " + entry.getKey().getName();
-            break;
+          if (END_DATE.equals(entry.getKey().getName())) {
+            entry.getKey().setText("2100-12-31");
+          } else {
+            entry.getKey().setText("0");
           }
-        } else {
-          entry.getKey().setText("0");
         }
       } else {
         String result = entry.getValue().apply(entry.getKey().getText());
@@ -191,12 +204,21 @@ abstract class AbstractCommandHandlers implements CommandHandler {
         new LabelFieldPair(tickerSymbolLabel, tickerSymbolValue));
   }
 
-  void createNumericFields(String fieldName) {
+  void createIntegerFields(String fieldName) {
     JLabel quantityLabel = new JLabel("Enter " + fieldName + ": ");
     JTextField quantityValue = new JTextField();
     quantityValue.setName(fieldName);
 
-    validatorMap.put(quantityValue, this::numberTextFieldValidator);
+    validatorMap.put(quantityValue, this::integerTextFieldValidator);
+    fieldsMap.put(quantityValue.getName(), new LabelFieldPair(quantityLabel, quantityValue));
+  }
+
+  void createDoubleFields(String fieldName) {
+    JLabel quantityLabel = new JLabel("Enter " + fieldName + ": ");
+    JTextField quantityValue = new JTextField();
+    quantityValue.setName(fieldName);
+
+    validatorMap.put(quantityValue, this::doubleTextFieldValidator);
     fieldsMap.put(quantityValue.getName(), new LabelFieldPair(quantityLabel, quantityValue));
   }
 
@@ -207,12 +229,24 @@ abstract class AbstractCommandHandlers implements CommandHandler {
     }
   }
 
+  boolean isPercentageTotalValid(DoubleAdder percentageTotal) {
+    if (percentageTotal.doubleValue() + Double.parseDouble(fieldsMap.get(PERCENTAGE).textField.getText())
+        > 100d) {
+      JOptionPane.showMessageDialog(mainFrame, "Percentage total cannot be greater than 100",
+          "Error",
+          JOptionPane.ERROR_MESSAGE);
+      return false;
+    } else if (Double.parseDouble(fieldsMap.get(PERCENTAGE).textField.getText()) <= 0d) {
+      JOptionPane.showMessageDialog(mainFrame, "Percentage value should be greater"
+          + " than 0 and less than 100", "Error", JOptionPane.ERROR_MESSAGE);
+      return false;
+    }
+    return true;
+  }
+
   boolean CreateTransactionWindow(AtomicBoolean OKClicked) {
     JPanel availablePortfoliosDisplay;
-    JDialog userInputDialog = getUserInputDialog("Transaction");
-    userInputDialog.setMinimumSize(new Dimension(470, 250));
-    userInputDialog.setLocationRelativeTo(null);
-    userInputDialog.setResizable(false);
+    JDialog userInputDialog = getUserInputDialog("Transaction", 500, 250);
 
     try {
       availablePortfoliosDisplay = getResultDisplay(features.getAvailablePortfolios(),
@@ -225,10 +259,10 @@ abstract class AbstractCommandHandlers implements CommandHandler {
     }
     JPanel userInputPanel = new JPanel(new GridLayout(0, 2));
     createDateLabelField(DATE);
-    createNumericFields(PORTFOLIO_ID);
+    createIntegerFields(PORTFOLIO_ID);
     createTickerSymbolField();
-    createNumericFields(QUANTITY);
-    createNumericFields(TRANSACTION_FEE);
+    createDoubleFields(QUANTITY);
+    createDoubleFields(TRANSACTION_FEE);
 
     JButton OKButton = getCustomButton("OK");
     OKButton.addActionListener(e -> {
@@ -250,6 +284,17 @@ abstract class AbstractCommandHandlers implements CommandHandler {
 
     userInputDialog.setVisible(true);
     return false;
+  }
+
+  void strategyDONEFunctionality(DoubleAdder percentageTotal, AtomicBoolean DoneClicked,
+      JDialog userInputDialog) {
+    if (percentageTotal.doubleValue() != 100) {
+      JOptionPane.showMessageDialog(mainFrame, "Percentage total is not 100", "Error",
+          JOptionPane.ERROR_MESSAGE);
+    } else {
+      userInputDialog.dispose();
+      DoneClicked.set(true);
+    }
   }
 
   static class LabelFieldPair {

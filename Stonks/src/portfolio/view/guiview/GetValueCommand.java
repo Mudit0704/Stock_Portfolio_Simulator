@@ -1,7 +1,6 @@
 package portfolio.view.guiview;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.BorderFactory;
@@ -31,10 +30,7 @@ class GetValueCommand extends AbstractCommandHandlers implements CommandHandler 
     JPanel availablePortfoliosDisplay;
     AtomicBoolean OKClicked = new AtomicBoolean(false);
 
-    JDialog userInputDialog = getUserInputDialog("Get Portfolio Value");
-    userInputDialog.setMinimumSize(new Dimension(470, 200));
-    userInputDialog.setLocationRelativeTo(null);
-    userInputDialog.setResizable(false);
+    JDialog userInputDialog = getUserInputDialog("Get Portfolio Value", 500, 200);
 
     try {
       availablePortfoliosDisplay = getResultDisplay(features.getAvailablePortfolios(),
@@ -48,7 +44,7 @@ class GetValueCommand extends AbstractCommandHandlers implements CommandHandler 
 
     JPanel userInputPanel = new JPanel(new GridLayout(0, 2));
     createDateLabelField(DATE);
-    createNumericFields(PORTFOLIO_ID);
+    createIntegerFields(PORTFOLIO_ID);
 
     JButton OKButton = getCustomButton("OK");
     OKButton.addActionListener(e -> {
@@ -94,17 +90,17 @@ class GetValueCommand extends AbstractCommandHandlers implements CommandHandler 
     @Override
     protected String doInBackground() throws Exception {
       try {
-        return String.format("%.2f", features.getPortfolioValue(date, portfolioId));
+        return "<html><center><h1>Portfolio Value on " + date + ": " + String.format("%.2f",
+            features.getPortfolioValue(date, portfolioId)) + "</center></html>";
       } catch (Exception e) {
-        return e.getLocalizedMessage();
+        return "<html><center><h1>" + e.getLocalizedMessage() + "</center></html>";
       }
     }
 
     @Override
     protected void done() {
       try {
-        resultArea.setText(
-            "<html><center><h1>Portfolio Value on " + date + ": " + get() + "</center></html>");
+        resultArea.setText(get());
         mainFrame.setEnabled(true);
         progressBar.setIndeterminate(false);
       } catch (Exception ignore) {

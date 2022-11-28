@@ -2,7 +2,6 @@ package portfolio.view.guiview;
 
 import java.awt.BorderLayout;
 import java.awt.Dialog.ModalityType;
-import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.BorderFactory;
@@ -33,10 +32,7 @@ public class DisplayPortfolioPerformance extends AbstractCommandHandlers impleme
     JPanel availablePortfoliosDisplay;
     AtomicBoolean OKClicked = new AtomicBoolean(false);
 
-    JDialog userInputDialog = getUserInputDialog("Portfolio performance");
-    userInputDialog.setMinimumSize(new Dimension(620, 200));
-    userInputDialog.setLocationRelativeTo(null);
-    userInputDialog.setResizable(false);
+    JDialog userInputDialog = getUserInputDialog("Portfolio performance", 620, 200);
 
     try {
       availablePortfoliosDisplay = getResultDisplay(features.getAvailablePortfolios(),
@@ -51,7 +47,7 @@ public class DisplayPortfolioPerformance extends AbstractCommandHandlers impleme
     JPanel userInputPanel = new JPanel(new GridLayout(0, 2));
     createDateLabelField(PERFORMANCE_START_DATE);
     createDateLabelField(PERFORMANCE_END_DATE);
-    createNumericFields(PORTFOLIO_ID);
+    createIntegerFields(PORTFOLIO_ID);
 
     JButton OKButton = getCustomButton("OK");
     OKButton.addActionListener(e -> {

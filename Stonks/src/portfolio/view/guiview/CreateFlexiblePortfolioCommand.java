@@ -1,7 +1,6 @@
 package portfolio.view.guiview;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,10 +31,8 @@ class CreateFlexiblePortfolioCommand extends AbstractCommandHandlers implements 
   @Override
   public void execute() {
     AtomicBoolean DoneClicked = new AtomicBoolean(false);
-    JDialog userInputDialog = getUserInputDialog("Create New Flexible Portfolio");
-    userInputDialog.setMinimumSize(new Dimension(450, 200));
-    userInputDialog.setLocationRelativeTo(null);
-    userInputDialog.setResizable(false);
+    AtomicBoolean OKClicked = new AtomicBoolean(false);
+    JDialog userInputDialog = getUserInputDialog("Create New Flexible Portfolio", 450, 200);
 
     JPanel mainPanel = new JPanel(new BorderLayout());
     mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -47,7 +44,7 @@ class CreateFlexiblePortfolioCommand extends AbstractCommandHandlers implements 
 
     createDateLabelField(DATE);
     createTickerSymbolField();
-    createNumericFields(QUANTITY);
+    createDoubleFields(QUANTITY);
 
     JButton OKButton = getCustomButton("OK");
     OKButton.addActionListener(e -> {
@@ -57,13 +54,16 @@ class CreateFlexiblePortfolioCommand extends AbstractCommandHandlers implements 
         fieldsMap.get(TICKER_SYMBOL).textField.setText("");
         fieldsMap.get(QUANTITY).textField.setText("");
         fieldsMap.get(DATE).textField.setEditable(false);
+        OKClicked.set(true);
       }
     });
 
     JButton DoneButton = getCustomButton("DONE");
     DoneButton.addActionListener(e -> {
       userInputDialog.dispose();
-      DoneClicked.set(true);
+      if (OKClicked.get()) {
+        DoneClicked.set(true);
+      }
     });
 
     addAllFieldsToInputPanel(userInputPanel);
@@ -99,7 +99,7 @@ class CreateFlexiblePortfolioCommand extends AbstractCommandHandlers implements 
     }
 
     @Override
-    protected String doInBackground() throws Exception {
+    protected String doInBackground() {
       try {
         return features.createFlexiblePortfolio(stocks, date);
       } catch (Exception e) {
