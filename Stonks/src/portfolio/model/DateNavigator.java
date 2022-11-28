@@ -4,6 +4,10 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * This singleton class implements the IDateNavigator interface. This class offers a single object
+ * of its type and facilitates the execution of transaction on next working date.
+ */
 public class DateNavigator implements IDateNavigator {
 
   protected final IStockService service;
@@ -16,8 +20,13 @@ public class DateNavigator implements IDateNavigator {
 
   static IDateNavigator dateNavigator;
 
-  static IDateNavigator getInstance() {
-    if(dateNavigator == null) {
+  /**
+   * Gets the only single instance of the DateNavigator class.
+   *
+   * @return the IDateNavigator instance.
+   */
+  public static IDateNavigator getInstance() {
+    if (dateNavigator == null) {
       dateNavigator = new DateNavigator(ServiceType.ALPHAVANTAGE);
     }
     return dateNavigator;
@@ -26,7 +35,7 @@ public class DateNavigator implements IDateNavigator {
   @Override
   public LocalDate getNextAvailableDate(LocalDate date) {
     LocalDate tempDate = date;
-    while(!this.dateSet.contains(tempDate) && !tempDate.isAfter(LocalDate.now())) {
+    while (!this.dateSet.contains(tempDate) && !tempDate.isAfter(LocalDate.now())) {
       tempDate = tempDate.plusDays(1);
     }
     return tempDate;

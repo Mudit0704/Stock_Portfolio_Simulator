@@ -5,6 +5,10 @@ import java.time.temporal.ChronoUnit;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * This class represents the Dollar Cost Averaging strategy that can be applied to any Strategic
+ * Portfolio.
+ */
 public class DollarCostAvgStrategy implements IStrategy {
 
   private final LocalDate startDate;
@@ -40,7 +44,6 @@ public class DollarCostAvgStrategy implements IStrategy {
         if(tempDate.isAfter(LocalDate.now())) {
           break;
         }
-        //TODO: Find a cleaner way to do this...
         Double qty = proportion / stockQty.getKey().getValue(tempDate);
         stockQtyMap.put(stockQty.getKey(), qty);
       }
@@ -61,6 +64,12 @@ public class DollarCostAvgStrategy implements IStrategy {
     return this.totalAmount;
   }
 
+  /**
+   * This class is a builder class for the DollarCostAvgStrategy type instances. It extends
+   * the StrategyBuilder abstract class. This class offers methods to collect the start and end
+   * points of this DollarCostAvgStrategy, the total amount, and build the DollarCostAvgStrategy
+   * type instances.
+   */
   public static class DollarCostAvgStrategyBuilder extends StrategyBuilder<DollarCostAvgStrategyBuilder> {
     private int strategyTimeFrame;
     private LocalDate strategyEndDate = LocalDate.of(2100, 12,31);

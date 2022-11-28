@@ -15,6 +15,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
+/**
+ * A JUnit test class for testing the StrategicFlexiblePortfoliosModel class.
+ */
 public class StrategicFlexiblePortfoliosModelTest {
   IStrategicFlexiblePortfolioModel portfolio;
   private IStockService mockStockService;
@@ -708,6 +711,51 @@ public class StrategicFlexiblePortfoliosModelTest {
     assertTrue(result.contains("ALGT -> 5.0"));
     assertTrue(result.contains("AMAM -> 2.0"));
     assertTrue(result.contains("AMAO -> 3.0"));
+  }
+
+  @Test
+  public void testCreateMultipleNewDollarCostAvgPortfolioFutureDates()
+    throws NoSuchFieldException, IllegalAccessException {
+    Map<String, Double> map = new HashMap<>();
+    map.put("ALGT", 50d);
+    map.put("AMAM", 20d);
+    map.put("AMAO", 30d);
+
+    double totalAmount = 5000d;
+
+    Field stockService = AbstractPortfolioModel.class.getDeclaredField("stockService");
+
+    stockService.set(mockSaveModel, mockStockService);
+
+    mockSaveModel.setStrategy(StrategyType.DOLLARCOSTAVERAGING,
+      LocalDate.of(2018,10,25),
+      LocalDate.of(2023,10,25),
+      30,
+      totalAmount);
+
+    mockSaveModel.createStrategicPortfolio(map, LocalDate.of(2018,10,25));
+    String result = mockSaveModel.getPortfolioCompositionOnADate(1, LocalDate.of(2018, 11, 30));
+    System.out.println(result);
+    //    assertTrue(result.contains("AMAM -> 2.73"));
+//    assertTrue(result.contains("AMAO -> 4.10"));
+//    assertTrue(result.contains("ALGT -> 6.84"));
+
+    mockSaveModel.setStrategy(StrategyType.DOLLARCOSTAVERAGING,
+      LocalDate.of(2018,10,25),
+      LocalDate.of(2023,10,25),
+      15,
+      totalAmount);
+
+    map = new HashMap<>();
+    map.put("ALGT", 50d);
+    map.put("AMAM", 20d);
+    map.put("AMAO", 30d);
+    mockSaveModel.investStrategicPortfolio(map, 1);
+    result = mockSaveModel.getPortfolioCompositionOnADate(1, LocalDate.of(2018, 11, 30));
+    System.out.println(result);
+    //    assertTrue(result.contains("AMAM -> 4.11"));
+//    assertTrue(result.contains("AMAO -> 6.16"));
+//    assertTrue(result.contains("ALGT -> 10.28"));
   }
 
   @After

@@ -1,5 +1,8 @@
 package portfolio.model;
 
+/**
+ * Dummy class to test the performance visualization of strategic portfolios.
+ */
 public class MockLineChartTester extends
   MockForStrategicFlexiblePortfoliosModel {
 

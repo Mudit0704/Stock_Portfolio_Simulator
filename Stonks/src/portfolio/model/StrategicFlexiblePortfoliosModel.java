@@ -6,6 +6,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This class represents the Strategic portfolio that can be used to apply various time based
+ * investment strategies. This class implements the IStrategicFlexiblePortfolioModel interface and
+ * is a class adapter over FlexiblePortfoliosModel.
+ */
 public class StrategicFlexiblePortfoliosModel extends FlexiblePortfoliosModel
     implements IStrategicFlexiblePortfolioModel {
 

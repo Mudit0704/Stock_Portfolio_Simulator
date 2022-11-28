@@ -22,6 +22,11 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+/**
+ * This class represents a StrategicPortfolio. This class implements the IStrategicPortfolio
+ * interface and uses a class adapter over FlexiblePortfolio. This class offers methods to
+ * invest in this portfolio using stocks after applying strategies.
+ */
 public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicPortfolio {
 
   private static class Pair<S,T> {
@@ -35,13 +40,14 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
 
   private double transactionFee;
 
-  Map<LocalDate, Map<IStock, Pair<Double, Double>>> listOfScheduledStocks;
+  protected Map<LocalDate, Map<IStock, Pair<Double, Double>>> listOfScheduledStocks;
   /**
    * Constructs an object of Portfolio and initializes its members.
    *
    * @param stockService   the service responsible for calling the API required for stocks data.
    * @param stocks         stocks that will be stored in this portfolio.
-   * @param transactionFee
+   * @param transactionFee the transaction fee to be applied while purchasing stocks to create this
+   *                       portfolio.
    * @param date           date on which this portfolio is created.
    */
   protected StrategicPortfolio(IStockService stockService, Map<IStock, Double> stocks,
@@ -51,7 +57,7 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
     this.creationDate = date;
   }
 
-  private void performCascadingUpdateForRetrospectiveBuy(Map<LocalDate, Double> historicQty,
+  protected void performCascadingUpdateForRetrospectiveBuy(Map<LocalDate, Double> historicQty,
       double quantity, LocalDate dateAfterPurchaseToUpdate, double costBasisUpdateFactor) {
     for(Map.Entry<LocalDate, Double> qtyOnDate:historicQty.entrySet()) {
       if (qtyOnDate.getKey().isAfter(dateAfterPurchaseToUpdate)) {
@@ -125,7 +131,7 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
     listOfScheduledStocks.put(date, stockQty);
   }
 
-  private void saveStrategy(String path) throws ParserConfigurationException {
+  protected void saveStrategy(String path) throws ParserConfigurationException {
     if (listOfScheduledStocks.size() == 0) {
       return;
     }
@@ -192,7 +198,7 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
     this.executeEligibleTransactions();
   }
 
-  private void executeEligibleTransactions() {
+  protected void executeEligibleTransactions() {
 
     for(Map.Entry<LocalDate, Map<IStock, Pair<Double, Double>>> mapEntry:
         this.listOfScheduledStocks.entrySet()) {
@@ -223,7 +229,7 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
     }
   }
 
-  private void retrieveStrategy(String strategyPath)
+  protected void retrieveStrategy(String strategyPath)
     throws IOException, ParserConfigurationException, SAXException {
     if (this.listOfScheduledStocks.size() > 0) {
       throw new RuntimeException("Portfolios already populated\n");
