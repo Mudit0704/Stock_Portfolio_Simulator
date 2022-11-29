@@ -151,38 +151,43 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
       rootElement.appendChild(transactionFee);
 
       for (Map<LocalDate, Map<IStock, Pair<Double, Double>>> dateMap : this.listOfScheduledStocks) {
-        dateMap = dateMap.entrySet().stream()
-          .sorted(Map.Entry.comparingByKey(Comparator.reverseOrder()))
-          .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
-            (e1, e2) -> e2, LinkedHashMap::new));
-
-        for (Map.Entry<LocalDate, Map<IStock, Pair<Double, Double>>> mapEntry
-            : dateMap.entrySet()) {
-          Element investmentElement = doc.createElement("investment");
-          investmentElement.setAttribute("date", String.valueOf(mapEntry.getKey()));
-          Map<IStock, Pair<Double, Double>> stockProportions = mapEntry.getValue();
-          Double amount = 0d;
-          for (Map.Entry<IStock, Pair<Double, Double>> stockProportion
-              : stockProportions.entrySet()) {
-            amount = stockProportion.getValue().s;
-
-            Element stock = doc.createElement("stock");
-            stock.appendChild(doc.createTextNode(stockProportion.getKey().getStockTicker()));
-            stock.setAttribute("percentage", String.valueOf(stockProportion.getValue().t));
-            investmentElement.appendChild(stock);
-          }
-
-          Element totalAmount = doc.createElement("amount");
-          totalAmount.appendChild(doc.createTextNode(amount.toString()));
-          investmentElement.appendChild(totalAmount);
-          rootElement.appendChild(investmentElement);
-        }
+        fillInvestmentXML(doc, dateMap, rootElement);
         super.writeXMLFile(doc, path);
       }
     } catch (DateTimeParseException e) {
       throw new RuntimeException("API Failure...\n");
     } catch (TransformerException e) {
       throw new RuntimeException(e);
+    }
+  }
+
+  protected void fillInvestmentXML(Document doc,
+      Map<LocalDate, Map<IStock, Pair<Double, Double>>> dateMap, Element rootElement) {
+    dateMap = dateMap.entrySet().stream()
+        .sorted(Map.Entry.comparingByKey(Comparator.reverseOrder()))
+        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+          (e1, e2) -> e2, LinkedHashMap::new));
+
+    for (Map.Entry<LocalDate, Map<IStock, Pair<Double, Double>>> mapEntry
+        : dateMap.entrySet()) {
+      Element investmentElement = doc.createElement("investment");
+      investmentElement.setAttribute("date", String.valueOf(mapEntry.getKey()));
+      Map<IStock, Pair<Double, Double>> stockProportions = mapEntry.getValue();
+      Double amount = 0d;
+      for (Map.Entry<IStock, Pair<Double, Double>> stockProportion
+        : stockProportions.entrySet()) {
+        amount = stockProportion.getValue().s;
+
+        Element stock = doc.createElement("stock");
+        stock.appendChild(doc.createTextNode(stockProportion.getKey().getStockTicker()));
+        stock.setAttribute("percentage", String.valueOf(stockProportion.getValue().t));
+        investmentElement.appendChild(stock);
+      }
+
+      Element totalAmount = doc.createElement("amount");
+      totalAmount.appendChild(doc.createTextNode(amount.toString()));
+      investmentElement.appendChild(totalAmount);
+      rootElement.appendChild(investmentElement);
     }
   }
 
@@ -201,37 +206,41 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
     String[] name = path.split("\\.");
     String strategyPath = name[0] + "_strategy." + name[1];
     this.retrieveStrategy(strategyPath);
-    this.executeEligibleTransactions();
+    this.executeScheduledTransactions();
   }
 
-  protected void executeEligibleTransactions() {
+  protected void executeScheduledTransactions() {
     for (Map<LocalDate, Map<IStock, Pair<Double, Double>>> dateMap : this.listOfScheduledStocks) {
-      for (Map.Entry<LocalDate, Map<IStock, Pair<Double, Double>>> mapEntry :
-          dateMap.entrySet()) {
-        LocalDate date = mapEntry.getKey();
-        Map<IStock, Pair<Double, Double>> stockQty = mapEntry.getValue();
-        Double amount = 0d;
-        Map<IStock, Double> stockRatios = new HashMap<>();
-        for (Map.Entry<IStock, Pair<Double, Double>> stocks : stockQty.entrySet()) {
-          amount = stocks.getValue().s;
-          stockRatios.put(stocks.getKey(), stocks.getValue().t);
+      executeTransaction(dateMap);
+    }
+  }
+
+  protected void executeTransaction(Map<LocalDate, Map<IStock, Pair<Double, Double>>> dateMap) {
+    for (Map.Entry<LocalDate, Map<IStock, Pair<Double, Double>>> mapEntry :
+      dateMap.entrySet()) {
+      LocalDate date = mapEntry.getKey();
+      Map<IStock, Pair<Double, Double>> stockQty = mapEntry.getValue();
+      Double amount = 0d;
+      Map<IStock, Double> stockRatios = new HashMap<>();
+      for (Map.Entry<IStock, Pair<Double, Double>> stocks : stockQty.entrySet()) {
+        amount = stocks.getValue().s;
+        stockRatios.put(stocks.getKey(), stocks.getValue().t);
+      }
+
+      IStrategy strategy = new NormalStrategy.NormalStrategyBuilder()
+          .setTotalAmount(amount)
+          .setDate(date)
+          .build();
+
+      Map<LocalDate, Map<IStock, Double>> result = strategy.applyStrategy(stockRatios);
+
+      for (Map.Entry<LocalDate, Map<IStock, Double>> resultEntry : result.entrySet()) {
+        if (resultEntry.getKey().isAfter(LocalDate.now())) {
+          break;
         }
-
-        IStrategy strategy = new NormalStrategy.NormalStrategyBuilder()
-            .setTotalAmount(amount)
-            .setDate(date)
-            .build();
-
-        Map<LocalDate, Map<IStock, Double>> result = strategy.applyStrategy(stockRatios);
-
-        for (Map.Entry<LocalDate, Map<IStock, Double>> resultEntry : result.entrySet()) {
-          if (resultEntry.getKey().isAfter(LocalDate.now())) {
-            break;
-          }
-          dateMap.remove(date);
-          this.investStocksIntoStrategicPortfolio(resultEntry.getValue(),
-              resultEntry.getKey(), this.transactionFee);
-        }
+        dateMap.remove(date);
+        this.investStocksIntoStrategicPortfolio(resultEntry.getValue(),
+          resultEntry.getKey(), this.transactionFee);
       }
     }
   }
@@ -266,33 +275,39 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
         LocalDate txnDate = LocalDate.parse(
             eElement.getAttributes().getNamedItem("date").getNodeValue());
 
-        Double amount = Double.valueOf(eElement.getElementsByTagName("amount")
-            .item(0).getTextContent());
 
-        int numStocks = eElement.getElementsByTagName("stock").getLength();
-        int idx = 0;
-        IStock newStock = null;
         Map<IStock, Pair<Double, Double>> map = new HashMap<>();
-        while (idx < numStocks) {
-          String tickerSymbol = eElement.getElementsByTagName("stock")
-              .item(idx).getTextContent();
-
-          Double percentage = Double.valueOf(eElement.getElementsByTagName("stock")
-              .item(idx).getAttributes().getNamedItem("percentage").getNodeValue());
-
-          idx++;
-
-          newStock = apiOptimizer.cacheGetObj(tickerSymbol);
-
-          if (newStock == null) {
-            newStock = new Stock(tickerSymbol, this.stockService);
-            apiOptimizer.cacheSetObj(tickerSymbol, newStock);
-          }
-          map.put(newStock, new Pair<>(amount, percentage));
-        }
+        parseInvestmentsXML(eElement, map);
         dateMap.put(txnDate, map);
         this.listOfScheduledStocks.add(dateMap);
       }
+    }
+  }
+
+  protected void parseInvestmentsXML(Element eElement, Map<IStock, Pair<Double, Double>> map) {
+    Double amount = Double.valueOf(eElement.getElementsByTagName("amount")
+        .item(0).getTextContent());
+
+    int numStocks = eElement.getElementsByTagName("stock").getLength();
+    int idx = 0;
+    IStock newStock = null;
+
+    while (idx < numStocks) {
+      String tickerSymbol = eElement.getElementsByTagName("stock")
+        .item(idx).getTextContent();
+
+      Double percentage = Double.valueOf(eElement.getElementsByTagName("stock")
+        .item(idx).getAttributes().getNamedItem("percentage").getNodeValue());
+
+      idx++;
+
+      newStock = apiOptimizer.cacheGetObj(tickerSymbol);
+
+      if (newStock == null) {
+        newStock = new Stock(tickerSymbol, this.stockService);
+        apiOptimizer.cacheSetObj(tickerSymbol, newStock);
+      }
+      map.put(newStock, new Pair<>(amount, percentage));
     }
   }
 

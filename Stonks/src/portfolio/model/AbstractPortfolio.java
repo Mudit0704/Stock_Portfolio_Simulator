@@ -46,6 +46,8 @@ public abstract class AbstractPortfolio implements IStrategicPortfolio {
   protected abstract boolean isTransactionSequenceInvalid(IStock stock, LocalDate date,
       TransactionType transactionType);
 
+  //This function has been moved up in this abstract class, to help facilitate its reuse in other
+  // child classes.
   protected LocalDate getClosestDate(LocalDate date, List<LocalDate> qtyHistory) {
     long minDiff = Long.MAX_VALUE;
     LocalDate result = null;

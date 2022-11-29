@@ -6,7 +6,7 @@ package portfolio.model;
  *
  * @param <T> represents the concrete type of StrategyBuilder.
  */
-public abstract class StrategyBuilder<T extends StrategyBuilder<T>> {
+abstract class StrategyBuilder<T extends StrategyBuilder<T>> {
 
   /**
    * Sets the total amount to be invested in the portfolio.
