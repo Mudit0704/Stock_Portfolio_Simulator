@@ -27,3 +27,18 @@ have been added in assignment 4.
 7. Providing a graph of a specified portfolio's performance over a specified period of time with a
    maximum timespan of 30 years.
 8. The same text based view with additional functionalities for new features.
+
+
+================================================================================================
+Assignment 6 Feature additions:
+================================================================================================
+1. Additional view in the form of GUI.
+2. Facility to have fractional investments through specifying a fixed amount and percentages of
+   stocks to invest.
+3. Creation of dollar cost averaging of portfolio over any specified range of time(specified in days) which
+   can be ongoing or specified over number of days and with the option of specifying commission fee.
+4. Application of Dollar cost averaging or fractional investment on an existing portfolio.
+5. Line chart performance for a specified portfolio.
+6. All the features supported as a part of previous iteration are still being supported without any
+   impact.
+7. Allowing periodic investment transactions to be executed on next working day in case of holidays.

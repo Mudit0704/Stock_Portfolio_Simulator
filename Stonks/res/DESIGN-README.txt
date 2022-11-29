@@ -1,4 +1,41 @@
 ====================================================================================================
+                         ASSIGNMENT 6: DESIGN CHANGES FOR EXISTING DESIGN:
+====================================================================================================
+
+Changes over existing design in this iteration:
+----------------------------------------------------------
+Model:
+--------
+1. For model we added a new DateNavigator singleton class in the AbstractPortfoliosModel class
+without making any significant changes over the existing FlexiblePortfoliosModel class.
+2. Additional methods were added for AbstractPortfolio class to make the StrategicPortfolio class
+compatible with the AbstractPortfolio.
+3. The rest of the model interfaces remain intact and unchanged.
+
+These are the only changes on the model side.
+NO EXISTING INTERFACES HAVE CHANGED.
+
+In order to support the new features for strategic portfolio, we simply extended the IFlexiblePortfolioModel
+with IStrategicFlexiblePortfolioModel interface. This model interface was implemented by
+StrategicFlexiblePortfolioModel and is a class adapter over FlexiblePortfoliosModel.
+
+Likewise, the inner StrategicPortfolio class as well. This is extending the IFlexiblePortfolio interface
+and is a class adapter over FlexiblePortfolio.
+
+For dollar cost averaging, we have implemented builder strategy to implement a normal fractional
+based strategy using which a user can specify any future investment or invest using dollar cost
+averaging, which can be applied at once on an existing portfolio or can be applied on a portfolio as
+an existing strategy.
+
+We implemented a singleton DateNavigator class which uses the existing stock API to query the available
+trading dates using the oldest trading stock company available through AlphaVantage API.
+
+All the investments which are part of DCA or normal investment in future dates(ongoing) are being
+persisted in the corresponding strategy xml file which is retrieved everytime all the portfolios are
+retrieved. While doing this, we ensure that all the transactions which are scheduled to be executed
+as part of the ongoing DCA are executed as soon as the portfolios are retrieved.
+
+====================================================================================================
                                            DESIGN CHANGES FOR EXISTING DESIGN:
 ====================================================================================================
 
@@ -21,7 +58,6 @@ avoid duplication.
 In order to provide new feature support, we did not make any design changes in the model and the
 view, we just extended the model interfaces and offered new methods in the new interface by
 following the open-close principle. Hence, this is backward compatible as well.
-
 
 
 
