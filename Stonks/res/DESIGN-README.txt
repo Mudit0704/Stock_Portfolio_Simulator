@@ -35,6 +35,9 @@ persisted in the corresponding strategy xml file which is retrieved everytime al
 retrieved. While doing this, we ensure that all the transactions which are scheduled to be executed
 as part of the ongoing DCA are executed as soon as the portfolios are retrieved.
 
+We have performed code reuse in the model in this iteration by using class adapters over flexible
+portfolios and using the previously created Abstract classes to our benefit as internal code refactoring.
+
 ====================================================================================================
                                            DESIGN CHANGES FOR EXISTING DESIGN:
 ====================================================================================================
