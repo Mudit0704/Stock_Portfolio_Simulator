@@ -175,7 +175,7 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
       Map<IStock, Pair<Double, Double>> stockProportions = mapEntry.getValue();
       Double amount = 0d;
       for (Map.Entry<IStock, Pair<Double, Double>> stockProportion
-        : stockProportions.entrySet()) {
+          : stockProportions.entrySet()) {
         amount = stockProportion.getValue().s;
 
         Element stock = doc.createElement("stock");
@@ -216,8 +216,7 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
   }
 
   protected void executeTransaction(Map<LocalDate, Map<IStock, Pair<Double, Double>>> dateMap) {
-    for (Map.Entry<LocalDate, Map<IStock, Pair<Double, Double>>> mapEntry :
-      dateMap.entrySet()) {
+    for (Map.Entry<LocalDate, Map<IStock, Pair<Double, Double>>> mapEntry : dateMap.entrySet()) {
       LocalDate date = mapEntry.getKey();
       Map<IStock, Pair<Double, Double>> stockQty = mapEntry.getValue();
       Double amount = 0d;
@@ -240,7 +239,7 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
         }
         dateMap.remove(date);
         this.investStocksIntoStrategicPortfolio(resultEntry.getValue(),
-          resultEntry.getKey(), this.transactionFee);
+            resultEntry.getKey(), this.transactionFee);
       }
     }
   }
@@ -294,10 +293,10 @@ public class StrategicPortfolio extends FlexiblePortfolio implements IStrategicP
 
     while (idx < numStocks) {
       String tickerSymbol = eElement.getElementsByTagName("stock")
-        .item(idx).getTextContent();
+          .item(idx).getTextContent();
 
       Double percentage = Double.valueOf(eElement.getElementsByTagName("stock")
-        .item(idx).getAttributes().getNamedItem("percentage").getNodeValue());
+          .item(idx).getAttributes().getNamedItem("percentage").getNodeValue());
 
       idx++;
 
