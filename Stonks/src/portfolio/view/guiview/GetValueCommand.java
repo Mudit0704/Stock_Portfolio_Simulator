@@ -33,6 +33,21 @@ class GetValueCommand extends AbstractCommandHandlers implements ICommandHandler
 
     JDialog userInputDialog = getUserInputDialog("Get Portfolio Value", 520, 200);
 
+    if (addAllElementsToUserInputDialog(okClicked, userInputDialog)) {
+      return;
+    }
+
+    if (okClicked.get()) {
+      GetValueTask task = new GetValueTask(features, fieldsMap.get(DATE).textField.getText(),
+          fieldsMap.get(PORTFOLIO_ID).textField.getText());
+      mainFrame.setEnabled(false);
+      progressBar.setIndeterminate(true);
+      task.execute();
+    }
+  }
+
+  private boolean addAllElementsToUserInputDialog(AtomicBoolean okClicked, JDialog userInputDialog) {
+    JPanel availablePortfoliosDisplay;
     try {
       availablePortfoliosDisplay = getResultDisplay(features.getAvailablePortfolios(),
           AVAILABLE_PORTFOLIOS);
@@ -40,7 +55,7 @@ class GetValueCommand extends AbstractCommandHandlers implements ICommandHandler
     } catch (Exception e) {
       resultArea.setText("<html><center><h1>" + e.getLocalizedMessage() + "</center></html>");
       progressBar.setIndeterminate(false);
-      return;
+      return true;
     }
 
     JPanel userInputPanel = new JPanel(new GridLayout(0, 2));
@@ -66,14 +81,7 @@ class GetValueCommand extends AbstractCommandHandlers implements ICommandHandler
     userInputDialog.add(fieldsPanel, BorderLayout.PAGE_END);
 
     userInputDialog.setVisible(true);
-
-    if (okClicked.get()) {
-      GetValueTask task = new GetValueTask(features, fieldsMap.get(DATE).textField.getText(),
-          fieldsMap.get(PORTFOLIO_ID).textField.getText());
-      mainFrame.setEnabled(false);
-      progressBar.setIndeterminate(true);
-      task.execute();
-    }
+    return false;
   }
 
   class GetValueTask extends SwingWorker<String, Object> {

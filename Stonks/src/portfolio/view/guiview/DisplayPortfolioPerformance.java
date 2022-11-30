@@ -35,6 +35,23 @@ public class DisplayPortfolioPerformance extends AbstractCommandHandlers impleme
 
     JDialog userInputDialog = getUserInputDialog("Portfolio performance", 660, 200);
 
+    if (addAllElementsToUserInputDialog(okClicked, userInputDialog)) {
+      return;
+    }
+
+    if (okClicked.get()) {
+      GetPortfolioPerformanceTask task = new GetPortfolioPerformanceTask(features,
+          fieldsMap.get(PERFORMANCE_START_DATE).textField.getText(),
+          fieldsMap.get(PERFORMANCE_END_DATE).textField.getText(),
+          fieldsMap.get(PORTFOLIO_ID).textField.getText());
+      mainFrame.setEnabled(false);
+      progressBar.setIndeterminate(true);
+      task.execute();
+    }
+  }
+
+  private boolean addAllElementsToUserInputDialog(AtomicBoolean okClicked, JDialog userInputDialog) {
+    JPanel availablePortfoliosDisplay;
     try {
       availablePortfoliosDisplay = getResultDisplay(features.getAvailablePortfolios(),
           AVAILABLE_PORTFOLIOS);
@@ -42,7 +59,7 @@ public class DisplayPortfolioPerformance extends AbstractCommandHandlers impleme
     } catch (Exception e) {
       resultArea.setText("<html><center><h1>" + e.getLocalizedMessage() + "</center></html>");
       progressBar.setIndeterminate(false);
-      return;
+      return true;
     }
 
     JPanel userInputPanel = new JPanel(new GridLayout(0, 2));
@@ -69,16 +86,7 @@ public class DisplayPortfolioPerformance extends AbstractCommandHandlers impleme
     userInputDialog.add(fieldsPanel, BorderLayout.PAGE_END);
 
     userInputDialog.setVisible(true);
-
-    if (okClicked.get()) {
-      GetPortfolioPerformanceTask task = new GetPortfolioPerformanceTask(features,
-          fieldsMap.get(PERFORMANCE_START_DATE).textField.getText(),
-          fieldsMap.get(PERFORMANCE_END_DATE).textField.getText(),
-          fieldsMap.get(PORTFOLIO_ID).textField.getText());
-      mainFrame.setEnabled(false);
-      progressBar.setIndeterminate(true);
-      task.execute();
-    }
+    return false;
   }
 
   class GetPortfolioPerformanceTask extends SwingWorker<Object, Object> {

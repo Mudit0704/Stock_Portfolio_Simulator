@@ -39,6 +39,20 @@ class CreateFlexiblePortfolioCommand extends AbstractCommandHandlers implements 
     JPanel mainPanel = new JPanel(new BorderLayout());
     mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
     userInputDialog.add(mainPanel);
+    Map<String, Double> stocks = addAllElementsToUserInputDialog(doneClicked, okClicked,
+      userInputDialog, mainPanel);
+
+    if (doneClicked.get()) {
+      CreateFlexiblePortfolioTask createFlexiblePortfolioTask = new CreateFlexiblePortfolioTask(
+          features, stocks, fieldsMap.get(DATE).textField.getText());
+      progressBar.setIndeterminate(true);
+      createFlexiblePortfolioTask.execute();
+      mainFrame.setEnabled(false);
+    }
+  }
+
+  private Map<String, Double> addAllElementsToUserInputDialog(AtomicBoolean doneClicked, AtomicBoolean okClicked,
+    JDialog userInputDialog, JPanel mainPanel) {
     Map<String, Double> stocks = new HashMap<>();
 
     JPanel userInputPanel = new JPanel(new GridLayout(0, 2));
@@ -50,14 +64,7 @@ class CreateFlexiblePortfolioCommand extends AbstractCommandHandlers implements 
 
     JButton okButton = getCustomButton("OK");
     okButton.addActionListener(e -> {
-      if (validator(validatorMap).isEmpty()) {
-        stocks.put(fieldsMap.get(TICKER_SYMBOL).textField.getText(),
-            Double.parseDouble(fieldsMap.get(QUANTITY).textField.getText()));
-        fieldsMap.get(TICKER_SYMBOL).textField.setText("");
-        fieldsMap.get(QUANTITY).textField.setText("");
-        fieldsMap.get(DATE).textField.setEditable(false);
-        okClicked.set(true);
-      }
+      okFunctionality(okClicked, stocks);
     });
 
     JButton doneButton = getCustomButton("DONE");
@@ -80,13 +87,17 @@ class CreateFlexiblePortfolioCommand extends AbstractCommandHandlers implements 
 
     userInputDialog.pack();
     userInputDialog.setVisible(true);
+    return stocks;
+  }
 
-    if (doneClicked.get()) {
-      CreateFlexiblePortfolioTask createFlexiblePortfolioTask = new CreateFlexiblePortfolioTask(
-          features, stocks, fieldsMap.get(DATE).textField.getText());
-      progressBar.setIndeterminate(true);
-      createFlexiblePortfolioTask.execute();
-      mainFrame.setEnabled(false);
+  private void okFunctionality(AtomicBoolean okClicked, Map<String, Double> stocks) {
+    if (validator(validatorMap).isEmpty()) {
+      stocks.put(fieldsMap.get(TICKER_SYMBOL).textField.getText(),
+          Double.parseDouble(fieldsMap.get(QUANTITY).textField.getText()));
+      fieldsMap.get(TICKER_SYMBOL).textField.setText("");
+      fieldsMap.get(QUANTITY).textField.setText("");
+      fieldsMap.get(DATE).textField.setEditable(false);
+      okClicked.set(true);
     }
   }
 

@@ -31,6 +31,22 @@ class GetCostBasisCommand extends AbstractCommandHandlers implements ICommandHan
     AtomicBoolean okClicked = new AtomicBoolean(false);
     JDialog userInputDialog = getUserInputDialog("Get Portfolio Cost Basis", 520, 200);
 
+    if (addAllElementsToUserInputDialog(okClicked, userInputDialog)) {
+      return;
+    }
+
+    if (okClicked.get()) {
+      GetCostBasisTask task = new GetCostBasisTask(features,
+          fieldsMap.get(DATE).textField.getText(),
+          fieldsMap.get(PORTFOLIO_ID).textField.getText());
+      progressBar.setIndeterminate(true);
+      task.execute();
+      mainFrame.setEnabled(false);
+    }
+  }
+
+  private boolean addAllElementsToUserInputDialog(AtomicBoolean okClicked, JDialog userInputDialog) {
+    JPanel availablePortfoliosDisplay;
     try {
       availablePortfoliosDisplay = getResultDisplay(features.getAvailablePortfolios(),
           AVAILABLE_PORTFOLIOS);
@@ -38,7 +54,7 @@ class GetCostBasisCommand extends AbstractCommandHandlers implements ICommandHan
     } catch (Exception e) {
       resultArea.setText("<html><center><h1>" + e.getLocalizedMessage() + "</center></html>");
       progressBar.setIndeterminate(false);
-      return;
+      return true;
     }
 
     JPanel userInputPanel = new JPanel(new GridLayout(0, 2));
@@ -64,15 +80,7 @@ class GetCostBasisCommand extends AbstractCommandHandlers implements ICommandHan
     userInputDialog.add(fieldsPanel, BorderLayout.PAGE_END);
 
     userInputDialog.setVisible(true);
-
-    if (okClicked.get()) {
-      GetCostBasisTask task = new GetCostBasisTask(features,
-          fieldsMap.get(DATE).textField.getText(),
-          fieldsMap.get(PORTFOLIO_ID).textField.getText());
-      progressBar.setIndeterminate(true);
-      task.execute();
-      mainFrame.setEnabled(false);
-    }
+    return false;
   }
 
   class GetCostBasisTask extends SwingWorker<String, Object> {
