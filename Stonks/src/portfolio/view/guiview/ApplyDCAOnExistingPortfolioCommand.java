@@ -16,15 +16,15 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTextPane;
 import javax.swing.SwingWorker;
-import portfolio.controller.Features;
+import portfolio.controller.IFeatures;
 import portfolio.controller.GUIPortfolioController;
 
 /**
  * Command class containing the logic for applying daily cost averaging strategy on an existing
- * portfolio. Implements {@link CommandHandler}.
+ * portfolio. Implements {@link ICommandHandler}.
  */
 class ApplyDCAOnExistingPortfolioCommand extends AbstractCommandHandlers implements
-    CommandHandler {
+    ICommandHandler {
 
   /**
    * Initializes the members required by each button handler.
@@ -36,7 +36,7 @@ class ApplyDCAOnExistingPortfolioCommand extends AbstractCommandHandlers impleme
    * @param mainFrame   the main window of the application
    */
   ApplyDCAOnExistingPortfolioCommand(JTextPane resultArea,
-      Features features, JProgressBar progressBar,
+      IFeatures features, JProgressBar progressBar,
       JFrame mainFrame) {
     super(resultArea, features, progressBar, mainFrame);
   }
@@ -145,7 +145,7 @@ class ApplyDCAOnExistingPortfolioCommand extends AbstractCommandHandlers impleme
 
   class ApplyDollarCostAveragePortfolioTask extends SwingWorker<String, Object> {
 
-    Features features;
+    IFeatures features;
     String startDate;
     String endDate;
     Map<String, Double> stockProportions;
@@ -153,7 +153,7 @@ class ApplyDCAOnExistingPortfolioCommand extends AbstractCommandHandlers impleme
     String timeFrame;
     String portfolioId;
 
-    ApplyDollarCostAveragePortfolioTask(Features features, Map<String, Double> stockProportions,
+    ApplyDollarCostAveragePortfolioTask(IFeatures features, Map<String, Double> stockProportions,
         String totalAmount, String startDate, String endDate, String timeFrame,
         String portfolioId) {
       this.features = features;

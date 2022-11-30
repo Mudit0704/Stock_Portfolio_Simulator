@@ -1,6 +1,6 @@
 package portfolio.view;
 
-import portfolio.controller.Features;
+import portfolio.controller.IFeatures;
 
 /**
  * Represents all the operations related to the GUI of the portfolio application.
@@ -14,7 +14,7 @@ public interface IGUIView extends ICommonView {
    * @param features an object of {@link portfolio.controller.GUIPortfolioController} to perform the
    *                 callback functionality between the view and controller
    */
-  void addFeatures(Features features);
+  void addFeatures(IFeatures features);
 
   /**
    * Displays the window responsible for getting a portfolio's value.
@@ -22,7 +22,7 @@ public interface IGUIView extends ICommonView {
    * @param features an object of {@link portfolio.controller.GUIPortfolioController} to perform the
    *                 callback functionality between the view and controller
    */
-  void displayGetPortfolioValueWindow(Features features);
+  void displayGetPortfolioValueWindow(IFeatures features);
 
   /**
    * Displays the window responsible for getting a portfolio's cost basis.
@@ -30,7 +30,7 @@ public interface IGUIView extends ICommonView {
    * @param features an object of {@link portfolio.controller.GUIPortfolioController} to perform the
    *                 callback functionality between the view and controller
    */
-  void displayGetPortfolioCostBasisWindow(Features features);
+  void displayGetPortfolioCostBasisWindow(IFeatures features);
 
   /**
    * Displays the window responsible for selling a portfolio's stock.
@@ -38,7 +38,7 @@ public interface IGUIView extends ICommonView {
    * @param features an object of {@link portfolio.controller.GUIPortfolioController} to perform the
    *                 callback functionality between the view and controller
    */
-  void displaySellStocksWindow(Features features);
+  void displaySellStocksWindow(IFeatures features);
 
   /**
    * Displays the window responsible for buying a portfolio's stock.
@@ -46,7 +46,7 @@ public interface IGUIView extends ICommonView {
    * @param features an object of {@link portfolio.controller.GUIPortfolioController} to perform the
    *                 callback functionality between the view and controller
    */
-  void displayBuyStocksWindow(Features features);
+  void displayBuyStocksWindow(IFeatures features);
 
   /**
    * Displays the window responsible for creating a new flexible portfolio.
@@ -54,7 +54,7 @@ public interface IGUIView extends ICommonView {
    * @param features an object of {@link portfolio.controller.GUIPortfolioController} to perform the
    *                 callback functionality between the view and controller
    */
-  void displayCreateNewFlexibleWindow(Features features);
+  void displayCreateNewFlexibleWindow(IFeatures features);
 
   /**
    * Displays the window responsible for performing fractional investment on an existing portfolio.
@@ -62,7 +62,7 @@ public interface IGUIView extends ICommonView {
    * @param features an object of {@link portfolio.controller.GUIPortfolioController} to perform the
    *                 callback functionality between the view and controller
    */
-  void displayFractionInvestmentWindow(Features features);
+  void displayFractionInvestmentWindow(IFeatures features);
 
   /**
    * Displays the window responsible for creating a portfolio using dollar cost average strategy.
@@ -70,7 +70,7 @@ public interface IGUIView extends ICommonView {
    * @param features an object of {@link portfolio.controller.GUIPortfolioController} to perform the
    *                 callback functionality between the view and controller
    */
-  void displayCreateDollarCostAveragingWindow(Features features);
+  void displayCreateDollarCostAveragingWindow(IFeatures features);
 
   /**
    * Displays the window responsible for displaying a portfolio's performance.
@@ -78,7 +78,7 @@ public interface IGUIView extends ICommonView {
    * @param features an object of {@link portfolio.controller.GUIPortfolioController} to perform the
    *                 callback functionality between the view and controller
    */
-  void displayPortfolioPerformanceLineChart(Features features);
+  void displayPortfolioPerformanceLineChart(IFeatures features);
 
   /**
    * Displays the window responsible for applying DCA on an existing portfolio.
@@ -86,5 +86,5 @@ public interface IGUIView extends ICommonView {
    * @param features an object of {@link portfolio.controller.GUIPortfolioController} to perform the
    *                 callback functionality between the view and controller
    */
-  void displayApplyDCAOnExistingPortfolioWindow(Features features);
+  void displayApplyDCAOnExistingPortfolioWindow(IFeatures features);
 }

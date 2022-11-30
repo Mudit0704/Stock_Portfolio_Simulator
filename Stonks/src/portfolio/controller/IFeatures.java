@@ -6,7 +6,7 @@ import java.util.Map;
 /**
  * Represents the GUI controller and its related operations required to implement portfolios.
  */
-public interface Features {
+public interface IFeatures {
 
   /**
    * Creates a new portfolio with the given creation date containing the stocks passed.

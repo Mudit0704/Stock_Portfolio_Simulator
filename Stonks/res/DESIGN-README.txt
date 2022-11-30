@@ -15,6 +15,27 @@ compatible with the AbstractPortfolio.
 These are the only changes on the model side.
 NO EXISTING INTERFACES HAVE CHANGED.
 
+----------------------------------------------------------
+View:
+--------
+
+To ensure we are reusing the methods defined in the IView interface for a GUI view, we have performed
+interface segregation such that all the common methods between TextBased and GUI view are moved
+to a new interface ICommonView. We extend this new interface in IView ensuring a passive change thereby
+not impacting previous functionality and neither causing any change to previous code.
+
+----------------------------------------------------------
+Controller:
+--------
+
+NO CHANGES TO CONTROLLER's EXISTING DESIGN.
+
+----------------------------------------------------------
+New Features Implementation:
+----------------------------------------------------------
+
+Model:
+--------
 In order to support the new features for strategic portfolio, we simply extended the IFlexiblePortfolioModel
 with IStrategicFlexiblePortfolioModel interface. This model interface was implemented by
 StrategicFlexiblePortfolioModel and is a class adapter over FlexiblePortfoliosModel.
@@ -37,6 +58,40 @@ as part of the ongoing DCA are executed as soon as the portfolios are retrieved.
 
 We have performed code reuse in the model in this iteration by using class adapters over flexible
 portfolios and using the previously created Abstract classes to our benefit as internal code refactoring.
+
+----------------------------------------------------------
+View:
+--------
+
+The ICommonView interface is further extended by IGUIView interface which contains methods defined
+to implement the new GUI view.
+
+IGUIView is then implemented by GUIView concrete class containing all the logic for our GUI view and to
+ensure we have proper modularity of code and not one big single view class, we have implemented the
+Command Design Pattern for all the different functionalities/commands offered in the UI. So for each
+button, the listener calls the respective command class logic to implement its functionality.
+
+We have implemented the pattern by the use of a new interface ICommandHandler that contains the basic
+method that is implemented by AbstractCommandHandlers class. To reuse common code for all the
+commands we have made use of AbstractCommandHandlers class which is then extended by all the
+individual commands.
+
+To ensure that the application doesn't
+hang while performing any task, we have implemented multi-threading by extending the inbuilt
+SwingWorker class for the private classes in each command.
+
+----------------------------------------------------------
+Controller:
+--------
+
+To ensure a proper decoupled controller and view, we have created a new interface IFeatures, that
+defines all the methods provided by controller to provide a proper way of communication between
+the model and view without exposing either of them to each other.
+
+We have created a new controller GUIPortfolioController class which is passed the
+StrategicFlexiblePortfoliosModel, GUIView and FlexibleView objects. The controller is implemented
+in such a way that it can switch between GUI view (GUIView) and the text based view (FlexibleView)
+based on user input. The controller implements the IFeatures interface.
 
 ====================================================================================================
                                            DESIGN CHANGES FOR EXISTING DESIGN:

@@ -12,15 +12,15 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTextPane;
 import javax.swing.SwingWorker;
-import portfolio.controller.Features;
+import portfolio.controller.IFeatures;
 
 /**
  * Command class containing the logic for getting a portfolio's cost basis. Implements
- * {@link CommandHandler}.
+ * {@link ICommandHandler}.
  */
-class GetCostBasisCommand extends AbstractCommandHandlers implements CommandHandler {
+class GetCostBasisCommand extends AbstractCommandHandlers implements ICommandHandler {
 
-  GetCostBasisCommand(JTextPane resultArea, Features features,
+  GetCostBasisCommand(JTextPane resultArea, IFeatures features,
       JProgressBar progressBar, JFrame mainFrame) {
     super(resultArea, features, progressBar, mainFrame);
   }
@@ -77,11 +77,11 @@ class GetCostBasisCommand extends AbstractCommandHandlers implements CommandHand
 
   class GetCostBasisTask extends SwingWorker<String, Object> {
 
-    Features features;
+    IFeatures features;
     String date;
     String portfolioId;
 
-    GetCostBasisTask(Features features, String date, String portfolioId) {
+    GetCostBasisTask(IFeatures features, String date, String portfolioId) {
       this.features = features;
       this.date = date;
       this.portfolioId = portfolioId;

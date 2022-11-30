@@ -2,6 +2,32 @@
                               STEPS TO RUN THE PROGRAM:
 ====================================================================================================
 
+Steps to run the program:
+
+Open a command line prompt/terminal in admin/sudo mode. Type this command 'java -jar "Stonks.jar"'
+
+================================================================================================================
+                                             NOTE:
+----------------------------------------------------------------------------------------------------------------
+
+Please ensure to have the /flexiblePortfolio folder along with the "Stonks.jar" to ensure saving of
+portfolios.
+
+DEPENDENCIES
+   -- RUNNING THROUGH COMMAND LINE : "jfreechart-1.0.1.jar" and "jcommon-1.0.0.jar" are the required dependencies to create the line chart for a
+      portfolio's performance. Please ensure to keep them along with the main application jar "Stonks.jar".
+   -- RUNNING IN IDE : After opening the project in IntelliJ,
+
+      File -> Project Structure -> Modules -> Dependencies -> Using '+' add "jfreechart-1.0.1.jar" and "jcommon-1.0.0.jar" to the
+      project -> Apply -> OK.
+
+LIBRARIES USED
+   -- JFreeChart 1.0.1
+
+====================================================================================================
+                              STEPS TO RUN THE TEXT-BASED PROGRAM:
+====================================================================================================
+
 Steps to create a portfolio with 3 different stocks
 1. Create/Move the provided folder 'flexiblePortfolio' in the directory where you run the jar.
 2. Open a command line prompt/terminal in admin/sudo mode. Type this command 'java -jar "Stonks.jar"'

@@ -16,17 +16,17 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTextPane;
 import javax.swing.SwingWorker;
-import portfolio.controller.Features;
+import portfolio.controller.IFeatures;
 
 /**
  * Command class containing the logic for creating a portfolio using the dollar cost average
- * strategy. Implements {@link CommandHandler}.
+ * strategy. Implements {@link ICommandHandler}.
  */
 class CreateDollarCostAveragePortfolioCommand extends AbstractCommandHandlers implements
-    CommandHandler {
+    ICommandHandler {
 
   CreateDollarCostAveragePortfolioCommand(JTextPane resultArea,
-      Features features, JProgressBar progressBar,
+      IFeatures features, JProgressBar progressBar,
       JFrame mainFrame) {
     super(resultArea, features, progressBar, mainFrame);
   }
@@ -121,14 +121,14 @@ class CreateDollarCostAveragePortfolioCommand extends AbstractCommandHandlers im
 
   class CreateDollarCostAveragePortfolioTask extends SwingWorker<String, Object> {
 
-    Features features;
+    IFeatures features;
     String startDate;
     String endDate;
     Map<String, Double> stockProportions;
     String totalAmount;
     String timeFrame;
 
-    CreateDollarCostAveragePortfolioTask(Features features, Map<String, Double> stockProportions,
+    CreateDollarCostAveragePortfolioTask(IFeatures features, Map<String, Double> stockProportions,
         String totalAmount,
         String startDate, String endDate, String timeFrame) {
       this.features = features;

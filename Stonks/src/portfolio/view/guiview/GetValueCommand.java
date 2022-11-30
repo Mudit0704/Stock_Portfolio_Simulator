@@ -12,15 +12,15 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTextPane;
 import javax.swing.SwingWorker;
-import portfolio.controller.Features;
+import portfolio.controller.IFeatures;
 
 /**
  * Command class containing the logic for getting a portfolio's value. Implements
- * {@link CommandHandler}.
+ * {@link ICommandHandler}.
  */
-class GetValueCommand extends AbstractCommandHandlers implements CommandHandler {
+class GetValueCommand extends AbstractCommandHandlers implements ICommandHandler {
 
-  GetValueCommand(JTextPane resultArea, Features features,
+  GetValueCommand(JTextPane resultArea, IFeatures features,
       JProgressBar progressBar, JFrame mainFrame) {
     super(resultArea, features, progressBar, mainFrame);
 
@@ -78,11 +78,11 @@ class GetValueCommand extends AbstractCommandHandlers implements CommandHandler 
 
   class GetValueTask extends SwingWorker<String, Object> {
 
-    Features features;
+    IFeatures features;
     String date;
     String portfolioId;
 
-    GetValueTask(Features features, String date, String portfolioId) {
+    GetValueTask(IFeatures features, String date, String portfolioId) {
       this.features = features;
       this.date = date;
       this.portfolioId = portfolioId;

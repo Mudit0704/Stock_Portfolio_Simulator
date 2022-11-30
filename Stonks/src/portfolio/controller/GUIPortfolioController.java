@@ -18,7 +18,7 @@ import portfolio.view.IView;
  * model's methods using the inputs passed by the view. Also takes model's response for every
  * operation and outputs them using the view.
  */
-public class GUIPortfolioController implements Features {
+public class GUIPortfolioController implements IFeatures {
 
   protected static final String MAIN_MENU =
       "Choose from the below menu: \n 1 -> Use text-based UI \n"

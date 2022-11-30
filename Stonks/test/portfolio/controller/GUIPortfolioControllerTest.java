@@ -26,7 +26,7 @@ public class GUIPortfolioControllerTest {
   private StringBuffer out;
   private IView mockView;
   private StringBuilder log;
-  private Features controller;
+  private IFeatures controller;
   private Reader in;
 
   @Before

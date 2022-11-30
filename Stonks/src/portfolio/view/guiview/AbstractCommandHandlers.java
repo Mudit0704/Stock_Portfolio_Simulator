@@ -27,12 +27,12 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.WindowConstants;
-import portfolio.controller.Features;
+import portfolio.controller.IFeatures;
 
 /**
  * Stores the common logic for different types of command handlers of the graphical user interface.
  */
-abstract class AbstractCommandHandlers implements CommandHandler {
+abstract class AbstractCommandHandlers implements ICommandHandler {
 
   public static final String INVALID = "Please Enter A Valid";
   public static final String VALID = "Valid";
@@ -52,7 +52,7 @@ abstract class AbstractCommandHandlers implements CommandHandler {
   public static final String STRATEGY_MESSAGE = "Press OK to add one stock and "
       + "DONE when you are done adding stocks";
   JTextPane resultArea;
-  Features features;
+  IFeatures features;
   JProgressBar progressBar;
   JFrame mainFrame;
   Map<String, LabelFieldPair> fieldsMap;
@@ -68,7 +68,7 @@ abstract class AbstractCommandHandlers implements CommandHandler {
    * @param progressBar a progress bar representing the status of each command
    * @param mainFrame   the main window of the application
    */
-  AbstractCommandHandlers(JTextPane resultArea, Features features,
+  AbstractCommandHandlers(JTextPane resultArea, IFeatures features,
       JProgressBar progressBar, JFrame mainFrame) {
     this.resultArea = resultArea;
     this.features = features;
@@ -231,7 +231,7 @@ abstract class AbstractCommandHandlers implements CommandHandler {
 
   boolean isPercentageTotalValid(DoubleAdder percentageTotal) {
     if (percentageTotal.doubleValue() + Double.parseDouble(fieldsMap.get(PERCENTAGE).textField
-        .getText())  > 100d) {
+        .getText()) > 100d) {
       JOptionPane.showMessageDialog(mainFrame, "Percentage total cannot be greater than 100",
           "Error",
           JOptionPane.ERROR_MESSAGE);
@@ -297,6 +297,10 @@ abstract class AbstractCommandHandlers implements CommandHandler {
     }
   }
 
+  /**
+   * A class to store a field and its label together as one object during their creation for
+   * providing ease of logic implementation for both.
+   */
   static class LabelFieldPair {
 
     JLabel label;

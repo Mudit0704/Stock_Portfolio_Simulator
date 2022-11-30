@@ -6,14 +6,14 @@ import javax.swing.JFrame;
 import javax.swing.JProgressBar;
 import javax.swing.JTextPane;
 import javax.swing.SwingWorker;
-import portfolio.controller.Features;
+import portfolio.controller.IFeatures;
 
 /**
- * Command class containing the logic for buying stocks. Implements {@link CommandHandler}.
+ * Command class containing the logic for buying stocks. Implements {@link ICommandHandler}.
  */
-class BuyStocksCommand extends AbstractCommandHandlers implements CommandHandler {
+class BuyStocksCommand extends AbstractCommandHandlers implements ICommandHandler {
 
-  BuyStocksCommand(JTextPane resultArea, Features features,
+  BuyStocksCommand(JTextPane resultArea, IFeatures features,
       JProgressBar progressBar, JFrame mainFrame) {
     super(resultArea, features, progressBar, mainFrame);
   }
@@ -39,14 +39,14 @@ class BuyStocksCommand extends AbstractCommandHandlers implements CommandHandler
 
   class BuyStocksTask extends SwingWorker<String, Object> {
 
-    Features features;
+    IFeatures features;
     String date;
     String portfolioId;
     String quantity;
     String tickerSymbol;
     String transactionFee;
 
-    BuyStocksTask(Features features, String quantity, String date, String portfolioId,
+    BuyStocksTask(IFeatures features, String quantity, String date, String portfolioId,
         String tickerSymbol, String transactionFee) {
       this.features = features;
       this.date = date;

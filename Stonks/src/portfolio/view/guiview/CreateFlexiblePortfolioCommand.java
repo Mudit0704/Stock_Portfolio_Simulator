@@ -16,16 +16,16 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTextPane;
 import javax.swing.SwingWorker;
-import portfolio.controller.Features;
+import portfolio.controller.IFeatures;
 
 /**
  * Command class containing the logic for creating a flexible portfolio. Implements
- * {@link CommandHandler}.
+ * {@link ICommandHandler}.
  */
-class CreateFlexiblePortfolioCommand extends AbstractCommandHandlers implements CommandHandler {
+class CreateFlexiblePortfolioCommand extends AbstractCommandHandlers implements ICommandHandler {
 
   CreateFlexiblePortfolioCommand(JTextPane resultArea,
-      Features features, JProgressBar progressBar,
+      IFeatures features, JProgressBar progressBar,
       JFrame mainFrame) {
     super(resultArea, features, progressBar, mainFrame);
   }
@@ -92,11 +92,11 @@ class CreateFlexiblePortfolioCommand extends AbstractCommandHandlers implements 
 
   class CreateFlexiblePortfolioTask extends SwingWorker<String, Object> {
 
-    Features features;
+    IFeatures features;
     String date;
     Map<String, Double> stocks;
 
-    CreateFlexiblePortfolioTask(Features features, Map<String, Double> stocks, String date) {
+    CreateFlexiblePortfolioTask(IFeatures features, Map<String, Double> stocks, String date) {
       this.features = features;
       this.date = date;
       this.stocks = stocks;

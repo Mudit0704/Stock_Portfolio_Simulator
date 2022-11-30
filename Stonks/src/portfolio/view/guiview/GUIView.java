@@ -15,7 +15,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import portfolio.controller.Features;
+import portfolio.controller.IFeatures;
 import portfolio.view.IGUIView;
 
 /**
@@ -121,7 +121,7 @@ public class GUIView extends JFrame implements IGUIView {
   }
 
   @Override
-  public void addFeatures(Features features) {
+  public void addFeatures(IFeatures features) {
     savePortfolioButton.addActionListener(e -> displayArea.setText("<html><center><h1>"
         + features.savePortfolio() + "</h1></center></html>"));
     getPortfolioValueButton.addActionListener(e -> displayGetPortfolioValueWindow(features));
@@ -144,48 +144,48 @@ public class GUIView extends JFrame implements IGUIView {
   }
 
   @Override
-  public void displayGetPortfolioValueWindow(Features features) {
+  public void displayGetPortfolioValueWindow(IFeatures features) {
     new GetValueCommand(displayArea, features, progressBar, this).execute();
   }
 
   @Override
-  public void displayGetPortfolioCostBasisWindow(Features features) {
+  public void displayGetPortfolioCostBasisWindow(IFeatures features) {
     new GetCostBasisCommand(displayArea, features, progressBar, this).execute();
   }
 
   @Override
-  public void displaySellStocksWindow(Features features) {
+  public void displaySellStocksWindow(IFeatures features) {
     new SellStocksCommand(displayArea, features, progressBar, this).execute();
   }
 
   @Override
-  public void displayBuyStocksWindow(Features features) {
+  public void displayBuyStocksWindow(IFeatures features) {
     new BuyStocksCommand(displayArea, features, progressBar, this).execute();
   }
 
   @Override
-  public void displayCreateNewFlexibleWindow(Features features) {
+  public void displayCreateNewFlexibleWindow(IFeatures features) {
     new CreateFlexiblePortfolioCommand(displayArea, features, progressBar, this).execute();
   }
 
   @Override
-  public void displayFractionInvestmentWindow(Features features) {
+  public void displayFractionInvestmentWindow(IFeatures features) {
     new ApplyFractionalInvestmentCommand(displayArea, features, progressBar, this).execute();
   }
 
   @Override
-  public void displayCreateDollarCostAveragingWindow(Features features) {
+  public void displayCreateDollarCostAveragingWindow(IFeatures features) {
     new CreateDollarCostAveragePortfolioCommand(displayArea, features, progressBar,
         this).execute();
   }
 
   @Override
-  public void displayPortfolioPerformanceLineChart(Features features) {
+  public void displayPortfolioPerformanceLineChart(IFeatures features) {
     new DisplayPortfolioPerformance(displayArea, features, progressBar, this).execute();
   }
 
   @Override
-  public void displayApplyDCAOnExistingPortfolioWindow(Features features) {
+  public void displayApplyDCAOnExistingPortfolioWindow(IFeatures features) {
     new ApplyDCAOnExistingPortfolioCommand(displayArea, features, progressBar, this).execute();
   }
 }

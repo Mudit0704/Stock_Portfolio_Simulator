@@ -1,7 +1,7 @@
 package portfolio.view;
 
 import javax.swing.UnsupportedLookAndFeelException;
-import portfolio.controller.Features;
+import portfolio.controller.IFeatures;
 import portfolio.view.guiview.GUIView;
 
 /**
@@ -24,7 +24,7 @@ public class MockGUIView extends GUIView {
   }
 
   @Override
-  public void addFeatures(Features features) {
+  public void addFeatures(IFeatures features) {
     //Overriden addFeatures method to avoid launching of UI while testing.
   }
 }

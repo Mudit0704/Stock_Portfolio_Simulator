@@ -16,17 +16,17 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTextPane;
 import javax.swing.SwingWorker;
-import portfolio.controller.Features;
+import portfolio.controller.IFeatures;
 
 /**
  * Command class containing the logic for performing a fractional investment on an existing
- * portfolio. Implements {@link CommandHandler}.
+ * portfolio. Implements {@link ICommandHandler}.
  */
 class ApplyFractionalInvestmentCommand extends AbstractCommandHandlers implements
-    CommandHandler {
+    ICommandHandler {
 
   ApplyFractionalInvestmentCommand(JTextPane resultArea,
-      Features features, JProgressBar progressBar,
+      IFeatures features, JProgressBar progressBar,
       JFrame mainFrame) {
     super(resultArea, features, progressBar, mainFrame);
   }
@@ -124,13 +124,13 @@ class ApplyFractionalInvestmentCommand extends AbstractCommandHandlers implement
 
   class InvestFractionalTask extends SwingWorker<String, Object> {
 
-    Features features;
+    IFeatures features;
     String date;
     Map<String, Double> stockProportions;
     String totalAmount;
     String portfolioId;
 
-    InvestFractionalTask(Features features, Map<String, Double> stockProportions,
+    InvestFractionalTask(IFeatures features, Map<String, Double> stockProportions,
         String totalAmount,
         String portfolioId, String date) {
       this.features = features;

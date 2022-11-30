@@ -13,16 +13,17 @@ import javax.swing.JProgressBar;
 import javax.swing.JTextPane;
 import javax.swing.SwingWorker;
 import javax.swing.WindowConstants;
-import portfolio.controller.Features;
+import portfolio.controller.IFeatures;
 
 /**
  * Command class containing the logic for displaying a portfolio's performance. Implements
- * {@link CommandHandler}.
+ * {@link ICommandHandler}.
  */
-public class DisplayPortfolioPerformance extends AbstractCommandHandlers implements CommandHandler {
+public class DisplayPortfolioPerformance extends AbstractCommandHandlers implements
+    ICommandHandler {
 
   DisplayPortfolioPerformance(JTextPane resultArea,
-      Features features, JProgressBar progressBar,
+      IFeatures features, JProgressBar progressBar,
       JFrame mainFrame) {
     super(resultArea, features, progressBar, mainFrame);
   }
@@ -82,12 +83,12 @@ public class DisplayPortfolioPerformance extends AbstractCommandHandlers impleme
 
   class GetPortfolioPerformanceTask extends SwingWorker<Object, Object> {
 
-    Features features;
+    IFeatures features;
     String startDate;
     String endDate;
     String portfolioId;
 
-    GetPortfolioPerformanceTask(Features features, String startDate, String endDate,
+    GetPortfolioPerformanceTask(IFeatures features, String startDate, String endDate,
         String portfolioId) {
       this.features = features;
       this.startDate = startDate;
