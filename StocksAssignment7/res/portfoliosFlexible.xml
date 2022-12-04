@@ -1,0 +1,15 @@
+<portfolioNames>
+    <pfName name="Coll">
+        <Stock CommissionFee="30.0" DateBought="2021-03-04" StockName="AAPL">25.0</Stock>
+        <Stock CommissionFee="24.0" DateBought="2021-04-05" StockName="AMZN">12.0</Stock>
+        <Stock CommissionFee="10.0" DateBought="2021-05-08" StockName="AAPL">15.0</Stock>
+        <Stock CommissionFee="10.0" DateBought="2021-06-09" StockName="AAPL">-39.0</Stock>
+        <Stock CommissionFee="11.0" DateBought="2021-07-08" StockName="AMZN">17.0</Stock>
+        <Stock CommissionFee="11.0" DateBought="2021-08-08" StockName="AMZN">1.0</Stock>
+    </pfName>
+    <pfName name="College">
+        <Stock CommissionFee="10.0" DateBought="2022-02-03" StockName="MSFT">24.0</Stock>
+        <Stock CommissionFee="15.0" DateBought="2022-04-05" StockName="TSLA">14.0</Stock>
+        <Stock CommissionFee="111.0" DateBought="2022-05-06" StockName="AAPL">11.0</Stock>
+    </pfName>
+</portfolioNames>

@@ -1,0 +1,11 @@
+<portfolioNames>
+    <pfName name="College">
+        <Stock StockName="AAPL">22</Stock>
+        <Stock StockName="AMZN">23</Stock>
+        <Stock StockName="AMZN">24</Stock>
+    </pfName>
+    <pfName name="Savings">
+        <Stock StockName="AMZN">22</Stock>
+        <Stock StockName="AAPL">11</Stock>
+    </pfName>
+</portfolioNames>

@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="res">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/jfreechart-1.0.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/A6_PDP.jar!/" />
+      <root url="jar://$PROJECT_DIR$/docs.zip!/" />
+      <root url="jar://$PROJECT_DIR$/jcommon-1.0.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
