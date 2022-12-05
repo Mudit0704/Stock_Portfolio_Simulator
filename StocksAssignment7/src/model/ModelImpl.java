@@ -269,4 +269,10 @@ public class ModelImpl implements Model {
     return (objPF.getAxisForGraph(date1, date2, validDatesInAPI));
   }
 
+  @Override
+  public void rebalanceExistingPortfolio(String pfNameGraph, String filePath, LocalDate date,
+    ArrayList<LocalDate> validDatesInAPI) {
+
+  }
+
 }

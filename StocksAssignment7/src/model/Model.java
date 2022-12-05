@@ -340,4 +340,7 @@ public interface Model {
    */
   HashMap<String,Integer> getAxisForGraph(String pfNameGraph, String filePath, LocalDate date1,
                              LocalDate date2, ArrayList<LocalDate> validDatesInAPI);
+
+  void rebalanceExistingPortfolio(String pfNameGraph, String filePath, LocalDate date,
+      ArrayList<LocalDate> validDatesInAPI);
 }
