@@ -278,6 +278,11 @@ public class ModelImpl implements Model {
     DollarCostAvg conv = new DollarCostAvg();
 
     HashMap<String, Double> mapForTSPrice = conv.getValueForPerc(this.mapForTsPerc, invtAmt);
+    List<String> stockList = this.getTickerSymbolsInPortfolio(pfName, filePath, date);
+
+    if (stockList.size() != this.mapForTsPerc.size()) {
+      throw new IllegalArgumentException("Insufficient proportions");
+    }
     ArrayList<LocalDate> timestampsList = new ArrayList<>();
     InvestmentStrategies objDcaTimestamps = new InvestmentStrategiesImpl(date, null);
     timestampsList.add(objDcaTimestamps.getWorkingTimestamp(date, validDatesInAPI));
@@ -293,9 +298,9 @@ public class ModelImpl implements Model {
   }
 
   @Override
-  public List<String> getTickerSymbolsInPortfolio(String pfName, String filePath) {
+  public List<String> getTickerSymbolsInPortfolio(String pfName, String filePath, LocalDate date) {
     objPF = new PortfolioImpl(pfName, filePath);
-    return objPF.getStocksInPortfolio();
+    return objPF.getStocksInPortfolio(date);
   }
 
 }

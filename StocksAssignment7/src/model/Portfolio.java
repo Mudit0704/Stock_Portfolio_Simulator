@@ -69,5 +69,5 @@ public interface Portfolio {
   void rebalanceStockInPortfolio(HashMap<LocalDate, Double> priceOnTimestamps, String tickerSymbol,
       Double stockProportion);
 
-  List<String> getStocksInPortfolio();
+  List<String> getStocksInPortfolio(LocalDate date);
 }

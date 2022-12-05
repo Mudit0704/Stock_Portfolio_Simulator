@@ -234,9 +234,9 @@ public class PortfolioImpl implements Portfolio {
   }
 
   @Override
-  public List<String> getStocksInPortfolio() {
+  public List<String> getStocksInPortfolio(LocalDate date) {
     HashMap<String, Double> pfDetails;
-    pfDetails = readPf.readXML(this.pfName, this.filePath, null); // Read Pfdetails from xml
+    pfDetails = readPf.readXML(this.pfName, this.filePath, date); // Read Pfdetails from xml
     return new ArrayList<>(pfDetails.keySet());
   }
 

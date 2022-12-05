@@ -345,5 +345,5 @@ public interface Model {
   void rebalanceExistingPortfolio(String pfName, String filePath, LocalDate date,
       ArrayList<LocalDate> validDatesInAPI, String type);
 
-  List<String> getTickerSymbolsInPortfolio(String pfName, String filePath);
+  List<String> getTickerSymbolsInPortfolio(String pfName, String filePath, LocalDate date);
 }
