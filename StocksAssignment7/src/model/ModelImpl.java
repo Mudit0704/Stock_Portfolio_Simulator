@@ -270,9 +270,11 @@ public class ModelImpl implements Model {
   }
 
   @Override
-  public void rebalanceExistingPortfolio(String pfNameGraph, String filePath, LocalDate date,
-    ArrayList<LocalDate> validDatesInAPI) {
-
+  public void rebalanceExistingPortfolio(String pfName, String filePath, LocalDate date,
+    ArrayList<LocalDate> validDatesInAPI, String type) {
+    objPF = new PortfolioImpl(pfName, filePath);
+//    return (objPF.getPortfolioTotal(date, type));
+//    HashMap<String, Double> mapForTSPrice = conv.getValueForPerc(this.mapForTsPerc, invtAmt);
   }
 
 }
