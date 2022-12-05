@@ -391,13 +391,4 @@ public class FlexiblePortfoliosModelTest {
     AbstractPortfolioModel portfolioModel = new FlexiblePortfoliosModel();
     portfolioModel.setCommissionFee(-10);
   }
-
-  @Test(expected = None.class)
-  public void testTransactionCache()
-      throws ParserConfigurationException, IOException, SAXException {
-    portfolioNew.setCommissionFee(10);
-    portfolioNew.retrievePortfolios();
-    portfolioNew.addStocksToPortfolio("GGO", 1d, 1, LocalDate.now());
-    portfolioNew.getPortfolioCompositionOnADate(1, LocalDate.now());
-  }
 }
