@@ -22,7 +22,7 @@ public class PortfolioTest {
 
   @Before
   public void setup() {
-    mockService = new MockStockService("/test/testData.txt");
+    mockService = new MockStockService("/test/testExtensiveData.txt");
   }
 
   @Test
@@ -69,7 +69,7 @@ public class PortfolioTest {
     map.put(new Stock("MSFT", mockService), 2d);
     IPortfolio portfolio = new Portfolio(mockService, map);
 
-    assertEquals(568.92, portfolio.getPortfolioValue(LocalDate.of(2022, 10, 28)), 0.0);
+    assertEquals(579.48, portfolio.getPortfolioValue(LocalDate.of(2022, 10, 28)), 0.0);
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -124,7 +124,7 @@ public class PortfolioTest {
     assertTrue(result.contains("GOOG -> 3.0\n"));
     assertTrue(result.contains("MSFT -> 2.0\n"));
     assertTrue(result.contains("PUBM -> 1.0\n"));
-    assertEquals(568.92, portfolio.getPortfolioValue(LocalDate.of(2022, 10, 28)), 0.0);
+    assertEquals(579.48, portfolio.getPortfolioValue(LocalDate.of(2022, 10, 28)), 0.0);
 
     try {
       Files.delete(Path.of(path));
@@ -174,7 +174,7 @@ public class PortfolioTest {
     assertTrue(result.contains("GOOG -> 3.0\n"));
     assertTrue(result.contains("MSFT -> 2.0\n"));
     assertTrue(result.contains("PUBM -> 1.0\n"));
-    assertEquals(577.72, retrievedPortfolio.getPortfolioValue(LocalDate.of(2022, 10, 28)), 0.0);
+    assertEquals(579.48, retrievedPortfolio.getPortfolioValue(LocalDate.of(2022, 10, 28)), 0.0);
 
     try {
       Files.delete(Path.of(path));

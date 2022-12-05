@@ -22,7 +22,6 @@ public class StrategicFlexiblePortfoliosModelTest {
   IStrategicFlexiblePortfolioModel portfolio;
   private IStockService mockStockService;
   private IStrategicFlexiblePortfolioModel mockSaveModel;
-  private IStrategicFlexiblePortfolioModel mockFutureRetrieve;
   private IStrategicFlexiblePortfolioModel mockSaveFutureTransaction;
 
   @Before
@@ -30,7 +29,6 @@ public class StrategicFlexiblePortfoliosModelTest {
     portfolio = new StrategicFlexiblePortfoliosModel();
     mockStockService = new MockStockService("/test/testExtensiveData.txt");
     mockSaveModel = new MockForStrategicFlexiblePortfoliosModel();
-    mockFutureRetrieve = new MockForRetrieveFuture();
     mockSaveFutureTransaction = new MockSavePartialTxn();
   }
 
@@ -587,23 +585,6 @@ public class StrategicFlexiblePortfoliosModelTest {
     model.retrievePortfolios();
 
     assertEquals(10000.0, model.getCostBasis(LocalDate.now(), 1), 0.0);
-  }
-
-  @Test
-  public void testFutureTransactions()
-      throws IOException, ParserConfigurationException, SAXException,
-      NoSuchFieldException, IllegalAccessException {
-    Field stockService = AbstractPortfolioModel.class.getDeclaredField("stockService");
-
-    stockService.set(mockFutureRetrieve, mockStockService);
-
-    mockFutureRetrieve.retrievePortfolios();
-    String result = mockFutureRetrieve.getPortfolioCompositionOnADate(1, LocalDate.of(2022,11,27));
-    assertTrue(result.contains("AMAM -> 19.64"));
-    assertTrue(result.contains("ALGT -> 49.12"));
-    assertTrue(result.contains("AMAO -> 24.41"));
-    assertTrue(result.contains("TSIBW -> 25.29"));
-    assertTrue(result.contains("TSLA -> 15.17"));
   }
 
   @Test(expected = IllegalArgumentException.class)

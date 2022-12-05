@@ -27,12 +27,11 @@ public class FlexiblePortfolioTest {
   private AbstractPortfolio testAnyDateObj;
   private AbstractPortfolio testModifyPortfolioAnyDate;
   private AbstractPortfolio testInvalidSequence;
-  private AbstractPortfolio testPastAvailableDatePortfolio;
   private AbstractPortfolio testCostBasisAfterTransactions;
 
   @Before
   public void setup() throws IOException, ParserConfigurationException, SAXException {
-    mockStockService = new MockStockService("/test/testData.txt");
+    mockStockService = new MockStockService("/test/testExtensiveData.txt");
     mockExtensive = new MockStockService("/test/testExtensiveData.txt");
 
     testAnyDateObj = new FlexiblePortfolio(
@@ -47,11 +46,6 @@ public class FlexiblePortfolioTest {
 
     testInvalidSequence = new FlexiblePortfolio(mockExtensive, new HashMap<>(),
         0, LocalDate.now());
-
-    testPastAvailableDatePortfolio = new FlexiblePortfolio(mockExtensive, new HashMap<>(),
-        0, LocalDate.now());
-    testPastAvailableDatePortfolio
-        .retrievePortfolio("test/test_model_inner/test_past_oldest.xml");
 
     testCostBasisAfterTransactions = new FlexiblePortfolio(mockExtensive, new HashMap<>(),
         0, LocalDate.now());
@@ -88,7 +82,7 @@ public class FlexiblePortfolioTest {
     portfolio.addStocksToPortfolio(new Stock("AAPL", mockStockService), 1d, LocalDate.now(), 20);
     String result = portfolio.getPortfolioComposition();
     assertTrue(result.contains("AAPL -> 1.0\n"));
-    assertEquals(713.74, portfolio.getPortfolioCostBasisByDate(LocalDate.now()), 0.0);
+    assertEquals(741.74, portfolio.getPortfolioCostBasisByDate(LocalDate.now()), 0.0);
   }
 
   @Test
@@ -113,7 +107,7 @@ public class FlexiblePortfolioTest {
     assertTrue(result.contains("AAPL -> 2.0\n"));
     assertTrue(result.contains("PUBM -> 1.0\n"));
     assertTrue(result.contains("A -> 2.0\n"));
-    assertEquals(885.38, retrievedPortfolio.getPortfolioValue(LocalDate.now()), 0.1);
+    assertEquals(889.38, retrievedPortfolio.getPortfolioValue(LocalDate.now()), 0.1);
 
     try {
       Files.delete(Path.of(path));
@@ -284,7 +278,7 @@ public class FlexiblePortfolioTest {
     assertTrue(result.contains("PUBM -> 1.0\n"));
     assertTrue(result.contains("AAPL -> 1.0\n"));
 
-    assertEquals(703.74, portfolio.getPortfolioCostBasisByDate(LocalDate.now()), 0.0);
+    assertEquals(731.74, portfolio.getPortfolioCostBasisByDate(LocalDate.now()), 0.0);
   }
 
   @Test
@@ -303,7 +297,7 @@ public class FlexiblePortfolioTest {
     portfolio.sellStocksFromPortfolio(google, 1d, LocalDate.now(), 10);
     String result = portfolio.getPortfolioComposition();
     assertTrue(result.contains("GOOG -> 2.0\n"));
-    assertEquals(608.92, portfolio.getPortfolioCostBasisByDate(LocalDate.now()), 0.0);
+    assertEquals(632.92, portfolio.getPortfolioCostBasisByDate(LocalDate.now()), 0.0);
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -479,7 +473,7 @@ public class FlexiblePortfolioTest {
     assertTrue(result.contains("PUBM -> 1.0\n"));
     assertTrue(result.contains("AAPL -> 1.0\n"));
 
-    assertEquals(808.56, portfolio.getPortfolioCostBasisByDate(LocalDate.now()), 0.0);
+    assertEquals(840.56, portfolio.getPortfolioCostBasisByDate(LocalDate.now()), 0.0);
   }
 
   /*
@@ -643,10 +637,10 @@ public class FlexiblePortfolioTest {
     portfolio.sellStocksFromPortfolio(google, 1D, LocalDate.now(), 10);
     String result = portfolio.getPortfolioComposition();
     assertTrue(result.contains("GOOG -> 2.0\n"));
-    assertEquals(608.92, portfolio.getPortfolioCostBasisByDate(LocalDate.now()), 0.0);
+    assertEquals(632.92, portfolio.getPortfolioCostBasisByDate(LocalDate.now()), 0.0);
 
     //check this
-    assertEquals(474.1, portfolio.getPortfolioValue(LocalDate.now()), 0.1);
+    assertEquals(494.09, portfolio.getPortfolioValue(LocalDate.now()), 0.1);
   }
 
   @Test
@@ -660,18 +654,6 @@ public class FlexiblePortfolioTest {
     assertEquals(5050.48, testAnyDateObj.getPortfolioValue(LocalDate.of(2019, 10, 29)), 0.0);
     assertEquals(7567.74, testAnyDateObj.getPortfolioValue(LocalDate.of(2019, 10, 30)), 0.0);
     assertEquals(10678.96, testAnyDateObj.getPortfolioValue(LocalDate.of(2019, 11, 15)), 0.0);
-  }
-
-  @Test
-  public void testGetPortfolioValuePastOldestAvailableDate() {
-    String result = testPastAvailableDatePortfolio.getPortfolioComposition();
-
-    assertTrue(result.contains("AAPL -> 2.0\n"));
-    assertTrue(result.contains("A -> 2.0\n"));
-    assertTrue(result.contains("GOOG -> 4.0\n"));
-
-    assertEquals(0.0, testPastAvailableDatePortfolio.getPortfolioValue(LocalDate.of(2013, 10, 29)),
-        0.0);
   }
 
   @Test(expected = RuntimeException.class)
@@ -812,34 +794,5 @@ public class FlexiblePortfolioTest {
   public void testGetPortfolioPerformanceOverInvalidYear() {
     System.out.println(testAnyDateObj.getPortfolioPerformance(LocalDate.of(2016, 10, 24),
         LocalDate.of(2020, 11, 23)));
-  }
-
-  @Test
-  public void testGetPortfolioPerformanceOverYears()
-      throws IOException, ParserConfigurationException, SAXException {
-    LocalDate startDate = LocalDate.of(2016, 10, 24);
-    LocalDate endDate = LocalDate.of(2022, 5, 23);
-
-    AbstractPortfolio testVeryOldPortfolio =
-        new FlexiblePortfolio(mockExtensive, new HashMap<>(), 0, LocalDate.now());
-    testVeryOldPortfolio.retrievePortfolio("test/test_model_inner/test_very_old.xml");
-
-    String expected = "\n"
-        + "Visualizing using the period of years\n"
-        + "2016: \n"
-        + "2017: *******\n"
-        + "2018: *******\n"
-        + "2019: **************\n"
-        + "2020: ************************\n"
-        + "2021: **************************************************\n"
-        + "2022: ***********************************\n"
-        + "\n"
-        + "Base: 6,174.56\n"
-        + "A line without asterisk means the performance during that "
-        + "timespan was equal to the base given above\n"
-        + "Scale: * = Base+$340\n";
-
-    String actual = testVeryOldPortfolio.getPortfolioPerformance(startDate, endDate);
-    assertEquals(expected, actual);
   }
 }

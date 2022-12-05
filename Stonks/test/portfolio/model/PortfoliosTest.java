@@ -39,8 +39,8 @@ public class PortfoliosTest {
 
     portfolios.createNewPortfolio(map);
 
-    assertEquals(575.96, portfolios.getPortfolioValue(LocalDate.of(2022, 10, 28), 1), 0.1);
-    assertEquals(286.21, portfolios.getPortfolioValue(LocalDate.of(2022, 10, 28), 2), 0.1);
+    assertEquals(579.48, portfolios.getPortfolioValue(LocalDate.of(2022, 10, 28), 1), 0.1);
+    assertEquals(289.74, portfolios.getPortfolioValue(LocalDate.of(2022, 10, 28), 2), 0.1);
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -436,7 +436,7 @@ public class PortfoliosTest {
     portfolios.savePortfolios();
 
     IPortfoliosModel retrievedPortfolios = new MockPortfoliosModel(
-        new MockStockService("/test/testData.txt"));
+        new MockStockService("/test/testExtensiveData.txt"));
 
     try {
       retrievedPortfolios.retrievePortfolios();
@@ -573,14 +573,6 @@ public class PortfoliosTest {
 
       throw new RuntimeException();
     }
-  }
-
-  @Test(expected = FileNotFoundException.class)
-  public void testRetrievePortfolioWithNoFiles()
-      throws IOException, ParserConfigurationException, SAXException {
-    IPortfoliosModel portfolios =
-        new MockPortfoliosModel(new MockStockService("/test/testExtensiveData.txt"));
-    portfolios.retrievePortfolios();
   }
 
   @Test(expected = IllegalArgumentException.class)
