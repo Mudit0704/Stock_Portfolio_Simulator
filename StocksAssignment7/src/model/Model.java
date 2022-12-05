@@ -3,6 +3,7 @@ package model;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * This interface is the model interface for the Stocks application. This has various function
@@ -343,4 +344,6 @@ public interface Model {
 
   void rebalanceExistingPortfolio(String pfName, String filePath, LocalDate date,
       ArrayList<LocalDate> validDatesInAPI, String type);
+
+  List<String> getTickerSymbolsInPortfolio(String pfName, String filePath);
 }

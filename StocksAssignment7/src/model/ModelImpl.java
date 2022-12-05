@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -289,6 +290,12 @@ public class ModelImpl implements Model {
 
       objPF.rebalanceStockInPortfolio(priceOnTimestamps, tsSet.getKey(), tsSet.getValue());
     }
+  }
+
+  @Override
+  public List<String> getTickerSymbolsInPortfolio(String pfName, String filePath) {
+    objPF = new PortfolioImpl(pfName, filePath);
+    return objPF.getStocksInPortfolio();
   }
 
 }

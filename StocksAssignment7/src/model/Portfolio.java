@@ -3,6 +3,7 @@ package model;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * This interface has the implementations to operate on a portfolio .
@@ -67,4 +68,6 @@ public interface Portfolio {
 
   void rebalanceStockInPortfolio(HashMap<LocalDate, Double> priceOnTimestamps, String tickerSymbol,
       Double stockProportion);
+
+  List<String> getStocksInPortfolio();
 }

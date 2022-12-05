@@ -1,5 +1,6 @@
 package model;
 
+import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -230,6 +231,13 @@ public class PortfolioImpl implements Portfolio {
       numShares = stockProportion / datePrice.getValue();
       this.writeStockDetailsInXML(tickerSymbol, numShares - existingShares, 0.0, datePrice.getKey());
     }
+  }
+
+  @Override
+  public List<String> getStocksInPortfolio() {
+    HashMap<String, Double> pfDetails;
+    pfDetails = readPf.readXML(this.pfName, this.filePath, null); // Read Pfdetails from xml
+    return new ArrayList<>(pfDetails.keySet());
   }
 
 }
