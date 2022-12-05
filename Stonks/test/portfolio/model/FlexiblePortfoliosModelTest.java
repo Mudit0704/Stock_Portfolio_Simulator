@@ -11,7 +11,6 @@ import java.util.Map;
 import javax.xml.parsers.ParserConfigurationException;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.Test.None;
 import org.xml.sax.SAXException;
 
 /**
@@ -20,14 +19,13 @@ import org.xml.sax.SAXException;
 public class FlexiblePortfoliosModelTest {
 
   private AbstractPortfolioModel portfolios;
-  private AbstractPortfolioModel portfolioNew;
 
   @Before
   public void setup() throws IllegalAccessException, NoSuchFieldException {
     IStockService mockExtensive = new MockStockService("/test/testExtensiveData.txt");
 
     portfolios = new FlexiblePortfoliosModel();
-    portfolioNew = new FlexiblePortfoliosModel();
+    AbstractPortfolioModel portfolioNew = new FlexiblePortfoliosModel();
 
     Field stockService = AbstractPortfolioModel.class.getDeclaredField("stockService");
 

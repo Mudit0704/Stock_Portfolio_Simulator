@@ -40,7 +40,7 @@ class CreateFlexiblePortfolioCommand extends AbstractCommandHandlers implements 
     mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
     userInputDialog.add(mainPanel);
     Map<String, Double> stocks = addAllElementsToUserInputDialog(doneClicked, okClicked,
-      userInputDialog, mainPanel);
+        userInputDialog, mainPanel);
 
     if (doneClicked.get()) {
       CreateFlexiblePortfolioTask createFlexiblePortfolioTask = new CreateFlexiblePortfolioTask(
@@ -51,8 +51,8 @@ class CreateFlexiblePortfolioCommand extends AbstractCommandHandlers implements 
     }
   }
 
-  private Map<String, Double> addAllElementsToUserInputDialog(AtomicBoolean doneClicked, AtomicBoolean okClicked,
-    JDialog userInputDialog, JPanel mainPanel) {
+  private Map<String, Double> addAllElementsToUserInputDialog(AtomicBoolean doneClicked,
+      AtomicBoolean okClicked, JDialog userInputDialog, JPanel mainPanel) {
     Map<String, Double> stocks = new HashMap<>();
 
     JPanel userInputPanel = new JPanel(new GridLayout(0, 2));

@@ -46,7 +46,8 @@ class GetValueCommand extends AbstractCommandHandlers implements ICommandHandler
     }
   }
 
-  private boolean addAllElementsToUserInputDialog(AtomicBoolean okClicked, JDialog userInputDialog) {
+  private boolean addAllElementsToUserInputDialog(AtomicBoolean okClicked,
+      JDialog userInputDialog) {
     JPanel availablePortfoliosDisplay;
     try {
       availablePortfoliosDisplay = getResultDisplay(features.getAvailablePortfolios(),
