@@ -218,4 +218,15 @@ public class PortfolioImpl implements Portfolio {
     return xyAxis;
   }
 
+  @Override
+  public void rebalanceStockInPortfolio(HashMap<LocalDate, Double> priceOnTimestamps,
+    String tickerSymbol, Double stockProportion) {
+
+    double numShares;
+    for (Map.Entry<LocalDate, Double> datePrice : priceOnTimestamps.entrySet()) {
+      numShares = stockProportion / datePrice.getValue();
+      this.writeStockDetailsInXML(tickerSymbol, numShares, 0.0, datePrice.getKey());
+    }
+  }
+
 }

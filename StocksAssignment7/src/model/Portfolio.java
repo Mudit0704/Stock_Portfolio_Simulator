@@ -64,4 +64,7 @@ public interface Portfolio {
 
   HashMap<String, Integer> getAxisForGraph(LocalDate date1,
                                    LocalDate date2, ArrayList<LocalDate> validDatesInAPI);
+
+  void rebalanceStockInPortfolio(HashMap<LocalDate, Double> priceOnTimestamps, String tickerSymbol,
+      Double stockProportion);
 }

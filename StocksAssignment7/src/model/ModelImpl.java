@@ -271,10 +271,24 @@ public class ModelImpl implements Model {
 
   @Override
   public void rebalanceExistingPortfolio(String pfName, String filePath, LocalDate date,
-    ArrayList<LocalDate> validDatesInAPI, String type) {
+      ArrayList<LocalDate> validDatesInAPI, String type) {
     objPF = new PortfolioImpl(pfName, filePath);
-//    return (objPF.getPortfolioTotal(date, type));
-//    HashMap<String, Double> mapForTSPrice = conv.getValueForPerc(this.mapForTsPerc, invtAmt);
+    Double invtAmt = objPF.getPortfolioTotal(date, type);
+    DollarCostAvg conv = new DollarCostAvg();
+
+    HashMap<String, Double> mapForTSPrice = conv.getValueForPerc(this.mapForTsPerc, invtAmt);
+    ArrayList<LocalDate> timestampsList = new ArrayList<>();
+    InvestmentStrategies objDcaTimestamps = new InvestmentStrategiesImpl(date, null);
+    timestampsList.add(objDcaTimestamps.getWorkingTimestamp(date, validDatesInAPI));
+
+    for (Map.Entry<String, Double> tsSet : mapForTSPrice.entrySet()) {
+      String tickerSymbol = tsSet.getKey();
+      // priceOnTimestamps = Price of stock on the timestamp. {Date : price from api on x date}
+      HashMap<LocalDate, Double> priceOnTimestamps = conv.getPriceOnTimestamps(
+        tickerSymbol, timestampsList);
+
+      objPF.rebalanceStockInPortfolio(priceOnTimestamps, tsSet.getKey(), tsSet.getValue());
+    }
   }
 
 }
