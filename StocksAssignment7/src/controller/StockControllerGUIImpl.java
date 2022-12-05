@@ -4,17 +4,20 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 
 import model.Model;
 import view.ViewGUI;
 
 /**
- * This class implements the Features and StockControllerGUI interface.
- * It has implementation methods for calling the view to perform various stock operations on the
- * GUI. These include creation and modification using earlier methods, investment strategy and
- * dollar cost averaging, uploading an existing portfolio, retrieving composition, total, cost
- * basis and performance graph of a portfolio.
+ * This class implements the Features and StockControllerGUI interface. It has implementation
+ * methods for calling the view to perform various stock operations on the GUI. These include
+ * creation and modification using earlier methods, investment strategy and dollar cost averaging,
+ * uploading an existing portfolio, retrieving composition, total, cost basis and performance graph
+ * of a portfolio.
  */
 public class StockControllerGUIImpl implements StockController, Features {
 
@@ -26,9 +29,8 @@ public class StockControllerGUIImpl implements StockController, Features {
   private ViewGUI view;
 
   /**
-   * Constructor for the StockControllerGUIImpl class. It has a model and view object to
-   * communicate with them. It also initialises the filepath where portfolio details will be
-   * saved.
+   * Constructor for the StockControllerGUIImpl class. It has a model and view object to communicate
+   * with them. It also initialises the filepath where portfolio details will be saved.
    *
    * @param m (Model) object of the Model class
    * @param v (View) object of the view class
@@ -71,6 +73,9 @@ public class StockControllerGUIImpl implements StockController, Features {
       this.purpose = "total";
       view.getGraphPage();
     } else if (Objects.equals(typed, "8")) {
+      this.purpose = "rebalance";
+      view.getPfNameAndDate();
+    } else if (Objects.equals(typed, "9")) {
       System.exit(0);
     }
   }
@@ -116,15 +121,40 @@ public class StockControllerGUIImpl implements StockController, Features {
       view.errorDate();
     } else {
       view.drawGraph(model.getAxisForGraph(inPFName, this.filePath, model.getDate(inDate),
-              model.getDate(inEndDate),
-              datesFromAPI));
+          model.getDate(inEndDate),
+          datesFromAPI));
     }
+  }
+
+  @Override
+  public void rebalancePortfolio(String pfName, String date) {
+    model.rebalanceExistingPortfolio(pfName, this.filePath, model.getDate(date), datesFromAPI,
+        "Flexible");
+  }
+
+  @Override
+  public void addStockWeightsForRebalance(String tickerSymbol, String percentage) {
+    if (model.percentageSumMoreThan100(model.getPercentage(percentage))) {
+      view.errorPerc();
+    } else if (!(model.isPercentagesSum100())) {
+      model.saveTsAndPerc(tickerSymbol, model.getPercentage(percentage));
+      if (model.isPercentagesSum100()) {
+        view.rebalanceDone100();
+      } else {
+        view.rebalanceStockAdded();
+      }
+    }
+  }
+
+  @Override
+  public List<String> getPortfolioStocks(String pfName) {
+    return model.getTickerSymbolsInPortfolio(pfName, this.filePath);
   }
 
   // For create
   @Override
   public void echoStockDetails(String pfName, String tickerSymbol, String numShares,
-                               String commFee, String date, boolean flag) {
+      String commFee, String date, boolean flag) {
 
     if (!(model.isPfNameUnique(pfName, this.filePath)) && flag) {
       view.errorPfName();
@@ -139,21 +169,21 @@ public class StockControllerGUIImpl implements StockController, Features {
         model.writePortfolioName(pfName, this.filePath);
       }
       model.writeStockDetails(pfName, model.getTickerSymbol(tickerSymbol),
-              model.getNumberOfShares(numShares), model.getCommFee(commFee),
-              this.filePath, model.getDate(date));
+          model.getNumberOfShares(numShares), model.getCommFee(commFee),
+          this.filePath, model.getDate(date));
       view.stockModifiedSuccess();
     }
   }
 
   @Override
   public void createDcaPortfolio(String pfName, String invtAmt, String commFee, String tickerSymbol,
-                                 String perc, String startDate, String endDate, String interval,
-                                 boolean flagForPfName, boolean flagForStocks) {
+      String perc, String startDate, String endDate, String interval,
+      boolean flagForPfName, boolean flagForStocks) {
 
     if (((!(this.model.isPfNameUnique(pfName, this.filePath))
-            && Objects.equals(this.purpose, "create"))
-            || ((this.model.isPfNameUnique(pfName, this.filePath))
-            && Objects.equals(this.purpose, "modify"))) && flagForPfName) {
+        && Objects.equals(this.purpose, "create"))
+        || ((this.model.isPfNameUnique(pfName, this.filePath))
+        && Objects.equals(this.purpose, "modify"))) && flagForPfName) {
 
       if (Objects.equals(this.purpose, "create")) {
         view.errorPfName();
@@ -164,8 +194,8 @@ public class StockControllerGUIImpl implements StockController, Features {
       view.errorInvtAmt();
     } else if (!(model.isCommFeeValid(commFee))) {
       view.errorCommFee();
-    //    } else if (!(model.isTickerSymbolValid(tickerSymbol)) && flagForStocks) {
-    //      view.errorTs();
+      //    } else if (!(model.isTickerSymbolValid(tickerSymbol)) && flagForStocks) {
+      //      view.errorTs();
     } else if (!(model.isPercentageValid(perc)) && flagForStocks) {
       view.errorPerc();
     } else {
@@ -184,7 +214,7 @@ public class StockControllerGUIImpl implements StockController, Features {
         if (!(model.isStartDateValid(startDate))) {
           view.errorDate();
         } else if (endDate.length() != 0 && !(model.isEndDateValid(endDate,
-                model.getDate(startDate)))) {
+            model.getDate(startDate)))) {
           view.errorDate();
         } else if (!(model.isIntervalValid(interval))) {
           view.errorInterval();
@@ -193,9 +223,9 @@ public class StockControllerGUIImpl implements StockController, Features {
             endDate = "N";
           }
           model.dollarCostAveraging(pfName, model.getInvestmentAmount(invtAmt),
-                  model.getCommFee(commFee), model.getDate(startDate), model.getDate(endDate),
-                  model.getInterval(interval),
-                  this.filePath, datesFromAPI, this.purpose);
+              model.getCommFee(commFee), model.getDate(startDate), model.getDate(endDate),
+              model.getInterval(interval),
+              this.filePath, datesFromAPI, this.purpose);
           model.resetTsAndPerc();
           if (Objects.equals(this.purpose, "create")) {
             view.portfolioSuccess("created");
@@ -214,11 +244,11 @@ public class StockControllerGUIImpl implements StockController, Features {
       view.errorPfName2();
 
     } else if (((Objects.equals(this.purpose, "cost basis"))
-            || (Objects.equals(this.purpose, "composition")))
-            && !(model.isStartDateValid(date))) {
+        || (Objects.equals(this.purpose, "composition")))
+        && !(model.isStartDateValid(date))) {
       view.errorDate();
     } else if (Objects.equals(this.purpose, "total")
-            && !(model.isDateValid(date, this.purpose, datesFromAPI))) {
+        && !(model.isDateValid(date, this.purpose, datesFromAPI))) {
       view.errorDateMarketClosed();
 
     } else if ((!(model.isPfNameUnique(pfName, this.filePath))) && (model.isStartDateValid(date))) {
@@ -237,6 +267,8 @@ public class StockControllerGUIImpl implements StockController, Features {
         } else {
           view.outputPage(comp);
         }
+      } else if (Objects.equals(this.purpose, "rebalance")) {
+        view.rebalancePortfolio(pfName, date);
       }
     }
   }
@@ -265,11 +297,11 @@ public class StockControllerGUIImpl implements StockController, Features {
 
   @Override
   public void buyOrSellStocks(String pfName, String tickerSymbol, String numShares,
-                              String commFee, String date) {
+      String commFee, String date) {
     if (model.isPfNameUnique(pfName, this.filePath)) {
       view.errorPfName2();
-    //    } else if (!(model.isTickerSymbolValid(tickerSymbol))) {
-    //      view.errorTs();
+      //    } else if (!(model.isTickerSymbolValid(tickerSymbol))) {
+      //      view.errorTs();
     } else if (!(model.isNumberOfSharesValid(numShares))) {
       view.errorNs();
     } else if (!(model.isDateValid(date, "purchasing", datesFromAPI))) {
@@ -279,15 +311,15 @@ public class StockControllerGUIImpl implements StockController, Features {
     } else {
       if (this.purpose.equals("buy")) {
         model.writeStockDetails(pfName, model.getTickerSymbol(tickerSymbol),
-                model.getNumberOfShares(numShares), model.getCommFee(commFee),
-                this.filePath, model.getDate(date));
+            model.getNumberOfShares(numShares), model.getCommFee(commFee),
+            this.filePath, model.getDate(date));
         view.stockModifiedSuccess();
       } else if (this.purpose.equals("sell")) {
         double shares = model.getNumberOfShares(numShares) * (-1);
         if (model.checkIfCanSell(pfName, model.getTickerSymbol(tickerSymbol),
-                shares, this.filePath, model.getDate(date))) {
+            shares, this.filePath, model.getDate(date))) {
           model.writeStockDetails(pfName, model.getTickerSymbol(tickerSymbol),
-                  shares, model.getCommFee(commFee), this.filePath, model.getDate(date));
+              shares, model.getCommFee(commFee), this.filePath, model.getDate(date));
           view.stockModifiedSuccess();
         } else {
           view.errorSell(); // cannot sell error message in view (need to change)
@@ -298,13 +330,13 @@ public class StockControllerGUIImpl implements StockController, Features {
 
   @Override
   public void createInvtPortfolio(String pfName, String invtAmt, String commFee,
-                                  String tickerSymbol, String perc, String date,
-                                  boolean flagForPfName, boolean flagForStocks) {
+      String tickerSymbol, String perc, String date,
+      boolean flagForPfName, boolean flagForStocks) {
 
     if (((!(this.model.isPfNameUnique(pfName, this.filePath))
-            && Objects.equals(this.purpose, "create"))
-            || ((this.model.isPfNameUnique(pfName, this.filePath))
-            && Objects.equals(this.purpose, "modify"))) && flagForPfName) {
+        && Objects.equals(this.purpose, "create"))
+        || ((this.model.isPfNameUnique(pfName, this.filePath))
+        && Objects.equals(this.purpose, "modify"))) && flagForPfName) {
 
       if (Objects.equals(this.purpose, "create")) {
         view.errorPfName();
@@ -315,8 +347,8 @@ public class StockControllerGUIImpl implements StockController, Features {
       view.errorInvtAmt();
     } else if (!(model.isCommFeeValid(commFee)) && flagForPfName) {
       view.errorCommFee();
-    //    } else if (!(model.isTickerSymbolValid(tickerSymbol)) && flagForStocks) {
-    //      view.errorTs();
+      //    } else if (!(model.isTickerSymbolValid(tickerSymbol)) && flagForStocks) {
+      //      view.errorTs();
     } else if (!(model.isPercentageValid(perc)) && flagForStocks) {
       view.errorPerc();
     } else {
@@ -336,9 +368,9 @@ public class StockControllerGUIImpl implements StockController, Features {
           view.errorDate();
         } else {
           model.dollarCostAveraging(pfName, model.getInvestmentAmount(invtAmt),
-                  model.getCommFee(commFee), model.getDate(date), null, 0,
-                  this.filePath, datesFromAPI,
-                  this.purpose);
+              model.getCommFee(commFee), model.getDate(date), null, 0,
+              this.filePath, datesFromAPI,
+              this.purpose);
           model.resetTsAndPerc();
 
           if (Objects.equals(this.purpose, "create")) {

@@ -181,4 +181,10 @@ public interface ViewGUI {
    * @param axisForGraph key value pair for x-y axis values.
    */
   void drawGraph(HashMap<String, Integer> axisForGraph);
+
+  void rebalancePortfolio(String pfName, String date);
+
+  void rebalanceDone100();
+
+  void rebalanceStockAdded();
 }

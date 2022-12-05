@@ -1,5 +1,8 @@
 package controller;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * This interface contains all the features to be performed when working with the GUI.
  */
@@ -129,4 +132,9 @@ public interface Features {
    * @param inEndDate end date for graph
    */
   void getGraph(String inPFName, String inDate, String inEndDate);
+
+  void rebalancePortfolio(String pfName, String date);
+  void addStockWeightsForRebalance(String tickerSymbol, String percentage);
+
+  List<String> getPortfolioStocks(String pfName);
 }
