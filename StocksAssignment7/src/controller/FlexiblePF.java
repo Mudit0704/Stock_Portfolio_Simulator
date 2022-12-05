@@ -10,9 +10,9 @@ import view.StockView;
 
 /**
  * This class extends the AbstractPF class and calls the view to display the submenu for the
- * flexible portfolios. Options include creation of a portfolio , modifying a portfolio,
- * uploading existing portfolio, composition examination, cost basis, total value of a portfolio
- * and performance graph over an interval.
+ * flexible portfolios. Options include creation of a portfolio , modifying a portfolio, uploading
+ * existing portfolio, composition examination, cost basis, total value of a portfolio and
+ * performance graph over an interval.
  */
 public class FlexiblePF extends AbstractPF {
 
@@ -32,7 +32,7 @@ public class FlexiblePF extends AbstractPF {
    * @param filePath absolute path of the file
    */
   public FlexiblePF(StockView view, Model model, String filePath,
-                    ArrayList<LocalDate> datesFromAPI) {
+      ArrayList<LocalDate> datesFromAPI) {
     super(view, model, filePath, datesFromAPI);
     this.view = view;
     this.model = model;
@@ -42,9 +42,8 @@ public class FlexiblePF extends AbstractPF {
   }
 
   /**
-   * This implementation displays the submenu for the flexible portfolios. Options include
-   * uploading existing portfolio, composition examination, cost basis and total value of a
-   * portfolio.
+   * This implementation displays the submenu for the flexible portfolios. Options include uploading
+   * existing portfolio, composition examination, cost basis and total value of a portfolio.
    *
    * @param scan (Scanner) object of Scanner class that gets inputs from the user
    */
@@ -71,6 +70,8 @@ public class FlexiblePF extends AbstractPF {
         } else if (choice == 7) {   // Get performance
           this.getPerformanceGraph(scan);
         } else if (choice == 8) {   // Quit
+          this.rebalancePortfolio(scan);
+        } else if (choice == 9) {   // Quit
           System.out.println();
           inputChoice = 0;
         } else {                    // Invalid input
@@ -92,7 +93,7 @@ public class FlexiblePF extends AbstractPF {
     String moreModifyFlag = "Y";
 
     while (Objects.equals(moreModifyFlag.toUpperCase(), "YES") || Objects.equals(
-            moreModifyFlag.toUpperCase(), "Y")) {
+        moreModifyFlag.toUpperCase(), "Y")) {
 
       view.modifyGetPfName();
       String pfName = scan.next();
@@ -106,7 +107,7 @@ public class FlexiblePF extends AbstractPF {
         if (Objects.equals(modifyOption, "1")) {
           String moreStocksFlag = "Y";
           while (Objects.equals(moreStocksFlag.toUpperCase(), "YES") || Objects.equals(
-                  moreStocksFlag.toUpperCase(), "Y")) {
+              moreStocksFlag.toUpperCase(), "Y")) {
 
             String tickerSymbol = valid.tickerSymbolCheck(scan);
             double numShares = valid.numOfSharesCheck(scan);
@@ -122,7 +123,7 @@ public class FlexiblePF extends AbstractPF {
         } else if (Objects.equals(modifyOption, "2")) {
           String moreStocksFlag = "Y";
           while (Objects.equals(moreStocksFlag.toUpperCase(), "YES") || Objects.equals(
-                  moreStocksFlag.toUpperCase(), "Y")) {
+              moreStocksFlag.toUpperCase(), "Y")) {
 
             String tickerSymbol = valid.tickerSymbolCheck(scan);
             double numShares = valid.numOfSharesCheck(scan);
@@ -132,12 +133,12 @@ public class FlexiblePF extends AbstractPF {
 
             if (model.checkIfCanSell(pfName, tickerSymbol, numShares, this.filePath, date)) {
               model.writeStockDetails(pfName, tickerSymbol, numShares, commFee, this.filePath,
-                      date);
+                  date);
             } else {
               view.errorMsg7();
               String moreSellFlag = scan.next();
               if (Objects.equals(moreSellFlag.toUpperCase(), "YES") || Objects.equals(
-                      moreSellFlag.toUpperCase(), "Y")) {
+                  moreSellFlag.toUpperCase(), "Y")) {
                 continue;
               }
             }
@@ -157,8 +158,8 @@ public class FlexiblePF extends AbstractPF {
   }
 
   /**
-   * This method gets the cost basis of a portfolio by calling the view to display messages, and
-   * the model to calculate the cost basis based on a specified date.
+   * This method gets the cost basis of a portfolio by calling the view to display messages, and the
+   * model to calculate the cost basis based on a specified date.
    *
    * @param scan (Scanner) object of Scanner class that gets inputs from the user
    */
@@ -166,7 +167,7 @@ public class FlexiblePF extends AbstractPF {
     String moreTotal = "Y";
 
     while (Objects.equals(moreTotal, "Yes") || Objects.equals(moreTotal, "Y") || Objects
-            .equals(moreTotal, "y")) {
+        .equals(moreTotal, "y")) {
       view.askPfName("cost basis"); //Ask for single pf name whose total is required
       String pfNameCB = scan.next();
       LocalDate date = valid.dateCheck(scan, "cost basis", this.datesFromAPI);
@@ -192,7 +193,7 @@ public class FlexiblePF extends AbstractPF {
     String morePfName = "Y";
 
     while (Objects.equals(morePfName, "Yes") || Objects.equals(morePfName, "Y") || Objects
-            .equals(morePfName, "y")) {
+        .equals(morePfName, "y")) {
       view.askPfName("performance LineChartView");
       String pfNameGraph = scan.next();
       LocalDate date1 = valid.dateCheck(scan, "Performance1", this.datesFromAPI);
@@ -200,7 +201,7 @@ public class FlexiblePF extends AbstractPF {
 
       if (!model.isPfNameUnique(pfNameGraph, this.filePath)) {
         StringBuilder pfGraph = model.getPerformanceGraph(pfNameGraph, this.filePath, date1, date2,
-                this.datesFromAPI);
+            this.datesFromAPI);
 
         view.printGraph(pfGraph, pfNameGraph, date1, date2);
         view.askMorePfName("performance LineChartView");
@@ -210,6 +211,47 @@ public class FlexiblePF extends AbstractPF {
       }
     }
   }
+
+  private void rebalancePortfolio(Scanner scan) {
+    String morePfName = "Y";
+
+    while (Objects.equals(morePfName, "Yes") || Objects.equals(morePfName, "Y") || Objects
+        .equals(morePfName, "y")) {
+      view.askPfName("rebalance");
+      String pfNameGraph = scan.next();
+      LocalDate date = valid.dateCheck(scan, "rebalance", this.datesFromAPI);
+
+      if (!model.isPfNameUnique(pfNameGraph, this.filePath)) {
+        String fullPfDetails = this.model.getComposition(pfNameGraph, this.filePath, date);
+        if (!Objects.equals(fullPfDetails, "")) {
+          this.view.printPfDetailsForComposition(fullPfDetails);
+        } else {
+          this.view.errorMsg11();
+        }
+
+        String tickerSymbol;
+        double percentage;
+        do {
+          tickerSymbol = valid.tickerSymbolCheck(scan);
+          percentage = valid.percentageCheck(scan, tickerSymbol);  //percentage of stock
+
+          if (this.model.percentageSumMoreThan100(percentage)) {
+            view.errorMsg19();
+          } else {
+            this.model.saveTsAndPerc(tickerSymbol, percentage);
+          }
+        } while (!(model.isPercentagesSum100()));
+        model.rebalanceExistingPortfolio(pfNameGraph, this.filePath, date,
+            this.datesFromAPI, "Flexible");
+
+        view.askMorePfName("rebalance");
+        morePfName = scan.next();
+      } else {
+        view.errorMsg10();
+      }
+    }
+  }
+
   //
   //  private void createOrModifyPortfolioUsingDCA(Scanner scan, String purpose) {
   //

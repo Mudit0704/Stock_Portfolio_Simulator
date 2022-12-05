@@ -117,6 +117,17 @@ public class ControlValidations {
     return model.getCommFee(commFee);
   }
 
+  public double percentageCheck(Scanner scan, String ts) {
+    view.getPercentageForDCA(ts);   //Tell view to ask for percentage for DCA
+    String perc = scan.next();
+    while (!model.isPercentageValid(perc)) {   //Check if input is valid.
+      view.errorMsg15();
+      view.getPercentageForDCA(ts);
+      perc = scan.next();
+    }
+    return model.getPercentage(perc);   //Get percentage
+  }
+
   //
   //  public Double investmentAmountCheck(Scanner scan) {
   //    view.getCommFee();   //Tell view to ask for investment amount

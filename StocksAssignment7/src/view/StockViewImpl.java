@@ -10,7 +10,7 @@ import java.util.Objects;
  */
 public class StockViewImpl implements StockView {
 
-  private final PrintStream output;
+  final PrintStream output;
 
   /**
    * Constructor that initialises the PrintStream object which is further used to print the output

@@ -6,8 +6,8 @@ import controller.StockController;
 import controller.StockControllerImpl;
 import model.Model;
 import model.ModelImpl;
+import view.RebalanceStockViewImpl;
 import view.StockView;
-import view.StockViewImpl;
 import view.ViewGUI;
 import view.ViewGUIImpl;
 
@@ -35,7 +35,7 @@ public class StockMain {
 
     Model model = new ModelImpl();
     if (choice == 1) {
-      StockView view = new StockViewImpl(System.out);
+      StockView view = new RebalanceStockViewImpl(System.out);
       StockController controller = new StockControllerImpl(model, view,
               new InputStreamReader(System.in));
       controller.selectOption();
