@@ -342,8 +342,27 @@ public interface Model {
   HashMap<String,Integer> getAxisForGraph(String pfNameGraph, String filePath, LocalDate date1,
                              LocalDate date2, ArrayList<LocalDate> validDatesInAPI);
 
+  /**
+   * Performs portfolio re-balancing for the specified portfolio, its type and on a specified date.
+   * It performs re-balancing by splitting the portfolio amount on the specified date
+   * as per the requested percentages.
+   *
+   * @param pfName portfolio name which has to be re-balanced
+   * @param filePath path of the file where portfolio details are available.
+   * @param date date on which the portfolio is to be balanced again.
+   * @param validDatesInAPI valid dates from api.
+   * @param type the portfolio type.
+   */
   void rebalanceExistingPortfolio(String pfName, String filePath, LocalDate date,
       ArrayList<LocalDate> validDatesInAPI, String type);
 
+  /**
+   * Gets all the ticker symbols in the specified portfolio on a given date.
+   *
+   * @param pfName the name of portfolio.
+   * @param filePath path of the file where portfolio details are available.
+   * @param date date on which the portfolio contents are to be checked.
+   * @return the list of all stock ticker symbols on the specified date.
+   */
   List<String> getTickerSymbolsInPortfolio(String pfName, String filePath, LocalDate date);
 }

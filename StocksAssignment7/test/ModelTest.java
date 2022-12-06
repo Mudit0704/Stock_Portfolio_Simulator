@@ -449,8 +449,8 @@ public class ModelTest {
             + "Scale: * = $1276\n"
             + "\n");
 
-    assertEquals(expectedOutput, model.getPerformanceGraph("College", fp.toString(),
-            startDate, endDate, datesFromAPI));
+    assertEquals(expectedOutput.toString(), model.getPerformanceGraph("College", fp.toString(),
+            startDate, endDate, datesFromAPI).toString());
   }
 
   @Test
@@ -475,7 +475,7 @@ public class ModelTest {
             + "Scale: * = $1533\n\n";
 
     assertEquals(expectedOutput, model.getPerformanceGraph("Health", fp.toString(),
-            startDate, endDate, datesFromAPI));
+            startDate, endDate, datesFromAPI).toString());
   }
 
   @Test
@@ -515,8 +515,8 @@ public class ModelTest {
             + "\n"
             + "Scale: * = $89\n\n");
 
-    assertEquals(expectedOutput, model.getPerformanceGraph("College",
-            fp.toString(), startDate, endDate, datesFromAPI));
+    assertEquals(expectedOutput.toString(), model.getPerformanceGraph("College",
+            fp.toString(), startDate, endDate, datesFromAPI).toString());
   }
 
   @Test
@@ -528,8 +528,8 @@ public class ModelTest {
     StringBuilder expectedOutput = new StringBuilder();
     expectedOutput.append("You did not own any stocks during this time period.\n");
 
-    assertEquals(expectedOutput, model.getPerformanceGraph("College", fp.toString(),
-            startDate, endDate, datesFromAPI));
+    assertEquals(expectedOutput.toString(), model.getPerformanceGraph("College", fp.toString(),
+            startDate, endDate, datesFromAPI).toString());
   }
 
   @Test
@@ -569,8 +569,8 @@ public class ModelTest {
             + "Scale: * = $1296\n"
             + "\n");
 
-    assertEquals(expectedOutput, model.getPerformanceGraph("College", fp.toString(),
-            startDate, endDate, datesFromAPI));
+    assertEquals(expectedOutput.toString(), model.getPerformanceGraph("College", fp.toString(),
+            startDate, endDate, datesFromAPI).toString());
   }
 
   @Test
@@ -606,8 +606,8 @@ public class ModelTest {
             + "Scale: * = $220\n"
             + "\n");
 
-    assertEquals(expectedOutput, model.getPerformanceGraph("Health", fp.toString(),
-            startDate, endDate, datesFromAPI));
+    assertEquals(expectedOutput.toString(), model.getPerformanceGraph("Health", fp.toString(),
+            startDate, endDate, datesFromAPI).toString());
   }
 
   @Test
@@ -643,8 +643,8 @@ public class ModelTest {
             + "Scale: * = $1498\n"
             + "\n");
 
-    assertEquals(expectedOutput, model.getPerformanceGraph("Health", fp.toString(),
-            startDate, endDate, datesFromAPI));
+    assertEquals(expectedOutput.toString(), model.getPerformanceGraph("Health", fp.toString(),
+            startDate, endDate, datesFromAPI).toString());
   }
 
   @Test
