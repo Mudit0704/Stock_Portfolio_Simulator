@@ -1,0 +1,102 @@
+<portfolioNames>
+    <pfName name="TestRebalance">
+        <Stock CommissionFee="5.0" DateBought="2021-12-28" StockName="AAPL">1.6732667744994145</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-11-29" StockName="AAPL">1.872191712431353</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-10-29" StockName="AAPL">2.0026702269692924</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-09-29" StockName="AAPL">2.1003990758244067</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-08-30" StockName="AAPL">1.9592476489028212</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-08-02" StockName="AAPL">2.061572292468389</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-07-01" StockName="AAPL">2.185473883587091</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-06-01" StockName="AAPL">2.413904087544255</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-05-03" StockName="AAPL">2.2634676324128566</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-04-05" StockName="AAPL">2.3828435266084194</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-03-03" StockName="AAPL">2.4578076355890546</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-02-01" StockName="AAPL">2.236469360369763</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-01-04" StockName="AAPL">2.318213430183139</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-12-28" StockName="AMZN">0.07324461945025519</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-11-29" StockName="AMZN">0.07019376286300705</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-10-29" StockName="AMZN">0.07413052309462317</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-09-29" StockName="AMZN">0.07573187281892206</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-08-30" StockName="AMZN">0.07306587326870413</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-08-02" StockName="AMZN">0.07504172319809814</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-07-01" StockName="AMZN">0.07282324051768585</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-06-01" StockName="AMZN">0.07767231603311947</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-05-03" StockName="AMZN">0.0738227486276351</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-04-05" StockName="AMZN">0.07747781810067778</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-03-03" StockName="AMZN">0.08319467554076539</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-02-01" StockName="AMZN">0.07478581343033551</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-01-04" StockName="AMZN">0.07845278554460354</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-12-28" StockName="MSFT">1.3186813186813187</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-11-29" StockName="MSFT">1.3367792531859906</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-10-29" StockName="MSFT">1.3569748507327664</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-09-29" StockName="MSFT">1.5845070422535212</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-08-30" StockName="MSFT">1.4822622616028198</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-08-02" StockName="MSFT">1.5799452285654099</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-07-01" StockName="MSFT">1.6568483063328423</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-06-01" StockName="MSFT">1.8189167340339532</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-05-03" StockName="MSFT">1.7867069006590963</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-04-05" StockName="MSFT">1.8067210021279159</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-03-03" StockName="MSFT">1.9775004394445421</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-02-01" StockName="MSFT">1.8777383684539954</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-01-04" StockName="MSFT">2.0671597225412284</Stock>
+        <Stock CommissionFee="0.0" DateBought="2022-02-02" StockName="AAPL">17.89016167776967</Stock>
+        <Stock CommissionFee="0.0" DateBought="2022-02-02" StockName="AMZN">2.667552455731362</Stock>
+        <Stock CommissionFee="0.0" DateBought="2022-02-02" StockName="MSFT">11.061030984530575</Stock>
+    </pfName>
+    <pfName name="TestRebalanceAfter">
+        <Stock CommissionFee="5.0" DateBought="2021-12-28" StockName="AAPL">1.6732667744994145</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-11-29" StockName="AAPL">1.872191712431353</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-10-29" StockName="AAPL">2.0026702269692924</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-09-29" StockName="AAPL">2.1003990758244067</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-08-30" StockName="AAPL">1.9592476489028212</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-08-02" StockName="AAPL">2.061572292468389</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-07-01" StockName="AAPL">2.185473883587091</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-06-01" StockName="AAPL">2.413904087544255</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-05-03" StockName="AAPL">2.2634676324128566</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-04-05" StockName="AAPL">2.3828435266084194</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-03-03" StockName="AAPL">2.4578076355890546</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-02-01" StockName="AAPL">2.236469360369763</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-01-04" StockName="AAPL">2.318213430183139</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-12-28" StockName="AMZN">0.07324461945025519</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-11-29" StockName="AMZN">0.07019376286300705</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-10-29" StockName="AMZN">0.07413052309462317</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-09-29" StockName="AMZN">0.07573187281892206</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-08-30" StockName="AMZN">0.07306587326870413</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-08-02" StockName="AMZN">0.07504172319809814</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-07-01" StockName="AMZN">0.07282324051768585</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-06-01" StockName="AMZN">0.07767231603311947</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-05-03" StockName="AMZN">0.0738227486276351</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-04-05" StockName="AMZN">0.07747781810067778</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-03-03" StockName="AMZN">0.08319467554076539</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-02-01" StockName="AMZN">0.07478581343033551</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-01-04" StockName="AMZN">0.07845278554460354</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-12-28" StockName="MSFT">1.3186813186813187</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-11-29" StockName="MSFT">1.3367792531859906</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-10-29" StockName="MSFT">1.3569748507327664</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-09-29" StockName="MSFT">1.5845070422535212</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-08-30" StockName="MSFT">1.4822622616028198</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-08-02" StockName="MSFT">1.5799452285654099</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-07-01" StockName="MSFT">1.6568483063328423</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-06-01" StockName="MSFT">1.8189167340339532</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-05-03" StockName="MSFT">1.7867069006590963</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-04-05" StockName="MSFT">1.8067210021279159</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-03-03" StockName="MSFT">1.9775004394445421</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-02-01" StockName="MSFT">1.8777383684539954</Stock>
+        <Stock CommissionFee="5.0" DateBought="2021-01-04" StockName="MSFT">2.0671597225412284</Stock>
+        <Stock CommissionFee="0.0" DateBought="2022-02-02" StockName="AAPL">17.89016167776967</Stock>
+        <Stock CommissionFee="0.0" DateBought="2022-02-02" StockName="AMZN">2.667552455731362</Stock>
+        <Stock CommissionFee="0.0" DateBought="2022-02-02" StockName="MSFT">11.061030984530575</Stock>
+    </pfName>
+    <pfName name="TestNormalRebalancing">
+        <Stock CommissionFee="0.0" DateBought="2016-10-10" StockName="GOOG">4.0</Stock>
+        <Stock CommissionFee="0.0" DateBought="2016-10-10" StockName="AAPL">4.0</Stock>
+        <Stock CommissionFee="0.0" DateBought="2016-10-10" StockName="AMZN">3.0</Stock>
+        <Stock CommissionFee="0.0" DateBought="2016-10-10" StockName="TSLA">4.0</Stock>
+    </pfName>
+    <pfName name="TestNormalRebalancingBetweenTxn">
+        <Stock CommissionFee="0.0" DateBought="2017-10-10" StockName="GOOG">4.0</Stock>
+        <Stock CommissionFee="0.0" DateBought="2017-10-10" StockName="AAPL">4.0</Stock>
+        <Stock CommissionFee="0.0" DateBought="2016-10-10" StockName="AMZN">3.0</Stock>
+        <Stock CommissionFee="0.0" DateBought="2016-10-10" StockName="TSLA">4.0</Stock>
+    </pfName>
+</portfolioNames>
