@@ -1,0 +1,30 @@
+Model review:
+
+Strengths:
+The model has been implemented in a logically sound manner and made changes for re-balancing much more simpler.
+The addition of all the buy sell operations into the portfolio is a good decision in terms of logically being
+able to add many more operations apart from just re-balancing a portfolio.
+
+However, there are some things that could have been done better in terms of design.
+
+Limitations of the design:
+The principles of Single Responsibility and Open Close principle have been violated at multiple places.
+
+As the application has been developed in a Model-View-Controller, attempts have been made to ensure
+nothing apart from the "model" has been exposed to the controller.
+However, this has resulted in addition of more and more methods to the Model interface which has resulted in the
+interface growing in size. Ideally the interface should not have changed once written, and the changes should
+be open for extension and closed for modification.
+
+The portfolio type has been implemented in a similar fashion.
+For all the functions to be provided by the model, a portfolio object has to be created everytime,
+coupling it with portfolio. The portfolio type has to be specified to return results appropriate for
+the portfolio type. This in by itself is because of the tight coupling.
+
+Code could have been a bit cleaner from the perspective of some functions like getPortfolioCostBasis
+in PortfolioImpl class. This function is very long and is having more than 4 blocks of indentations.
+Ideally that should be restricted to 3 to 4 blocks and this impacts the readability and debuggability of
+the code.
+
+Code documentation is appropriate and easy to understand.
+No changes were to be requested from us to the providers.
