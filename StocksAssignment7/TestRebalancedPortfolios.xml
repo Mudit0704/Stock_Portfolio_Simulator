@@ -4,17 +4,11 @@
         <Stock CommissionFee="0.0" DateBought="2016-10-10" StockName="AAPL">4.0</Stock>
         <Stock CommissionFee="0.0" DateBought="2016-10-10" StockName="AMZN">3.0</Stock>
         <Stock CommissionFee="0.0" DateBought="2016-10-10" StockName="TSLA">4.0</Stock>
-        <Stock CommissionFee="0.0" DateBought="2022-12-02" StockName="AAPL">-0.5219031188688183</Stock>
-        <Stock CommissionFee="0.0" DateBought="2022-12-02" StockName="AMZN">2.461569106554765</Stock>
-        <Stock CommissionFee="0.0" DateBought="2022-12-02" StockName="TSLA">-1.3617084060351026</Stock>
-        <Stock CommissionFee="0.0" DateBought="2022-12-02" StockName="GOOG">1.0986561539224438</Stock>
     </pfName>
     <pfName name="TestNormalRebalancingBetweenTxn">
         <Stock CommissionFee="0.0" DateBought="2017-10-10" StockName="GOOG">4.0</Stock>
         <Stock CommissionFee="0.0" DateBought="2017-10-10" StockName="AAPL">4.0</Stock>
         <Stock CommissionFee="0.0" DateBought="2016-10-10" StockName="AMZN">3.0</Stock>
         <Stock CommissionFee="0.0" DateBought="2016-10-10" StockName="TSLA">4.0</Stock>
-        <Stock CommissionFee="0.0" DateBought="2016-12-02" StockName="AMZN">-2.0048828916443795</Stock>
-        <Stock CommissionFee="0.0" DateBought="2016-12-02" StockName="TSLA">8.179285832368988</Stock>
     </pfName>
 </portfolioNames>
