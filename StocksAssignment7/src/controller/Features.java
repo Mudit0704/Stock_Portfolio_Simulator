@@ -49,7 +49,7 @@ public interface Features {
    * @param flag         to check if pf name field is disabled.
    */
   void echoStockDetails(String pfName, String tickerSymbol, String numShares, String commFee,
-                        String date, boolean flag);
+      String date, boolean flag);
 
   /**
    * This method receives the values entered by the user for portfolio creation using Dollar Cost
@@ -68,8 +68,8 @@ public interface Features {
    * @param flagForStocks to check if stock name field is disabled or enabled.
    */
   void createDcaPortfolio(String pfName, String invtAmt, String commFee, String tickerSymbol,
-                          String perc, String startDate, String endDate, String interval,
-                          boolean flagForPfName, boolean flagForStocks);
+      String perc, String startDate, String endDate, String interval,
+      boolean flagForPfName, boolean flagForStocks);
 
   /**
    * This method gets the portfolio name with date for composition or total or cost basis. It calls
@@ -103,11 +103,11 @@ public interface Features {
    * @param date         date on which buying/ selling will happen.
    */
   void buyOrSellStocks(String pfName, String tickerSymbol, String numShares, String commFee,
-                       String date);
+      String date);
 
   /**
-   * This method gets the details entered by the user for investing an amount in several stocks
-   * on a specific date.
+   * This method gets the details entered by the user for investing an amount in several stocks on a
+   * specific date.
    *
    * @param pfName        portfolio name for creation.
    * @param invtAmt       money to be invested.
@@ -119,8 +119,8 @@ public interface Features {
    * @param flagForStocks if ticker symbol field is enabled or disabled.
    */
   void createInvtPortfolio(String pfName, String invtAmt, String commFee, String tickerSymbol,
-                           String perc, String date, boolean flagForPfName,
-                           boolean flagForStocks);
+      String perc, String date, boolean flagForPfName,
+      boolean flagForStocks);
 
   void modifyStocksDca();
 
@@ -133,8 +133,29 @@ public interface Features {
    */
   void getGraph(String inPFName, String inDate, String inEndDate);
 
+  /**
+   * This method performs the rebalancing of a portfolio at a given date by calling the respective
+   * model method.
+   *
+   * @param pfName name of the portfolio for which rebalancing has to be done
+   * @param date   date at which rebalancing has to be done
+   */
   void rebalancePortfolio(String pfName, String date);
+
+  /**
+   * Add weightage for stocks inside a portfolio for rebalancing.
+   *
+   * @param tickerSymbol stock symbol for which weightage is being set
+   * @param percentage   weightage for the stock symbol
+   */
   void addStockWeightsForRebalance(String tickerSymbol, String percentage);
 
-  List<String> getPortfolioStocks(String pfName);
+  /**
+   * Get a list of stocks in a portfolio at a given date.
+   *
+   * @param pfName name of the portfolio for which stocks have to be determined
+   * @param date   date at which the stocks have to be determined
+   * @return list of stocks inside the portfolio at a given date
+   */
+  List<String> getPortfolioStocks(String pfName, String date);
 }

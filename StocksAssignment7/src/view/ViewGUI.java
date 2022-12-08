@@ -6,8 +6,8 @@ import java.util.HashMap;
 import controller.Features;
 
 /**
- * This is the view GUI interface for the Stocks application. This has various function
- * descriptions to display the menu and values for the user on a Graphical user interface.
+ * This is the view GUI interface for the Stocks application. This has various function descriptions
+ * to display the menu and values for the user on a Graphical user interface.
  */
 
 public interface ViewGUI {
@@ -20,6 +20,7 @@ public interface ViewGUI {
   /**
    * This feeature initialises an object of the Features interface to interact with the controller
    * implementation class.
+   *
    * @param features object of the Features interface.
    */
   void addFeatures(Features features);
@@ -31,6 +32,7 @@ public interface ViewGUI {
 
   /**
    * This method displays the frame where the user can enter the new portfolio details.
+   *
    * @param tickerSymbolList List of valid ticker symbols.
    */
   void getCreatePage(ArrayList<String> tickerSymbolList);
@@ -62,8 +64,8 @@ public interface ViewGUI {
   void errorInvtAmt();
 
   /**
-   * This method displays an error pop up if user enters invalid date. Invalid date is a date
-   * which is not in yyyy-MM-dd format.
+   * This method displays an error pop up if user enters invalid date. Invalid date is a date which
+   * is not in yyyy-MM-dd format.
    */
   void errorDate();
 
@@ -78,20 +80,21 @@ public interface ViewGUI {
   void stockModifiedSuccess();
 
   /**
-   * This method displays an error pop up if user tries to buy on a holiday
-   * (i.e. when market is closed).
+   * This method displays an error pop up if user tries to buy on a holiday (i.e. when market is
+   * closed).
    */
   void errorDateMarketClosed();
 
   /**
-   * This method displays the frame for getting inputs from user for viewing performance graph
-   * of a portfolio.
+   * This method displays the frame for getting inputs from user for viewing performance graph of a
+   * portfolio.
    */
   void getGraphPage();
 
   /**
-   * This method displays the frame for creating portfolio by investing money using dollar
-   * cost averaging method.
+   * This method displays the frame for creating portfolio by investing money using dollar cost
+   * averaging method.
+   *
    * @param tickerSymbolList list of valid ticker symbols for combo box.
    */
   void getDcaPage(ArrayList<String> tickerSymbolList);
@@ -122,6 +125,7 @@ public interface ViewGUI {
 
   /**
    * This method prints the frame for total or cost basis or composition of the GUI.
+   *
    * @param output amount or composition (string)
    */
   void outputPage(String output);
@@ -134,6 +138,7 @@ public interface ViewGUI {
 
   /**
    * This method displays a success pop up if portfolio is created successfully.
+   *
    * @param purpose text for displaying whether portfolio was 'created' or 'modified'.
    */
   void portfolioSuccess(String purpose);
@@ -160,8 +165,9 @@ public interface ViewGUI {
 
   /**
    * This method displays the frame for displaying the ways in which user can modify a portfolio.
+   *
    * @param tickerSymbolList list of valid ticker symbols for combo box.
-  */
+   */
   void modifyStocks(ArrayList<String> tickerSymbolList);
 
   /**
@@ -170,21 +176,36 @@ public interface ViewGUI {
   void errorSell();
 
   /**
-   * This method displays the frame for creating portfolio by investing money on a specific
-   * date on the GUI.
+   * This method displays the frame for creating portfolio by investing money on a specific date on
+   * the GUI.
+   *
    * @param tickerSymbolList list of valid ticker symbols for combo box.
    */
   void getCreateByInvtOncePage(ArrayList<String> tickerSymbolList);
 
   /**
    * This method is responsible for drawing the performance graph (a line chart).
+   *
    * @param axisForGraph key value pair for x-y axis values.
    */
   void drawGraph(HashMap<String, Integer> axisForGraph);
 
+  /**
+   * This method is responsible for displaying the rebalancing window in GUI.
+   *
+   * @param pfName the name of portfolio for which rebalancing has to be done
+   * @param date   the date at which rebalancing has to be done
+   */
   void rebalancePortfolio(String pfName, String date);
 
+  /**
+   * This method is responsible for displaying the message window for 100 weightage added.
+   */
   void rebalanceDone100();
 
+  /**
+   * This method is responsible for displaying the message window when weights for all the stocks in
+   * a portfolio have been added.
+   */
   void rebalanceStockAdded();
 }

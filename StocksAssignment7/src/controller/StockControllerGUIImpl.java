@@ -126,31 +126,6 @@ public class StockControllerGUIImpl implements StockController, Features {
     }
   }
 
-  @Override
-  public void rebalancePortfolio(String pfName, String date) {
-    model.rebalanceExistingPortfolio(pfName, this.filePath, model.getDate(date), datesFromAPI,
-        "Flexible");
-  }
-
-  @Override
-  public void addStockWeightsForRebalance(String tickerSymbol, String percentage) {
-    if (model.percentageSumMoreThan100(model.getPercentage(percentage))) {
-      view.errorPerc();
-    } else if (!(model.isPercentagesSum100())) {
-      model.saveTsAndPerc(tickerSymbol, model.getPercentage(percentage));
-      if (model.isPercentagesSum100()) {
-        view.rebalanceDone100();
-      } else {
-        view.rebalanceStockAdded();
-      }
-    }
-  }
-
-  @Override
-  public List<String> getPortfolioStocks(String pfName) {
-    return model.getTickerSymbolsInPortfolio(pfName, this.filePath);
-  }
-
   // For create
   @Override
   public void echoStockDetails(String pfName, String tickerSymbol, String numShares,
@@ -382,6 +357,31 @@ public class StockControllerGUIImpl implements StockController, Features {
         }
       }
     }
+  }
+
+  @Override
+  public void rebalancePortfolio(String pfName, String date) {
+    model.rebalanceExistingPortfolio(pfName, this.filePath, model.getDate(date), datesFromAPI,
+        "Flexible");
+  }
+
+  @Override
+  public void addStockWeightsForRebalance(String tickerSymbol, String percentage) {
+    if (model.percentageSumMoreThan100(model.getPercentage(percentage))) {
+      view.errorPerc();
+    } else {
+      model.saveTsAndPerc(tickerSymbol, model.getPercentage(percentage));
+      if (model.isPercentagesSum100()) {
+        view.rebalanceDone100();
+      } else {
+        view.rebalanceStockAdded();
+      }
+    }
+  }
+
+  @Override
+  public List<String> getPortfolioStocks(String pfName, String date) {
+    return model.getTickerSymbolsInPortfolio(pfName, this.filePath, LocalDate.parse(date));
   }
 
 }

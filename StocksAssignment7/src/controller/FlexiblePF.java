@@ -69,7 +69,7 @@ public class FlexiblePF extends AbstractPF {
           this.getTotal(scan, "Flexible");
         } else if (choice == 7) {   // Get performance
           this.getPerformanceGraph(scan);
-        } else if (choice == 8) {   // Quit
+        } else if (choice == 8) {   // Rebalance
           this.rebalancePortfolio(scan);
         } else if (choice == 9) {   // Quit
           System.out.println();
@@ -227,6 +227,7 @@ public class FlexiblePF extends AbstractPF {
           this.view.printPfDetailsForComposition(fullPfDetails);
         } else {
           this.view.errorMsg11();
+          return;
         }
 
         String tickerSymbol;

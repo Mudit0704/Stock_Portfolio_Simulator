@@ -959,7 +959,7 @@ public class ViewGUIImpl extends JFrame implements ViewGUI, ActionListener {
 
   @Override
   public void rebalancePortfolio(String pfName, String date) {
-    List<String> portfolioStocks = fObj.getPortfolioStocks(pfName);
+    List<String> portfolioStocks = fObj.getPortfolioStocks(pfName, date);
 
     Box pfNameBox = Box.createHorizontalBox();
 
