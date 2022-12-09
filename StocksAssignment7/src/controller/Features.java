@@ -1,7 +1,6 @@
 package controller;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * This interface contains all the features to be performed when working with the GUI.

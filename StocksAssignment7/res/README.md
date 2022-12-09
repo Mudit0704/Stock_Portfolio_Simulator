@@ -64,7 +64,7 @@ and the GUI.
 
 ### Controller:
 1. For the GUI controller, first we added a new choice 8 for rebalancing a portfolio
-   . We added three new methods to the Features interface to keep it consistent with
+   .Then, we added three new methods to the Features interface to keep it consistent with
    the existing design and implementation approach to avoid breaking the MVC. We added a method to rebalance a portfolio, to add stocks and their respective weights for rebalancing
    and lastly to get all the stock ticker symbols in the portfolio at the rebalancing date
    provided by the user. The same were implemented in the StockControllerGUIImpl class.

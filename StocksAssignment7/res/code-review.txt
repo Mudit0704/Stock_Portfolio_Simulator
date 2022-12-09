@@ -1,3 +1,8 @@
+//TODO Your review should have the following sections: Design critique, implementation critique,
+//TODO documentation critique, design/code strengths, design/code limitations and suggestions on how to
+//TODO address them. If your review is not structured into sections you will lose points.
+//TODO we need to merge our reviews to achieve above sections
+
 Model review:
 
 Strengths:
@@ -25,6 +30,61 @@ Code could have been a bit cleaner from the perspective of some functions like g
 in PortfolioImpl class. This function is very long and is having more than 4 blocks of indentations.
 Ideally that should be restricted to 3 to 4 blocks and this impacts the readability and debuggability of
 the code.
+
+Code documentation is appropriate and easy to understand.
+No changes were to be requested from us to the providers.
+
+View review:
+
+Strengths:
+
+The callback functionality implementation between the controller and view was well executed,
+and it helped in easy incorporation of the rebalancing logic along with proper flow of communication
+between M-V-C.
+
+Limitations:
+
+The StockView interface is overloaded with methods and similarly its concrete class StockViewImpl.
+Better modularity here could have helped improve debuggability and readability. With each iteration,
+all new methods have been added to same old interface and this has led to a very large interface
+that is doing a lot. Interface creation and extension in each iteration would have made the
+implementation much cleaner.
+
+Presence of interface methods and implementation that are not even being used. Interface should
+have methods as and when they are going to be used as compared to having them for the future (if
+that was the intention).
+
+Method naming convention can be improved, for example errorMsg2 instead it should be named
+using what kind of error its displaying for example displayInvalidOptionSelectedError which makes
+it more informative.
+
+Code documentation is missing for some parts. The documentation is easy to understand wherever
+provided.
+No changes were to be requested from us to the providers.
+
+Controller review:
+
+Strengths:
+
+Major strength was code modularity that helped in ease of implementation of rebalancing logic and
+code reuse. For example, a separate class for validating user input throughout the controller
+lifecycle was really helpful and made the validation of user input easy while implementing the
+rebalancing functionality. Also, by storing the common functionality between inflexible and flexible
+portfolios inside AbstractPF class was a great approach to have code reuse.
+
+Limitations:
+
+Some methods like createInvtPortfolio and createDcaPortfolio have large number of lines of code
+along with some redundant code. For better investigation, debugging and code readability this code
+could have been broken down into smaller methods, especially the logic that is common between them.
+
+APICaller class could have been inside the model as typically the model is supposed to handle the
+application functionality logic and the controller is just supposed to handle the I/O.
+
+The method naming convention could be better for to have code readability and understandability.
+For eg, echoPfNameWithDate is mainly being used to display results for operations asking
+portfolioname and date, so this could have been given a generic name like
+displayOperationsWithPfNameAndDateResults.
 
 Code documentation is appropriate and easy to understand.
 No changes were to be requested from us to the providers.
