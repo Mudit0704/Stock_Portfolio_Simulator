@@ -114,8 +114,8 @@ public class RebalacingControllerTest {
 
   @Test
   public void testGUIBasedController_RebalancePortfolio() {
-    new StockControllerGUIImpl(mockModel, new ViewGUIImpl("test")).rebalancePortfolio("College",
-        "2022-02-03");
+    new StockControllerGUIImpl(mockModel, new MockRebalancingView("test", out)).
+        rebalancePortfolio("College", "2022-02-03");
 
     assertEquals("CollegeC:\\Users\\Mudit Maheshwari\\Desktop\\NEU_StudyMat\\PDP_Group"
         + "\\PDP_A47\\StocksAssignment7\\portfoliosFlexible.xml2022-02-03Flexible", log.toString());

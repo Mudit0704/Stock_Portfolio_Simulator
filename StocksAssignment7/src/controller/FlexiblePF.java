@@ -234,7 +234,7 @@ public class FlexiblePF extends AbstractPF {
         double percentage;
         do {
           tickerSymbol = valid.tickerSymbolCheck(scan);
-          percentage = valid.percentageCheck(scan, tickerSymbol);  //percentage of stock
+          percentage = valid.percentageCheck(scan, tickerSymbol);
 
           if (this.model.percentageSumMoreThan100(percentage)) {
             view.errorMsg19();

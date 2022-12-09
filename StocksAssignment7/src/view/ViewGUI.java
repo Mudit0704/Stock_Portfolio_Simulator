@@ -209,5 +209,9 @@ public interface ViewGUI {
    */
   void rebalanceStockAdded();
 
+  /**
+   * This method displays the success window after the rebalancing of a portfolio is done
+   * successfully.
+   */
   void rebalanceSuccess();
 }

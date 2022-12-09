@@ -24,7 +24,13 @@ public class MockRebalancingView extends ViewGUIImpl implements ViewGUI {
     out.print("Reached 100");
   }
 
+  @Override
   public void rebalanceStockAdded() {
     out.print("All stockes added");
+  }
+
+  @Override
+  public void rebalanceSuccess() {
+    out.print("Rebalance Success");
   }
 }
