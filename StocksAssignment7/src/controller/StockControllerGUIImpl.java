@@ -363,6 +363,7 @@ public class StockControllerGUIImpl implements StockController, Features {
   public void rebalancePortfolio(String pfName, String date) {
     model.rebalanceExistingPortfolio(pfName, this.filePath, model.getDate(date), datesFromAPI,
         "Flexible");
+    view.rebalanceSuccess();
   }
 
   @Override

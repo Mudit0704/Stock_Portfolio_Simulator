@@ -521,27 +521,6 @@ public class ViewGUIImpl extends JFrame implements ViewGUI, ActionListener {
 
   }
 
-  public void rebalanceStockAdded() {
-
-    Box successBox = Box.createVerticalBox();
-    successBox.setBorder(BorderFactory.createEmptyBorder(10, 10, 20, 20));
-    errorLabel = new JLabel("Stock added successfully.");
-    successBox.add(errorLabel);
-
-    buttonOk = new JButton("Ok");
-    successBox.add(Box.createRigidArea(new Dimension(0, 20)));
-    successBox.add(buttonOk);
-
-    getSuccessFrame = frameSetter("Success", successBox);
-
-    buttonOk.addActionListener(evt -> {
-      getSuccessFrame.dispose();
-      backButton.setEnabled(false);
-      inPerc.setText("");
-    });
-
-  }
-
   @Override
   public void dcaInvested100() {
 
@@ -958,91 +937,6 @@ public class ViewGUIImpl extends JFrame implements ViewGUI, ActionListener {
   }
 
   @Override
-  public void rebalancePortfolio(String pfName, String date) {
-    List<String> portfolioStocks = fObj.getPortfolioStocks(pfName, date);
-
-    Box pfNameBox = Box.createHorizontalBox();
-
-    Box tsBox = Box.createHorizontalBox();
-    tsBox.setBorder(BorderFactory.createEmptyBorder(10, 10, 20, 20));
-    getTickerSymbol = new JLabel("Ticker symbol   ");
-    tsComboBox = new JComboBox(portfolioStocks.toArray());
-
-    tsBox.add(getTickerSymbol);
-    tsBox.add(tsComboBox);
-
-    Box percBox = Box.createHorizontalBox();
-    percBox.setBorder(BorderFactory.createEmptyBorder(10, 10, 20, 20));
-    getPerc = new JLabel("Percentage   ");
-    inPerc = new JTextField(10);
-    percBox.add(getPerc);
-    percBox.add(inPerc);
-
-    Box submitExitBox = Box.createHorizontalBox();
-    submitExitBox.setBorder(BorderFactory.createEmptyBorder(10, 10, 20, 20));
-    addStocksButton = new JButton("Add Stocks");
-    doneButton = doneButton("Done");
-    doneButton.setEnabled(false);
-    backButton = new JButton("Back");
-    submitExitBox.add(addStocksButton);
-    submitExitBox.add(Box.createRigidArea(new Dimension(20, 0)));
-    submitExitBox.add(doneButton);
-    submitExitBox.add(Box.createRigidArea(new Dimension(20, 0)));
-    submitExitBox.add(backButton);
-
-    Box createDCABox = Box.createVerticalBox();
-    createDCABox.setBorder(BorderFactory.createEmptyBorder(10, 10, 20, 20));
-    createDCABox.add(pfNameBox);
-    createDCABox.add(tsBox);
-    createDCABox.add(percBox);
-    createDCABox.add(submitExitBox);
-
-    addStocksButton.addActionListener(evt -> {
-      fObj.addStockWeightsForRebalance((String) tsComboBox.getSelectedItem(), inPerc.getText());
-      tsComboBox.removeItem(tsComboBox.getSelectedItem());
-        });
-
-    doneButton.addActionListener(evt -> {
-      fObj.rebalancePortfolio(pfName, date);
-    });
-
-    JFrame createPageFrame = frameSetter("Output", createDCABox);
-
-    backButton(doneButton, createPageFrame, this);
-
-    backButton.addActionListener(evt -> {
-      createPageFrame.dispose();
-    });
-  }
-
-  @Override
-  public void rebalanceDone100() {
-
-    Box successBox = Box.createVerticalBox();
-    successBox.setBorder(BorderFactory.createEmptyBorder(10, 10, 20, 20));
-    errorLabel = new JLabel("You've added 100% of weightage"
-        + "for stocks rebalancing. You can't add more stock weightage hereafter.");
-    successBox.add(errorLabel);
-
-    buttonOk = new JButton("Ok");
-    successBox.add(Box.createRigidArea(new Dimension(0, 20)));
-    successBox.add(buttonOk);
-
-    getSuccessFrame = frameSetter("Success", successBox);
-
-    buttonOk.addActionListener(evt -> {
-      getSuccessFrame.dispose();
-      inPerc.setText("");
-      tsComboBox.setEnabled(false);
-      inPerc.setEditable(false);
-      addStocksButton.setEnabled(false);
-      doneButton.setEnabled(true);
-      backButton.setEnabled(false);
-    });
-
-  }
-
-  @Override
   public void actionPerformed(ActionEvent e) {
     if (e.getSource() == tsComboBox) {
       System.out.println(tsComboBox);
@@ -1249,5 +1143,136 @@ public class ViewGUIImpl extends JFrame implements ViewGUI, ActionListener {
     return label;
   }
 
+  @Override
+  public void rebalancePortfolio(String pfName, String date) {
+    List<String> portfolioStocks = fObj.getPortfolioStocks(pfName, date);
+
+    Box tsBox = Box.createHorizontalBox();
+    tsBox.setBorder(BorderFactory.createEmptyBorder(10, 10, 20, 20));
+    getTickerSymbol = new JLabel("Ticker symbol   ");
+    tsComboBox = new JComboBox(portfolioStocks.toArray());
+
+    tsBox.add(getTickerSymbol);
+    tsBox.add(tsComboBox);
+
+    Box percBox = Box.createHorizontalBox();
+    percBox.setBorder(BorderFactory.createEmptyBorder(10, 10, 20, 20));
+    getPerc = new JLabel("Percentage   ");
+    inPerc = new JTextField(10);
+    percBox.add(getPerc);
+    percBox.add(inPerc);
+
+    Box submitExitBox = Box.createHorizontalBox();
+    submitExitBox.setBorder(BorderFactory.createEmptyBorder(10, 10, 20, 20));
+    addStocksButton = new JButton("Add Stocks");
+    doneButton = doneButton("Done");
+    doneButton.setEnabled(false);
+    backButton = new JButton("Back");
+    submitExitBox.add(addStocksButton);
+    submitExitBox.add(Box.createRigidArea(new Dimension(20, 0)));
+    submitExitBox.add(doneButton);
+    submitExitBox.add(Box.createRigidArea(new Dimension(20, 0)));
+    submitExitBox.add(backButton);
+
+    Box createRebalanceBox = Box.createVerticalBox();
+    createRebalanceBox.setBorder(BorderFactory.createEmptyBorder(10, 10, 20, 20));
+    createRebalanceBox.add(tsBox);
+    createRebalanceBox.add(percBox);
+    createRebalanceBox.add(submitExitBox);
+
+    addStocksButton.addActionListener(evt -> {
+      try  {
+        if (portfolioStocks.size() != 1 && tsComboBox.getItemCount() != 1
+            && Double.parseDouble(inPerc.getText()) >= 100d) {
+          errorPerc();
+        } else {
+          fObj.addStockWeightsForRebalance((String) tsComboBox.getSelectedItem(), inPerc.getText());
+          tsComboBox.removeItem(tsComboBox.getSelectedItem());
+        }
+      } catch (NumberFormatException e) {
+        errorPerc();
+      }
+
+    });
+
+    JFrame createPageFrame = frameSetter("Rebalance a portfolio", createRebalanceBox);
+
+    doneButton.addActionListener(evt -> {
+      fObj.rebalancePortfolio(pfName, date);
+      createPageFrame.dispose();
+      inPFName.setText("");
+      inDate.setText("");
+    });
+
+    backButton.addActionListener(evt -> {
+      createPageFrame.dispose();
+    });
+  }
+
+  @Override
+  public void rebalanceDone100() {
+
+    Box successBox = Box.createVerticalBox();
+    successBox.setBorder(BorderFactory.createEmptyBorder(10, 10, 20, 20));
+    errorLabel = new JLabel("You've added 100% of weightage"
+        + "for stocks rebalancing. You can't add more stock weightage hereafter.");
+    successBox.add(errorLabel);
+
+    buttonOk = new JButton("Ok");
+    successBox.add(Box.createRigidArea(new Dimension(0, 20)));
+    successBox.add(buttonOk);
+
+    getSuccessFrame = frameSetter("Success", successBox);
+
+    buttonOk.addActionListener(evt -> {
+      getSuccessFrame.dispose();
+      inPerc.setText("");
+      tsComboBox.setEnabled(false);
+      inPerc.setEditable(false);
+      addStocksButton.setEnabled(false);
+      doneButton.setEnabled(true);
+      backButton.setEnabled(false);
+    });
+
+  }
+
+  public void rebalanceStockAdded() {
+
+    Box successBox = Box.createVerticalBox();
+    successBox.setBorder(BorderFactory.createEmptyBorder(10, 10, 20, 20));
+    errorLabel = new JLabel("Stock added successfully.");
+    successBox.add(errorLabel);
+
+    buttonOk = new JButton("Ok");
+    successBox.add(Box.createRigidArea(new Dimension(0, 20)));
+    successBox.add(buttonOk);
+
+    getSuccessFrame = frameSetter("Success", successBox);
+
+    buttonOk.addActionListener(evt -> {
+      getSuccessFrame.dispose();
+      backButton.setEnabled(false);
+      inPerc.setText("");
+    });
+
+  }
+
+  @Override
+  public void rebalanceSuccess() {
+    Box successBox = Box.createVerticalBox();
+    successBox.setBorder(BorderFactory.createEmptyBorder(10, 10, 20, 20));
+    errorLabel = new JLabel("Portfolio rebalanced successfully");
+    successBox.add(errorLabel);
+
+    buttonOk = new JButton("Ok");
+    successBox.add(Box.createRigidArea(new Dimension(0, 20)));
+    successBox.add(buttonOk);
+
+    getSuccessFrame = frameSetter("Success", successBox);
+
+    buttonOk.addActionListener(evt -> {
+      getSuccessFrame.dispose();
+    });
+  }
 }
 

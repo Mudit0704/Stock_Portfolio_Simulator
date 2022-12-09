@@ -208,4 +208,6 @@ public interface ViewGUI {
    * a portfolio have been added.
    */
   void rebalanceStockAdded();
+
+  void rebalanceSuccess();
 }

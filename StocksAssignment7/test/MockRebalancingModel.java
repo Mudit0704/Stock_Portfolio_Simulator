@@ -3,7 +3,6 @@ import java.util.ArrayList;
 import java.util.List;
 import model.Model;
 import model.ModelImpl;
-import view.ViewGUIImpl;
 
 /**
  * Class to mock the {@link ModelImpl} class for rebalancing a portolio testing.
