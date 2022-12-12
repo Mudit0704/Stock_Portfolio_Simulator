@@ -10,6 +10,9 @@ import model.ModelImpl;
 import org.junit.Before;
 import org.junit.Test;
 
+/**
+ * A JUnit test class to test portfolio re balancing.
+ */
 public class RebalancingTest {
 
   Path currentPath;
