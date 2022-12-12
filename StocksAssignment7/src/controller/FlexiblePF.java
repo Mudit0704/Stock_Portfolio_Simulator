@@ -212,6 +212,12 @@ public class FlexiblePF extends AbstractPF {
     }
   }
 
+  /**
+   * This method performs rebalancing of a portfolio at a given date and calls the model and view's
+   * methods accordingly to achieve the functionality.
+   *
+   * @param scan (Scanner) object of Scanner class that gets inputs from the user
+   */
   private void rebalancePortfolio(Scanner scan) {
     String morePfName = "Y";
 

@@ -215,5 +215,9 @@ public interface ViewGUI {
    */
   void rebalanceSuccess();
 
+  /**
+   * This method displays the error window when the user provides a date at which no stocks were
+   * available in the portfolio.
+   */
   void displayNoStockAvailableWindow();
 }

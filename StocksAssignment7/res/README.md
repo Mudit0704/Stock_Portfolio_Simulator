@@ -78,22 +78,44 @@ other than the Model to be exposed to controller.
 The rest of the interfaces remain unchanged.
 
 ### Controller:
-1. For the GUI controller, first we added a new choice 8 for rebalancing a portfolio
-   .Then, we added three new methods to the Features interface to keep it consistent with
-   the existing design and implementation approach to avoid breaking the MVC. We added a method to rebalance a portfolio, to add stocks and their respective weights for rebalancing
-   and lastly to get all the stock ticker symbols in the portfolio at the rebalancing date
-   provided by the user. The same were implemented in the StockControllerGUIImpl class.
-2. As for the text based controller, we added a new choice 8 for rebalancing a portfolio in 
-   FlexiblePF class and implemented the private helper method required for its logic implementation.
+
+1. For the GUI controller,
+    - We added a new choice 8 for rebalancing a portfolio in **_public void echoTextTyped(String
+       typed)_**.
+    - We added three new methods to the **_Features_** interface to keep it consistent with
+       the existing design and implementation approach to avoid breaking the MVC.
+        1. To rebalance a portfolio, **_void rebalancePortfolio(String pfName, String date)_**.
+        2. To add stocks and their respective weights for rebalancing, **_void
+           addStockWeightsForRebalance(String tickerSymbol, String percentage)_**.
+        3. To get all the stock ticker symbols in the portfolio at the rebalancing date
+           provided by the user, **_List<String> getPortfolioStocks(String pfName, String date)_**.
+
+       The above methods were implemented in the **_StockControllerGUIImpl_** class.
+
+2. As for the text based controller,
+    - We added a new choice 8 for re-balancing a portfolio in **_public void flexiblePF(Scanner
+       scan)_** and implemented the same method in **_FlexiblePF_** class.
 3. The existing methods and interface signatures were left untouched.
 
 ### View:
-1. For the GUI view, first we added the option for rebalancing a portfolio and its respective listeners.
-2. Next, we also added four new methods in the ViewGUI interface, one for displaying the 
-   window responsible to get the inputs of stocks and their weightages, second for displaying stock
-   added successfully, third for displaying 100 weight reached successfully and lastly to display
-   rebalancing success. All these methods were then implemented in ViewGUIImpl class.
-3. As for the text based view, we created a new class RebalanceStockViewImpl which extends the older view
-   class and overrode the method to display the menu containing a rebalancing option and for operations
-   following the main menu were implemented reusing the existing code.
-4. The existing methods and interface signatures were left untouched.
+
+1. For the GUI view,
+    - We added the option for re-balancing a portfolio in **_public void getFlexibleMenu()_**
+       inside **_ViewGUIImpl_** class.
+    - We also added five new methods in the ViewGUI interface,
+        1. For displaying the window responsible to get the inputs of stocks and their
+           weightages, **_void rebalancePortfolio(String pfName, String date)_**.
+        2. For displaying stock added successfully, **_void rebalanceDone100()_**.
+        3. For displaying 100 weight reached successfully, **_void rebalanceStockAdded()_**.
+        4. For displaying re-balancing success window, **_void rebalanceSuccess()_**.
+        5. For displaying error window when date before creation date provided, **_void
+           displayNoStockAvailableWindow()_**.
+
+   All these methods were then implemented in **_ViewGUIImpl_** class.
+
+2. As for the text based view,
+    - We created a new class **_RebalanceStockViewImpl_** which extends the older
+       view class (**_StockViewImpl_**) and overrode the method to display the menu containing a
+       re-balancing option and operations following the main menu were implemented reusing the
+       existing code.
+3. The existing methods and interface signatures were left untouched.
