@@ -13,7 +13,6 @@ import model.Model;
 import org.junit.Before;
 import org.junit.Test;
 import view.StockViewImpl;
-import view.ViewGUIImpl;
 
 /**
  * JUnit class to test the rebalancing logic inside textbased and gui based controllers.

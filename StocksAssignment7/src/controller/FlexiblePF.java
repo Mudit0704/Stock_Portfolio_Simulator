@@ -247,7 +247,8 @@ public class FlexiblePF extends AbstractPF {
           } else {
             this.model.saveTsAndPerc(tickerSymbol, percentage);
           }
-        } while (!(model.isPercentagesSum100()));
+        }
+        while (!(model.isPercentagesSum100()));
         model.rebalanceExistingPortfolio(pfNameGraph, this.filePath, date,
             this.datesFromAPI, "Flexible");
 

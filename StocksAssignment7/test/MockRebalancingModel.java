@@ -8,6 +8,7 @@ import model.ModelImpl;
  * Class to mock the {@link ModelImpl} class for rebalancing a portolio testing.
  */
 public class MockRebalancingModel extends ModelImpl implements Model {
+
   StringBuilder log;
   Boolean invalidData;
   Boolean percentage100;
@@ -22,7 +23,7 @@ public class MockRebalancingModel extends ModelImpl implements Model {
   public void rebalanceExistingPortfolio(String pfName, String filePath, LocalDate date,
       ArrayList<LocalDate> validDatesInAPI, String type) {
     log.append(pfName).append(filePath).append(date).append(type);
-    }
+  }
 
   @Override
   public List<String> getTickerSymbolsInPortfolio(String pfName, String filePath, LocalDate date) {

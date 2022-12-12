@@ -10,9 +10,9 @@ import view.StockView;
 
 /**
  * This class tracks all the validation checks to be performed by the model on inputs from the user.
- * It takes the input and passes it to the model for validations. Until the model confirms,
- * methods of this class will repeatedly call the view to display error messages and then later
- * ask for inputs.
+ * It takes the input and passes it to the model for validations. Until the model confirms, methods
+ * of this class will repeatedly call the view to display error messages and then later ask for
+ * inputs.
  */
 public class ControlValidations {
 
@@ -21,8 +21,8 @@ public class ControlValidations {
   String filePath;
 
   /**
-   * Constructor that calls the model and view to validate the portfolio details
-   * based on the inputs like dates, ticker symbol, stocks, percentage, amount etc.
+   * Constructor that calls the model and view to validate the portfolio details based on the inputs
+   * like dates, ticker symbol, stocks, percentage, amount etc.
    *
    * @param model    object of stockModel interface
    * @param view     object of stockView interface
@@ -35,9 +35,9 @@ public class ControlValidations {
   }
 
   /**
-   * This method takes in the date for performing operations (say composition, total,
-   * cost basis etc.) as and when entered by the user. It takes the date as a string and
-   * passes it to the model for validating.
+   * This method takes in the date for performing operations (say composition, total, cost basis
+   * etc.) as and when entered by the user. It takes the date as a string and passes it to the model
+   * for validating.
    *
    * @param scan    (Scanner) object of Scanner class that gets inputs from the user
    * @param purpose (String) purpose denotes if it's for buying or selling the portfolio
@@ -66,8 +66,8 @@ public class ControlValidations {
   }
 
   /**
-   * This method takes in the number of shares of a stock the user wants to buy for
-   * creating or modifying the portfolio.
+   * This method takes in the number of shares of a stock the user wants to buy for creating or
+   * modifying the portfolio.
    *
    * @param scan (Scanner) object of Scanner class that gets inputs from the user
    * @return the number of shares (double).
@@ -117,6 +117,13 @@ public class ControlValidations {
     return model.getCommFee(commFee);
   }
 
+  /**
+   * This method validates the user input for percentage and returns its double representation.
+   *
+   * @param scan (Scanner) object of Scanner class that gets inputs from the user
+   * @param ts   Ticker Symbol of stock for which percentage has to be asked
+   * @return double representation of String percentage
+   */
   public double percentageCheck(Scanner scan, String ts) {
     view.getPercentageForDCA(ts);   //Tell view to ask for percentage for DCA
     String perc = scan.next();

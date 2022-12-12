@@ -5,10 +5,7 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Objects;
-
 import model.Model;
 import view.ViewGUI;
 
@@ -382,7 +379,8 @@ public class StockControllerGUIImpl implements StockController, Features {
 
   @Override
   public List<String> getPortfolioStocks(String pfName, String date) {
-    List<String> stocks = model.getTickerSymbolsInPortfolio(pfName, this.filePath, LocalDate.parse(date));
+    List<String> stocks = model.getTickerSymbolsInPortfolio(pfName, this.filePath,
+        LocalDate.parse(date));
     if (stocks.isEmpty()) {
       view.displayNoStockAvailableWindow();
     }

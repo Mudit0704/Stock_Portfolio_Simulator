@@ -2,11 +2,14 @@ package view;
 
 import java.io.PrintStream;
 
+/**
+ * Text based view class for providing the re-balance a portfolio functionality.
+ */
 public class RebalanceStockViewImpl extends StockViewImpl {
 
   /**
-   * Constructor that initialises the PrintStream object which is further used to print the output on
-   * the UI.
+   * Constructor that initialises the PrintStream object which is further used to print the output
+   * on the UI.
    *
    * @param out object of the PrintStream interface
    */

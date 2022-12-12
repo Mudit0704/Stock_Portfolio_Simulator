@@ -1,9 +1,10 @@
 package view;
 
-import java.awt.Dimension;
+import controller.Features;
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -11,23 +12,17 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
-import javax.swing.JButton;
-import javax.swing.Box;
 import javax.swing.BorderFactory;
-import javax.swing.JFileChooser;
-import javax.swing.JTextArea;
-import javax.swing.JLabel;
+import javax.swing.Box;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
-
-import controller.Features;
 
 /**
  * This class extends the JFrame class and implements the ViewGUI interface and ActionListener
@@ -1182,12 +1177,13 @@ public class ViewGUIImpl extends JFrame implements ViewGUI, ActionListener {
       createRebalanceBox.add(submitExitBox);
 
       addStocksButton.addActionListener(evt -> {
-        try  {
+        try {
           if (portfolioStocks.size() != 1 && tsComboBox.getItemCount() != 1
               && Double.parseDouble(inPerc.getText()) >= 100d) {
             errorPerc();
           } else {
-            fObj.addStockWeightsForRebalance((String) tsComboBox.getSelectedItem(), inPerc.getText());
+            fObj.addStockWeightsForRebalance((String) tsComboBox.getSelectedItem(),
+                inPerc.getText());
             tsComboBox.removeItem(tsComboBox.getSelectedItem());
           }
         } catch (NumberFormatException e) {
@@ -1238,6 +1234,7 @@ public class ViewGUIImpl extends JFrame implements ViewGUI, ActionListener {
 
   }
 
+  @Override
   public void rebalanceStockAdded() {
 
     Box successBox = Box.createVerticalBox();
