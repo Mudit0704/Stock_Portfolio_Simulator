@@ -66,8 +66,21 @@ public interface Portfolio {
   HashMap<String, Integer> getAxisForGraph(LocalDate date1,
                                    LocalDate date2, ArrayList<LocalDate> validDatesInAPI);
 
+  /**
+   * Re-balances the given portfolio on a given date and proportions of the stock in portfolio.
+   *
+   * @param priceOnTimestamps the prices of stock on the dates of re-balancing.
+   * @param tickerSymbol the ticker symbol of stock to be rebalanced.
+   * @param stockProportion the proportion with which the stock is to be rebalanced.
+   */
   void rebalanceStockInPortfolio(HashMap<LocalDate, Double> priceOnTimestamps, String tickerSymbol,
       Double stockProportion);
 
+  /**
+   * Get the stocks in the portfolio to display on given date.
+   *
+   * @param date the specified date.
+   * @return the list of all stocks present in the portfolio on the given date.
+   */
   List<String> getStocksInPortfolio(LocalDate date);
 }

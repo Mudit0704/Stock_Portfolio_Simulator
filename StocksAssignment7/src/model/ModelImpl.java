@@ -291,7 +291,7 @@ public class ModelImpl implements Model {
       String tickerSymbol = tsSet.getKey();
       // priceOnTimestamps = Price of stock on the timestamp. {Date : price from api on x date}
       HashMap<LocalDate, Double> priceOnTimestamps = conv.getPriceOnTimestamps(
-        tickerSymbol, timestampsList);
+          tickerSymbol, timestampsList);
 
       objPF.rebalanceStockInPortfolio(priceOnTimestamps, tsSet.getKey(), tsSet.getValue());
     }

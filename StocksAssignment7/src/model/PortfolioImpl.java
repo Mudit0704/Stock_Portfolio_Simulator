@@ -221,15 +221,16 @@ public class PortfolioImpl implements Portfolio {
 
   @Override
   public void rebalanceStockInPortfolio(HashMap<LocalDate, Double> priceOnTimestamps,
-    String tickerSymbol, Double stockProportion) {
+      String tickerSymbol, Double stockProportion) {
     HashMap<String, Double> pfDetails;
 
     double numShares;
     for (Map.Entry<LocalDate, Double> datePrice : priceOnTimestamps.entrySet()) {
-      pfDetails = readPf.readXML(this.pfName, this.filePath, datePrice.getKey()); // Read Pfdetails from xml
+      pfDetails = readPf.readXML(this.pfName, this.filePath, datePrice.getKey());
       double existingShares = pfDetails.get(tickerSymbol);
       numShares = stockProportion / datePrice.getValue();
-      this.writeStockDetailsInXML(tickerSymbol, numShares - existingShares, 0.0, datePrice.getKey());
+      this.writeStockDetailsInXML(tickerSymbol, numShares - existingShares,
+          0.0, datePrice.getKey());
     }
   }
 
