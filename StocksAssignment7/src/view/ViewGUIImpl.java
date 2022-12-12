@@ -1147,66 +1147,68 @@ public class ViewGUIImpl extends JFrame implements ViewGUI, ActionListener {
   public void rebalancePortfolio(String pfName, String date) {
     List<String> portfolioStocks = fObj.getPortfolioStocks(pfName, date);
 
-    Box tsBox = Box.createHorizontalBox();
-    tsBox.setBorder(BorderFactory.createEmptyBorder(10, 10, 20, 20));
-    getTickerSymbol = new JLabel("Ticker symbol   ");
-    tsComboBox = new JComboBox(portfolioStocks.toArray());
+    if (!portfolioStocks.isEmpty()) {
+      Box tsBox = Box.createHorizontalBox();
+      tsBox.setBorder(BorderFactory.createEmptyBorder(10, 10, 20, 20));
+      getTickerSymbol = new JLabel("Ticker symbol   ");
+      tsComboBox = new JComboBox(portfolioStocks.toArray());
 
-    tsBox.add(getTickerSymbol);
-    tsBox.add(tsComboBox);
+      tsBox.add(getTickerSymbol);
+      tsBox.add(tsComboBox);
 
-    Box percBox = Box.createHorizontalBox();
-    percBox.setBorder(BorderFactory.createEmptyBorder(10, 10, 20, 20));
-    getPerc = new JLabel("Percentage   ");
-    inPerc = new JTextField(10);
-    percBox.add(getPerc);
-    percBox.add(inPerc);
+      Box percBox = Box.createHorizontalBox();
+      percBox.setBorder(BorderFactory.createEmptyBorder(10, 10, 20, 20));
+      getPerc = new JLabel("Percentage   ");
+      inPerc = new JTextField(10);
+      percBox.add(getPerc);
+      percBox.add(inPerc);
 
-    Box submitExitBox = Box.createHorizontalBox();
-    submitExitBox.setBorder(BorderFactory.createEmptyBorder(10, 10, 20, 20));
-    addStocksButton = new JButton("Add Stocks");
-    doneButton = doneButton("Done");
-    doneButton.setEnabled(false);
-    backButton = new JButton("Back");
-    submitExitBox.add(addStocksButton);
-    submitExitBox.add(Box.createRigidArea(new Dimension(20, 0)));
-    submitExitBox.add(doneButton);
-    submitExitBox.add(Box.createRigidArea(new Dimension(20, 0)));
-    submitExitBox.add(backButton);
+      Box submitExitBox = Box.createHorizontalBox();
+      submitExitBox.setBorder(BorderFactory.createEmptyBorder(10, 10, 20, 20));
+      addStocksButton = new JButton("Add Stocks");
+      doneButton = doneButton("Done");
+      doneButton.setEnabled(false);
+      backButton = new JButton("Back");
+      submitExitBox.add(addStocksButton);
+      submitExitBox.add(Box.createRigidArea(new Dimension(20, 0)));
+      submitExitBox.add(doneButton);
+      submitExitBox.add(Box.createRigidArea(new Dimension(20, 0)));
+      submitExitBox.add(backButton);
 
-    Box createRebalanceBox = Box.createVerticalBox();
-    createRebalanceBox.setBorder(BorderFactory.createEmptyBorder(10, 10, 20, 20));
-    createRebalanceBox.add(tsBox);
-    createRebalanceBox.add(percBox);
-    createRebalanceBox.add(submitExitBox);
+      Box createRebalanceBox = Box.createVerticalBox();
+      createRebalanceBox.setBorder(BorderFactory.createEmptyBorder(10, 10, 20, 20));
+      createRebalanceBox.add(tsBox);
+      createRebalanceBox.add(percBox);
+      createRebalanceBox.add(submitExitBox);
 
-    addStocksButton.addActionListener(evt -> {
-      try  {
-        if (portfolioStocks.size() != 1 && tsComboBox.getItemCount() != 1
-            && Double.parseDouble(inPerc.getText()) >= 100d) {
+      addStocksButton.addActionListener(evt -> {
+        try  {
+          if (portfolioStocks.size() != 1 && tsComboBox.getItemCount() != 1
+              && Double.parseDouble(inPerc.getText()) >= 100d) {
+            errorPerc();
+          } else {
+            fObj.addStockWeightsForRebalance((String) tsComboBox.getSelectedItem(), inPerc.getText());
+            tsComboBox.removeItem(tsComboBox.getSelectedItem());
+          }
+        } catch (NumberFormatException e) {
           errorPerc();
-        } else {
-          fObj.addStockWeightsForRebalance((String) tsComboBox.getSelectedItem(), inPerc.getText());
-          tsComboBox.removeItem(tsComboBox.getSelectedItem());
         }
-      } catch (NumberFormatException e) {
-        errorPerc();
-      }
 
-    });
+      });
 
-    JFrame createPageFrame = frameSetter("Rebalance a portfolio", createRebalanceBox);
+      JFrame createPageFrame = frameSetter("Rebalance a portfolio", createRebalanceBox);
 
-    doneButton.addActionListener(evt -> {
-      fObj.rebalancePortfolio(pfName, date);
-      createPageFrame.dispose();
-      inPFName.setText("");
-      inDate.setText("");
-    });
+      doneButton.addActionListener(evt -> {
+        fObj.rebalancePortfolio(pfName, date);
+        createPageFrame.dispose();
+        inPFName.setText("");
+        inDate.setText("");
+      });
 
-    backButton.addActionListener(evt -> {
-      createPageFrame.dispose();
-    });
+      backButton.addActionListener(evt -> {
+        createPageFrame.dispose();
+      });
+    }
   }
 
   @Override
@@ -1273,6 +1275,13 @@ public class ViewGUIImpl extends JFrame implements ViewGUI, ActionListener {
     buttonOk.addActionListener(evt -> {
       getSuccessFrame.dispose();
     });
+  }
+
+  @Override
+  public void displayNoStockAvailableWindow() {
+    createErrorFrame = errorFrameSetter("No stocks available at this date.");
+    clearErrorFields(inPFName);
+    clearErrorFields(inDate);
   }
 }
 
