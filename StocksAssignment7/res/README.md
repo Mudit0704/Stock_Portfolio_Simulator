@@ -57,10 +57,25 @@ and the GUI.
 
 ## Change summary:
 ### Model:
-1. For model, we added a couple of methods to the interface to keep consistent with the existing design.
-    We did this to comply with the existing architecture and avoid breaking the MVC by exposing anything other than the Model to be exposed to controller.
-2. We added the method to re-balance a portfolio in the model. The corresponding method had to be added to the Portfolios interface as well.
-3. The rest of the methods and interface signatures were left untouched.
+
+For model, we added a couple of methods to the interface to support the re-balancing operation.
+We did this to comply with the existing architecture and avoid breaking the MVC by exposing anything 
+other than the Model to be exposed to controller.
+
+1. Added the following methods in the model interface 
+   - `rebalanceExistingPortfolio` to handle portfolio re-balancing. (Model.java line 356)
+   - `getTickerSymbolsInPortfolio` to return a list of available stocks to re-balance on a given date. (Model.java line 367)
+2. Implemented the above 2 methods in the Model implementation class,
+   - `rebalanceExistingPortfolio` ModelImpl line 274
+   - `getTickerSymbolsInPortfolio` ModelImpl line 301
+3. The corresponding methods were to be supported in the portfolio instances as well.
+   - `rebalanceStockInPortfolio` to re-balance the specified portfolio, (Portfolio.java line 69)
+   - `getStocksInPortfolio` to get the list of stocks in the specified portfolio, (Portfolio.java line 71)
+4. Implemented the above 2 methods in the PortfolioImpl class
+   - `rebalanceStockInPortfolio` PortfolioImpl line 223
+   - `getStocksInPortfolio` PortfolioImpl line 237
+
+The rest of the interfaces remain unchanged.
 
 ### Controller:
 1. For the GUI controller, first we added a new choice 8 for rebalancing a portfolio

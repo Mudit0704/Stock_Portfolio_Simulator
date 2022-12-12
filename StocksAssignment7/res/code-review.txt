@@ -94,9 +94,9 @@ interface growing in size. Ideally the interface should not have changed once wr
 be open for extension and closed for modification.
 
 The portfolio type has been implemented in a similar fashion.
-For all the functions to be provided by the model, a portfolio object has to be created everytime,
+For all the functions to be provided by the model, a portfolio type object has to be created everytime,
 coupling it with portfolio. The portfolio type has to be specified to return results appropriate for
-the portfolio type. This in by itself is because of the tight coupling.
+the portfolio type. This in by itself is because of the tight coupling and is a sign of wrong design.
 
 There are multiple places where the class doesn't follow a specific interface. For instance, the
 dollar cost averaging class object has been used directly. Had there been an interface for it,
