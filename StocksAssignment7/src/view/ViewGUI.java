@@ -214,4 +214,6 @@ public interface ViewGUI {
    * successfully.
    */
   void rebalanceSuccess();
+
+  void displayNoStockAvailableWindow();
 }

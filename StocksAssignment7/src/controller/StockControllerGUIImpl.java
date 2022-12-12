@@ -382,7 +382,11 @@ public class StockControllerGUIImpl implements StockController, Features {
 
   @Override
   public List<String> getPortfolioStocks(String pfName, String date) {
-    return model.getTickerSymbolsInPortfolio(pfName, this.filePath, LocalDate.parse(date));
+    List<String> stocks = model.getTickerSymbolsInPortfolio(pfName, this.filePath, LocalDate.parse(date));
+    if (stocks.isEmpty()) {
+      view.displayNoStockAvailableWindow();
+    }
+    return stocks;
   }
 
 }
