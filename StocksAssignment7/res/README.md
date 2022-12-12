@@ -2,8 +2,81 @@
 # Stocks
 
 ## How to run the program:
-The steps to run this program are unchanged and can be referred from the SETUP-README.md
-We have added another option in the text based menu to "Rebalance a portfolio."
+## Installation
+
+- The folder that contains the '.jar' and the supporting files will be available for download inside the res folder.
+- Download the res folder into your local system.
+
+#### Adding the dependencies to project
+
+- The 2 external jar files for line chart generation is present in the res folder. We have to include these dependencies. To do so:
+
+   1. In intelliJ, go to File -> Project Structure -> Modules.
+   2. Click on the '+' symbol and select 'JARs or directories'
+      ![plot](./read-me_images/jfc1.png)
+   3. Select the two jar files (jcommon-1.9.9.jar and jfreechart-1.0.1.jar), and click 'OK'
+      ![plot](./read-me_images/jfc2.png)
+   4. Select them and click 'Apply' and then 'OK'
+      ![plot](./read-me_images/jfc3.png)
+
+#### Running the file from command-line (Terminal on Mac)
+
+- Step 1: Open Terminal
+- Step 2: Enter the following command (Note: You can also open the command-line pointing to the file. Right click on the folder and choose "Open with Terminal")
+
+```bash
+  cd <local_path_to_the_folder_containing_jar>
+```
+
+- Step 3: Run the following command (Before that, make sure that the '.jar' file is present inside the downloaded res folder)
+
+```bash
+  java -jar StocksAssignment7.jar
+```
+
+- Once the file ran successfully, you will see the list of options popping up on the command prompt:
+```bash
+Choose UI : 
+1. Text Based UI
+2. GUI Based UI 
+Enter choice :  
+```
+## Navigating through the Text-based UI
+
+- On selecting "1" for the above menu you will be redirected to the text based menu UI as follows:
+```bash
+Welcome to the Stock Application
+-----------------------
+1. Create/ Fetch inflexible portfolio (Commission fee : $10 per transaction)
+2. Create/ Fetch flexible portfolio (Commission fee : $10 per transaction)
+3. Quit
+-----------------------
+Enter Choice : 
+```
+Choosing the choices from above will take us to the next section - Creating Flexible or Inflexible (option 1 or 2 )
+
+#### Section 1. Creating a new Flexible Portfolio
+
+Here, we will run through the steps in creating two Portfolios A and B. Portfolio A will have 3 values of stocks and Portfolio B will have 2 values of stocks.
+- Step 1.1: You will see the sub menu for a Flexible portfolio as follows:
+
+```bash
+
+-----------FLEXIBLE PORTFOLIO------------
+1. Create new flexible portfolio (Commission fee : $10 per transaction)
+2. Modify existing portfolio (Commission fee : $10 per transaction)
+3. Upload existing portfolio file
+4. Examine current composition for a portfolio
+5. Cost Basis
+6. Get total value of the portfolio.
+7. Get performance graph.
+8. Rebalance a portfolio.
+9. Quit
+-----------------------
+Enter Choice : 
+```
+
+- Re-balance a portfolio
 
 The sequence of flow for text UI is as below,
 ``` bash
@@ -20,16 +93,16 @@ Enter the date (yyyy-MM-dd) for rebalance:
 ```
 Enter a valid input date and then hit enter
 
-You should see the portfolio composition to get an idea 
+You should see the portfolio composition to get an idea
 about its composition.
 
-Next, input all the available stock tickers in the portfolio 
+Next, input all the available stock tickers in the portfolio
 and your wished proportions to re-balance the portfolio.
 
 Once you are done, it performs the re-balancing and you can
 verify by checking the portfolio composition.
 
-GUI FLOW: 
+GUI FLOW:
 
 Click on the option 8. Rebalance a portfolio
 
@@ -43,26 +116,29 @@ Once done, a message will pop up stating that you have reached the total of 100,
 add more and the Done button will be enabled. Click on Done and after the rebalancing is done, a
 message box displaying the success status will display.
 
-Click on OK and you will see the portfolio name and date window again. If you want to rebalance 
+Click on OK and you will see the portfolio name and date window again. If you want to rebalance
 another portfolio, provide the necessary details otherwise click on back to go back to the main menu.
 
 
-## Parts that work:
+## Parts completed:
 Given a portfolio, for a given date and intended weights by percentage
-of the portfolio value at the specified date, the portfolio stocks' 
+of the portfolio value at the specified date, the portfolio stocks'
 weights are adjusted.
 
 This operation can be carried out both through the text based UI
 and the GUI.
 
+## Parts not completed:
+None.
+
 ## Change summary:
 ### Model:
 
 For model, we added a couple of methods to the interface to support the re-balancing operation.
-We did this to comply with the existing architecture and avoid breaking the MVC by exposing anything 
+We did this to comply with the existing architecture and avoid breaking the MVC by exposing anything
 other than the Model to be exposed to controller.
 
-1. Added the following methods in the model interface 
+1. Added the following methods in the model interface
    - `rebalanceExistingPortfolio` to handle portfolio re-balancing. (Model.java line 356)
    - `getTickerSymbolsInPortfolio` to return a list of available stocks to re-balance on a given date. (Model.java line 367)
 2. Implemented the above 2 methods in the Model implementation class,
