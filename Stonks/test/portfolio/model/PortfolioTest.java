@@ -18,20 +18,20 @@ import org.xml.sax.SAXException;
  * A JUnit class to test Portfolio class.
  */
 public class PortfolioTest {
-  private IStockService mockStockService;
+  private IStockService mockService;
 
   @Before
   public void setup() {
-    mockStockService = new MockStockService("/test/testData.txt");
+    mockService = new MockStockService("/test/testData.txt");
   }
 
   @Test
   public void testSetPortfolioStocks() {
     Map<IStock, Long> map = new HashMap<>();
-    map.put(new Stock("GOOG", mockStockService), 3L);
-    map.put(new Stock("PUBM", mockStockService), 1L);
-    map.put(new Stock("MSFT", mockStockService), 2L);
-    IPortfolio portfolio = new Portfolio(mockStockService, map);
+    map.put(new Stock("GOOG", mockService), 3L);
+    map.put(new Stock("PUBM", mockService), 1L);
+    map.put(new Stock("MSFT", mockService), 2L);
+    IPortfolio portfolio = new Portfolio(mockService, map);
 
     String result = portfolio.getPortfolioComposition();
     assertTrue(result.contains("GOOG -> 3\n"));
@@ -41,7 +41,7 @@ public class PortfolioTest {
 
   @Test
   public void testSetPortfolioZeroStocks() {
-    IPortfolio portfolio = new Portfolio(mockStockService, new HashMap<>());
+    IPortfolio portfolio = new Portfolio(mockService, new HashMap<>());
 
     String result = portfolio.getPortfolioComposition();
     assertEquals("No stocks in the portfolio", result);
@@ -50,10 +50,10 @@ public class PortfolioTest {
   @Test
   public void getPortfolioComposition() {
     Map<IStock, Long> map = new HashMap<>();
-    map.put(new Stock("GOOG", mockStockService), 3L);
-    map.put(new Stock("PUBM", mockStockService), 1L);
-    map.put(new Stock("MSFT", mockStockService), 2L);
-    IPortfolio portfolio = new Portfolio(mockStockService, map);
+    map.put(new Stock("GOOG", mockService), 3L);
+    map.put(new Stock("PUBM", mockService), 1L);
+    map.put(new Stock("MSFT", mockService), 2L);
+    IPortfolio portfolio = new Portfolio(mockService, map);
 
     String result = portfolio.getPortfolioComposition();
     assertTrue(result.contains("GOOG -> 3\n"));
@@ -64,10 +64,10 @@ public class PortfolioTest {
   @Test
   public void testGetPortfolioValue() {
     Map<IStock, Long> map = new HashMap<>();
-    map.put(new Stock("GOOG", mockStockService), 3L);
-    map.put(new Stock("PUBM", mockStockService), 1L);
-    map.put(new Stock("MSFT", mockStockService), 2L);
-    IPortfolio portfolio = new Portfolio(mockStockService, map);
+    map.put(new Stock("GOOG", mockService), 3L);
+    map.put(new Stock("PUBM", mockService), 1L);
+    map.put(new Stock("MSFT", mockService), 2L);
+    IPortfolio portfolio = new Portfolio(mockService, map);
 
     assertEquals(568.92, portfolio.getPortfolioValue(LocalDate.of(2022, 10, 28)), 0.0);
   }
@@ -75,10 +75,10 @@ public class PortfolioTest {
   @Test(expected = IllegalArgumentException.class)
   public void testGetPortfolioValueInvalidDate() {
     Map<IStock, Long> map = new HashMap<>();
-    map.put(new Stock("GOOG", mockStockService), 3L);
-    map.put(new Stock("PUBM", mockStockService), 1L);
-    map.put(new Stock("MSFT", mockStockService), 2L);
-    IPortfolio portfolio = new Portfolio(mockStockService, map);
+    map.put(new Stock("GOOG", mockService), 3L);
+    map.put(new Stock("PUBM", mockService), 1L);
+    map.put(new Stock("MSFT", mockService), 2L);
+    IPortfolio portfolio = new Portfolio(mockService, map);
 
     assertEquals(568.92, portfolio.getPortfolioValue(LocalDate.of(2012, 10, 28)), 0.0);
   }
@@ -86,17 +86,17 @@ public class PortfolioTest {
   @Test(expected = IllegalArgumentException.class)
   public void testGetPortfolioValueInvalidFutureDate() {
     Map<IStock, Long> map = new HashMap<>();
-    map.put(new Stock("GOOG", mockStockService), 3L);
-    map.put(new Stock("PUBM", mockStockService), 1L);
-    map.put(new Stock("MSFT", mockStockService), 2L);
-    IPortfolio portfolio = new Portfolio(mockStockService, map);
+    map.put(new Stock("GOOG", mockService), 3L);
+    map.put(new Stock("PUBM", mockService), 1L);
+    map.put(new Stock("MSFT", mockService), 2L);
+    IPortfolio portfolio = new Portfolio(mockService, map);
 
     assertEquals(568.92, portfolio.getPortfolioValue(LocalDate.of(2023, 10, 28)), 0.0);
   }
 
   @Test
   public void testGetEmptyPortfolioValue() {
-    IPortfolio portfolio = new Portfolio(mockStockService, new HashMap<>());
+    IPortfolio portfolio = new Portfolio(mockService, new HashMap<>());
 
     assertEquals(0, portfolio.getPortfolioValue(LocalDate.of(2022, 10, 28)), 0.0);
   }
@@ -104,15 +104,15 @@ public class PortfolioTest {
   @Test
   public void testSavePortfolio() throws ParserConfigurationException {
     Map<IStock, Long> map = new HashMap<>();
-    map.put(new Stock("GOOG", mockStockService), 3L);
-    map.put(new Stock("PUBM", mockStockService), 1L);
-    map.put(new Stock("MSFT", mockStockService), 2L);
-    IPortfolio portfolio = new Portfolio(mockStockService, map);
+    map.put(new Stock("GOOG", mockService), 3L);
+    map.put(new Stock("PUBM", mockService), 1L);
+    map.put(new Stock("MSFT", mockService), 2L);
+    IPortfolio portfolio = new Portfolio(mockService, map);
 
     String path = System.getProperty("user.dir") + "/test_save.xml";
     portfolio.savePortfolio(path);
 
-    IPortfolio retrievedPortfolio = new Portfolio(mockStockService, new HashMap<>());
+    IPortfolio retrievedPortfolio = new Portfolio(mockService, new HashMap<>());
 
     try {
       retrievedPortfolio.retrievePortfolio(path);
@@ -135,7 +135,7 @@ public class PortfolioTest {
 
   @Test(expected = RuntimeException.class)
   public void testSaveEmptyPortfolio() throws IOException, ParserConfigurationException {
-    IPortfolio portfolio = new Portfolio(mockStockService, new HashMap<>());
+    IPortfolio portfolio = new Portfolio(mockService, new HashMap<>());
 
     String path = System.getProperty("user.dir") + "/test_save.xml";
     portfolio.savePortfolio(path);
@@ -150,10 +150,10 @@ public class PortfolioTest {
   @Test
   public void testSavePortfolioMultipleTimes() throws IOException, ParserConfigurationException {
     Map<IStock, Long> map = new HashMap<>();
-    map.put(new Stock("GOOG", mockStockService), 3L);
-    map.put(new Stock("PUBM", mockStockService), 1L);
-    map.put(new Stock("MSFT", mockStockService), 2L);
-    IPortfolio portfolio = new Portfolio(mockStockService, map);
+    map.put(new Stock("GOOG", mockService), 3L);
+    map.put(new Stock("PUBM", mockService), 1L);
+    map.put(new Stock("MSFT", mockService), 2L);
+    IPortfolio portfolio = new Portfolio(mockService, map);
 
     String path = System.getProperty("user.dir") + "/test_multiple_save.xml";
     portfolio.savePortfolio(path);
@@ -162,7 +162,7 @@ public class PortfolioTest {
     portfolio.savePortfolio(path);
 
 
-    IPortfolio retrievedPortfolio = new Portfolio(mockStockService, new HashMap<>());
+    IPortfolio retrievedPortfolio = new Portfolio(mockService, new HashMap<>());
 
     try {
       retrievedPortfolio.retrievePortfolio(path);
@@ -174,7 +174,7 @@ public class PortfolioTest {
     assertTrue(result.contains("GOOG -> 3\n"));
     assertTrue(result.contains("MSFT -> 2\n"));
     assertTrue(result.contains("PUBM -> 1\n"));
-    assertEquals(568.92, retrievedPortfolio.getPortfolioValue(LocalDate.of(2022, 10, 28)), 0.0);
+    assertEquals(579.48, retrievedPortfolio.getPortfolioValue(LocalDate.of(2022, 10, 28)), 0.0);
 
     try {
       Files.delete(Path.of(path));
@@ -188,7 +188,7 @@ public class PortfolioTest {
       throws IOException, ParserConfigurationException, SAXException {
     String path = System.getProperty("user.dir") + "/invalid.xml";
 
-    IPortfolio retrievedPortfolio = new Portfolio(mockStockService, new HashMap<>());
+    IPortfolio retrievedPortfolio = new Portfolio(mockService, new HashMap<>());
 
     try {
       retrievedPortfolio.retrievePortfolio(path);
@@ -207,10 +207,10 @@ public class PortfolioTest {
   public void testRetrievePortfolioMultipleTimes()
       throws IOException, ParserConfigurationException {
     Map<IStock, Long> map = new HashMap<>();
-    map.put(new Stock("GOOG", mockStockService), 3L);
-    map.put(new Stock("PUBM", mockStockService), 1L);
-    map.put(new Stock("MSFT", mockStockService), 2L);
-    IPortfolio portfolio = new Portfolio(mockStockService, map);
+    map.put(new Stock("GOOG", mockService), 3L);
+    map.put(new Stock("PUBM", mockService), 1L);
+    map.put(new Stock("MSFT", mockService), 2L);
+    IPortfolio portfolio = new Portfolio(mockService, map);
 
     String path = System.getProperty("user.dir") + "/test_multiple_save.xml";
     portfolio.savePortfolio(path);
@@ -219,7 +219,7 @@ public class PortfolioTest {
     portfolio.savePortfolio(path);
 
 
-    IPortfolio retrievedPortfolio = new Portfolio(mockStockService, new HashMap<>());
+    IPortfolio retrievedPortfolio = new Portfolio(mockService, new HashMap<>());
 
     try {
       retrievedPortfolio.retrievePortfolio(path);

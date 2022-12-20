@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<portfolio>
+  <created>2019-10-24</created>
+  <cost-basis date="2019-10-24">7342.56</cost-basis>
+  <stock>
+    <stockQuantity date="2019-10-24">2</stockQuantity>
+    <tickerSymbol>A</tickerSymbol>
+    <stockPrice>1218.76</stockPrice>
+    <currentHolding date="2022-11-11">2</currentHolding>
+  </stock>
+  <stock>
+    <stockQuantity date="2019-10-24">2</stockQuantity>
+    <tickerSymbol>GOOG</tickerSymbol>
+    <stockPrice>1218.76</stockPrice>
+    <currentHolding date="2022-11-11">2</currentHolding>
+  </stock>
+  <stock>
+    <stockQuantity date="2019-10-24">2</stockQuantity>
+    <tickerSymbol>AAPL</tickerSymbol>
+    <stockPrice>1218.76</stockPrice>
+    <currentHolding date="2022-11-11">2</currentHolding>
+  </stock>
+</portfolio>

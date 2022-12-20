@@ -3,7 +3,6 @@ package portfolio.controller;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.Map;
@@ -23,17 +22,19 @@ import portfolio.view.IView;
 public class PortfolioController implements IPortfolioController {
 
   //region Variables
-  private static final String CREATE_PORTFOLIO_SUB_MENU =
+  protected static final String CREATE_PORTFOLIO_SUB_MENU =
       "Choose from the below menu: \n 1 -> Add a new stock "
           + "\n E -> Exit from the operation \n";
-  private static final String SAVE_RETRIEVE_PORTFOLIO_MENU =
+  protected static final String SAVE_RETRIEVE_PORTFOLIO_MENU =
       "Choose from the below menu: \n 1 -> Save portfolio "
           + "\n 2 -> Retrieve portfolio \n E -> Exit from the operation \n";
-  private static final String CHOOSE_FROM_AVAILABLE_PORTFOLIOS = "Choose from available portfolios "
+  protected static final String CHOOSE_FROM_AVAILABLE_PORTFOLIOS = "Choose from available "
+      + "portfolios "
       + "(eg: Portfolio1 -> give 1):\n";
 
   private final Readable in;
   private final IView view;
+  private final ControllerHelper controllerHelper;
   //endregion
 
   /**
@@ -45,6 +46,7 @@ public class PortfolioController implements IPortfolioController {
   public PortfolioController(Readable in, IView view) {
     this.in = in;
     this.view = view;
+    this.controllerHelper = new ControllerHelper(view);
   }
 
   //region Public methods
@@ -86,7 +88,7 @@ public class PortfolioController implements IPortfolioController {
   //endregion
 
   //region Private Methods
-  private void getPortfolioComposition(IPortfoliosModel portfolios, Scanner scan)
+  protected void getPortfolioComposition(IPortfoliosModel portfolios, Scanner scan)
       throws IOException {
     String result;
     while (true) {
@@ -102,7 +104,7 @@ public class PortfolioController implements IPortfolioController {
       } catch (InputMismatchException | IllegalArgumentException e) {
         if ("No portfolios".equals(e.getMessage())) {
           view.displayCustomText("No portfolios\n");
-          displayExitOperationSequence(scan);
+          controllerHelper.performExitOperationSequence(scan);
           return;
         }
         view.displayInvalidInput();
@@ -110,10 +112,10 @@ public class PortfolioController implements IPortfolioController {
     }
 
     view.displayCustomText(result);
-    displayExitOperationSequence(scan);
+    controllerHelper.performExitOperationSequence(scan);
   }
 
-  private void saveRetrievePortfolios(IPortfoliosModel portfolios, Scanner scan)
+  protected void saveRetrievePortfolios(IPortfoliosModel portfolios, Scanner scan)
       throws IOException {
     try {
       while (true) {
@@ -125,12 +127,12 @@ public class PortfolioController implements IPortfolioController {
           case "1":
             portfolios.savePortfolios();
             view.displayCustomText("Saved\n");
-            displayExitOperationSequence(scan);
+            controllerHelper.performExitOperationSequence(scan);
             return;
           case "2":
             portfolios.retrievePortfolios();
             view.displayCustomText("Retrieved\n");
-            displayExitOperationSequence(scan);
+            controllerHelper.performExitOperationSequence(scan);
             return;
           default:
             view.displayInvalidInput();
@@ -148,37 +150,26 @@ public class PortfolioController implements IPortfolioController {
     } catch (FileNotFoundException e) {
       view.displayCustomText("No files found to retrieve\n");
     }
-    displayExitOperationSequence(scan);
+    controllerHelper.performExitOperationSequence(scan);
   }
 
-  private void getPortfolioValuesForGivenDate(IPortfoliosModel portfolios, Scanner scan)
+  protected void getPortfolioValuesForGivenDate(IPortfoliosModel portfolios, Scanner scan)
       throws IOException {
     LocalDate date;
-    int portfolioId;
+    Integer portfolioId;
 
     while (true) {
       try {
-        view.displayCustomText(CHOOSE_FROM_AVAILABLE_PORTFOLIOS);
-        String availablePortfolios = portfolios.getAvailablePortfolios();
-        view.displayCustomText(availablePortfolios);
-        view.askForInput();
-        scan.nextLine();
-        portfolioId = scan.nextInt();
-        if (portfolioId <= 0) {
-          throw new IllegalArgumentException();
+        portfolioId = controllerHelper.populatePortfolioIdFromUser(portfolios, scan);
+        if (portfolioId == null) {
+          return;
         }
-        view.displayCustomText("Please enter the date (yyyy-mm-dd): ");
-        date = LocalDate.parse(scan.next());
+        date = controllerHelper.populateDateFromUser(scan);
         String portfolioValue = String.format("%.2f",
             portfolios.getPortfolioValue(date, portfolioId));
         view.displayCustomText("Portfolio" + portfolioId + "\n" + portfolioValue + "\n");
         break;
-      } catch (DateTimeParseException | IllegalArgumentException | InputMismatchException e) {
-        if ("No portfolios".equals(e.getMessage())) {
-          view.displayCustomText("No portfolios\n");
-          displayExitOperationSequence(scan);
-          return;
-        }
+      } catch (IllegalArgumentException e) {
         view.displayInvalidInput();
       }
       catch (RuntimeException e) {
@@ -186,10 +177,10 @@ public class PortfolioController implements IPortfolioController {
       }
     }
 
-    displayExitOperationSequence(scan);
+    controllerHelper.performExitOperationSequence(scan);
   }
 
-  private void generatePortfolios(Scanner scan, IPortfoliosModel portfolios)
+  protected void generatePortfolios(Scanner scan, IPortfoliosModel portfolios)
       throws IOException {
     Map<String, Long> stocks = new HashMap<>();
     while (true) {
@@ -202,56 +193,13 @@ public class PortfolioController implements IPortfolioController {
           }
           return;
         case "1":
-          addNewStock(scan, portfolios, stocks);
+          controllerHelper.populateStockDataFromUser(scan, portfolios, stocks);
           break;
         default:
           view.displayInvalidInput();
           scan.nextLine();
           break;
       }
-    }
-  }
-
-  private void addNewStock(Scanner scan, IPortfoliosModel portfolios, Map<String, Long> stocks)
-      throws IOException {
-    String tickerSymbol;
-    long stockQuantity;
-    view.displayCustomText("Stock Symbol: ");
-    scan.nextLine();
-    tickerSymbol = scan.nextLine();
-    while (!portfolios.isTickerSymbolValid(tickerSymbol)) {
-      view.displayCustomText("Invalid Ticker Symbol\n");
-      view.displayCustomText("Stock Symbol: ");
-      tickerSymbol = scan.nextLine();
-    }
-    while (true) {
-      view.displayCustomText("Stock Quantity: ");
-      try {
-        stockQuantity = scan.nextLong();
-        if (stockQuantity <= 0) {
-          throw new IllegalArgumentException();
-        }
-        break;
-      } catch (InputMismatchException | IllegalArgumentException e) {
-        scan.nextLine();
-        view.displayInvalidInput();
-      }
-    }
-    if (stocks.containsKey(tickerSymbol)) {
-      stocks.put(tickerSymbol, stocks.get(tickerSymbol) + stockQuantity);
-    }
-    else {
-      stocks.put(tickerSymbol, stockQuantity);
-    }
-  }
-
-  private void displayExitOperationSequence(Scanner scan) throws IOException {
-    view.displayEscapeFromOperation();
-    scan.nextLine();
-    while (!"E".equals(scan.next())) {
-      scan.nextLine();
-      view.displayInvalidInput();
-      view.displayEscapeFromOperation();
     }
   }
   //endregion

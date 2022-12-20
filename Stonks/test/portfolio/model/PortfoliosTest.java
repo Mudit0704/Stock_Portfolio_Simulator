@@ -24,7 +24,7 @@ public class PortfoliosTest {
   @Test
   public void testGetPortfolioValue() {
     IPortfoliosModel portfolios =
-        new MockPortfoliosModel(new MockStockService("/test/testData.txt"));
+        new MockPortfoliosModel(new MockStockService("/test/testExtensiveData.txt"));
 
     Map<String, Long> map = new HashMap<>();
     map.put("GOOG", 3L);
@@ -39,14 +39,14 @@ public class PortfoliosTest {
 
     portfolios.createNewPortfolio(map);
 
-    assertEquals(568.92, portfolios.getPortfolioValue(LocalDate.of(2022, 10, 28), 1), 0.0);
-    assertEquals(284.46, portfolios.getPortfolioValue(LocalDate.of(2022, 10, 28), 2), 0.0);
+    assertEquals(579.48, portfolios.getPortfolioValue(LocalDate.of(2022, 10, 28), 1), 0.1);
+    assertEquals(289.74, portfolios.getPortfolioValue(LocalDate.of(2022, 10, 28), 2), 0.1);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testGetPortfolioValueForEmptyPortfolio() {
     IPortfoliosModel portfolios =
-        new MockPortfoliosModel(new MockStockService("/test/testData.txt"));
+        new MockPortfoliosModel(new MockStockService("/test/testExtensiveData.txt"));
 
     Map<String, Long> map = new HashMap<>();
 
@@ -58,7 +58,7 @@ public class PortfoliosTest {
   @Test(expected = IllegalArgumentException.class)
   public void testGetPortfolioValueForInvalidPortfolioId() {
     IPortfoliosModel portfolios =
-        new MockPortfoliosModel(new MockStockService("/test/testData.txt"));
+        new MockPortfoliosModel(new MockStockService("/test/testExtensiveData.txt"));
 
     Map<String, Long> map = new HashMap<>();
     map.put("GOOG", 3L);
@@ -81,7 +81,7 @@ public class PortfoliosTest {
   @Test(expected = IllegalArgumentException.class)
   public void testGetPortfolioValueForNonEmptyZeroPortfolioId() {
     IPortfoliosModel portfolios =
-        new MockPortfoliosModel(new MockStockService("/test/testData.txt"));
+        new MockPortfoliosModel(new MockStockService("/test/testExtensiveData.txt"));
 
     Map<String, Long> map = new HashMap<>();
     map.put("GOOG", 3L);
@@ -104,7 +104,7 @@ public class PortfoliosTest {
   @Test(expected = IllegalArgumentException.class)
   public void testGetPortfolioValueForInvalidDate() {
     IPortfoliosModel portfolios =
-        new MockPortfoliosModel(new MockStockService("/test/testData.txt"));
+        new MockPortfoliosModel(new MockStockService("/test/testExtensiveData.txt"));
 
     Map<String, Long> map = new HashMap<>();
     map.put("GOOG", 3L);
@@ -127,7 +127,7 @@ public class PortfoliosTest {
   @Test(expected = IllegalArgumentException.class)
   public void testGetPortfolioValueForNegativeId() {
     IPortfoliosModel portfolios =
-        new MockPortfoliosModel(new MockStockService("/test/testData.txt"));
+        new MockPortfoliosModel(new MockStockService("/test/testExtensiveData.txt"));
 
     Map<String, Long> map = new HashMap<>();
     map.put("GOOG", 3L);
@@ -150,7 +150,7 @@ public class PortfoliosTest {
   @Test
   public void testGetPortfolioComposition() {
     IPortfoliosModel portfolios =
-        new MockPortfoliosModel(new MockStockService("/test/testData.txt"));
+        new MockPortfoliosModel(new MockStockService("/test/testExtensiveData.txt"));
 
     Map<String, Long> map = new HashMap<>();
     map.put("GOOG", 3L);
@@ -195,7 +195,7 @@ public class PortfoliosTest {
   @Test(expected = IllegalArgumentException.class)
   public void testGetPortfolioCompositionZeroId() {
     IPortfoliosModel portfolios =
-        new MockPortfoliosModel(new MockStockService("/test/testData.txt"));
+        new MockPortfoliosModel(new MockStockService("/test/testExtensiveData.txt"));
 
     Map<String, Long> map = new HashMap<>();
     map.put("GOOG", 3L);
@@ -224,7 +224,7 @@ public class PortfoliosTest {
   @Test(expected = IllegalArgumentException.class)
   public void testGetInvalidIdPortfolioComposition() {
     IPortfoliosModel portfolios =
-        new MockPortfoliosModel(new MockStockService("/test/testData.txt"));
+        new MockPortfoliosModel(new MockStockService("/test/testExtensiveData.txt"));
 
     Map<String, Long> map = new HashMap<>();
     map.put("GOOG", 3L);
@@ -253,7 +253,7 @@ public class PortfoliosTest {
   @Test(expected = IllegalArgumentException.class)
   public void testGetInvalidEmptyPortfolioComposition() {
     IPortfoliosModel portfolios =
-        new MockPortfoliosModel(new MockStockService("/test/testData.txt"));
+        new MockPortfoliosModel(new MockStockService("/test/testExtensiveData.txt"));
 
     Map<String, Long> map = new HashMap<>();
 
@@ -265,7 +265,7 @@ public class PortfoliosTest {
   @Test(expected = IllegalArgumentException.class)
   public void testGetInvalidIndexEmptyPortfolioComposition() {
     IPortfoliosModel portfolios =
-        new MockPortfoliosModel(new MockStockService("/test/testData.txt"));
+        new MockPortfoliosModel(new MockStockService("/test/testExtensiveData.txt"));
 
     Map<String, Long> map = new HashMap<>();
 
@@ -277,7 +277,7 @@ public class PortfoliosTest {
   @Test(expected = IllegalArgumentException.class)
   public void testGetInvalidIdPortfolioCompositionNegativeVal() {
     IPortfoliosModel portfolios =
-        new MockPortfoliosModel(new MockStockService("/test/testData.txt"));
+        new MockPortfoliosModel(new MockStockService("/test/testExtensiveData.txt"));
 
     Map<String, Long> map = new HashMap<>();
     map.put("GOOG", 3L);
@@ -322,7 +322,7 @@ public class PortfoliosTest {
   public void testSavePortfolio() throws ParserConfigurationException {
 
     IPortfoliosModel portfolios =
-        new MockPortfoliosModel(new MockStockService("/test/testData.txt"));
+        new MockPortfoliosModel(new MockStockService("/test/testExtensiveData.txt"));
 
     Map<String, Long> map = new HashMap<>();
     map.put("GOOG", 3L);
@@ -348,7 +348,7 @@ public class PortfoliosTest {
     portfolios.savePortfolios();
 
     IPortfoliosModel retrievedPortfolios = new MockPortfoliosModel(
-        new MockStockService("/test/testData.txt"));
+        new MockStockService("/test/testExtensiveData.txt"));
 
     try {
       retrievedPortfolios.retrievePortfolios();
@@ -389,7 +389,7 @@ public class PortfoliosTest {
   @Test
   public void testSaveSinglePortfolio() throws ParserConfigurationException {
     IPortfoliosModel portfolios =
-        new MockPortfoliosModel(new MockStockService("/test/testData.txt"));
+        new MockPortfoliosModel(new MockStockService("/test/testExtensiveData.txt"));
 
     Map<String, Long> map = new HashMap<>();
     map.put("GOOG", 3L);
@@ -401,7 +401,7 @@ public class PortfoliosTest {
     portfolios.savePortfolios();
 
     IPortfoliosModel retrievedPortfolios = new MockPortfoliosModel(
-        new MockStockService("/test/testData.txt"));
+        new MockStockService("/test/testExtensiveData.txt"));
 
     try {
       retrievedPortfolios.retrievePortfolios();
@@ -429,7 +429,7 @@ public class PortfoliosTest {
   @Test(expected = RuntimeException.class)
   public void testNoStockPortfolioSaveRetrieve() throws ParserConfigurationException {
     IPortfoliosModel portfolios =
-        new MockPortfoliosModel(new MockStockService("/test/testData.txt"));
+        new MockPortfoliosModel(new MockStockService("/test/testExtensiveData.txt"));
 
     Map<String, Integer> map = new HashMap<>();
 
@@ -450,7 +450,7 @@ public class PortfoliosTest {
       throws ParserConfigurationException, IOException, SAXException {
 
     IPortfoliosModel portfolios =
-        new MockPortfoliosModel(new MockStockService("/test/testData.txt"));
+        new MockPortfoliosModel(new MockStockService("/test/testExtensiveData.txt"));
 
     Map<String, Long> map = new HashMap<>();
     map.put("GOOG", 3L);
@@ -476,7 +476,7 @@ public class PortfoliosTest {
     portfolios.savePortfolios();
 
     IPortfoliosModel retrievedPortfolios = new MockPortfoliosModel(
-        new MockStockService("/test/testData.txt"));
+        new MockStockService("/test/testExtensiveData.txt"));
 
     retrievedPortfolios.retrievePortfolios();
 
@@ -512,7 +512,7 @@ public class PortfoliosTest {
       throws ParserConfigurationException, IOException, SAXException {
 
     IPortfoliosModel portfolios =
-        new MockPortfoliosModel(new MockStockService("/test/testData.txt"));
+        new MockPortfoliosModel(new MockStockService("/test/testExtensiveData.txt"));
 
     Map<String, Long> map = new HashMap<>();
     map.put("GOOG", 3L);
@@ -538,7 +538,7 @@ public class PortfoliosTest {
     portfolios.savePortfolios();
 
     IPortfoliosModel retrievedPortfolios = new MockPortfoliosModel(
-        new MockStockService("/test/testData.txt"));
+        new MockStockService("/test/testExtensiveData.txt"));
 
     retrievedPortfolios.retrievePortfolios();
     try {
@@ -579,14 +579,14 @@ public class PortfoliosTest {
   public void testRetrievePortfolioWithNoFiles()
       throws IOException, ParserConfigurationException, SAXException {
     IPortfoliosModel portfolios =
-        new MockPortfoliosModel(new MockStockService("/test/testData.txt"));
+        new MockPortfoliosModel(new MockStockService("/test/testExtensiveData.txt"));
     portfolios.retrievePortfolios();
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testSetStocksInPortfolioZeroStocks() {
     IPortfoliosModel portfolios =
-        new MockPortfoliosModel(new MockStockService("/test/testData.txt"));
+        new MockPortfoliosModel(new MockStockService("/test/testExtensiveData.txt"));
     Map<String, Long> map = new HashMap<>();
 
     portfolios.createNewPortfolio(map);
@@ -598,7 +598,7 @@ public class PortfoliosTest {
   @Test
   public void testGetAvailablePortfolios() throws AttributeNotFoundException {
     IPortfoliosModel portfolios =
-        new MockPortfoliosModel(new MockStockService("/test/testData.txt"));
+        new MockPortfoliosModel(new MockStockService("/test/testExtensiveData.txt"));
     Map<String, Long> map = new HashMap<>();
     map.put("GOOG", 3L);
     map.put("PUBM", 2L);
