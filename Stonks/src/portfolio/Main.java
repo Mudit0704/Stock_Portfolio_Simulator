@@ -2,10 +2,12 @@ package portfolio;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import portfolio.controller.FlexiblePortfolioController;
-import portfolio.model.FlexiblePortfoliosModel;
+import javax.swing.UnsupportedLookAndFeelException;
+import portfolio.controller.GUIPortfolioController;
+import portfolio.model.StrategicFlexiblePortfoliosModel;
 import portfolio.view.FlexibleView;
 import portfolio.view.IView;
+import portfolio.view.guiview.GUIView;
 
 /**
  * Main class that initializes Model, View and Controller objects.
@@ -17,14 +19,17 @@ public class Main {
    * it.
    *
    * @param args command line arguments for main method.
+   * @throws IOException if an I/O error occurs.
    */
-  public static void main(String[] args) {
+  public static void main(String[] args) throws IOException {
+    IView view = null;
     try {
-      IView view = new FlexibleView(System.out);
-      new FlexiblePortfolioController(new InputStreamReader(System.in), view).run(
-          new FlexiblePortfoliosModel());
-    } catch (IOException e) {
-      e.printStackTrace();
+      view = new FlexibleView(System.out);
+      new GUIPortfolioController(new StrategicFlexiblePortfoliosModel(),
+          new InputStreamReader(System.in), view, new GUIView("Stonks"));
+    } catch (IOException | UnsupportedLookAndFeelException | ClassNotFoundException |
+             InstantiationException | IllegalAccessException e) {
+      view.displayCustomText("Error occurred while trying to start application\n");
     }
   }
 }

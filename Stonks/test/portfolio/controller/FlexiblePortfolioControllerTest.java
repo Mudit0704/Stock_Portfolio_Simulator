@@ -102,7 +102,7 @@ public class FlexiblePortfolioControllerTest {
 
     controller.run(new MockFlexiblePortfolioModel(log, true));
 
-    assertEquals("ALPHAVANTAGETICKER_SYMBOL {TICKER_SYMBOL=12} 2019-10-25",
+    assertEquals("ALPHAVANTAGETICKER_SYMBOL {TICKER_SYMBOL=12.0} 2019-10-25",
         log.toString());
     assertEquals("Choose from the below menu: \n"
         + " 1 -> Create a static portfolio \n"
@@ -129,7 +129,7 @@ public class FlexiblePortfolioControllerTest {
 
     controller.run(new MockFlexiblePortfolioModel(log, true));
 
-    assertEquals("ALPHAVANTAGETICKER_SYMBOL {TICKER_SYMBOL=12} 2019-10-25",
+    assertEquals("ALPHAVANTAGETICKER_SYMBOL {TICKER_SYMBOL=12.0} 2019-10-25",
         log.toString());
     assertEquals("Choose from the below menu: \n"
         + " 1 -> Create a static portfolio \n"
@@ -274,7 +274,7 @@ public class FlexiblePortfolioControllerTest {
     controller.run(new MockFlexiblePortfolioModel(log, true));
 
     assertEquals("ALPHAVANTAGEAvailable_Portfolios TICKER_SYMBOL "
-            + "TICKER_SYMBOL_2_1_2019-10-25",
+            + "TICKER_SYMBOL_2.0_1_2019-10-25",
         log.toString());
     assertEquals("Choose from the below menu: \n"
         + " 1 -> Create a static portfolio \n"
@@ -305,7 +305,7 @@ public class FlexiblePortfolioControllerTest {
     controller.run(new MockFlexiblePortfolioModel(log, true));
 
     assertEquals("ALPHAVANTAGEAvailable_Portfolios TICKER_SYMBOL "
-            + "TICKER_SYMBOL_2_1_2019-10-25",
+            + "TICKER_SYMBOL_2.0_1_2019-10-25",
         log.toString());
     assertEquals("Choose from the below menu: \n"
         + " 1 -> Create a static portfolio \n"

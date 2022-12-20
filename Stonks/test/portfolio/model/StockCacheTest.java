@@ -17,7 +17,7 @@ public class StockCacheTest {
     for (int i = 0; i < 100000; i++) {
       StringBuilder stock = new StringBuilder("Stock" + i);
       apiOptimizer.cacheSetObj(stock.toString(),
-          new Stock(stock.toString(), new MockStockService("test/testData.txt")));
+          new Stock(stock.toString(), new MockStockService("test/testExtensiveData.txt")));
     }
     for (int i = 0; i < 100000; i++) {
       StringBuilder stock = new StringBuilder("Stock" + i);

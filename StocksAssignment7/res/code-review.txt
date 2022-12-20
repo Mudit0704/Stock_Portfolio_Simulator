@@ -1,0 +1,131 @@
+====================================================================================================
+CODE REVIEW:
+====================================================================================================
+
+This review has been split into the following sections,
+1. Design critique
+2. Implementation critique
+3. Documentation critique
+4. Design/code strengths
+5. Design/code limitations
+6. Suggestions
+
+====================================================================================================
+Design critique:
+====================================================================================================
+The model has been implemented in a logically sound manner. Separation of concerns is followed
+at multiple places, such as, the design has a dedicated module to write stock details to XML,
+having a different class to implement the dollar cost averaging, a separate sophisticated module for getting
+data from API.
+
+However, things could have been done a little better in terms of following SOLID principles when
+new changes come in to the picture during every iteration. Such has having to specify the portfolio
+type in a string format when you have to get the portfolio composition, is a sign of bad design choices.
+
+====================================================================================================
+Implementation critique:
+====================================================================================================
+Some functionalities have been implemented in an inefficient manner.
+Specifically in the model, where when you have to determine the cost basis or determine the
+portfolio value, you have to read from the XML file and parse it every time for these operations.
+This in turn results in a lot of I/Os and results in slow down of application and poor experience
+while using it.
+Moreover, there are multiple places where the data types, such as HashMaps/HashSets/ArrayLists are
+not referenced with their interface types(Map/Set/Lists), and instead they have been referred with
+their concrete types, i.e. HashMap, HashSet, ArrayList, even while defining the return types as well.
+In addition, the code could have been a bit cleaner from the perspective of some functions like
+getPortfolioCostBasis in PortfolioImpl class. This function is very long and is having more than 4
+blocks of indentations. Ideally that should be restricted to 3 to 4 blocks and this impacts the
+readability and debuggability of the code.
+
+Some methods like createInvtPortfolio and createDcaPortfolio have large number of lines of code
+along with some redundant code. For better investigation, debugging and code readability this code
+could have been broken down into smaller methods, especially the logic that is common between them.
+
+APICaller class could have been inside the model as typically the model is supposed to handle the
+application functionality logic and the controller is just supposed to handle the I/O.
+
+The method naming convention could be better for to have code readability and understandability.
+For eg, echoPfNameWithDate is mainly being used to display results for operations asking
+portfolioname and date, so this could have been given a generic name like
+displayOperationsWithPfNameAndDateResults.
+
+
+====================================================================================================
+Documentation critique:
+====================================================================================================
+
+There were some places where the documentation was missing, such as the DataSource API fetch interface,
+where the functions in the interface didn't have the appropriate documentation. Likewise, the Validator
+interface also didn't have method documentation, although the function names were clear enough.
+Apart from these few instances, code documentation seems appropriate and easy to understand.
+
+
+
+====================================================================================================
+Design/code strengths:
+====================================================================================================
+The model has been implemented in a logically sound manner and made changes for re-balancing much more simpler.
+The addition of all the buy sell operations into the portfolio is a good decision in terms of logically being
+able to add many more operations apart from just re-balancing a portfolio.
+
+The callback functionality implementation between the controller and view was well executed,
+and it helped in easy incorporation of the rebalancing logic along with proper flow of communication
+between M-V-C.
+
+Major strength was code modularity that helped in ease of implementation of rebalancing logic and
+code reuse. For example, a separate class for validating user input throughout the controller
+lifecycle was really helpful and made the validation of user input easy while implementing the
+re-balancing functionality. Also, by storing the common functionality between inflexible and flexible
+portfolios inside AbstractPF class was a great approach to have code reuse.
+
+
+====================================================================================================
+Design/code limitations:
+====================================================================================================
+There are some things that could have been done better in terms of design.
+
+The principles of Single Responsibility and Open Close principle have been violated at multiple places.
+
+As the application has been developed in a Model-View-Controller, attempts have been made to ensure
+nothing apart from the "model" has been exposed to the controller.
+However, this has resulted in addition of more and more methods to the Model interface which has resulted in the
+interface growing in size. Ideally the interface should not have changed once written, and the changes should
+be open for extension and closed for modification.
+
+The portfolio type has been implemented in a similar fashion.
+For all the functions to be provided by the model, a portfolio type object has to be created everytime,
+coupling it with portfolio. The portfolio type has to be specified to return results appropriate for
+the portfolio type. This in by itself is because of the tight coupling and is a sign of wrong design.
+
+There are multiple places where the class doesn't follow a specific interface. For instance, the
+dollar cost averaging class object has been used directly. Had there been an interface for it,
+then it would have been more extensible for new strategies to be added/implemented. This resulted
+into more coupling and low cohesion.
+
+The StockView interface is overloaded with methods and similarly its concrete class StockViewImpl.
+Better modularity here could have helped improve debuggability and readability.
+
+Presence of interface methods and implementation that are not even being used. Interface should
+have methods as and when they are going to be used as compared to having them for the future (if
+that was the intention).
+
+====================================================================================================
+Suggestions:
+====================================================================================================
+
+With each iteration,
+all new methods have been added to same old interface and this has led to a very large interface
+that is doing a lot. Interface creation and extension in each iteration would have made the
+implementation much cleaner.
+
+Going ahead, instead of using direct class type, interface type should be used so that the code
+becomes less susceptible to larger changes and becomes more extensible.
+
+SOLID principles like Separation of concerns and Open closed principles should be followed in the
+model where addition of features and different types of portfolios are likely to result into more
+and more changes.
+
+Method naming convention can be improved, for example errorMsg2 instead it should be named
+using what kind of error its displaying for example displayInvalidOptionSelectedError which makes
+it more informative.

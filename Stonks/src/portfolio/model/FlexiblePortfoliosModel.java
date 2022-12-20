@@ -1,7 +1,6 @@
 package portfolio.model;
 
 import java.time.LocalDate;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -11,18 +10,15 @@ import java.util.Map;
  */
 public class FlexiblePortfoliosModel extends AbstractPortfolioModel {
 
-  private double transactionFee;
-
   /**
    * Constructs an object of {@link FlexiblePortfoliosModel} and initializes its members.
    */
   public FlexiblePortfoliosModel() {
-    apiOptimizer = StockCache.getInstance();
-    portfolioMap = new LinkedHashMap<>();
+    super();
   }
 
   @Override
-  public void addStocksToPortfolio(String tickerSymbol, Long quantity,
+  public void addStocksToPortfolio(String tickerSymbol, Double quantity,
       int portfolioId, LocalDate date) {
     if (quantity < 0) {
       throw new IllegalArgumentException("Invalid quantity");
@@ -42,7 +38,7 @@ public class FlexiblePortfoliosModel extends AbstractPortfolioModel {
   }
 
   @Override
-  public void sellStockFromPortfolio(String tickerSymbol, Long quantity, int portfolioId,
+  public void sellStockFromPortfolio(String tickerSymbol, Double quantity, int portfolioId,
       LocalDate date) {
     if (quantity < 0) {
       throw new IllegalArgumentException("Invalid quantity");
@@ -98,6 +94,9 @@ public class FlexiblePortfoliosModel extends AbstractPortfolioModel {
 
   @Override
   public void setCommissionFee(double commissionFee) {
+    if (commissionFee < 0.0) {
+      throw new IllegalArgumentException("Invalid commission fee.");
+    }
     this.transactionFee = commissionFee;
   }
 
@@ -106,7 +105,7 @@ public class FlexiblePortfoliosModel extends AbstractPortfolioModel {
     return this.transactionFee;
   }
 
-  protected AbstractPortfolio createPortfolio(Map<IStock, Long> stockQty, LocalDate date) {
+  protected AbstractPortfolio createPortfolio(Map<IStock, Double> stockQty, LocalDate date) {
     return new FlexiblePortfolio(this.stockService, stockQty, this.transactionFee, date);
   }
 

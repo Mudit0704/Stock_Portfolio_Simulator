@@ -15,7 +15,7 @@ public interface IFlexiblePortfoliosModel extends IPortfoliosModel {
    * @param stocks mapping of stock ticker symbols and quantities.
    * @param date   the date on which the portfolio is to be created.
    */
-  void createNewPortfolioOnADate(Map<String, Long> stocks, LocalDate date);
+  void createNewPortfolioOnADate(Map<String, Double> stocks, LocalDate date);
 
   /**
    * Adds new stocks and their respective quantities to an existing portfolio.
@@ -24,7 +24,7 @@ public interface IFlexiblePortfoliosModel extends IPortfoliosModel {
    * @param quantity     quantity of the stock to be added.
    * @param portfolioId  id of the portfolio for which stock has to be added.
    */
-  void addStocksToPortfolio(String tickerSymbol, Long quantity, int portfolioId, LocalDate date);
+  void addStocksToPortfolio(String tickerSymbol, Double quantity, int portfolioId, LocalDate date);
 
   /**
    * Sells current stocks and their respective quantities from the given portfolio.
@@ -34,7 +34,7 @@ public interface IFlexiblePortfoliosModel extends IPortfoliosModel {
    * @param portfolioId  id of the portfolio for which stock has to be sold.
    * @throws IllegalArgumentException if provided invalid inputs.
    */
-  void sellStockFromPortfolio(String tickerSymbol, Long quantity, int portfolioId, LocalDate date)
+  void sellStockFromPortfolio(String tickerSymbol, Double quantity, int portfolioId, LocalDate date)
       throws IllegalArgumentException;
 
   /**

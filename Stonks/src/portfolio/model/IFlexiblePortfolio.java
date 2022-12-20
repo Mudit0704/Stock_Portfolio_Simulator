@@ -14,7 +14,7 @@ public interface IFlexiblePortfolio extends IPortfolio {
    * @param stocks   Stock object to be added to the portfolio
    * @param quantity Quantity of the stock to be added
    */
-  void addStocksToPortfolio(IStock stocks, Long quantity, LocalDate date, double transactionFee);
+  void addStocksToPortfolio(IStock stocks, Double quantity, LocalDate date, double transactionFee);
 
   /**
    * Sells the given set of stocks from this portfolio.
@@ -23,7 +23,7 @@ public interface IFlexiblePortfolio extends IPortfolio {
    * @param quantity quantity of stock to be sold
    * @throws IllegalArgumentException if provided invalid inputs
    */
-  void sellStocksFromPortfolio(IStock stock, Long quantity,
+  void sellStocksFromPortfolio(IStock stock, Double quantity,
       LocalDate date, double transactionFee)
       throws IllegalArgumentException;
 

@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import javax.xml.parsers.ParserConfigurationException;
@@ -21,36 +22,55 @@ public abstract class AbstractPortfolioModel implements IFlexiblePortfoliosModel
   Map<String, AbstractPortfolio> portfolioMap;
   IStockService stockService;
   IStockAPIOptimizer apiOptimizer;
+  protected double transactionFee;
+  IDateNavigator dateNavigator;
+
+  AbstractPortfolioModel() {
+    apiOptimizer = StockCache.getInstance();
+    dateNavigator = DateNavigator.getInstance();
+    portfolioMap = new LinkedHashMap<>();
+  }
 
   @Override
   public void setServiceType(ServiceType serviceType) {
     stockService = AbstractServiceCreator.serviceCreator(serviceType);
   }
 
-  @Override
-  public void createNewPortfolioOnADate(Map<String, Long> stocks, LocalDate date) {
-    Map<IStock, Long> stockQty = new HashMap<>();
+  protected Map<IStock, Double> getStockQuantitiesFromTickerSymbol(Map<String, Double> stocks) {
+    Map<IStock, Double> stockQty = new HashMap<>();
 
-    for (Map.Entry<String, Long> entry : stocks.entrySet()) {
-      IStock stock = new Stock(entry.getKey(), this.stockService);
-      apiOptimizer.cacheSetObj(entry.getKey(), stock);
+    for (Map.Entry<String, Double> entry : stocks.entrySet()) {
+      if (entry.getValue() <= 0) {
+        throw new IllegalArgumentException("Invalid stock quantities.");
+      }
+      IStock stock = apiOptimizer.cacheGetObj(entry.getKey());
+      if (stock == null) {
+        stock = new Stock(entry.getKey(), this.stockService);
+        apiOptimizer.cacheSetObj(entry.getKey(), stock);
+      }
       stockQty.put(stock, entry.getValue());
     }
+    return stockQty;
+  }
+
+  @Override
+  public void createNewPortfolioOnADate(Map<String, Double> stocks, LocalDate date) {
+    Map<IStock, Double> stockQty = getStockQuantitiesFromTickerSymbol(stocks);
 
     AbstractPortfolio portfolio = createPortfolio(stockQty, date);
-    portfolioMap.put(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+    portfolioMap.put(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss")),
         portfolio);
   }
 
   @Override
-  public void createNewPortfolio(Map<String, Long> stocks) {
+  public void createNewPortfolio(Map<String, Double> stocks) {
     createNewPortfolioOnADate(stocks, LocalDate.now());
   }
 
   @Override
   public Double getPortfolioValue(LocalDate date, int portfolioId) throws IllegalArgumentException {
     if (date.isAfter(LocalDate.now()) || portfolioId > portfolioMap.size() || portfolioId <= 0) {
-      throw new IllegalArgumentException();
+      throw new IllegalArgumentException("Invalid portfolio Id.");
     }
 
     return getPortfolioFromMap(portfolioId).getValue().getPortfolioValue(date);
@@ -111,7 +131,8 @@ public abstract class AbstractPortfolioModel implements IFlexiblePortfoliosModel
 
     String userDirectory = System.getProperty("user.dir") + "/" + getPath();
     File dir = new File(userDirectory);
-    File[] files = dir.listFiles((dir1, name) -> name.toLowerCase().endsWith(".xml"));
+    File[] files = dir.listFiles((dir1, name) -> name.toLowerCase().endsWith(".xml")
+        && !name.toLowerCase().contains("strategy"));
 
     if (files != null && files.length != 0) {
       for (File file : files) {
@@ -140,7 +161,8 @@ public abstract class AbstractPortfolioModel implements IFlexiblePortfoliosModel
     return valueToCheck;
   }
 
-  protected abstract AbstractPortfolio createPortfolio(Map<IStock, Long> stockQty, LocalDate date);
+  protected abstract AbstractPortfolio createPortfolio(Map<IStock, Double> stockQty,
+      LocalDate date);
 
   protected abstract String getPath();
 

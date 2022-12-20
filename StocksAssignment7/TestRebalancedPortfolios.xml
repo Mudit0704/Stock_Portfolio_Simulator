@@ -1,0 +1,14 @@
+<portfolioNames>
+    <pfName name="TestNormalRebalancing">
+        <Stock CommissionFee="0.0" DateBought="2016-10-10" StockName="GOOG">4.0</Stock>
+        <Stock CommissionFee="0.0" DateBought="2016-10-10" StockName="AAPL">4.0</Stock>
+        <Stock CommissionFee="0.0" DateBought="2016-10-10" StockName="AMZN">3.0</Stock>
+        <Stock CommissionFee="0.0" DateBought="2016-10-10" StockName="TSLA">4.0</Stock>
+    </pfName>
+    <pfName name="TestNormalRebalancingBetweenTxn">
+        <Stock CommissionFee="0.0" DateBought="2017-10-10" StockName="GOOG">4.0</Stock>
+        <Stock CommissionFee="0.0" DateBought="2017-10-10" StockName="AAPL">4.0</Stock>
+        <Stock CommissionFee="0.0" DateBought="2016-10-10" StockName="AMZN">3.0</Stock>
+        <Stock CommissionFee="0.0" DateBought="2016-10-10" StockName="TSLA">4.0</Stock>
+    </pfName>
+</portfolioNames>

@@ -1,0 +1,76 @@
+<portfolioNames>
+    <pfName name="Coll">
+        <Stock CommissionFee="30.0" DateBought="2021-03-04" StockName="AAPL">25.0</Stock>
+        <Stock CommissionFee="24.0" DateBought="2021-04-05" StockName="AMZN">12.0</Stock>
+        <Stock CommissionFee="10.0" DateBought="2021-05-08" StockName="AAPL">15.0</Stock>
+        <Stock CommissionFee="10.0" DateBought="2021-06-09" StockName="AAPL">-39.0</Stock>
+        <Stock CommissionFee="11.0" DateBought="2021-07-08" StockName="AMZN">17.0</Stock>
+        <Stock CommissionFee="11.0" DateBought="2021-08-08" StockName="AMZN">1.0</Stock>
+    </pfName>
+    <pfName name="College">
+        <Stock CommissionFee="10.0" DateBought="2022-02-03" StockName="MSFT">24.0</Stock>
+        <Stock CommissionFee="15.0" DateBought="2022-04-05" StockName="TSLA">14.0</Stock>
+        <Stock CommissionFee="111.0" DateBought="2022-05-06" StockName="AAPL">11.0</Stock>
+        <Stock CommissionFee="1.0" DateBought="2022-02-09" StockName="MSFT">-23.0</Stock>
+        <Stock CommissionFee="15.0" DateBought="2022-09-12" StockName="AAPL">2.0</Stock>
+        <Stock CommissionFee="14.0" DateBought="2022-09-12" StockName="AAPL">13.0</Stock>
+        <Stock CommissionFee="15.0" DateBought="2021-07-20" StockName="AAPL">41.05371193978789</Stock>
+        <Stock CommissionFee="15.0" DateBought="2021-01-04" StockName="AAPL">46.36426860366278</Stock>
+        <Stock CommissionFee="15.0" DateBought="2021-07-20" StockName="HD">43.03058244966958</Stock>
+        <Stock CommissionFee="15.0" DateBought="2021-01-04" StockName="HD">53.04637769020915</Stock>
+        <Stock CommissionFee="1.0" DateBought="2022-05-10" StockName="AAPL">-1.0</Stock>
+        <Stock CommissionFee="6.0" DateBought="2022-11-29" StockName="AAPL">20.0</Stock>
+        <Stock CommissionFee="3.0" DateBought="2022-11-30" StockName="AAPL">-100.0</Stock>
+    </pfName>
+    <pfName name="Health">
+        <Stock CommissionFee="22.0" DateBought="2022-04-05" StockName="AMZN">1.0</Stock>
+    </pfName>
+    <pfName name="FAANG">
+        <Stock CommissionFee="10.0" DateBought="2022-03-04" StockName="GOOG">10.0</Stock>
+        <Stock CommissionFee="111.0" DateBought="2022-03-04" StockName="TSLA">100.0</Stock>
+    </pfName>
+    <pfName name="FAANG2">
+        <Stock CommissionFee="100.0" DateBought="2022-03-04" StockName="BAC">6.105006105006105</Stock>
+        <Stock CommissionFee="100.0" DateBought="2022-03-04" StockName="GOOG">0.28382858267358957</Stock>
+    </pfName>
+    <pfName name="Collegee">
+        <Stock CommissionFee="100.0" DateBought="2022-04-01" StockName="AAPL">0.6299122253456485</Stock>
+        <Stock CommissionFee="100.0" DateBought="2022-03-02" StockName="AAPL">0.659221902017291</Stock>
+        <Stock CommissionFee="100.0" DateBought="2022-01-31" StockName="AAPL">0.6282183316168898</Stock>
+        <Stock CommissionFee="100.0" DateBought="2022-01-03" StockName="AAPL">0.6032635569474205</Stock>
+        <Stock CommissionFee="100.0" DateBought="2022-04-01" StockName="AAPL">0.6299122253456485</Stock>
+        <Stock CommissionFee="100.0" DateBought="2022-03-02" StockName="AAPL">0.659221902017291</Stock>
+        <Stock CommissionFee="100.0" DateBought="2022-01-31" StockName="AAPL">0.6282183316168898</Stock>
+        <Stock CommissionFee="100.0" DateBought="2022-01-03" StockName="AAPL">0.6032635569474205</Stock>
+    </pfName>
+    <pfName name="Colqwe">
+        <Stock CommissionFee="10.0" DateBought="2021-10-28" StockName="MSFT">37.37012486511484</Stock>
+        <Stock CommissionFee="10.0" DateBought="2021-07-20" StockName="MSFT">43.39467277674352</Stock>
+        <Stock CommissionFee="10.0" DateBought="2021-04-12" StockName="MSFT">47.36430776444844</Stock>
+        <Stock CommissionFee="10.0" DateBought="2021-01-04" StockName="MSFT">55.68009554871607</Stock>
+        <Stock CommissionFee="15.0" DateBought="2022-03-03" StockName="AAPL">1.0</Stock>
+        <Stock CommissionFee="9.0" DateBought="2022-04-05" StockName="GOOG">9.0</Stock>
+        <Stock CommissionFee="12.0" DateBought="2021-09-09" StockName="MSFT">-31.0</Stock>
+        <Stock CommissionFee="1.0" DateBought="2022-04-06" StockName="GOOG">-2.0</Stock>
+        <Stock CommissionFee="1.0" DateBought="2022-01-05" StockName="MSFT">0.8217965737404387</Stock>
+        <Stock CommissionFee="1.0" DateBought="2022-01-05" StockName="AAPL">4.2305053738852045</Stock>
+    </pfName>
+    <pfName name="Portfolio">
+        <Stock CommissionFee="12.0" DateBought="2022-01-04" StockName="AAPL">15.0</Stock>
+    </pfName>
+    <pfName name="Test">
+        <Stock CommissionFee="10.0" DateBought="2022-11-28" StockName="AAPL">20.0</Stock>
+    </pfName>
+    <pfName name="Test2">
+        <Stock CommissionFee="5.0" DateBought="2022-11-10" StockName="AMZN">19.0</Stock>
+    </pfName>
+    <pfName name="Sample">
+        <Stock CommissionFee="5.0" DateBought="2022-12-02" StockName="GOOG">20.0</Stock>
+    </pfName>
+    <pfName name="Sample2">
+        <Stock CommissionFee="5.0" DateBought="2022-12-02" StockName="GOOG">19.83536645839532</Stock>
+    </pfName>
+    <pfName name="p2">
+        <Stock CommissionFee="20.0" DateBought="2022-10-10" StockName="AAPL">2.0</Stock>
+    </pfName>
+</portfolioNames>

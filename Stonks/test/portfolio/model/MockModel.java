@@ -63,7 +63,7 @@ public class MockModel implements IPortfoliosModel {
   }
 
   @Override
-  public void createNewPortfolio(Map<String, Long> stocks) {
+  public void createNewPortfolio(Map<String, Double> stocks) {
     log.append(stocks).append(" ");
   }
 

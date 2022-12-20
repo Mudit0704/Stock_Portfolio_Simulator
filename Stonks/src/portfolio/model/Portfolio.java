@@ -41,7 +41,7 @@ class Portfolio implements IPortfolio {
     }
   }
 
-  private final List<Pair<IStock, Long>> stocks = new ArrayList<>();
+  private final List<Pair<IStock, Double>> stocks = new ArrayList<>();
   private final IStockService stockService;
   private final IStockAPIOptimizer apiOptimizer;
   //endregion
@@ -52,7 +52,7 @@ class Portfolio implements IPortfolio {
    * @param stockService the service responsible for calling the API required for stocks data.
    * @param stocks       stocks that will be stored in this portfolio.
    */
-  public Portfolio(IStockService stockService, Map<IStock, Long> stocks) {
+  public Portfolio(IStockService stockService, Map<IStock, Double> stocks) {
     this.stockService = stockService;
     setPortfolioStocks(stocks);
     apiOptimizer = StockCache.getInstance();
@@ -69,7 +69,7 @@ class Portfolio implements IPortfolio {
   public double getPortfolioValue(LocalDate date) throws IllegalArgumentException {
     double portfolioValue = 0;
 
-    for (Pair<IStock, Long> stock : this.stocks) {
+    for (Pair<IStock, Double> stock : this.stocks) {
       try {
         portfolioValue += stock.s.getValue(date) * stock.t;
       } catch (DateTimeParseException e) {
@@ -93,7 +93,7 @@ class Portfolio implements IPortfolio {
       Element rootElement = doc.createElement("portfolio");
       doc.appendChild(rootElement);
 
-      for (Pair<IStock, Long> stock : this.stocks) {
+      for (Pair<IStock, Double> stock : this.stocks) {
         Element stockElement = doc.createElement("stock");
 
         Element stockTickerSymbol = doc.createElement("tickerSymbol");
@@ -148,7 +148,7 @@ class Portfolio implements IPortfolio {
         Element eElement = (Element) nNode;
         String tickerSymbol = eElement.getElementsByTagName("tickerSymbol")
             .item(0).getTextContent();
-        long stockQuantity = Long.parseLong(eElement.getElementsByTagName("stockQuantity")
+        double stockQuantity = Double.parseDouble(eElement.getElementsByTagName("stockQuantity")
             .item(0).getTextContent());
         IStock newStock = apiOptimizer.cacheGetObj(tickerSymbol);
         if (newStock == null) {
@@ -162,8 +162,8 @@ class Portfolio implements IPortfolio {
   //endregion
 
   //region Private Methods
-  private void setPortfolioStocks(Map<IStock, Long> stocks) {
-    for (Map.Entry<IStock, Long> entry : stocks.entrySet()) {
+  private void setPortfolioStocks(Map<IStock, Double> stocks) {
+    for (Map.Entry<IStock, Double> entry : stocks.entrySet()) {
       this.stocks.add(new Pair<>(entry.getKey(), entry.getValue()));
     }
   }

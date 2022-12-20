@@ -139,13 +139,13 @@ public class ControllerHelperTest {
     Reader in = new StringReader("\nTICKER_SYMBOL\n2");
     scanner = new Scanner(in);
     controllerHelper = new ControllerHelper(mockView);
-    Map<String, Long> stocks = new HashMap<>();
+    Map<String, Double> stocks = new HashMap<>();
 
     controllerHelper.populateStockDataFromUser(scanner,
         new MockFlexiblePortfolioModel(log, true), stocks);
 
     assertTrue(stocks.containsKey("TICKER_SYMBOL"));
-    assertEquals(Optional.of(2L).get(), stocks.get("TICKER_SYMBOL"));
+    assertEquals(Optional.of(2D).get(), stocks.get("TICKER_SYMBOL"));
     assertEquals("TICKER_SYMBOL ", log.toString());
     assertEquals("Stock Symbol: Stock Quantity: ", out.toString());
   }
@@ -156,14 +156,14 @@ public class ControllerHelperTest {
     Reader in = new StringReader("\nTICKER_SYMBOL\n2");
     scanner = new Scanner(in);
     controllerHelper = new ControllerHelper(mockView);
-    Map<String, Long> stocks = new HashMap<>();
-    stocks.put("TICKER_SYMBOL", 2L);
+    Map<String, Double> stocks = new HashMap<>();
+    stocks.put("TICKER_SYMBOL", 2D);
 
     controllerHelper.populateStockDataFromUser(scanner,
         new MockFlexiblePortfolioModel(log, true), stocks);
 
     assertTrue(stocks.containsKey("TICKER_SYMBOL"));
-    assertEquals(Optional.of(4L).get(), stocks.get("TICKER_SYMBOL"));
+    assertEquals(Optional.of(4D).get(), stocks.get("TICKER_SYMBOL"));
     assertEquals("TICKER_SYMBOL ", log.toString());
     assertEquals("Stock Symbol: Stock Quantity: ", out.toString());
   }
@@ -173,13 +173,13 @@ public class ControllerHelperTest {
     Reader in = new StringReader("\nINVALID_SYMBOL\nTICKER_SYMBOL\n2");
     scanner = new Scanner(in);
     controllerHelper = new ControllerHelper(mockView);
-    Map<String, Long> stocks = new HashMap<>();
+    Map<String, Double> stocks = new HashMap<>();
 
     controllerHelper.populateStockDataFromUser(scanner,
         new MockFlexiblePortfolioModel(log, true), stocks);
 
     assertTrue(stocks.containsKey("TICKER_SYMBOL"));
-    assertEquals(Optional.of(2L).get(), stocks.get("TICKER_SYMBOL"));
+    assertEquals(Optional.of(2D).get(), stocks.get("TICKER_SYMBOL"));
     assertEquals("INVALID_SYMBOL TICKER_SYMBOL ", log.toString());
     assertEquals("Stock Symbol: Invalid Ticker Symbol\n"
         + "Stock Symbol: Stock Quantity: ", out.toString());
@@ -190,13 +190,13 @@ public class ControllerHelperTest {
     Reader in = new StringReader("\nTICKER_SYMBOL\nInvalid_Quantity\n2");
     scanner = new Scanner(in);
     controllerHelper = new ControllerHelper(mockView);
-    Map<String, Long> stocks = new HashMap<>();
+    Map<String, Double> stocks = new HashMap<>();
 
     controllerHelper.populateStockDataFromUser(scanner,
         new MockFlexiblePortfolioModel(log, true), stocks);
 
     assertTrue(stocks.containsKey("TICKER_SYMBOL"));
-    assertEquals(Optional.of(2L).get(), stocks.get("TICKER_SYMBOL"));
+    assertEquals(Optional.of(2D).get(), stocks.get("TICKER_SYMBOL"));
     assertEquals("TICKER_SYMBOL ", log.toString());
     assertEquals("Stock Symbol: Stock Quantity: Invalid_Input Stock Quantity: ",
         out.toString());
@@ -207,13 +207,13 @@ public class ControllerHelperTest {
     Reader in = new StringReader("\nTICKER_SYMBOL\n0\n2");
     scanner = new Scanner(in);
     controllerHelper = new ControllerHelper(mockView);
-    Map<String, Long> stocks = new HashMap<>();
+    Map<String, Double> stocks = new HashMap<>();
 
     controllerHelper.populateStockDataFromUser(scanner,
         new MockFlexiblePortfolioModel(log, true), stocks);
 
     assertTrue(stocks.containsKey("TICKER_SYMBOL"));
-    assertEquals(Optional.of(2L).get(), stocks.get("TICKER_SYMBOL"));
+    assertEquals(Optional.of(2D).get(), stocks.get("TICKER_SYMBOL"));
     assertEquals("TICKER_SYMBOL ", log.toString());
     assertEquals("Stock Symbol: Stock Quantity: Invalid_Input Stock Quantity: ",
         out.toString());
